@@ -1,0 +1,38 @@
+
+services:
+  api:
+    container_name: web
+    build:
+      context: .
+      dockerfile: ./docker/django/Dockerfile
+    volumes:
+      - ./core:/app/core
+    env_file:
+      - ./.envs/.django
+      - ./.envs/.postgres
+    ports:
+      - 8000:8000
+    depends_on:
+      - postgres
+
+    restart: always
+    networks:
+      - web-network
+
+  postgres:
+    image: postgres:15-bullseye
+    volumes:
+      - local_postgres_db:/var/lib/postgresql/data
+    env_file:
+      - ./.envs/.postgres
+    restart: always
+    networks:
+      - web-network
+
+
+networks:
+  web-network:
+    driver: bridge
+
+volumes:
+  local_postgres_db:

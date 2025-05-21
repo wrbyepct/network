@@ -1,0 +1,121 @@
+#!/bin/bash
+
+
+api() {
+    docker-compose -f local.yml exec api $@
+}
+
+# Lint
+
+lint:ci() {
+    SKIP=no-commit-to-branch pre-commit run --all-files --show-diff-on-failure
+}
+
+lint() {
+    git add .; poetry run pre-commit run --all-files 
+}
+
+update-precommit() {
+    poetry run pre-commit uninstall; poetry run pre-commit clean; poetry run pre-commit install
+}
+
+
+# contrainer
+up() {
+    docker-compose -f local.yml up --build -d 
+}
+
+down() {
+    docker-compose -f local.yml down
+}
+
+prod-up() {
+    docker-compose -f prod.yml up --build -d 
+}
+
+prod-down() {
+    docker-compose -f prod.yml down
+}
+
+# Tests
+test() {
+    docker-compose -f local.yml exec -e IN_TEST=1 api pytest $@ 
+}
+
+
+test-dist() {
+    docker-compose -f local.yml exec -e IN_TEST=1 api pytest $@ \
+    -n auto \
+    --dist loadfile
+}
+
+test-report() {
+    docker-compose -f local.yml exec -e IN_TEST=1 api pytest $@  \
+    -n auto \
+    --dist loadfile \
+    --cov-report term-missing \
+    --cov-report html \
+    --cov=core \
+    --cov-config=pyproject.toml
+}
+
+
+# CI
+test:ci() {
+    poetry run env IN_TEST=1 pytest \
+    -x \
+    -n auto \
+    --dist loadfile
+}
+
+
+##
+# Terraform
+##
+
+tf-lint:cd() {
+    cd terraform
+    docker compose -f tf.yml run --rm terraform -chdir=setup init -backend=false
+    docker compose -f tf.yml run --rm terraform -chdir=deploy init -backend=false
+
+    docker compose -f tf.yml run --rm terraform -chdir=setup validate
+    docker compose -f tf.yml run --rm terraform -chdir=setup fmt -check
+
+    docker compose -f tf.yml run --rm terraform -chdir=deploy validate
+    docker compose -f tf.yml run --rm terraform -chdir=deploy fmt -check
+
+}
+
+tf-init() {
+    docker-compose -f terraform/tf.yml run --rm terraform -chdir=$1 init
+}
+
+tf-plan() {
+    docker-compose -f terraform/tf.yml run --rm terraform -chdir=$1 plan
+}
+
+tf-deploy() {
+    docker-compose -f terraform/tf.yml run --rm terraform -chdir=$1 deploy
+}
+
+tf-destroy() {
+    docker-compose -f terraform/tf.yml run --rm terraform -chdir=$1 destroy
+}
+
+tf-fmt() {
+    docker-compose -f terraform/tf.yml run --rm terraform -chdir=$1 fmt
+}
+
+tf-validate() {
+    docker-compose -f terraform/tf.yml run --rm terraform -chdir=$1 fmt
+}
+
+
+help() {
+    echo "${1} <task> <arg>s"
+    echo "Tasks:"
+    compgen -A function | cat -n 
+}
+
+TIMEFORMAT="Task completed in %3lR"
+time ${@:-help}

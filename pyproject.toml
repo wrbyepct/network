@@ -1,0 +1,124 @@
+[tool.poetry]
+name = "network"
+version = "0.1.0"
+description = "CS50 WEB Network"
+authors = ["Furthermore <wrbyepcr11@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+django = "^5.2.1"
+psycopg2 = "^2.9.10"
+django-environ = "^0.12.0"
+split-settings = "^1.0.0"
+
+
+[tool.poetry.group.qa.dependencies]
+pytest = "^8.3.5"
+pytest-django = "^4.11.1"
+pytest-xdist = "^3.6.1"
+pytest-factoryboy = "^2.7.0"
+pytest-mock = "^3.14.0"
+django-mock-queries = "^2.3.0"
+ruff = "^0.11.10"
+pre-commit = "^4.2.0"
+
+
+[tool.poetry.group.dev.dependencies]
+commitizen = "^4.8.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.ruff.lint]
+select = ["ALL"]
+fixable = ["ALL"]
+ignore = [
+    "A002", # Argument `format` is shadowing a Python builtin
+    "ANN001", # Missing type annotation for function argument
+    "ANN201", # Check return type annotation
+    "ANN202", # Missing return type annotation for private function
+    "ANN002", # Missing type annotation for `*args`
+    "ANN003", # Missing type annotation for `**extra_fields`
+    "ARG002", # Unused method argument
+    "D106", # Missing docstring in public nested class
+    "D203", # 1 blank line required before class docstring
+    "D212", # Multi-line docstring summary should start at the first line
+    "D407", # Missing dashed underline after section ("Args")
+    "FIX002", # Line contains TODO, consider resolving the issue
+    "E501", # line too long
+    "S311", # Standard pseudo-random generators are not suitable for cryptographic purposes
+    "RUF012", # Mutable class attributes should be annotated with `typing.ClassVar`
+    "G004", # Logging statement uses f-string
+    "TD", # Missing author in TODO; try: `# TODO(<author_name>): ...` or `# TODO @<author_name>: ...`
+    "PGH003",  # Use specified rules
+    "COM812", 
+    "ISC001"
+    
+]
+
+
+[tool.ruff.lint.per-file-ignores]
+"local/*.py" = ["F821"]
+"core/tests/*.py" = [
+    "S101", 
+    "INP001", 
+    "ANN201", 
+    "ANN001", 
+    "ARG",
+    "D",
+    "DTZ005", # atetime.datetime.now()` called without a `tz` argumen
+    "PT006", #  Wrong type passed to first argument of `@pytest.mark.parametrize`; expected `tuple`
+    "ERA001",
+    "W291",
+    "PT011",
+    "SLF001",
+    "PLR0913",
+    "PT012",  # `pytest.raises()` block should contain a single simple statement
+]
+"**/migrations/**/*.py" = [
+    "ANN001", 
+    "ARG001",
+    "INP001", 
+    "D", # Missing docstring in public module
+
+]
+"**/signals.py" = [
+    "ANN001", 
+    "ARG001",
+    "INP001", 
+    "D", # Missing docstring in public module
+
+]
+"**/middlewares.py" = [
+    "ANN",
+    "INP001", 
+    "D", # Missing docstring in public module
+
+]
+"**/apps.py" = [
+    "INP001", 
+    "D", # Missing docstring in public module
+
+]
+"**/__init__.py" = [
+    "INP001", 
+    "D", # Missing docstring in public module
+
+]
+"core/manage.py" = ["ALL"]
+
+[tool.ruff.lint.mccabe]
+# Check mccabe. 
+# Each additional decision point (e.g., if, elif, else, for, while, try, except, etc.) 
+# increases the complexity score by 1.
+max-complexity = 8 
+
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+version = "0.1.0"  
+update_changelog_on_bump = false
+tag_format = "$version"
