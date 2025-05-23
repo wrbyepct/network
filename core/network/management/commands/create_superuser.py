@@ -3,7 +3,7 @@
 from django.contrib.auth import get_user_model
 from django.core.management import BaseCommand
 
-from network.constants import ADMIN_PASSWORD, ADMIN_USERNAME
+from network.user.constants import ADMIN_PASSWORD, ADMIN_USERNAME
 
 
 class Command(BaseCommand):

@@ -55,8 +55,7 @@ ignore = [
     "TD", # Missing author in TODO; try: `# TODO(<author_name>): ...` or `# TODO @<author_name>: ...`
     "PGH003",  # Use specified rules
     "COM812", 
-    "ISC001"
-    
+    "ISC001"   
 ]
 
 
@@ -109,6 +108,7 @@ ignore = [
 
 ]
 "core/manage.py" = ["ALL"]
+"**/middlewares/**/*" = ["ALL"]
 
 [tool.ruff.lint.mccabe]
 # Check mccabe. 
