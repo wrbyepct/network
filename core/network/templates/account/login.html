@@ -1,0 +1,29 @@
+{% extends "account/partials/auth_card.html" %} 
+{% load socialaccount %}
+
+{% block auth_content %}
+
+    <h2 class="text-center mb-4">Login</h2>
+
+    {% include "network/partials/messages.html" %}
+  
+
+        {% include "account/partials/traditional_login.html" %}
+        
+        <hr class="my-4">
+
+        <div class="text-center">Or log in with:</div>
+        <ul class="list-unstyled text-center mt-2">
+        {% get_providers as socialaccount_providers %}
+        {% for provider in socialaccount_providers %}
+            <li class="my-1">
+            <a class="btn btn-outline-dark w-100" href="{% provider_login_url provider.id %}">
+                {{ provider.name }}
+            </a>
+            </li>
+        {% endfor %}
+        </ul>
+
+
+
+{% endblock %}

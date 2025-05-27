@@ -1,5 +1,6 @@
 {% load static %}
 
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -16,7 +17,7 @@
               <ul class="navbar-nav mr-auto">
                 {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="#"><strong>{{ user.username }}</strong></a>
+                        <a class="nav-link" href="#"><strong>{{ user.email }}</strong></a>
                     </li>
                 {% endif %}
                 <li class="nav-item">
@@ -27,14 +28,14 @@
                         <a class="nav-link" href="#">Following</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+                        <a class="nav-link" href="{% url 'account_logout' %}">Log Out</a>
                     </li>
                 {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'login' %}">Log In</a>
+                        <a class="nav-link" href="{% url 'account_login' %}">Log In</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'register' %}">Register</a>
+                        <a class="nav-link" href="{% url 'account_signup' %}">Register</a>
                     </li>
                 {% endif %}
               </ul>
