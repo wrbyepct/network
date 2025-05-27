@@ -1,6 +1,6 @@
 
 services:
-  api:
+  web:
     container_name: web
     build:
       context: .
