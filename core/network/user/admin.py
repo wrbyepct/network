@@ -10,3 +10,5 @@ User = get_user_model()
 @admin.register(User)
 class CustomUserAdmin(UserAdmin):
     """User admin."""
+
+    ordering = ["email"]

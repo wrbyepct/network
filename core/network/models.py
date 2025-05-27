@@ -1,16 +1,4 @@
 """Models."""
 
-from uuid import uuid4
-
-from django.contrib.auth.models import AbstractUser
-from django.db import models
-
-
-class User(AbstractUser):
-    """User model."""
-
-    pkid = models.BigAutoField(
-        primary_key=True,
-        editable=False,
-    )  # Primary key will make sure it's unqiue
-    id = models.UUIDField(default=uuid4, unique=True, editable=False)
+# ruff: noqa: F401
+from .user.models import User

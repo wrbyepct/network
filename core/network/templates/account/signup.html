@@ -1,0 +1,31 @@
+{% extends "account/partials/auth_card.html" %} 
+{% load socialaccount %}
+
+
+{% block auth_content %}
+
+    <h4 class="mb-4 text-center">Sign Up</h4>
+        
+        {% get_providers as socialaccount_providers %}
+            {% if socialaccount_providers %}
+                <div class="mb-3 text-center">Or sign up with:</div>
+                <div class="d-grid gap-2 mb-4">
+                {% for provider in socialaccount_providers %}
+                    <a class="btn btn-outline-primary" href="{% provider_login_url provider.id %}">
+                    <i class="bi bi-google me-2"></i> Continue with {{ provider.name }}
+                    </a>
+                {% endfor %}
+                </div>
+            {% endif %}
+
+        <hr class="my-4">
+
+        {% include "account/partials/traditional_signup.html" %}
+
+        <p class="mt-4 text-center text-muted">
+            Already have an account?
+            <a href="{% url 'account_login' %}">Log in here</a>.
+        </p>
+
+
+{% endblock %}

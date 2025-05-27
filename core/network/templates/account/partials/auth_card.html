@@ -1,0 +1,15 @@
+{% extends "network/layout.html" %}
+{% block body %}
+    <div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+        <div class="card shadow-sm">
+            <div class="card-body">
+            {% block auth_content %}
+            {% endblock %}
+            </div>
+        </div>
+        </div>
+    </div>
+    </div>
+{% endblock %}
