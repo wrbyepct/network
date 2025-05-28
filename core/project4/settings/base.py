@@ -24,6 +24,7 @@ THIRD_PARTY_APPS = [
     # Social providers
     "allauth.socialaccount.providers.google",
     "allauth.socialaccount.providers.facebook",
+    "allauth.socialaccount.providers.twitter",
 ]
 
 INSTALLED_APPS = BASE_APPS + MY_APPS + THIRD_PARTY_APPS
@@ -31,7 +32,7 @@ INSTALLED_APPS = BASE_APPS + MY_APPS + THIRD_PARTY_APPS
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "network.middlewares.sessionswatch.SessionWatchMiddleware",
+    # "network.middlewares.sessionswatch.SessionWatchMiddleware", # my middileware
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",

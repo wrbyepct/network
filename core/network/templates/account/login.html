@@ -10,9 +10,12 @@
 
         {% include "account/partials/traditional_login.html" %}
         
-        <hr class="my-4">
+        <div class="d-flex align-content-center">
+            <hr class="flex-fill ">
+            <span class="mt-1 mx-1 text-black-50">Or</span>
+            <hr class="flex-fill ">
+        </div>
 
-        <div class="text-center">Or log in with:</div>
         <ul class="list-unstyled text-center mt-2">
         {% get_providers as socialaccount_providers %}
         {% for provider in socialaccount_providers %}

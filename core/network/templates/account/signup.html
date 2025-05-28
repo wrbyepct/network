@@ -5,18 +5,17 @@
 {% block auth_content %}
 
     <h4 class="mb-4 text-center">Sign Up</h4>
-        
-        {% get_providers as socialaccount_providers %}
-            {% if socialaccount_providers %}
-                <div class="mb-3 text-center">Or sign up with:</div>
-                <div class="d-grid gap-2 mb-4">
-                {% for provider in socialaccount_providers %}
-                    <a class="btn btn-outline-primary" href="{% provider_login_url provider.id %}">
-                    <i class="bi bi-google me-2"></i> Continue with {{ provider.name }}
-                    </a>
-                {% endfor %}
-                </div>
-            {% endif %}
+        <ul class="list-unstyled text-center mt-2">
+            {% get_providers as socialaccount_providers %}
+            {% for provider in socialaccount_providers %}
+                <li class="my-1">
+                <a class="btn btn-outline-dark w-100" href="{% provider_login_url provider.id %}">
+                   Continue with {{ provider.name }}
+                </a>
+                </li>
+            {% endfor %}
+        </ul>
+
 
         <hr class="my-4">
 
