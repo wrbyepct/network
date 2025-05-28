@@ -35,19 +35,20 @@ ACCOUNT_EMAIL_VERIFICATION = "none"  # Can later change to "optional" or "mandat
 
 ACCOUNT_SIGNUP_FORM_CLASS = "network.user.forms.SignupForm"
 
-
-GOOGLE_PROVIDER_CLIENT_ID = env("GOOGLE_PROVIDER_CLIENT_ID")
-GOOGLE_PROVIDER_SECRET = env("GOOGLE_PROVIDER_SECRET")
-
 SITE_ID = 1
 
 SOCIALACCOUNT_PROVIDERS = {
     "google": {
         "APP": {
-            "client_id": GOOGLE_PROVIDER_CLIENT_ID,
-            "secret": GOOGLE_PROVIDER_SECRET,
-            "key": "",
+            "client_id": env("OAUTH_GOOGLE_CLIENT_ID"),
+            "secret": env("OAUTH_GOOGLE_SECRET"),
         },
+    },
+    "twitter": {
+        "APP": {
+            "client_id": env("OAUTH_TIWTTER_CLIENT_ID"),
+            "secret": env("OAUTH_TIWTTER_SECRET"),
+        }
     },
 }
 
