@@ -1,8 +1,17 @@
 #!/bin/bash
 
 
-api() {
-    docker-compose -f local.yml exec api $@
+# migration
+migrations() {
+    docker compose -f local.yml exec web python -m manage makemigrations
+}
+
+migrate() {
+    docker compose -f local.yml exec web python -m manage migrate
+}
+
+web() {
+    docker-compose -f local.yml exec web $@
 }
 
 # Lint
@@ -39,18 +48,18 @@ prod-down() {
 
 # Tests
 test() {
-    docker-compose -f local.yml exec -e IN_TEST=1 api pytest $@ 
+    docker-compose -f local.yml exec -e IN_TEST=1 web pytest $@ 
 }
 
 
 test-dist() {
-    docker-compose -f local.yml exec -e IN_TEST=1 api pytest $@ \
+    docker-compose -f local.yml exec -e IN_TEST=1 web pytest $@ \
     -n auto \
     --dist loadfile
 }
 
 test-report() {
-    docker-compose -f local.yml exec -e IN_TEST=1 api pytest $@  \
+    docker-compose -f local.yml exec -e IN_TEST=1 web pytest $@  \
     -n auto \
     --dist loadfile \
     --cov-report term-missing \
