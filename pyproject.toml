@@ -16,6 +16,8 @@ requests = "^2.32.3"
 pyjwt = "^2.10.1"
 cryptography = "^45.0.3"
 requests-oauthlib = "^2.0.0"
+django-phonenumber-field = {extras = ["phonenumberslite"], version = "^8.1.0"}
+pillow = "^11.2.1"
 
 
 [tool.poetry.group.qa.dependencies]
@@ -127,3 +129,18 @@ name = "cz_conventional_commits"
 version = "0.1.0"  
 update_changelog_on_bump = false
 tag_format = "$version"
+
+
+
+[tool.pytest.ini_options]
+django_find_project = false
+pythonpath = "core" # relative to the pyproject
+DJANGO_SETTINGS_MODULE = "project4.settings" # relative to the pythonpath
+python_files = "test_*.py"
+testpaths = ["tests"] # relative to the pythonpath and this is where conftest should be
+addopts = """
+    --reuse-db
+    --durations=10
+
+"""
+filterwarnings = ["ignore::DeprecationWarning", "ignore::pytest.PytestCacheWarning", "ignore::pytest.PytestUnknownMarkWarning"]
