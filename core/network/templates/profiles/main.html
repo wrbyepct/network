@@ -1,0 +1,32 @@
+{% extends "network/layout.html" %}
+{% block body %}
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between">
+        <h2>{{ profile.username }}'s Profile</h2>
+        <a href="{% url 'profile_edit' %}">Edit Perfornal Informaiton</a>
+    </div>
+
+
+  <ul class="nav nav-tabs mb-3">
+    {% for tab in tabs %}
+        <li class="nav-item">
+          <a class="nav-link"
+            hx-get="{% url 'profile_'|add:tab profile.username %}"
+            hx-vals='{"query": "{{ tab }}"}'
+            hx-target="#tab-content"
+            hx-push-url="/profiles/{{ profile.username }}/{{ tab }}/"
+            hx-swap="innerHTML">
+            {{ tab|title }}
+          </a>
+        </li>
+    {% endfor %}
+  </ul>
+
+  <div id="tab-content">
+    {% block tab_content %}
+    {% endblock %}
+  </div>
+</div>
+
+{% endblock %}

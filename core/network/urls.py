@@ -8,4 +8,5 @@ from . import views
 urlpatterns = [
     path("", views.IndexView.as_view(), name="index"),
     path("accounts/", include("allauth.urls")),
+    path("profiles/", include("network.profiles.urls")),
 ]

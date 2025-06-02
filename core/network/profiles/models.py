@@ -28,7 +28,7 @@ class FollowMixin:
 class Profile(TimestampedModel, FollowMixin):
     """User's Profile model."""
 
-    username = models.CharField(max_length=255, blank=True)
+    username = models.CharField(max_length=255, blank=True, unique=True)
     first_name = models.CharField(max_length=255, blank=True)
     last_name = models.CharField(max_length=255, blank=True)
 

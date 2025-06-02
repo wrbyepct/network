@@ -36,11 +36,11 @@ ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_EMAIL_VERIFICATION = "none"  # Can later change to "optional" or "mandatory"
 
-ACCOUNT_SIGNUP_FORM_CLASS = "network.user.forms.SignupForm"
+ACCOUNT_SIGNUP_FORM_CLASS = "network.forms.SignupForm"
 
 
 SOCIALACCOUNT_LOGIN_ON_GET = True
-SOCIALACCOUNT_ADAPTER = "network.user.adapters.CustomAccountAdapter"
+SOCIALACCOUNT_ADAPTER = "network.adapters.CustomAccountAdapter"
 SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
 SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
 
