@@ -6,7 +6,7 @@ from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from network.profile.models import Profile
+from network.profiles.models import Profile
 
 logger = logging.getLogger(__name__)
 
