@@ -1,6 +1,13 @@
 #!/bin/bash
 
 
+# create app
+
+startapp() {
+    docker compose -f local.yml exec web python -m manage startapp $@
+}
+
+
 # migration
 migrations() {
     docker compose -f local.yml exec web python -m manage makemigrations
@@ -8,6 +15,10 @@ migrations() {
 
 migrate() {
     docker compose -f local.yml exec web python -m manage migrate
+}
+
+migration-plan() {
+    docker compose -f local.yml exec web python -m manage showmigrations --plan 
 }
 
 web() {

@@ -7,4 +7,4 @@ class NetworkConfig(AppConfig):
     name = "network"
 
     def ready(self):
-        from core.network.user import signals  # noqa: F401
+        from network import signals  # noqa: F401
