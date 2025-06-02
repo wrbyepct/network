@@ -4,6 +4,7 @@
 
 MY_APPS = [
     "network",
+    "network.profiles",
 ]
 
 BASE_APPS = [
