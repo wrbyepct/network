@@ -19,7 +19,7 @@
                 {% if user.is_authenticated %}
                     <li class="nav-item">
                         <a class="nav-link"
-                        href="profiles/{{ user.profile.username}}/about"
+                        href="{% url 'profile_about' user.profile.username %}"
                          ><strong>{{ user.email }}</strong></a>
                     </li>
                 {% endif %}

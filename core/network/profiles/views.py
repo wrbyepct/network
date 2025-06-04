@@ -30,6 +30,7 @@ class ProfileBaseTabView(TemplateView):
         """Get partial query from htmx request."""
         q = self.request.GET.get("query", None)
         q = q if q in profile_tabs else None
+        # Return partial html or full tab profile html path
         return (
             f"partial/{q}"
             if q
