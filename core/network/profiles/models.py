@@ -6,7 +6,7 @@ from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 
 from network.common.models import TimestampedModel
-from network.tools.image import generate_file_path
+from network.tools.media import generate_file_path
 
 
 class FollowMixin:
@@ -46,7 +46,7 @@ class Profile(TimestampedModel, FollowMixin):
     )
 
     followers = models.ManyToManyField(
-        "self", symmetrical=False, related_name="following"
+        "self", symmetrical=False, related_name="following", blank=True
     )
 
     # TODO implement profile pictures and images later.
