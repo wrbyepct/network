@@ -2,6 +2,7 @@
 
 # ruff: noqa: F821
 STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "network" / "static"  # for scss processor to work
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = str(BASE_DIR / "network" / "media")
