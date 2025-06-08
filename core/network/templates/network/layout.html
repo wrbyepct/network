@@ -1,12 +1,12 @@
 {% load static %}
-
+{% load sass_tags %}
 
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <title>{% block title %}Social Network{% endblock %}</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-        <link href="{% static 'network/css/styles.css' %}" rel="stylesheet">
+        <link href="{% sass_src 'scss/main.scss' %}" rel="stylesheet">
         <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     </head>
     <body>
@@ -20,12 +20,12 @@
                     <li class="nav-item">
                         <a class="nav-link"
                         href="{% url 'profile_about' user.profile.username %}"
-                         ><strong>{{ user.email }}</strong></a>
+                         ><strong>{{ user.profile.username }}</strong></a>
                     </li>
                 {% endif %}
 
                 <li class="nav-item">
-                  <a class="nav-link" href="{% url 'index' %}">All Posts</a>
+                  <a class="nav-link" href="{% url 'post_list' %}">All Posts</a>
                 </li>
                 {% if user.is_authenticated %}
                     <li class="nav-item">
