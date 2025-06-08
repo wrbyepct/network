@@ -2,7 +2,7 @@
 
 from django.db import migrations, models
 
-import network.tools.image
+import network.tools.media
 
 
 class Migration(migrations.Migration):
@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
                 blank=True,
                 default="defaults/zen.png",
                 null=True,
-                upload_to=network.tools.image.generate_file_path,
+                upload_to=network.tools.media.generate_file_path,
             ),
         ),
     ]
