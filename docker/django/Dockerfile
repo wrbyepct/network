@@ -19,7 +19,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
     libpq-dev \
     && pip install --upgrade pip \
     && pip install poetry==1.7.1 \
-    && poetry install --no-root --no-ansi --with qa
+    && poetry install --no-root --no-ansi --with qa,dev
 
 
 FROM python AS runner

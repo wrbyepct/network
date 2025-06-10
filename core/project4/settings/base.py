@@ -31,6 +31,8 @@ THIRD_PARTY_APPS = [
     "phonenumber_field",
     # SCSS
     "sass_processor",
+    # Debug
+    "django_extensions",
 ]
 
 INSTALLED_APPS = BASE_APPS + MY_APPS + THIRD_PARTY_APPS
@@ -66,11 +68,6 @@ TEMPLATES = [
     },
 ]
 
-# SCSS
-STATICFILES_FINDERS = [
-    "sass_processor.finders.CssFinder",
-]
-SASS_PROCESSOR_ROOT = BASE_DIR / "static"
 
 WSGI_APPLICATION = "project4.wsgi.application"
 
