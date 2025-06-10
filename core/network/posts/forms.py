@@ -4,7 +4,7 @@ from django import forms
 
 from .constants import ALLOWED_POST_IMAGE_NUM
 from .models import Post, PostMedia
-from .validators import validate_image_extension
+from .validators import validate_image_extension, validate_video_extension
 
 
 class MultipleFileInput(forms.ClearableFileInput):
@@ -54,6 +54,7 @@ class PostForm(forms.ModelForm):
         ),
     )
     images = MultipleFileField(required=False, validators=[validate_image_extension])
+    video = forms.FileField(required=False, validators=[validate_video_extension])
 
     class Meta:
         model = Post
@@ -62,6 +63,7 @@ class PostForm(forms.ModelForm):
     def save_media(self, post):
         """Save media(images/vidoe) after validation if any."""
         images = self.cleaned_data.get("images")
+        video = self.cleaned_data.get("video")
         if images:
             PostMedia.objects.bulk_create(
                 [
@@ -73,4 +75,11 @@ class PostForm(forms.ModelForm):
                     )
                     for index, image in enumerate(images, start=1)
                 ]
+            )
+        if video:
+            PostMedia.objects.create(
+                post=post,
+                file=video,
+                type=PostMedia.MediaType.VIDEO,
+                order=100,
             )
