@@ -29,10 +29,11 @@
                 name="video"
                 id="video-upload"
                 accept="video/*"
-                class="d-none"
                 x-ref="videoUpload"
-                multiple
             />
+            {% for error in form.video.errors %}
+                <div class="error">{{ error }}</div>
+            {% endfor %}
         </div>
            <button class="btn btn-primary w-100" type="submit">Submit</button>
         </form>
