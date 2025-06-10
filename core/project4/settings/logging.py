@@ -31,7 +31,7 @@ LOGGING = {
         "django": {
             "handlers": ["console"],
             "level": "INFO",  # Use DEBUG for development
-            "propagate": False,
+            "propagate": True,
         },
     },
 }
