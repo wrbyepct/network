@@ -30,7 +30,7 @@ class Post(TimestampedModel):
 
     def __str__(self) -> str:
         """Return string <user-profile-username>'s post: <post-title>."""
-        return f"{self.user.profile.username}'s post: {self.title}"
+        return f"Post by: {self.user.profile.username}"
 
 
 class PostLike(TimestampedModel):
@@ -61,6 +61,19 @@ class PostMedia(TimestampedModel):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="medias")
     type = models.CharField(max_length=10, choices=MediaType.choices)
     order = models.PositiveSmallIntegerField(default=0)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["post", "order"], name="Unique order per post."
+            )
+        ]
+
+    def __str__(self) -> str:
+        """Return string "Media Type: {self.type}. Order: {self.order}. From post: {self.post.pkid}."""
+        return (
+            f"Media Type: {self.type}. Order: {self.order}. From post: {self.post.pkid}"
+        )
 
     def is_image(self):
         """Check the media if type is image."""

@@ -8,6 +8,14 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = str(BASE_DIR / "network" / "media")
 
 
+# SCSS
+STATICFILES_FINDERS = [
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",  # ← important for admin!
+    "sass_processor.finders.CssFinder",
+]
+SASS_PROCESSOR_ROOT = BASE_DIR / "static"
+
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",  # default for admin
     "allauth.account.auth_backends.AuthenticationBackend",  # allows allauth to handle logins
