@@ -1,8 +1,74 @@
 {% extends 'network/layout.html' %} 
 
 {% block body %}
-    <div>This is going to be Post List View</div>
+    
     <div>
         <a class="text-dark text-decoration-none" href={% url 'post_create' %}>Create post</a>
     </div>
+    <div class="container mt-4">
+        <div class="row">
+          <div class="col-lg-8 mx-auto">
+            {% for post in posts %}
+              <div class="card mb-4 shadow-sm">
+                <!-- Card Header -->
+                <div class="card-header d-flex align-items-center bg-white border-bottom">
+                  <img src="{{ post.user.profile.profile_picture.url }}"
+                       alt="avatar"
+                       class="rounded-circle me-3"
+                       width="48" height="48">
+                  <div>
+                    <strong>{{ post.user.profile.username }}</strong><br>
+                    <small class="text-muted">{{ post.created_at|date:"M d, Y H:i" }}</small>
+                  </div>
+                </div>
+      
+                <!-- Card Body -->
+                <div class="card-body">
+                  <p class="mb-3">{{ post.content }}</p>
+      
+                  {% if post.medias.all %}
+                    <div id="carousel{{ forloop.counter }}" class="carousel slide" data-bs-ride="carousel">
+                      <div class="carousel-inner rounded">
+                        {% for media in post.medias.all %}
+                          <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                            {% if media.is_image %}
+                              <img src="{{ media.file.url }}" class="img-fluid w-100" alt="media image">
+                            {% elif media.is_video %}
+                              <video class="w-100" controls>
+                                <source src="{{ media.file.url }}">
+                                Your browser does not support the video tag.
+                              </video>
+                            {% endif %}
+                          </div>
+                        {% endfor %}
+                      </div>
+      
+                      {% if post.medias.count > 1 %}
+                        <button class="carousel-control-prev" type="button"
+                                data-bs-target="#carousel{{ forloop.counter }}" data-bs-slide="prev">
+                          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                          <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button"
+                                data-bs-target="#carousel{{ forloop.counter }}" data-bs-slide="next">
+                          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                          <span class="visually-hidden">Next</span>
+                        </button>
+                      {% endif %}
+                    </div>
+                  {% endif %}
+                </div>
+      
+                <!-- Card Footer -->
+                <div class="card-footer bg-white d-flex justify-content-between align-items-center">
+                  <span class="text-muted">👍 {{ post.like_count }} Likes</span>
+                  <a href="#" class="text-decoration-none">💬 Comment</a>
+                </div>
+              </div>
+            {% empty %}
+              <p class="text-center text-muted">No posts to display.</p>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
 {% endblock %} 
