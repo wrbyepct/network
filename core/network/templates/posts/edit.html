@@ -1,0 +1,82 @@
+{% extends 'network/layout.html' %}
+
+{% block body %}
+
+<div class="container py-5">
+    {% for error in form.non_field_errors %}
+        <div class="text-danger">{{error}}</div>
+    {% endfor %}
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card shadow-sm">
+        <div class="card-header bg-light">
+          <h5 class="mb-0">Edit Post</h5>
+        </div>
+
+        <div class="card-body">
+          <form method="post" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
+
+            <!-- Content -->
+            <div class="mb-4">
+              {{ form.content }}
+              {{ form.content.errors }}
+            </div>
+
+            <!-- Existing Media Preview with Delete Checkboxes -->
+            {% if post.medias.all %}
+            <div class="mb-4">
+                <label class="form-label">Existing Media</label>
+                <div class="row g-3">
+                {% for media in post.medias.all %}
+                    <div class="col-6 col-md-4">
+                    <div class="border p-2 rounded position-relative">
+                        {% if media.is_image %}
+                        <img src="{{ media.file.url }}" class="img-fluid rounded" alt="Image">
+                        {% elif media.is_video %}
+                        <video class="w-100 rounded" controls>
+                            <source src="{{ media.file.url }}">
+                            Your browser does not support the video tag.
+                        </video>
+                        {% endif %}
+
+                        <div class="form-check mt-2">
+                        <input class="form-check-input" type="checkbox" 
+                                name="delete_media" value="{{ media.id }}" 
+                                id="media-{{ media.id }}">
+                        <label class="form-check-label text-danger small" for="media-{{ media.id }}">
+                            Delete
+                        </label>
+                        </div>
+                    </div>
+                    </div>
+                {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Upload New Images -->
+            <div class="mb-4">
+              <label for="id_images" class="form-label">Add Images</label>
+              {{ form.images }}
+              {{ form.images.errors }}
+            </div>
+
+            <!-- Upload New Video -->
+            <div class="mb-4">
+              <label for="id_video" class="form-label">Add Video</label>
+              {{ form.video }}
+              {{ form.video.errors }}
+            </div>
+
+            <!-- Submit -->
+            <div class="d-grid">
+              <button type="submit" class="btn btn-primary">Update Post</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

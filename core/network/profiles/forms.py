@@ -30,3 +30,5 @@ class ProfileForm(forms.ModelForm):
             "bio",
             "birth_date",
         ]
+
+    # TODO check invalid picture upload
