@@ -1,9 +1,11 @@
 {% extends 'network/layout.html' %} 
 
 {% block body %}
-    
-
+{% for error in form.non_field_errors %}
+    <div class="text-danger">{{error}}</div>
+{% endfor %}   
     <div class="post-creator">
+ 
         <form action="{% url 'post_create' %}" method="POST" enctype="multipart/form-data" id="post-form">
             {% csrf_token %}
             <div cllass="mb-3">

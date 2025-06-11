@@ -6,10 +6,8 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   border: 1px solid #ddd; }
 
-.post-card {
-  margin-bottom: 2rem;
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
-  border-radius: 12px;
-  overflow: hidden; }
+.hover-bg-danger:hover {
+  background-color: #f8d7da !important;
+  /* Light red background */ }
 
 /*# sourceMappingURL=main.css.map */
