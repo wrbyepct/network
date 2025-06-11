@@ -15,4 +15,9 @@ urlpatterns = [
         views.PostCreateView.as_view(),
         name="post_create",
     ),
+    path(
+        "edit/<uuid:post_id>/",
+        views.PostEditView.as_view(),
+        name="post_edit",
+    ),
 ]

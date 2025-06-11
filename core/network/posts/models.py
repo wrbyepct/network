@@ -60,7 +60,7 @@ class PostMedia(TimestampedModel):
     file = models.FileField(upload_to=post_media_path, null=True, blank=True)
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="medias")
     type = models.CharField(max_length=10, choices=MediaType.choices)
-    order = models.PositiveSmallIntegerField(default=0)
+    order = models.SmallIntegerField(default=0)
 
     class Meta:
         constraints = [

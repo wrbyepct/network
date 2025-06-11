@@ -9,6 +9,13 @@ from .models import Post, PostMedia
 class PostAdmin(admin.ModelAdmin):
     """Custome Post admin."""
 
+    list_display = ["id", "username"]
+    list_display_links = ["id"]
+
+    def username(self, obj):
+        """Get username."""
+        return obj.user.profile.username
+
 
 @admin.register(PostMedia)
 class PostMediaAdmin(admin.ModelAdmin):

@@ -1,8 +1,9 @@
 """Post forms."""
 
 from django import forms
+from django.db.models import Max
 
-from .constants import ALLOWED_POST_IMAGE_NUM
+from .constants import ALLOWED_POST_IMAGE_NUM, ALLOWED_POST_VIDEO_NUM
 from .models import Post, PostMedia
 from .validators import validate_image_extension, validate_video_extension
 
@@ -24,16 +25,10 @@ class MultipleFileField(forms.FileField):
         kwargs.setdefault("widget", MultipleFileInput())
         super().__init__(*args, **kwargs)
 
-    def _validate_file_num(self, values):
-        if len(values) > ALLOWED_POST_IMAGE_NUM:
-            msg = f"You can only upload up to {ALLOWED_POST_IMAGE_NUM} images"
-            raise forms.ValidationError(msg)
-
     def clean(self, data, initial=None):
         """Override .clean method to allow validating each value & allowed upload amount."""
         single_file_clean = super().clean
         if isinstance(data, (list, tuple)):
-            self._validate_file_num(data)  # Check allowed upload number first
             result = [single_file_clean(d, initial) for d in data]
         else:
             result = [single_file_clean(data, initial)]
@@ -65,6 +60,7 @@ class PostForm(forms.ModelForm):
         images = self.cleaned_data.get("images")
         video = self.cleaned_data.get("video")
         if images:
+            max_order = self._get_max_order(post)
             PostMedia.objects.bulk_create(
                 [
                     PostMedia(
@@ -73,7 +69,7 @@ class PostForm(forms.ModelForm):
                         type=PostMedia.MediaType.IMAGE,
                         order=index,
                     )
-                    for index, image in enumerate(images, start=1)
+                    for index, image in enumerate(images, start=max_order + 1)
                 ]
             )
         if video:
@@ -81,5 +77,37 @@ class PostForm(forms.ModelForm):
                 post=post,
                 file=video,
                 type=PostMedia.MediaType.VIDEO,
-                order=100,
+                order=-1,
             )
+
+    def _get_max_order(self, post):
+        return post.medias.aggregate(max_order=Max("order"))["max_order"]
+
+    def clean(self):
+        """Validate allowed media amount."""
+        cleaned_data = super().clean()
+        self._validate_allowed_media_num(
+            objs=cleaned_data.get("images"),
+            media_type=PostMedia.MediaType.IMAGE,
+            limit_num=ALLOWED_POST_IMAGE_NUM,
+        )
+        self._validate_allowed_media_num(
+            objs=cleaned_data.get("video"),
+            media_type=PostMedia.MediaType.VIDEO,
+            limit_num=ALLOWED_POST_VIDEO_NUM,
+        )
+        return cleaned_data
+
+    def _validate_allowed_media_num(self, objs, media_type, limit_num):
+        post = self.instance
+        if post.pk:
+            existing_count = PostMedia.objects.filter(
+                type=media_type, post=self.instance
+            ).count()
+        else:
+            existing_count = 0
+        new_upload_count = len(objs or [])
+        total = existing_count + new_upload_count
+        if total > limit_num:
+            msg = f"You can only upload up to {limit_num} {media_type}"
+            raise forms.ValidationError(msg)
