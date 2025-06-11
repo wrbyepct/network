@@ -3,10 +3,10 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView
+from django.views.generic import CreateView, ListView, UpdateView
 
 from .forms import PostForm
-from .models import Post
+from .models import Post, PostMedia
 
 # Create your views here.
 
@@ -25,7 +25,7 @@ class PostListView(ListView):
 
 
 class PostCreateView(LoginRequiredMixin, CreateView):
-    """Post Creations View."""
+    """Post Creation View."""
 
     template_name = "posts/create.html"
     form_class = PostForm
@@ -38,4 +38,26 @@ class PostCreateView(LoginRequiredMixin, CreateView):
             self.object = form.save()
             form.save_media(self.object)
 
+        return super().form_valid(form)
+
+
+class PostEditView(LoginRequiredMixin, UpdateView):
+    """Post update view."""
+
+    template_name = "posts/edit.html"
+    form_class = PostForm
+    success_url = reverse_lazy("post_list")
+
+    def get_object(self, queryset=None):
+        """Return the requesting post object."""
+        post_id = self.kwargs.get("post_id")
+        return Post.objects.get(id=post_id)
+
+    def form_valid(self, form):
+        """Handle deleting old files and add new files."""
+        delete_ids = self.request.POST.getlist("delete_media")
+
+        with transaction.atomic():
+            PostMedia.objects.filter(id__in=delete_ids).delete()
+            form.save_media(post=self.get_object())
         return super().form_valid(form)

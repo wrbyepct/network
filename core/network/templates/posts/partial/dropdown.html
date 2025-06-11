@@ -1,0 +1,10 @@
+<div class="btn-group ms-auto p-2">
+    <button class="btn btn-lg dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        ⋮
+    </button>
+    <ul class="dropdown-menu p-0">
+        <li><a class="dropdown-item py-1" href="{% url 'post_edit' post.id %}">Edit</a></li>
+        <li><hr class="dropdown-divider m-0"></li>
+        <li><a class="dropdown-item py-1 text-danger hover-bg-danger" href="#">Delete</a></li>
+    </ul>
+</div>
