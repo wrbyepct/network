@@ -22,7 +22,7 @@ class Post(TimestampedModel):
 
     objects = PostManger()
 
-    class Meta:
+    class Meta(TimestampedModel.Meta):
         indexes = [
             models.Index(fields=["-created_at"]),
             models.Index(fields=["user", "-created_at"]),

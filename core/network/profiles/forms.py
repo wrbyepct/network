@@ -15,7 +15,8 @@ class ProfileForm(forms.ModelForm):
         initial="TW",
     )
     birth_date = forms.DateField(
-        widget=DateInput(attrs={"type": "date", "class": "form-control"})
+        widget=DateInput(attrs={"type": "date", "class": "form-control"}),
+        required=False,
     )
 
     class Meta:
