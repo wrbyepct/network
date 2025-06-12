@@ -2,8 +2,9 @@
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
+from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView, UpdateView
+from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
 from .forms import PostForm
 from .models import Post, PostMedia
@@ -41,6 +42,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
+# TODO add permissions later
 class PostEditView(LoginRequiredMixin, UpdateView):
     """Post update view."""
 
@@ -51,7 +53,7 @@ class PostEditView(LoginRequiredMixin, UpdateView):
     def get_object(self, queryset=None):
         """Return the requesting post object."""
         post_id = self.kwargs.get("post_id")
-        return Post.objects.get(id=post_id)
+        return get_object_or_404(Post, id=post_id, user=self.request.user)
 
     def form_valid(self, form):
         """Handle deleting old files and add new files."""
@@ -61,3 +63,14 @@ class PostEditView(LoginRequiredMixin, UpdateView):
             PostMedia.objects.filter(id__in=delete_ids).delete()
             form.save_media(post=self.get_object())
         return super().form_valid(form)
+
+
+class PostDeleteView(DeleteView):
+    """Post Delete View."""
+
+    success_url = reverse_lazy("post_list")
+
+    def get_object(self, queryset=None):
+        """Return the requesting post object."""
+        post_id = self.kwargs.get("post_id")
+        return get_object_or_404(Post, id=post_id, user=self.request.user)
