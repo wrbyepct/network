@@ -69,9 +69,12 @@ class PostEditView(LoginRequiredMixin, UpdateView):
 class PostDeleteView(DeleteView):
     """Post Delete View."""
 
-    success_url = reverse_lazy("post_list")
-
     def get_object(self, queryset=None):
         """Return the requesting post object."""
         post_id = self.kwargs.get("post_id")
         return get_object_or_404(Post, id=post_id, user=self.request.user)
+
+    def get_success_url(self):
+        """Redirect to referring page after deletion."""
+        referer = self.request.META.get("HTTP_REFERER")
+        return referer or reverse_lazy("post_list")
