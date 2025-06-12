@@ -12,6 +12,8 @@ from .models import Post, PostMedia
 # Create your views here.
 
 
+# TODO allow user to click avatar picture and get directed to their profile page
+# TODO allow like/unlike the post
 class PostListView(ListView):
     """Post List View."""
 
@@ -22,7 +24,7 @@ class PostListView(ListView):
 
     def get_queryset(self):
         """Get optimized post queryset."""
-        return Post.objects.select_related("user__profile").prefetch_related("medias")
+        return Post.objects.for_list_data()
 
 
 class PostCreateView(LoginRequiredMixin, CreateView):
