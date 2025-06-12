@@ -12,7 +12,6 @@ from .models import Post, PostMedia
 # Create your views here.
 
 
-# TODO allow user to click avatar picture and get directed to their profile page
 # TODO allow like/unlike the post
 class PostListView(ListView):
     """Post List View."""
@@ -44,7 +43,6 @@ class PostCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-# TODO add permissions later
 class PostEditView(LoginRequiredMixin, UpdateView):
     """Post update view."""
 
@@ -67,6 +65,7 @@ class PostEditView(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 
+# TODO return to the last stay page after deletion
 class PostDeleteView(DeleteView):
     """Post Delete View."""
 
