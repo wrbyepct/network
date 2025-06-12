@@ -81,7 +81,7 @@ class PostForm(forms.ModelForm):
             )
 
     def _get_max_order(self, post):
-        return post.medias.aggregate(max_order=Max("order"))["max_order"]
+        return post.medias.aggregate(max_order=Max("order"))["max_order"] or 0
 
     def clean(self):
         """Validate allowed media amount."""
