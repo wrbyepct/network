@@ -28,8 +28,16 @@ class ProfileEditView(LoginRequiredMixin, UpdateView):
 class ProfileBaseTabView(TemplateView):
     """Profile base view."""
 
+    def get_template_names(self):
+        """Dynamically return partial or full template based on requests."""
+        return f"profiles/tabs/{self.get_url_query()}.html"
+
     def get_url_query(self):
-        """Get partial query from htmx request."""
+        """
+        Get partial query from htmx request and return partial path.
+
+        Or return full page path
+        """
         q = self.request.GET.get("partial_request", None)
         q = q if q in profile_tabs else None  # Prevent invalid requests.
         # Return partial html or full tab profile html path
@@ -39,34 +47,37 @@ class ProfileBaseTabView(TemplateView):
             else f"full/{self.request.path.rstrip('/').split('/')[-1]}"
         )
 
-    def get_template_names(self):
-        """Dynamically return partial or full template."""
-        return f"profiles/tabs/{self.get_url_query()}.html"
-
     def get_context_data(self, **kwargs):
         """Provide user profile and profile tab context."""
         context = super().get_context_data(**kwargs)
         profile = get_object_or_404(Profile, username=self.kwargs["username"])
+
         context["profile"] = profile
         context["tabs"] = profile_tabs
+        context["current_tab"] = self._get_tab_name()
         return context
+
+    def _get_tab_name(self):
+        url = self.get_url_query()
+
+        return url.split("/")[-1]
 
 
 # Tab views
 class ProfilePhotosView(ProfileBaseTabView):
-    """Profile photos view."""
+    """Profile photos view that handles partial and full request."""
 
 
 class ProfileAboutView(ProfileBaseTabView):
-    """Profile about view."""
+    """Profile about view that handles partial and full request."""
 
 
 class ProfileFollowersView(ProfileBaseTabView):
-    """Profile Followers view."""
+    """Profile Followers view that handles partial and full request."""
 
 
 class ProfilePostsView(ProfileBaseTabView):
-    """Profile Posts view."""
+    """Profile Posts view that handles partial and full request."""
 
     def get_context_data(self, **kwargs):
         """Retrieve only user's posts."""
