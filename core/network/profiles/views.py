@@ -82,7 +82,8 @@ class ProfilePostsView(ProfileBaseTabView):
     def get_context_data(self, **kwargs):
         """Retrieve only user's posts."""
         context = super().get_context_data(**kwargs)
-        user = self.request.user
+        profile = get_object_or_404(Profile, username=self.kwargs["username"])
+        user = profile.user
         # self.request.user.posts can't use custom query methods
         context["posts"] = Post.objects.for_list_data().by_user(user=user)
         return context
