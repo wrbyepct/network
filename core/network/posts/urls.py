@@ -20,4 +20,9 @@ urlpatterns = [
         views.PostEditView.as_view(),
         name="post_edit",
     ),
+    path(
+        "delete/<uuid:post_id>/",
+        views.PostDeleteView.as_view(),
+        name="post_delete",
+    ),
 ]

@@ -5,6 +5,12 @@
     <ul class="dropdown-menu p-0">
         <li><a class="dropdown-item py-1" href="{% url 'post_edit' post.id %}">Edit</a></li>
         <li><hr class="dropdown-divider m-0"></li>
-        <li><a class="dropdown-item py-1 text-danger hover-bg-danger" href="#">Delete</a></li>
+        <li>  
+            <form method="post" action="{% url 'post_delete' post.id %}">
+                {% csrf_token %}
+                <button type="submit" class="dropdown-item py-1 text-danger hover-bg-danger border-0 bg-transparent w-100 text-start">
+                    Delete
+                </button>
+          </form></li>
     </ul>
 </div>
