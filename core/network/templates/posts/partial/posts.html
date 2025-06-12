@@ -5,10 +5,12 @@
           <div class="card mb-4 shadow-sm">
             <!-- Card Header -->
             <div class="card-header d-flex align-items-center bg-white border-bottom">
-              <img src="{{ post.user.profile.profile_picture.url }}"
-                   alt="avatar"
-                   class="rounded-circle me-3"
-                   width="48" height="48">
+                <a href="{% url 'profile_about' post.user.profile.username %}">
+                  <img src="{{ post.user.profile.profile_picture.url }}"
+                      alt="avatar"
+                      class="rounded-circle me-3"
+                      width="48" height="48">
+                </a>
               <div>
                 <strong>{{ post.user.profile.username }}</strong><br>
                 <small class="text-muted">{{ post.created_at|date:"M d, Y H:i" }}</small>
