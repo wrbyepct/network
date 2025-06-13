@@ -13,18 +13,6 @@ from .forms import ProfileForm
 from .models import Profile
 
 
-class ProfileEditView(LoginRequiredMixin, UpdateView):
-    """Profile creation view."""
-
-    template_name = "profiles/edit.html"
-    form_class = ProfileForm
-    success_url = reverse_lazy("profile_edit")
-
-    def get_object(self, queryset=None):
-        """Return the requesting user's Profile."""
-        return self.request.user.profile
-
-
 class ProfileBaseTabView(TemplateView):
     """Profile base view."""
 
@@ -63,7 +51,7 @@ class ProfileBaseTabView(TemplateView):
         return url.split("/")[-1]
 
 
-# Tab views
+# Profile Tab views
 class ProfilePhotosView(ProfileBaseTabView):
     """Profile photos view that handles partial and full request."""
 
@@ -87,3 +75,15 @@ class ProfilePostsView(ProfileBaseTabView):
         # self.request.user.posts can't use custom query methods
         context["posts"] = Post.objects.for_list_data().by_user(user=user)
         return context
+
+
+class ProfileEditView(LoginRequiredMixin, UpdateView):
+    """Profile creation view."""
+
+    template_name = "profiles/edit.html"
+    form_class = ProfileForm
+    success_url = reverse_lazy("profile_edit")
+
+    def get_object(self, queryset=None):
+        """Return the requesting user's Profile."""
+        return self.request.user.profile

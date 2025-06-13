@@ -1,15 +1,27 @@
 """Post views."""
 
+import logging
+
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db import transaction
+from django.db import IntegrityError, transaction
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DeleteView, ListView, UpdateView
+from django.views.generic import (
+    CreateView,
+    DeleteView,
+    ListView,
+    UpdateView,
+    View,
+)
 
 from .forms import PostForm
-from .models import Post, PostMedia
+from .models import Post, PostLike, PostMedia
 
 # Create your views here.
+
+logger = logging.getLogger(__name__)
 
 
 # TODO allow like/unlike the post
@@ -65,7 +77,6 @@ class PostEditView(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 
-# TODO return to the last stay page after deletion
 class PostDeleteView(DeleteView):
     """Post Delete View."""
 
@@ -78,3 +89,32 @@ class PostDeleteView(DeleteView):
         """Redirect to referring page after deletion."""
         referer = self.request.META.get("HTTP_REFERER")
         return referer or reverse_lazy("post_list")
+
+
+# TODO Make like/unlike view
+
+
+# TODO Fix liking a post without login the post corrupt with login page.
+class LikePost(LoginRequiredMixin, View):
+    """Like a post view that returns the partial html of likes count."""
+
+    def post(self, request, *args, **kwargs):
+        """Like the post and syncs with post's like_count field."""
+        user = self.request.user
+        post_id = self.kwargs.get("post_id")
+
+        post = get_object_or_404(Post, id=post_id)
+
+        with transaction.atomic():
+            try:
+                PostLike.objects.create(post=post, user=user)
+                post.like_count = post.likes.count()
+                post.save()
+            except IntegrityError:
+                msg = "Captured someone tries to like a post more than once."
+                logger.info(msg)
+
+        html = render_to_string(
+            "posts/partial/like_count.html", {"like_count": post.like_count}
+        )
+        return HttpResponse(html)
