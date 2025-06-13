@@ -25,4 +25,9 @@ urlpatterns = [
         views.PostDeleteView.as_view(),
         name="post_delete",
     ),
+    path(
+        "like/<uuid:post_id>",
+        views.LikePost.as_view(),
+        name="post_like",
+    ),
 ]
