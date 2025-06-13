@@ -100,14 +100,16 @@ class PostForm(forms.ModelForm):
 
     def _validate_allowed_media_num(self, objs, media_type, limit_num):
         post = self.instance
-        if post.pk:
+        if post.pk:  # when editing
             existing_count = PostMedia.objects.filter(
                 type=media_type, post=self.instance
             ).count()
         else:
             existing_count = 0
+
         new_upload_count = len(objs or [])
         total = existing_count + new_upload_count
+
         if total > limit_num:
             msg = f"You can only upload up to {limit_num} {media_type}"
             raise forms.ValidationError(msg)
