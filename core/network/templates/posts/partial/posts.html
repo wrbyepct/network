@@ -69,9 +69,22 @@
             </div>
   
             <!-- Card Footer -->
-            <div class="card-footer bg-white d-flex justify-content-between align-items-center">
-              <span class="text-muted">👍 {{ post.like_count }} Likes</span>
-              <a href="#" class="text-decoration-none">💬 Comment</a>
+            <div class="card-footer bg-white d-flex justify-content-start align-items-center">
+              {% csrf_token %} 
+              <a
+                class="btn btn-sm btn-outline-danger border-0"
+                hx-post="{% url 'post_like' post.id %}"
+                hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                hx-target="#post-like"
+                hx-swap="innerHTML"
+                >
+              ❤️
+              </a>
+              <div id="post-like">
+                <span class="text-muted ps-1">{{ post.like_count }} Likes</span>
+              </div>
+
+              <a href="#" class="text-decoration-none ms-auto">💬 Comment</a>
             </div>
           </div>
         {% empty %}

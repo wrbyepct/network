@@ -21,7 +21,7 @@ LOGGING = {
     },
     "root": {
         "handlers": ["console"],
-        "level": "WARNING",  # Change to 'DEBUG' to see more logs
+        "level": "INFO",  # Change to 'DEBUG' to see more logs
     },
     "loggers": {
         "allauth": {
