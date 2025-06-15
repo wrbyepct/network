@@ -6,6 +6,7 @@ from . import views
 
 urlpatterns = [
     path("edit/", views.ProfileEditView.as_view(), name="profile_edit"),
+    # Tab views
     path(
         "<str:username>/about/",
         views.ProfileAboutView.as_view(),
@@ -26,4 +27,6 @@ urlpatterns = [
         views.ProfilePostsView.as_view(),
         name="profile_posts",
     ),
+    # Follow
+    path("<str:username>/follow/", views.FollowView.as_view(), name="follow"),
 ]
