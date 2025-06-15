@@ -90,16 +90,32 @@ class ProfileEditView(LoginRequiredMixin, UpdateView):
 
 
 # Follow/Unfollow
+# TODO redirect login if it's anonymous user
 class FollowView(View):
     """View to follow a user's profile."""
 
+    def perform_follow(self, profile, to_follow_profile):
+        """Peform follow and return message context."""
+        profile.follow(to_follow_profile)
+        msg = f"You followed {to_follow_profile.username}!"
+        return {"follow_message": msg}
+
+    def perform_unfollow(self, profile, to_unfollow_profile):
+        """Peform unfollow and return message context."""
+        profile.unfollows(to_unfollow_profile)
+        msg = f"Unfollowed {to_unfollow_profile.username}."
+        return {"follow_message": msg}
+
     def post(self, request, *args, **kwargs):
         """Follow a profile and return success message."""
-        to_follow_profile = get_object_or_404(Profile, username=kwargs.get("username"))
+        to_profile = get_object_or_404(Profile, username=kwargs.get("username"))
         profile = request.user.profile
-        profile.following.add(to_follow_profile)
 
-        msg = f"You followed {to_follow_profile.username}!"
-        context = {"follow_message": msg}
+        has_followed = profile.has_followed(to_profile)
+        if not has_followed:
+            context = self.perform_follow(profile, to_profile)
+
+        else:
+            context = self.perform_unfollow(profile, to_profile)
 
         return render(request, "profiles/partials/messages.html", context)
