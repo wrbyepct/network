@@ -18,7 +18,7 @@ class FollowMixin:
             message = "You cannot follow yourself."
             raise BadRequest(message)
 
-        profile.following.add(profile)
+        self.following.add(profile)
 
     def unfollow(self, profile):
         """Unfollow a profile."""
