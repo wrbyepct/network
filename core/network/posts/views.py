@@ -3,7 +3,7 @@
 import logging
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db import IntegrityError, transaction
+from django.db import transaction
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
@@ -96,23 +96,20 @@ class PostDeleteView(DeleteView):
 
 # TODO Fix liking a post without login the post corrupt with login page.
 class LikePost(LoginRequiredMixin, View):
-    """Like a post view that returns the partial html of likes count."""
+    """Like/Unline a post view that returns the partial html of likes count."""
 
     def post(self, request, *args, **kwargs):
         """Like the post and syncs with post's like_count field."""
         user = self.request.user
-        post_id = self.kwargs.get("post_id")
-
-        post = get_object_or_404(Post, id=post_id)
+        post = get_object_or_404(Post, id=self.kwargs.get("post_id"))
 
         with transaction.atomic():
-            try:
-                PostLike.objects.create(post=post, user=user)
-                post.like_count = post.likes.count()
-                post.save()
-            except IntegrityError:
-                msg = "Captured someone tries to like a post more than once."
-                logger.info(msg)
+            like, created = PostLike.objects.get_or_create(post=post, user=user)
+            if not created:
+                like.delete()
+
+            post.like_count = post.likes.count()
+            post.save()
 
         html = render_to_string(
             "posts/partial/like_count.html", {"like_count": post.like_count}

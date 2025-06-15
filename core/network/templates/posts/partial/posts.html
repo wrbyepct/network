@@ -1,3 +1,6 @@
+
+{% load post_extra %}
+
 <div class="container mt-4">
     <div class="row">
       <div class="col-lg-8 mx-auto">
@@ -75,12 +78,24 @@
                 class="btn btn-sm btn-outline-danger border-0"
                 hx-post="{% url 'post_like' post.id %}"
                 hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-                hx-target="#post-like"
+                hx-target="#post-like-{{ post.id }}"
                 hx-swap="innerHTML"
+                x-data="{'liked': {{ post|liked_by_user:request.user|yesno:'true,false' }}}"
+
                 >
-              ❤️
+                <span 
+                  @click="liked = !liked"
+                  class="heart-transition"
+                  >
+                  <template x-if="liked">
+                    <span>❤️</span>
+                  </template>
+                  <template x-if="!liked">
+                    <span>🤍</span>
+                  </template>
+                </span>
               </a>
-              <div id="post-like">
+              <div id="post-like-{{ post.id }}">
                 <span class="text-muted ps-1">{{ post.like_count }} Likes</span>
               </div>
 
