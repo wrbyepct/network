@@ -4,7 +4,11 @@
 <div class="container mt-5">
     <div class="d-flex justify-content-between">
         <h2>{{ profile.username }}'s Profile</h2>
-        <a href="{% url 'profile_edit' %}">Edit</a>
+        {% if profile.user == request.user %}
+          <a href="{% url 'profile_edit' %}">Edit</a>
+        {% else %}
+          <a href="#">Follow</a>
+        {% endif %}
     </div>
 
   <ul class="nav nav-tabs mb-3"

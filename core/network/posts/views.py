@@ -1,7 +1,5 @@
 """Post views."""
 
-import logging
-
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
 from django.http import HttpResponse, HttpResponseRedirect
@@ -19,12 +17,10 @@ from django.views.generic import (
 from .forms import PostForm
 from .models import Post, PostLike, PostMedia
 
-# Create your views here.
 
-logger = logging.getLogger(__name__)
-
-
-# TODO allow like/unlike the post
+# TODO (extra) cache the posts result
+# TODO (extra) make media load faster
+# TODO make about page posts also paginated (scroll loading)
 class PostListView(ListView):
     """Post List View."""
 
@@ -91,10 +87,6 @@ class PostDeleteView(DeleteView):
         return referer or reverse_lazy("post_list")
 
 
-# TODO Make like/unlike view
-
-
-# TODO Fix liking a post without login, the login page is squeezed in to like count field.
 class LikePost(View):
     """Like/Unlike a post view that returns the partial html of likes count."""
 
