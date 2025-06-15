@@ -4,7 +4,7 @@ import logging
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
@@ -94,9 +94,15 @@ class PostDeleteView(DeleteView):
 # TODO Make like/unlike view
 
 
-# TODO Fix liking a post without login the post corrupt with login page.
-class LikePost(LoginRequiredMixin, View):
-    """Like/Unline a post view that returns the partial html of likes count."""
+# TODO Fix liking a post without login, the login page is squeezed in to like count field.
+class LikePost(View):
+    """Like/Unlike a post view that returns the partial html of likes count."""
+
+    def dispatch(self, request, *args, **kwargs):
+        """Redirect to login page instead of sending back partial html."""
+        if not request.user.is_authenticated:
+            return HttpResponseRedirect(reverse_lazy("account_login"))
+        return super().dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         """Like the post and syncs with post's like_count field."""
