@@ -12,3 +12,7 @@
   .hover-bg-danger:hover {
     background-color: #f8d7da !important;  /* Light red background */
   }
+
+  .heart-transition {
+    transition: all 0.3s ease-in-out;
+  }
