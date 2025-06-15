@@ -1,13 +1,28 @@
 {% extends "network/layout.html" %}
 {% block body %}
+<!-- Follow toast -->
 
-<div class="container mt-5">
+<div id="follow_message">
+
+</div>
+
+<div 
+  class="container mt-5"
+  x-data="{'has_messages': '{{ messages|length|yesno:'true,false' }}'}"
+>
     <div class="d-flex justify-content-between">
         <h2>{{ profile.username }}'s Profile</h2>
         {% if profile.user == request.user %}
           <a href="{% url 'profile_edit' %}">Edit</a>
         {% else %}
-          <a href="#">Follow</a>
+          <a 
+            class="btn btn-outline-primary"
+            hx-post="{% url 'follow' profile.username %}"
+            hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+            hx-target="#follow_message"
+          >
+          Follow
+          </a>
         {% endif %}
     </div>
 

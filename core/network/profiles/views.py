@@ -2,9 +2,9 @@
 """Profile views."""
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView, UpdateView
+from django.views.generic import TemplateView, UpdateView, View
 
 from network.posts.models import Post
 
@@ -87,3 +87,19 @@ class ProfileEditView(LoginRequiredMixin, UpdateView):
     def get_object(self, queryset=None):
         """Return the requesting user's Profile."""
         return self.request.user.profile
+
+
+# Follow/Unfollow
+class FollowView(View):
+    """View to follow a user's profile."""
+
+    def post(self, request, *args, **kwargs):
+        """Follow a profile and return success message."""
+        to_follow_profile = get_object_or_404(Profile, username=kwargs.get("username"))
+        profile = request.user.profile
+        profile.following.add(to_follow_profile)
+
+        msg = f"You followed {to_follow_profile.username}!"
+        context = {"follow_message": msg}
+
+        return render(request, "profiles/partials/messages.html", context)
