@@ -102,7 +102,7 @@ class FollowView(View):
 
     def perform_unfollow(self, profile, to_unfollow_profile):
         """Peform unfollow and return message context."""
-        profile.unfollows(to_unfollow_profile)
+        profile.unfollow(to_unfollow_profile)
         msg = f"Unfollowed {to_unfollow_profile.username}."
         return {"follow_message": msg}
 
@@ -110,8 +110,8 @@ class FollowView(View):
         """Follow a profile and return success message."""
         to_profile = get_object_or_404(Profile, username=kwargs.get("username"))
         profile = request.user.profile
-
         has_followed = profile.has_followed(to_profile)
+
         if not has_followed:
             context = self.perform_follow(profile, to_profile)
 
