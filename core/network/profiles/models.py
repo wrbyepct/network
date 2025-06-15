@@ -24,6 +24,10 @@ class FollowMixin:
         """Unfollow a profile."""
         self.following.remove(profile)
 
+    def has_followed(self, profile):
+        """Check if a user has followed the profile."""
+        return self.following.filter(id=profile.id).exists()
+
 
 class Profile(TimestampedModel, FollowMixin):
     """User's Profile model."""
