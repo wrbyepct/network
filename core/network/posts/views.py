@@ -2,9 +2,8 @@
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import get_object_or_404
-from django.template.loader import render_to_string
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
 from django.views.generic import (
     CreateView,
@@ -99,7 +98,7 @@ class LikePost(View):
     def post(self, request, *args, **kwargs):
         """Like the post and syncs with post's like_count field."""
         user = self.request.user
-        post = get_object_or_404(Post, id=self.kwargs.get("post_id"))
+        post = get_object_or_404(Post, id=kwargs.get("post_id"))
 
         with transaction.atomic():
             like, created = PostLike.objects.get_or_create(post=post, user=user)
@@ -109,7 +108,8 @@ class LikePost(View):
             post.like_count = post.likes.count()
             post.save()
 
-        html = render_to_string(
-            "posts/partial/like_count.html", {"like_count": post.like_count}
+        return render(
+            request,
+            "posts/partial/like_count.html",
+            {"like_count": post.like_count},
         )
-        return HttpResponse(html)
