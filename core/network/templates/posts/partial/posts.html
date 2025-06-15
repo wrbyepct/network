@@ -107,4 +107,15 @@
         {% endfor %}
       </div>
     </div>
+    <!-- Pagination -->
+     <div class="d-flex justify-content-around">
+      {% if page_obj.has_next %}
+          <a href="?page={{ page_obj.next_page_number }}">Next</a>
+          <a href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+      {% elif page_obj.has_previous %}
+          <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+          <a href="?page={{ page_obj.paginator.start_index }}"> &laquo; First</a>
+      {% endif %}
+     </div>
+
   </div>
