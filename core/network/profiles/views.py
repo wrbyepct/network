@@ -39,7 +39,6 @@ class ProfileBaseTabView(TemplateView):
         """Provide user profile and profile tab context."""
         context = super().get_context_data(**kwargs)
         profile = get_object_or_404(Profile, username=self.kwargs["username"])
-
         context["profile"] = profile
         context["tabs"] = profile_tabs
         context["current_tab"] = self._get_tab_name()
@@ -90,7 +89,6 @@ class ProfileEditView(LoginRequiredMixin, UpdateView):
 
 
 # Follow/Unfollow
-# TODO redirect login if it's anonymous user
 class FollowView(View):
     """View to follow a user's profile."""
 
@@ -110,6 +108,7 @@ class FollowView(View):
         """Follow a profile and return success message."""
         to_profile = get_object_or_404(Profile, username=kwargs.get("username"))
         profile = request.user.profile
+
         has_followed = profile.has_followed(to_profile)
 
         if not has_followed:

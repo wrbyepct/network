@@ -11,4 +11,4 @@ logger = logging.getLogger(__name__)
 
 
 class CustomAccountAdapter(DefaultSocialAccountAdapter):
-    """Cust Sociaal account adapter."""
+    """Custom Sociaal account adapter."""

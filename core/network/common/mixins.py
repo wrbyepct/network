@@ -2,7 +2,7 @@
 
 
 class RefererRedirectMixin:
-    """Redirect mixinxs."""
+    """Redirect use referer first or fallback to default url."""
 
     def get_success_url(self):
         """Redirect to referring page after deletion."""
