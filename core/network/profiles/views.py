@@ -17,7 +17,7 @@ class ProfileBaseTabView(TemplateView):
     """Profile base view."""
 
     def get_template_names(self):
-        """Dynamically return partial or full template based on requests."""
+        """Dynamically return partial or full tab template based on requests."""
         return f"profiles/tabs/{self.get_url_query()}.html"
 
     def get_url_query(self):
