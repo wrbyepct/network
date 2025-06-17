@@ -4,7 +4,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView, UpdateView, View
+from django.views.generic import ListView, TemplateView, UpdateView, View
 
 from network.posts.models import Post
 
@@ -86,6 +86,21 @@ class ProfileEditView(LoginRequiredMixin, UpdateView):
     def get_object(self, queryset=None):
         """Return the requesting user's Profile."""
         return self.request.user.profile
+
+
+# Following list view
+
+
+class FollowingView(ListView):
+    """Return user's all following profiles."""
+
+    template_name = "profiles/following.html"
+    context_object_name = "following"
+
+    def get_queryset(self):
+        """Return user's all following profiles."""
+        profile = self.request.user.profile
+        return profile.following.all()
 
 
 # Follow/Unfollow
