@@ -29,4 +29,6 @@ urlpatterns = [
     ),
     # Follow
     path("<str:username>/follow/", views.FollowView.as_view(), name="follow"),
+    # Following
+    path("<str:username>/following/", views.FollowingView.as_view(), name="following"),
 ]

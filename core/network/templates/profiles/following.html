@@ -1,0 +1,37 @@
+{% extends "network/layout.html" %}
+{% block body %}
+
+    <div id="follow_message">
+
+    </div>
+    <div class="container-sm mt-5">
+        {% for profile in following %}
+            <div 
+                class="d-flex justify-content-between p-3 m-1"
+                x-data="{ has_followed: true}"
+            >
+                <div>
+                    <img src="{{ profile.profile_picture.url }}"
+                    alt="avatar"
+                    class="rounded-circle me-3"
+                    width="48" height="48">
+                    <span class="p-1">{{profile.username}}</span>
+                </div>
+                <a 
+                    class="btn d-flex align-items-center "
+                    @click="has_followed = !has_followed"
+                    :class="has_followed ? 'btn-primary' : 'btn-outline-primary'"
+                    hx-post="{% url 'follow' profile.username %}"
+                    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                    hx-target="#follow_message"
+                >
+                    <div class="my-auto" x-text="has_followed ? 'Followed' : 'Follow'"></div>
+                </a>
+            </div>
+        {% empty %}
+            <div class="text-muted">No following profiles yet.</div>
+        {% endfor %}
+    </div>
+
+
+{% endblock %}
