@@ -46,7 +46,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
         """Save images and videos to PostMedia if they are valid."""
         with transaction.atomic():
             form.instance.user = self.request.user
-            resp = super().form.save()
+            resp = super().form_valid(form)
             form.save_media(self.object)
 
         return resp
@@ -70,7 +70,7 @@ class PostEditView(LoginRequiredMixin, UpdateView):
 
         with transaction.atomic():
             PostMedia.objects.filter(id__in=delete_ids).delete()
-            resp = super().form.save()
+            resp = super().form_valid(form)
             form.save_media(post=self.object)
         return resp
 
