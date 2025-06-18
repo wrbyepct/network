@@ -65,8 +65,6 @@ class PostMedia(TimestampedModel):
         Profile,
         on_delete=models.CASCADE,
         related_name="medias",
-        null=True,
-        blank=True,
     )
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="medias")
 
@@ -98,7 +96,7 @@ class Album(TimestampedModel):
 
     name = models.CharField(max_length=255)
     profile = models.ForeignKey(
-        Profile, on_delete=models.CASCADE, related_name="albums", null=True, blank=True
+        Profile, on_delete=models.CASCADE, related_name="albums"
     )
     photos = models.ManyToManyField(PostMedia, related_name="albums")
 
