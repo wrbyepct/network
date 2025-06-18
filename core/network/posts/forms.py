@@ -68,6 +68,7 @@ class PostForm(forms.ModelForm):
                         file=image,
                         type=PostMedia.MediaType.IMAGE,
                         order=index,
+                        profile=post.user.profile,
                     )
                     for index, image in enumerate(images, start=max_order + 1)
                 ]
@@ -75,6 +76,7 @@ class PostForm(forms.ModelForm):
         if video:
             PostMedia.objects.create(
                 post=post,
+                profile=post.user.profile,
                 file=video,
                 type=PostMedia.MediaType.VIDEO,
                 order=-1,
