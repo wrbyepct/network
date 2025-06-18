@@ -2,15 +2,15 @@
 
 from django.conf import settings
 from django.db import models
+from django.utils.functional import cached_property
 
 from network.common.models import TimestampedModel
 from network.tools.media import post_media_path
 
 from .managers import PostManger
 
+
 # Create your models here.
-
-
 class Post(TimestampedModel):
     """Post model."""
 
@@ -58,9 +58,16 @@ class PostMedia(TimestampedModel):
         VIDEO = "video", "Video"
 
     file = models.FileField(upload_to=post_media_path, null=True, blank=True)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="medias")
-    type = models.CharField(max_length=10, choices=MediaType.choices)
     order = models.SmallIntegerField(default=0)
+    type = models.CharField(max_length=10, choices=MediaType.choices)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="medias",
+        null=True,
+        blank=True,
+    )
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="medias")
 
     class Meta:
         constraints = [
@@ -82,3 +89,22 @@ class PostMedia(TimestampedModel):
     def is_video(self):
         """Check the media if type is video."""
         return self.type == self.MediaType.VIDEO
+
+
+# Album model
+class Album(TimestampedModel):
+    """Album model for profile."""
+
+    name = models.CharField(max_length=255)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="albums"
+    )
+    photos = models.ManyToManyField(PostMedia, related_name="albums")
+
+    class Meta(TimestampedModel.Meta):
+        pass
+
+    @cached_property
+    def photo_count(self):
+        """Return photo count."""
+        return self.photos.all().count()
