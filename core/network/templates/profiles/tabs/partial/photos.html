@@ -1,6 +1,11 @@
 
 
 <div class="container">
+    <div class="d-flex justify-content-between mb-3">
+        <h2 class="text-dark">Photos</h2>
+        <a href="{% url 'post_create' %}">Upload New Photo/Video</a>
+    </div>
+
     <div class="row g-2">
   
       {% for media in profile.medias.all %}
@@ -12,14 +17,20 @@
                    class="img-fluid w-100 h-100 object-fit-cover" />
             
             {% elif media.is_video %}
+            <div class="position-relative position-relative rounded overflow-hidden shadow-sm"></div>
               <video class="w-100 h-100 object-fit-cover" muted preload="metadata">
                 <source src="{{ media.file.url }}" type="video/mp4">
                 Your browser does not support the video tag.
               </video>
               <!-- Play icon overlay -->
-              <div class="position-absolute top-50 start-50 translate-middle">
-                <i class="bi bi-play-circle-fill fs-1 text-white opacity-75"></i>
-              </div>
+              
+                <button 
+                  class="btn btn-light rounded-circle shadow position-absolute top-50 start-50 translate-middle"
+                  style="width: 48px; height: 48px;"
+                >
+                    <i class="bi bi-play-circle-fill fs-4 text-white opacity-75"></i>
+                </button>
+            </div>
             {% endif %}
   
           </div>
