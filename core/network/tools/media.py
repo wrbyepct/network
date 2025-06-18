@@ -9,7 +9,7 @@ def generate_file_path(instance, filename, path_prefix="uploads"):  # noqa: ARG0
     """
     Change uploaded image file name to uuid4 string + extension.
 
-    For example: uploads/<app_name>/<uuid4>.jpg
+    For example: uploads/APP_NAME/UUID4.jpg
     """
     path = Path(filename)
     ext = path.suffix
