@@ -10,7 +10,7 @@ startapp() {
 
 # migration
 migrations() {
-    docker compose -f local.yml exec web python -m manage makemigrations
+    docker compose -f local.yml exec web python -m manage makemigrations $@
 }
 
 migrate() {
