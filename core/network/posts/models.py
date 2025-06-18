@@ -5,6 +5,7 @@ from django.db import models
 from django.utils.functional import cached_property
 
 from network.common.models import TimestampedModel
+from network.profiles.models import Profile
 from network.tools.media import post_media_path
 
 from .managers import PostManger
@@ -60,8 +61,8 @@ class PostMedia(TimestampedModel):
     file = models.FileField(upload_to=post_media_path, null=True, blank=True)
     order = models.SmallIntegerField(default=0)
     type = models.CharField(max_length=10, choices=MediaType.choices)
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
+    profile = models.ForeignKey(
+        Profile,
         on_delete=models.CASCADE,
         related_name="medias",
         null=True,
@@ -96,8 +97,8 @@ class Album(TimestampedModel):
     """Album model for profile."""
 
     name = models.CharField(max_length=255)
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="albums"
+    profile = models.ForeignKey(
+        Profile, on_delete=models.CASCADE, related_name="albums", null=True, blank=True
     )
     photos = models.ManyToManyField(PostMedia, related_name="albums")
 
