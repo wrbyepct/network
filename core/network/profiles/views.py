@@ -19,22 +19,16 @@ class ProfileBaseTabView(TemplateView):
 
     def get_template_names(self):
         """Dynamically return partial or full tab template based on requests."""
-        return f"profiles/tabs/{self.get_url_query()}.html"
+        is_partial_request = self.request.GET.get("is_partial_request", None) == "true"
+        request_page_str = self.request.path.rstrip("/").split("/")[-1]
 
-    def get_url_query(self):
-        """
-        Get partial query from htmx request and return partial path.
-
-        Or return full page path
-        """
-        q = self.request.GET.get("partial_request", None)
-        q = q if q in profile_tabs else None  # Prevent invalid requests.
-        # Return partial html or full tab profile html path
-        return (
-            f"partial/{q}"
-            if q
-            else f"full/{self.request.path.rstrip('/').split('/')[-1]}"
+        sub_path = (
+            f"partial/{request_page_str}"
+            if is_partial_request
+            else f"full/{request_page_str}"
         )
+
+        return f"profiles/tabs/{sub_path}.html"
 
     def get_context_data(self, **kwargs):
         """Provide user profile and profile tab context."""
@@ -42,13 +36,9 @@ class ProfileBaseTabView(TemplateView):
         profile = get_object_or_404(Profile, username=self.kwargs["username"])
         context["profile"] = profile
         context["tabs"] = profile_tabs
-        context["current_tab"] = self._get_tab_name()
+        context["current_tab"] = self.profile_tab
+
         return context
-
-    def _get_tab_name(self):
-        url = self.get_url_query()
-
-        return url.split("/")[-1]
 
 
 #####################
@@ -59,6 +49,8 @@ class ProfileBaseTabView(TemplateView):
 # Base photo view.
 class ProfilePhotoBaseView(ProfileBaseTabView):
     """Base view photo page."""
+
+    profile_tab = "photos"
 
     def get_context_data(self, **kwargs):
         """Provide photo tabs constant for frontend."""
@@ -91,7 +83,7 @@ class ProfilePhotoAlbumFullView(ProfilePhotoBaseView):
         return "profiles/tabs/full/photos.html"
 
 
-# Profile photos partial views
+# Base photos partial views
 class ProfilePhotoParialBaseView(TemplateView):
     """Base view for partial photo content."""
 
@@ -103,12 +95,14 @@ class ProfilePhotoParialBaseView(TemplateView):
         return context
 
 
+# Photos uploads view
 class ProfilePhotoUploadsPartialView(ProfilePhotoParialBaseView):
     """Render partail photo uploads view."""
 
     template_name = "profiles/tabs/partial/photo_partials/uploads.html"
 
 
+# photos albums view
 class ProfilePhotoAlbumsPartialView(ProfilePhotoParialBaseView):
     """Render partail photo albums view."""
 
@@ -118,13 +112,19 @@ class ProfilePhotoAlbumsPartialView(ProfilePhotoParialBaseView):
 class ProfileAboutView(ProfileBaseTabView):
     """Profile about view that handles partial and full request."""
 
+    profile_tab = "about"
+
 
 class ProfileFollowersView(ProfileBaseTabView):
     """Profile Followers view that handles partial and full request."""
 
+    profile_tab = "followers"
+
 
 class ProfilePostsView(ProfileBaseTabView):
     """Profile Posts view that handles partial and full request."""
+
+    profile_tab = "posts"
 
     def get_context_data(self, **kwargs):
         """Retrieve only user's posts."""
