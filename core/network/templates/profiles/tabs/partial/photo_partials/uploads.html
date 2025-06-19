@@ -1,0 +1,31 @@
+
+{% for media in profile.medias.all %}
+  <div class="col-6 col-md-4 col-lg-3">
+    <div class="position-relative ratio ratio-1x1 rounded overflow-hidden shadow-sm">
+
+      {% if media.is_image %}
+        <img src="{{ media.file.url }}" alt="Image"
+            class="img-fluid w-100 h-100 object-fit-cover" />
+      
+      {% elif media.is_video %}
+      <div class="position-relative position-relative rounded overflow-hidden shadow-sm"></div>
+        <video class="w-100 h-100 object-fit-cover" muted preload="metadata">
+          <source src="{{ media.file.url }}" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <!-- Play icon overlay -->
+        
+          <button 
+            class="btn btn-light rounded-circle shadow position-absolute top-50 start-50 translate-middle"
+            style="width: 48px; height: 48px;"
+          >
+              <i class="bi bi-play-circle-fill fs-4 text-white opacity-75"></i>
+          </button>
+      </div>
+      {% endif %}
+
+    </div>
+  </div>
+{% empty %}
+  <span class="text-muted">No photos yet! Upload more!</span>
+{% endfor %}
