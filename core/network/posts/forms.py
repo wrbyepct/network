@@ -94,7 +94,7 @@ class PostForm(forms.ModelForm):
             limit_num=ALLOWED_POST_IMAGE_NUM,
         )
         self._validate_allowed_media_num(
-            objs=[cleaned_data.get("video")],
+            objs=[cleaned_data.get("video")],  # clean data of video is not a list.
             media_type=PostMedia.MediaType.VIDEO,
             limit_num=ALLOWED_POST_VIDEO_NUM,
         )
