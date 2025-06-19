@@ -9,17 +9,17 @@ urlpatterns = [
     # Tab views
     path(
         "<str:username>/about/",
-        views.ProfileAboutView.as_view(),
+        views.AboutView.as_view(),
         name="profile_about",
     ),
     path(
         "<str:username>/followers/",
-        views.ProfileFollowersView.as_view(),
+        views.FollowersView.as_view(),
         name="profile_followers",
     ),
     path(
         "<str:username>/posts/",
-        views.ProfilePostsView.as_view(),
+        views.PostsView.as_view(),
         name="profile_posts",
     ),
     path(
@@ -31,16 +31,6 @@ urlpatterns = [
         "<str:username>/photos_albums/",
         views.ProfilePhotoAlbumFullView.as_view(),
         name="profile_photos_albums",
-    ),
-    path(
-        "<str:username>/photos/partial/uploads/",
-        views.ProfilePhotoUploadsPartialView.as_view(),
-        name="partial_photos_uploads",
-    ),
-    path(
-        "<str:username>/photos/partial/albums/",
-        views.ProfilePhotoAlbumsPartialView.as_view(),
-        name="partial_photos_albums",
     ),
     # Follow
     path("<str:username>/follow/", views.FollowView.as_view(), name="follow"),
