@@ -3,12 +3,13 @@
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, render
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.views.generic import ListView, TemplateView, UpdateView, View
 
 from network.posts.models import Post
 
-from .constants import profile_tabs
+from .constants import photo_tabs, profile_tabs
 from .forms import ProfileForm
 from .models import Profile
 
@@ -50,9 +51,68 @@ class ProfileBaseTabView(TemplateView):
         return url.split("/")[-1]
 
 
-# Profile Tab views
-class ProfilePhotosView(ProfileBaseTabView):
+#####################
+# Profile Tab views #
+#####################
+
+
+# Base photo view.
+class ProfilePhotoBaseView(ProfileBaseTabView):
+    """Base view photo page."""
+
+    def get_context_data(self, **kwargs):
+        """Provide photo tabs constant for frontend."""
+        context = super().get_context_data(**kwargs)
+        context["photo_tabs"] = photo_tabs
+        context["current_photo_tab"] = self.active_tab
+
+        # Render data for photo_content block in partial photos.html
+        context["photo_content"] = render_to_string(self.partial_template, context)
+        return context
+
+
+# Photo uploads view
+class ProfilePhotosView(ProfilePhotoBaseView):
     """Profile photos view that handles partial and full request."""
+
+    partial_template = "profiles/tabs/partial/photo_partials/uploads.html"
+    active_tab = "uploads"
+
+
+# Photo albums view
+class ProfilePhotoAlbumFullView(ProfilePhotoBaseView):
+    """View to handle profile albums page."""
+
+    partial_template = "profiles/tabs/partial/photo_partials/albums.html"
+    active_tab = "albums"
+
+    def get_template_names(self):
+        """Return full photo page html."""
+        return "profiles/tabs/full/photos.html"
+
+
+# Profile photos partial views
+class ProfilePhotoParialBaseView(TemplateView):
+    """Base view for partial photo content."""
+
+    def get_context_data(self, **kwargs):
+        """Provide user profile in context."""
+        profile = get_object_or_404(Profile, username=kwargs.get("username"))
+        context = super().get_context_data(**kwargs)
+        context["profile"] = profile
+        return context
+
+
+class ProfilePhotoUploadsPartialView(ProfilePhotoParialBaseView):
+    """Render partail photo uploads view."""
+
+    template_name = "profiles/tabs/partial/photo_partials/uploads.html"
+
+
+class ProfilePhotoAlbumsPartialView(ProfilePhotoParialBaseView):
+    """Render partail photo albums view."""
+
+    template_name = "profiles/tabs/partial/photo_partials/albums.html"
 
 
 class ProfileAboutView(ProfileBaseTabView):
@@ -72,6 +132,7 @@ class ProfilePostsView(ProfileBaseTabView):
         profile = get_object_or_404(Profile, username=self.kwargs["username"])
         user = profile.user
         # self.request.user.posts can't use custom query methods
+        # So we have to use Post model directly
         context["posts"] = Post.objects.for_list_data().by_user(user=user)
         return context
 
