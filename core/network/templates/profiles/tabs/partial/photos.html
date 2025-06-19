@@ -6,38 +6,37 @@
         <a href="{% url 'post_create' %}">Upload New Photo/Video</a>
     </div>
 
-    <div class="row g-2">
-  
-      {% for media in profile.medias.all %}
-        <div class="col-6 col-md-4 col-lg-3">
-          <div class="position-relative ratio ratio-1x1 rounded overflow-hidden shadow-sm">
-  
-            {% if media.is_image %}
-              <img src="{{ media.file.url }}" alt="Image"
-                   class="img-fluid w-100 h-100 object-fit-cover" />
-            
-            {% elif media.is_video %}
-            <div class="position-relative position-relative rounded overflow-hidden shadow-sm"></div>
-              <video class="w-100 h-100 object-fit-cover" muted preload="metadata">
-                <source src="{{ media.file.url }}" type="video/mp4">
-                Your browser does not support the video tag.
-              </video>
-              <!-- Play icon overlay -->
-              
-                <button 
-                  class="btn btn-light rounded-circle shadow position-absolute top-50 start-50 translate-middle"
-                  style="width: 48px; height: 48px;"
-                >
-                    <i class="bi bi-play-circle-fill fs-4 text-white opacity-75"></i>
-                </button>
-            </div>
+    <!-- Photo Tabs  -->
+    <div 
+      class="my-3" 
+      id="photos-tabs"
+      x-data="{ activeTab: '{{ current_photo_tab }}' }"
+    >
+      <ul class="nav nav-tabs">
+        {% for tab in photo_tabs %}
+        <li class="nav-item">
+          <a 
+            class="nav-link"
+            :class="{ 'active': activeTab === '{{ tab }}' }"
+            @click="activeTab = '{{ tab }}'"
+            hx-get="{% url 'partial_photos_'|add:tab profile.username %}"
+            hx-swap="innerHTML"
+            hx-target="#mediaContainer"
+            {% if tab == "albums" %}
+              hx-push-url="{% url 'profile_photos_albums' profile.username %}"
+            {% else %}
+              hx-push-url="{% url 'profile_photos' profile.username %}"
             {% endif %}
-  
-          </div>
-        </div>
-      {% empty %}
-        <span class="text-muted">No photos yet! Upload more!</span>
-      {% endfor %}
-  
+          >
+            {{ tab|title }}
+          </a>
+          
+        </li>
+        {% endfor %}
+      </ul>
     </div>
-  </div>
+
+      <div class="row g-2" id="mediaContainer">
+        {{ photo_content|safe }}
+      </div>
+</div>
