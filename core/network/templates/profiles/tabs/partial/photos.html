@@ -19,7 +19,8 @@
             class="nav-link"
             :class="{ 'active': activeTab === '{{ tab }}' }"
             @click="activeTab = '{{ tab }}'"
-            hx-get="{% url 'partial_photos_'|add:tab profile.username %}"
+            hx-get="{% url 'profile_photos' profile.username %}"
+            hx-vals='{"partial_query": "{{ tab }}"}'
             hx-swap="innerHTML"
             hx-target="#mediaContainer"
             {% if tab == "albums" %}
