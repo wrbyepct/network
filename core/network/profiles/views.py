@@ -5,8 +5,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, render
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
-from django.views.generic import ListView, TemplateView, UpdateView, View
+from django.views.generic import CreateView, ListView, TemplateView, UpdateView, View
 
+from network.posts.forms import AlbumForm
 from network.posts.models import Post
 
 from .constants import photo_tabs, profile_tabs
@@ -112,13 +113,16 @@ class PartialPhotoTabMixin:
 
         return query if query in photo_tabs else None
 
+    def get_partial_rendered_string(self, context):
+        """Get partial photo tab html string."""
+        return render_to_string(
+            self.get_photo_partial_template_path(),
+            {**context, "request": self.request},
+        )
+
     def get_photo_partial_template_path(self):
         """Get partial photo tab template path."""
         return self.PHOTO_PARTIALS[self.resolved_tab]
-
-    def get_partial_rendered_string(self, context):
-        """Get partial photo tab html string."""
-        return render_to_string(self.get_photo_partial_template_path(), context)
 
 
 # Base photo view.
@@ -188,6 +192,13 @@ class PostsView(ProfileBaseTabView):
         return context
 
 
+class AlbumCreateView(LoginRequiredMixin, CreateView):
+    """View to create Album."""
+
+    template_name = "albums/create.html"
+    form_class = AlbumForm
+
+
 class ProfileEditView(LoginRequiredMixin, UpdateView):
     """Profile creation view."""
 
@@ -201,8 +212,6 @@ class ProfileEditView(LoginRequiredMixin, UpdateView):
 
 
 # Following list view
-
-
 class FollowingView(ListView):
     """Return user's all following profiles."""
 
