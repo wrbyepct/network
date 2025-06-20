@@ -1,1 +1,9 @@
-<div class="text-muted">This will be albums</div>
+<div class="container-md w-100">
+    <div class="d-flex justify-content-between">
+        {% if request.user == profile.user %}
+            <a class="" href="{% url 'album_create' profile.username %}">Create new album</a>
+        {% endif %}
+        <div class="text-muted">Here will be albums</div>
+    </div>
+
+</div>
