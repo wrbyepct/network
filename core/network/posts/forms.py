@@ -4,7 +4,7 @@ from django import forms
 from django.db.models import Max
 
 from .constants import ALLOWED_POST_IMAGE_NUM, ALLOWED_POST_VIDEO_NUM
-from .models import Post, PostMedia
+from .models import Album, Post, PostMedia
 from .validators import validate_image_extension, validate_video_extension
 
 
@@ -117,3 +117,11 @@ class PostForm(forms.ModelForm):
             raise forms.ValidationError(msg)
 
     # TODO (extra) implement validate media size
+
+
+class AlbumForm(forms.ModelForm):
+    """Album form."""
+
+    class Meta:
+        model = Album
+        fields = ["name"]
