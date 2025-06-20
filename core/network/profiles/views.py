@@ -21,7 +21,7 @@ class TabMixin:
     active_tab = None
 
     def get_tab_context(self):
-        """Get tab context."""
+        """Get tab context. Update photo tab context if it's photo tab."""
         context = {
             "tabs": profile_tabs,
             "current_tab": self.profile_tab,
@@ -57,14 +57,18 @@ class TabMixin:
 class ProfileContextMixin:
     """Mixin to provide profile to context."""
 
-    def get_profile(self):
+    def dispatch(self, request, *args, **kwargs):
+        """Set profile instance on receiving request."""
+        self.set_profile()
+        return super().dispatch(request, *args, **kwargs)
+
+    def set_profile(self):
         """Get profile instance from argument or return 404."""
         self._profile = get_object_or_404(Profile, username=self.kwargs["username"])
-        return self._profile
 
     def get_profile_context(self):
         """Return get_profile_context."""
-        return {"profile": self.get_profile()}
+        return {"profile": self._profile}
 
 
 class ProfileBaseTabView(ProfileContextMixin, TabMixin, TemplateView):
@@ -96,15 +100,25 @@ class PartialPhotoTabMixin:
         "albums": "profiles/tabs/partial/photo_partials/albums.html",
     }
 
-    def get_partial_query(self):
-        """Get photo tabs partial query."""
-        query = self.request.GET.get("partial_query")
+    def dispatch(self, request, *args, **kwargs):
+        """Set photo partial key if any. And key for partial template."""
+        self.photo_partial_key = self.get_photo_partial_key()
+        self.resolved_tab = self.photo_partial_key or self.active_tab
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_photo_partial_key(self):
+        """Get photo tabs partial key in request. Return None if not found or not in allowed valid keys."""
+        query = self.request.GET.get("photo_partial_key")
 
         return query if query in photo_tabs else None
 
     def get_photo_partial_template_path(self):
         """Get partial photo tab template path."""
-        return self.PHOTO_PARTIALS[self.partial_query]
+        return self.PHOTO_PARTIALS[self.resolved_tab]
+
+    def get_partial_rendered_string(self, context):
+        """Get partial photo tab html string."""
+        return render_to_string(self.get_photo_partial_template_path(), context)
 
 
 # Base photo view.
@@ -113,23 +127,19 @@ class ProfilePhotoBaseView(PartialPhotoTabMixin, ProfileBaseTabView):
 
     profile_tab = "photos"
 
-    def dispatch(self, request, *args, **kwargs):
-        """Set photo partial query if any."""
-        self.partial_query = self.get_partial_query()
-        return super().dispatch(request, *args, **kwargs)
-
     def get_template_names(self):
         """Get partial template path if partial query exists, or return default full page."""
-        if self.partial_query:
+        if self.photo_partial_key:
             return self.get_photo_partial_template_path()
         return super().get_template_names()
 
     def get_context_data(self, **kwargs):
         """Provide photo tabs constant for frontend."""
         context = super().get_context_data(**kwargs)
-        # Render data for photo_content block in partial photos.html
-        if not self.partial_query:
-            context["photo_content"] = render_to_string(self.partial_template, context)
+
+        if self.photo_partial_key is None:  # Fallbacks to full page request
+            # Render data for photo_content block in partial photos.html
+            context["photo_content"] = self.get_partial_rendered_string(context)
         return context
 
 
@@ -137,7 +147,6 @@ class ProfilePhotoBaseView(PartialPhotoTabMixin, ProfileBaseTabView):
 class ProfilePhotosView(ProfilePhotoBaseView):
     """Profile photos view that handles partial and full request."""
 
-    partial_template = "profiles/tabs/partial/photo_partials/uploads.html"
     active_tab = "uploads"
 
 
@@ -145,7 +154,6 @@ class ProfilePhotosView(ProfilePhotoBaseView):
 class ProfilePhotoAlbumFullView(ProfilePhotoBaseView):
     """View to handle profile albums page."""
 
-    partial_template = "profiles/tabs/partial/photo_partials/albums.html"
     active_tab = "albums"
 
     def get_template_names(self):
@@ -209,7 +217,7 @@ class FollowingView(ListView):
 
 # Follow/Unfollow
 class FollowView(View):
-    """View to follow a user's profile."""
+    """View to follow/unfollow a user's profile."""
 
     def perform_follow(self, profile, to_follow_profile):
         """Peform follow and return message context."""
