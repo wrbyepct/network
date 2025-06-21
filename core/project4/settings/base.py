@@ -27,10 +27,9 @@ THIRD_PARTY_APPS = [
     "allauth.socialaccount.providers.google",
     "allauth.socialaccount.providers.facebook",
     "allauth.socialaccount.providers.twitter",
-    # Profile
-    "phonenumber_field",
-    # SCSS
-    "sass_processor",
+    "phonenumber_field",  # Profile
+    "widget_tweaks",  # Widget tweaks
+    "sass_processor",  # SCSS
     # Debug
     "django_extensions",
 ]

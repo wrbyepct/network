@@ -1,9 +1,36 @@
-<div class="container-md w-100">
-    <div class="d-flex justify-content-between">
-        {% if request.user == profile.user %}
-            <a class="" href="{% url 'album_create' profile.username %}">Create new album</a>
-        {% endif %}
-        <div class="text-muted">Here will be albums</div>
-    </div>
 
-</div>
+    <div class="container-md py-4">
+
+        <hr class="mb-4">
+    
+        <div class="row g-4">
+            {% if request.user == profile.user %}
+            <div class="col-6 col-md-4 col-lg-3">
+                <a href="{% url 'album_create' %}" class="text-decoration-none">
+                    <div class="card h-100 border-dashed text-center d-flex justify-content-center align-items-center p-3 bg-light">
+                        <div class="fs-1 text-primary">＋</div>
+                        <div class="fw-bold">Create New Album</div>
+                    </div>
+                </a>
+            </div>
+            {% endif %}
+    
+            {% for album in profile.albums.all %}
+            <div class="col-6 col-md-4 col-lg-3">
+                <div class="card h-100 shadow-sm">
+                    {% if album.photos.first %}
+                    <img src="{{ album.photos.first.file.url }}" class="card-img-top object-fit-cover" style="height: 180px;" alt="Album cover">
+                    {% else %}
+                    <div class="card-img-top d-flex align-items-center justify-content-center bg-secondary bg-opacity-25" style="height: 180px;">
+                        <span class="text-muted">No cover</span>
+                    </div>
+                    {% endif %}
+                    <div class="card-body text-center">
+                        <h5 class="card-title mb-1">{{ album.name }}</h5>
+                        <p class="text-muted small mb-0">{{ album.photo_count }} photo{{ album.photo_count|pluralize }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
