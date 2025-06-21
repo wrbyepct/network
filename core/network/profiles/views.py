@@ -4,7 +4,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, render
 from django.template.loader import render_to_string
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, ListView, TemplateView, UpdateView, View
 
 from network.posts.forms import AlbumForm
@@ -197,6 +197,17 @@ class AlbumCreateView(LoginRequiredMixin, CreateView):
 
     template_name = "albums/create.html"
     form_class = AlbumForm
+    success_url = reverse_lazy("profile_photos_albums")
+
+    def form_valid(self, form):
+        """Associate profile with album."""
+        form.instance.profile = self.request.user.profile
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        """Get profile album url."""
+        profile = self.request.user.profile
+        return reverse("profile_photos_albums", args=[profile.username])
 
 
 class ProfileEditView(LoginRequiredMixin, UpdateView):

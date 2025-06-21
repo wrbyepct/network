@@ -100,9 +100,6 @@ class Album(TimestampedModel):
     )
     photos = models.ManyToManyField(PostMedia, related_name="albums")
 
-    class Meta(TimestampedModel.Meta):
-        pass
-
     @cached_property
     def photo_count(self):
         """Return photo count."""

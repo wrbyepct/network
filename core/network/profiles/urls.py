@@ -34,7 +34,7 @@ urlpatterns = [
     ),
     # Album
     path(
-        "<str:username>/albums/create/",
+        "albums/create/",
         views.AlbumCreateView.as_view(),
         name="album_create",
     ),
