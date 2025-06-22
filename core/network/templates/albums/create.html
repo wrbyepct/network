@@ -7,7 +7,7 @@
         <h5 class="mb-0">Create New Album</h5>
       </div>
       <div class="card-body">
-        <form method="post" action="{% url 'album_create' %}">
+        <form method="post" action="{% url 'album_create' %}" enctype="multipart/form-data">
           {% csrf_token %}
           
           <!-- Album Name Field -->
@@ -18,7 +18,25 @@
               <div class="text-danger small">{{ form.name.errors }}</div>
             {% endif %}
           </div>
-  
+
+          <!-- Album Medias field  -->
+          <div class="mb-3">
+            <label for="{{ form.medias.id_for_label }}" class="form-label">Upload Media</label>
+            <input 
+                type="file" 
+                name="medias" 
+                id="{{ form.medias.id_for_label }}" 
+                multiple 
+                class="form-control{% if form.medias.errors %} is-invalid{% endif %}"
+            >
+            {% if form.medias.errors %}
+                <div class="invalid-feedback">
+                    {{ form.medias.errors }}
+                </div>
+            {% endif %}
+          </div>
+    
+
           <!-- Submit Button -->
           <button type="submit" class="btn btn-success">
             <i class="bi bi-plus-circle me-1"></i> Create Album
