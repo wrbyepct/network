@@ -23,10 +23,10 @@ def get_media_type(media):
     """Get media type."""
     content_type = media.content_type
 
-    if content_type.startswith("/image"):
+    if content_type.startswith("image/"):
         return MediaBaseModel.MediaType.IMAGE
 
-    if content_type.startswith("/video"):
+    if content_type.startswith("video/"):
         return MediaBaseModel.MediaType.VIDEO
     return forms.ValidationError(f"{media.name} Unknown file content type.")
 
