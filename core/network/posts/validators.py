@@ -25,3 +25,8 @@ validate_image_extension = partial(
 validate_video_extension = partial(
     _validate_extension, allowed_exts=ALLOWED_POST_VIDEO_EXT
 )
+
+
+validate_media_extension = partial(
+    _validate_extension, allowed_exts=(ALLOWED_POST_VIDEO_EXT + ALLOWED_POST_IMAGE_EXT)
+)
