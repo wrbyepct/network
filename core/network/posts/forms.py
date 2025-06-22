@@ -3,36 +3,32 @@
 from django import forms
 from django.db.models import Max
 
+from network.common.fields import MultipleFileField
+
 from .constants import ALLOWED_POST_IMAGE_NUM, ALLOWED_POST_VIDEO_NUM
-from .models import Album, Post, PostMedia
-from .validators import validate_image_extension, validate_video_extension
+from .models import Album, AlbumMedia, MediaBaseModel, Post, PostMedia
+from .validators import (
+    validate_image_extension,
+    validate_media_extension,
+    validate_video_extension,
+)
 
 
-class MultipleFileInput(forms.ClearableFileInput):
-    """Cutstom file input to allow multiple select."""
+def get_max_order(obj):
+    """Get max order of an object that has medias."""
+    return obj.medias.aggregate(max_order=Max("order"))["max_order"] or 0
 
-    allow_multiple_selected = True
 
+def get_media_type(media):
+    """Get media type."""
+    content_type = media.content_type
 
-class MultipleFileField(forms.FileField):
-    """
-    A file field that supports multiple file uploads.
+    if content_type.startswith("/image"):
+        return MediaBaseModel.MediaType.IMAGE
 
-    Uses a custom widget and overrides clean() to handle lists of files.
-    """
-
-    def __init__(self, *args, **kwargs) -> None:
-        kwargs.setdefault("widget", MultipleFileInput())
-        super().__init__(*args, **kwargs)
-
-    def clean(self, data, initial=None):
-        """Override .clean method to allow validating each value & allowed upload amount."""
-        single_file_clean = super().clean
-        if isinstance(data, (list, tuple)):
-            result = [single_file_clean(d, initial) for d in data]
-        else:
-            result = [single_file_clean(data, initial)]
-        return result
+    if content_type.startswith("/video"):
+        return MediaBaseModel.MediaType.VIDEO
+    return forms.ValidationError(f"{media.name} Unknown file content type.")
 
 
 class PostForm(forms.ModelForm):
@@ -49,7 +45,7 @@ class PostForm(forms.ModelForm):
         ),
     )
     images = MultipleFileField(required=False, validators=[validate_image_extension])
-    video = forms.FileField(required=False, validators=[validate_video_extension])
+    video = MultipleFileField(required=False, validators=[validate_video_extension])
 
     class Meta:
         model = Post
@@ -60,7 +56,7 @@ class PostForm(forms.ModelForm):
         images = self.cleaned_data.get("images")
         video = self.cleaned_data.get("video")
         if images:
-            max_order = self._get_max_order(post)
+            max_order = get_max_order(post)
             PostMedia.objects.bulk_create(
                 [
                     PostMedia(
@@ -82,20 +78,17 @@ class PostForm(forms.ModelForm):
                 order=-1,
             )
 
-    def _get_max_order(self, post):
-        return post.medias.aggregate(max_order=Max("order"))["max_order"] or 0
-
     def clean(self):
         """Validate allowed media amount."""
         cleaned_data = super().clean()
         self._validate_allowed_media_num(
             objs=cleaned_data.get("images"),
-            media_type=PostMedia.MediaType.IMAGE,
+            media_type=MediaBaseModel.MediaType.IMAGE,
             limit_num=ALLOWED_POST_IMAGE_NUM,
         )
         self._validate_allowed_media_num(
             objs=[cleaned_data.get("video")],  # clean data of video is not a list.
-            media_type=PostMedia.MediaType.VIDEO,
+            media_type=MediaBaseModel.MediaType.VIDEO,
             limit_num=ALLOWED_POST_VIDEO_NUM,
         )
         return cleaned_data
@@ -122,6 +115,25 @@ class PostForm(forms.ModelForm):
 class AlbumForm(forms.ModelForm):
     """Album form."""
 
+    medias = MultipleFileField(required=False, validators=[validate_media_extension])
+
     class Meta:
         model = Album
         fields = ["name"]
+
+    def save_medias(self, album):
+        """Save valid uploaded media to album."""
+        medias = self.cleaned_data.get("medias")
+        max_order = get_max_order(album)
+        if medias:
+            AlbumMedia.objects.bulk_create(
+                [
+                    AlbumMedia(
+                        album=album,
+                        file=media,
+                        order=index,
+                        type=get_media_type(media),
+                    )
+                    for index, media in enumerate(medias, start=max_order + 1)
+                ]
+            )
