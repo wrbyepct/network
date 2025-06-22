@@ -2,6 +2,7 @@
 """Profile views."""
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db import transaction
 from django.shortcuts import get_object_or_404, render
 from django.template.loader import render_to_string
 from django.urls import reverse, reverse_lazy
@@ -201,8 +202,11 @@ class AlbumCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         """Associate profile with album."""
-        form.instance.profile = self.request.user.profile
-        return super().form_valid(form)
+        with transaction.atomic():
+            form.instance.profile = self.request.user.profile
+            resp = super().form_valid(form)
+            form.save_medias(form)
+        return resp
 
     def get_success_url(self):
         """Get profile album url."""
