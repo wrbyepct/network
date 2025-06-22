@@ -51,8 +51,8 @@ class PostLike(TimestampedModel):
         ]
 
 
-class PostMedia(TimestampedModel):
-    """Post image model."""
+class MediaBaseModel(TimestampedModel):
+    """Media Base model."""
 
     class MediaType(models.TextChoices):
         IMAGE = "image", "Image"
@@ -61,14 +61,30 @@ class PostMedia(TimestampedModel):
     file = models.FileField(upload_to=post_media_path, null=True, blank=True)
     order = models.SmallIntegerField(default=0)
     type = models.CharField(max_length=10, choices=MediaType.choices)
+
+    class Meta(TimestampedModel.Meta):
+        abstract = True
+
+    def is_image(self):
+        """Check the media if type is image."""
+        return self.type == self.MediaType.IMAGE
+
+    def is_video(self):
+        """Check the media if type is video."""
+        return self.type == self.MediaType.VIDEO
+
+
+class PostMedia(MediaBaseModel):
+    """Post image model."""
+
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="medias")
     profile = models.ForeignKey(
         Profile,
         on_delete=models.CASCADE,
         related_name="medias",
     )
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="medias")
 
-    class Meta:
+    class Meta(MediaBaseModel.Meta):
         constraints = [
             models.UniqueConstraint(
                 fields=["post", "order"], name="Unique order per post."
@@ -81,14 +97,6 @@ class PostMedia(TimestampedModel):
             f"Media Type: {self.type}. Order: {self.order}. From post: {self.post.pkid}"
         )
 
-    def is_image(self):
-        """Check the media if type is image."""
-        return self.type == self.MediaType.IMAGE
-
-    def is_video(self):
-        """Check the media if type is video."""
-        return self.type == self.MediaType.VIDEO
-
 
 # Album model
 class Album(TimestampedModel):
@@ -98,9 +106,25 @@ class Album(TimestampedModel):
     profile = models.ForeignKey(
         Profile, on_delete=models.CASCADE, related_name="albums"
     )
-    photos = models.ManyToManyField(PostMedia, related_name="albums")
 
     @cached_property
-    def photo_count(self):
+    def media_count(self):
         """Return photo count."""
-        return self.photos.all().count()
+        return self.medias.all().count()
+
+
+class AlbumMedia(MediaBaseModel):
+    """Media model for album."""
+
+    album = models.ForeignKey(Album, on_delete=models.CASCADE, related_name="medias")
+
+    class Meta(MediaBaseModel.Meta):
+        constraints = [
+            models.UniqueConstraint(
+                fields=["album", "order"], name="Unique order per album."
+            )
+        ]
+
+    def __str__(self) -> str:
+        """Return string "Media Type: {self.type}. Order: {self.order}. From post: {self.post.pkid}."""
+        return f"Media Type: {self.type}. Order: {self.order}. From album: {self.album.name}"
