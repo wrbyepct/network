@@ -205,7 +205,7 @@ class AlbumCreateView(LoginRequiredMixin, CreateView):
         with transaction.atomic():
             form.instance.profile = self.request.user.profile
             resp = super().form_valid(form)
-            form.save_medias(form)
+            form.save_medias(self.object)
         return resp
 
     def get_success_url(self):
