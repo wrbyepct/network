@@ -38,6 +38,12 @@ urlpatterns = [
         views.AlbumCreateView.as_view(),
         name="album_create",
     ),
+    # Album
+    path(
+        "albums/<int:album_pk>/<str:username>",
+        views.AlbumDetailView.as_view(),
+        name="album_detail",
+    ),
     # Follow
     path("<str:username>/follow/", views.FollowView.as_view(), name="follow"),
     # Following

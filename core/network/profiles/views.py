@@ -6,7 +6,14 @@ from django.db import transaction
 from django.shortcuts import get_object_or_404, render
 from django.template.loader import render_to_string
 from django.urls import reverse, reverse_lazy
-from django.views.generic import CreateView, ListView, TemplateView, UpdateView, View
+from django.views.generic import (
+    CreateView,
+    DetailView,
+    ListView,
+    TemplateView,
+    UpdateView,
+    View,
+)
 
 from network.posts.forms import AlbumForm
 from network.posts.models import Post
@@ -191,6 +198,19 @@ class PostsView(ProfileBaseTabView):
         # So we have to use Post model directly
         context["posts"] = Post.objects.for_list_data().by_user(user=user)
         return context
+
+
+class AlbumDetailView(LoginRequiredMixin, DetailView):
+    """Album detail view."""
+
+    context_object_name = "album"
+    template_name = "profiles/album_detail.html"
+    pk_url_kwarg = "album_pk"
+
+    def get_queryset(self):
+        """Provide albums queryset of the requesting user."""
+        profile = get_object_or_404(Profile, username=self.kwargs.get("username"))
+        return profile.albums.all()
 
 
 class AlbumCreateView(LoginRequiredMixin, CreateView):
