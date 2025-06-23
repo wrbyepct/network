@@ -1,0 +1,59 @@
+{% extends 'network/layout.html' %}
+
+{% block body %}
+<div class="container py-4">
+
+  <!-- Album Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="h4 mb-0">{{ album.name }}</h2>
+      <p class="text-muted small mb-0">{{ album.media_count }} media item{{ album.media_count|pluralize }}</p>
+    </div>
+    <a href="{% url 'profile_photos_albums' album.profile.username %}" class="btn btn-outline-secondary btn-sm">
+      ← Back to albums
+    </a>
+  </div>
+
+  <!-- Media Grid -->
+  <div class="row g-3" id="mediaContainer">
+    {% for media in album.medias.all %}
+      <div class="col-6 col-md-4 col-lg-3">
+        <div class="position-relative ratio ratio-1x1 rounded overflow-hidden shadow-sm border">
+
+          {% if media.is_image %}
+            <img src="{{ media.file.url }}" alt="Album Image"
+              class="img-fluid w-100 h-100"
+              style="object-fit: cover;" />
+
+          {% elif media.is_video %}
+            <video class="w-100 h-100" muted preload="metadata" style="object-fit: cover;">
+              <source src="{{ media.file.url }}" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+
+            <!-- Play Icon Overlay -->
+            <button 
+              class="btn btn-light rounded-circle shadow position-absolute top-50 start-50 translate-middle"
+              style="width: 48px; height: 48px;"
+              aria-label="Play video"
+            >
+              <i class="bi bi-play-circle-fill fs-3 text-primary opacity-75"></i>
+            </button>
+          {% endif %}
+
+        </div>
+      </div>
+    {% empty %}
+      <!-- Empty State -->
+      <div class="col-12 text-center mt-5">
+        <i class="bi bi-image fs-1 text-muted d-block mb-2"></i>
+        <p class="text-muted">This album is empty. Upload something memorable!</p>
+        {% if request.user == album.profile.user %}
+          <a href="#" class="btn btn-primary btn-sm">Add Media</a>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+
+</div>
+{% endblock %}
