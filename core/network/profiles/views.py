@@ -16,7 +16,7 @@ from django.views.generic import (
 )
 
 from network.posts.forms import AlbumForm
-from network.posts.models import Album, Post
+from network.posts.models import Album, AlbumMedia, Post
 
 from .constants import photo_tabs, profile_tabs
 from .forms import ProfileForm
@@ -240,6 +240,13 @@ class AlbumUpdate(LoginRequiredMixin, UpdateView):
     template_name = "albums/edit.html"
     form_class = AlbumForm
 
+    def get_success_url(self):
+        """Get back to the request album detail page."""
+        album_pk = self.kwargs.get("album_pk")
+        user = self.request.user
+        profile = user.profile
+        return reverse("album_detail", args=[album_pk, profile.username])
+
     def get_object(self):
         """Return the specified album owned by the profile."""
         album_pk = self.kwargs.get("album_pk")
@@ -253,6 +260,15 @@ class AlbumUpdate(LoginRequiredMixin, UpdateView):
         album = self.object
         context["medias"] = album.medias.all()
         return context
+
+    def form_valid(self, form):
+        """Handle delete requested media and save new ones."""
+        delete_ids = self.request.POST.getlist("delete_media")
+        with transaction.atomic():
+            AlbumMedia.objects.filter(id__in=delete_ids).delete()
+            resp = super().form_valid(form)
+            form.save_medias(self.object)
+        return resp
 
 
 class ProfileEditView(LoginRequiredMixin, UpdateView):
