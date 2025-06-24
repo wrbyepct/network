@@ -16,7 +16,7 @@ from django.views.generic import (
 )
 
 from network.posts.forms import AlbumForm
-from network.posts.models import Post
+from network.posts.models import Album, Post
 
 from .constants import photo_tabs, profile_tabs
 from .forms import ProfileForm
@@ -232,6 +232,27 @@ class AlbumCreateView(LoginRequiredMixin, CreateView):
         """Get profile album url."""
         profile = self.request.user.profile
         return reverse("profile_photos_albums", args=[profile.username])
+
+
+class AlbumUpdate(LoginRequiredMixin, UpdateView):
+    """View to update album."""
+
+    template_name = "albums/edit.html"
+    form_class = AlbumForm
+
+    def get_object(self):
+        """Return the specified album owned by the profile."""
+        album_pk = self.kwargs.get("album_pk")
+        user = self.request.user
+
+        return get_object_or_404(Album, profile=user.profile, pk=album_pk)
+
+    def get_context_data(self, **kwargs):
+        """Provide existing medias in album in context."""
+        context = super().get_context_data(**kwargs)
+        album = self.object
+        context["medias"] = album.medias.all()
+        return context
 
 
 class ProfileEditView(LoginRequiredMixin, UpdateView):

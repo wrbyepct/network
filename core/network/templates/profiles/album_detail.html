@@ -16,6 +16,16 @@
 
   <!-- Media Grid -->
   <div class="row g-3" id="mediaContainer">
+    {% if request.user == album.profile.user %}
+      <div class="col-6 col-md-4 col-lg-3">
+          <a href="{% url 'album_edit' album.pk %}" class="text-decoration-none">
+              <div class="card h-100 border-dashed text-center d-flex justify-content-center align-items-center p-3 bg-light">
+                  <div class="fs-1 text-primary">＋</div>
+                  <div class="fw-bold">Add more phots</div>
+              </div>
+          </a>
+      </div>
+    {% endif %}
     {% for media in album.medias.all %}
       <div class="col-6 col-md-4 col-lg-3">
         <div class="position-relative ratio ratio-1x1 rounded overflow-hidden shadow-sm border">
