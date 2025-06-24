@@ -35,11 +35,36 @@
                 </div>
             {% endif %}
           </div>
-    
+          
+          <div class="row g-3">
+              {% for media in medias %}
+                <div class="col-6 col-md-4">
+                  <div class="border p-2 rounded position-relative">
+                      {% if media.is_image %}
+                        <img src="{{ media.file.url }}" class="img-fluid rounded" alt="Image">
+                      {% elif media.is_video %}
+                      <video class="w-100 rounded" controls>
+                          <source src="{{ media.file.url }}">
+                          Your browser does not support the video tag.
+                      </video>
+                      {% endif %}
+
+                      <div class="form-check mt-2">
+                      <input class="form-check-input" type="checkbox" 
+                              name="delete_media" value="{{ media.id }}" 
+                              id="media-{{ media.id }}">
+                      <label class="form-check-label text-danger small" for="media-{{ media.id }}">
+                          Delete
+                      </label>
+                      </div>
+                  </div>
+                </div>
+            {% endfor %}  
+          </div>
 
           <!-- Submit Button -->
           <button type="submit" class="btn btn-success">
-            <i class="bi bi-plus-circle me-1"></i> Create Album
+            <i class="bi bi-plus-circle me-1"></i> Update Album
           </button>
         </form>
       </div>
