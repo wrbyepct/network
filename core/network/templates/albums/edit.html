@@ -1,0 +1,48 @@
+{% extends 'network/layout.html' %}
+{% load widget_tweaks %}
+{% block body %}
+<div class="container mt-5">
+    <div class="card shadow-sm border-0">
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Edit Album</h5>
+      </div>
+      <div class="card-body">
+        <form method="post" action="{% url 'album_edit' album.pk %}" enctype="multipart/form-data">
+          {% csrf_token %}
+          
+          <!-- Album Name Field -->
+          <div class="mb-3">
+            <label for="{{ form.name.id_for_label }}" class="form-label">Album Name</label>
+            <input class="form-control" type="text" name="name" value="{{ form.name.value }}" > 
+            {% if form.name.errors %}
+              <div class="text-danger small ">{{ form.name.errors }}</div>
+            {% endif %}
+          </div>
+
+          <!-- Album Medias field  -->
+          <div class="mb-3">
+            <label for="{{ form.medias.id_for_label }}" class="form-label">Upload Media</label>
+            <input 
+                type="file" 
+                name="medias" 
+                id="{{ form.medias.id_for_label }}" 
+                multiple 
+                class="form-control{% if form.medias.errors %} is-invalid{% endif %}"
+            >
+            {% if form.medias.errors %}
+                <div class="invalid-feedback">
+                    {{ form.medias.errors }}
+                </div>
+            {% endif %}
+          </div>
+    
+
+          <!-- Submit Button -->
+          <button type="submit" class="btn btn-success">
+            <i class="bi bi-plus-circle me-1"></i> Create Album
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}
