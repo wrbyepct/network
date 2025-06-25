@@ -21,8 +21,9 @@ class AlbumForm(MediaMixin, forms.ModelForm):
     def save_medias(self, album):
         """Save valid uploaded media to album."""
         medias = self.cleaned_data.get("medias")
-        max_order = self.get_max_order(album)
+
         if medias:
+            max_order = self.get_max_order(album)
             AlbumMedia.objects.bulk_create(
                 [
                     AlbumMedia(
