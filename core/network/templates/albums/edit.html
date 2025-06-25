@@ -3,10 +3,22 @@
 {% block body %}
 <div class="container mt-5">
     <div class="card shadow-sm border-0">
+      <!-- Album Delete Button -->
+      <div class="my-2 text-end">
+        <form method="post" action="{% url 'album_delete' album.id %}" id="album-delete-form">
+          {% csrf_token %}
+          <button type="button" class="btn btn-outline-danger" id="album-delete-btn">
+            <i class="bi bi-dash-circle me-1"></i> Delete Album
+          </button>
+        </form>
+      </div>
+
+      <!-- Album Edit Form -->
       <div class="card-header bg-primary text-white">
         <h5 class="mb-0">Edit Album</h5>
       </div>
       <div class="card-body">
+ 
         <form method="post" action="{% url 'album_edit' album.pk %}" enctype="multipart/form-data">
           {% csrf_token %}
           
@@ -36,7 +48,8 @@
             {% endif %}
           </div>
           
-          <div class="row g-3">
+          <!-- List of existing Medias -->
+          <div class="row g-3 my-2">
               {% for media in medias %}
                 <div class="col-6 col-md-4">
                   <div class="border p-2 rounded position-relative">
@@ -67,7 +80,26 @@
             <i class="bi bi-plus-circle me-1"></i> Update Album
           </button>
         </form>
+ 
+
       </div>
-    </div>
   </div>
+</div>
+<script>
+  document.getElementById("album-delete-btn").addEventListener("click", function () {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        document.getElementById("album-delete-form").submit();
+      }
+    });
+  });
+</script>
 {% endblock %}
