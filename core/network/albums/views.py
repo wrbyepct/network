@@ -18,12 +18,12 @@ class AlbumDetailView(LoginRequiredMixin, DetailView):
 
     context_object_name = "album"
     template_name = "profiles/album_detail.html"
-    pk_url_kwarg = "album_pk"
 
-    def get_queryset(self):
-        """Provide albums queryset of the requesting user."""
+    def get_object(self, queryset=None):
+        """Directly return the album obect."""
         profile = get_object_or_404(Profile, username=self.kwargs.get("username"))
-        return profile.albums.all()
+
+        return get_object_or_404(Album, pk=self.kwargs.get("album_pk"), profile=profile)
 
 
 class AlbumCreateView(LoginRequiredMixin, CreateView):
@@ -36,7 +36,9 @@ class AlbumCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         """Associate profile with album."""
         with transaction.atomic():
-            form.instance.profile = self.request.user.profile
+            form.instance.profile = (
+                self.request.user.profile
+            )  # associate the profile with the album
             resp = super().form_valid(form)
             form.save_medias(self.object)
         return resp
