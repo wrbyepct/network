@@ -53,8 +53,6 @@ class Profile(TimestampedModel, FollowMixin):
         "self", symmetrical=False, related_name="following", blank=True
     )
 
-    # TODO implement Poto model for user to upload photos
-
     def __str__(self) -> str:
         """Return string Profile of the user: <user-email>."""
         return f"Profile of the user: {self.user.email}"
