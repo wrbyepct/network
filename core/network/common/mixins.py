@@ -39,3 +39,12 @@ class MediaMixin:
         if content_type.startswith("video/"):
             return MediaBaseModel.MediaType.VIDEO
         return ValidationError(f"{media.name} Unknown file content type.")
+
+
+class SetOwnerProfileMixin:
+    """Mixin for setting profile instance for later access."""
+
+    def dispatch(self, request, *args, **kwargs):
+        """Set profile instance for later access."""
+        self._profile = self.request.user.profile
+        return super().dispatch(request, *args, **kwargs)
