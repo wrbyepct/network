@@ -19,7 +19,6 @@ from .models import Post, PostLike, PostMedia
 
 # TODO (extra) cache the posts result
 # TODO (extra) make media load faster
-# TODO make about page posts also paginated (scroll loading)
 
 
 class PostListView(ListView):
