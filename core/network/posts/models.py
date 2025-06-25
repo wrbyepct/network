@@ -2,11 +2,9 @@
 
 from django.conf import settings
 from django.db import models
-from django.utils.functional import cached_property
 
-from network.common.models import TimestampedModel
+from network.common.models import MediaBaseModel, TimestampedModel
 from network.profiles.models import Profile
-from network.tools.media import post_media_path
 
 from .managers import PostManger
 
@@ -51,29 +49,6 @@ class PostLike(TimestampedModel):
         ]
 
 
-class MediaBaseModel(TimestampedModel):
-    """Media Base model."""
-
-    class MediaType(models.TextChoices):
-        IMAGE = "image", "Image"
-        VIDEO = "video", "Video"
-
-    file = models.FileField(upload_to=post_media_path, null=True, blank=True)
-    order = models.SmallIntegerField(default=0)
-    type = models.CharField(max_length=10, choices=MediaType.choices)
-
-    class Meta(TimestampedModel.Meta):
-        abstract = True
-
-    def is_image(self):
-        """Check the media if type is image."""
-        return self.type == self.MediaType.IMAGE
-
-    def is_video(self):
-        """Check the media if type is video."""
-        return self.type == self.MediaType.VIDEO
-
-
 class PostMedia(MediaBaseModel):
     """Post image model."""
 
@@ -96,35 +71,3 @@ class PostMedia(MediaBaseModel):
         return (
             f"Media Type: {self.type}. Order: {self.order}. From post: {self.post.pkid}"
         )
-
-
-# Album model
-class Album(TimestampedModel):
-    """Album model for profile."""
-
-    name = models.CharField(max_length=255)
-    profile = models.ForeignKey(
-        Profile, on_delete=models.CASCADE, related_name="albums"
-    )
-
-    @cached_property
-    def media_count(self):
-        """Return photo count."""
-        return self.medias.count()
-
-
-class AlbumMedia(MediaBaseModel):
-    """Media model for album."""
-
-    album = models.ForeignKey(Album, on_delete=models.CASCADE, related_name="medias")
-
-    class Meta(MediaBaseModel.Meta):
-        constraints = [
-            models.UniqueConstraint(
-                fields=["album", "order"], name="Unique order per album."
-            )
-        ]
-
-    def __str__(self) -> str:
-        """Return string "Media Type: {self.type}. Order: {self.order}. From post: {self.post.pkid}."""
-        return f"Media Type: {self.type}. Order: {self.order}. From album: {self.album.name}"
