@@ -25,7 +25,6 @@ from .models import Post, PostLike, PostMedia
 class PostListView(ListView):
     """Post List View."""
 
-    model = Post
     template_name = "posts/list.html"
     context_object_name = "posts"
     paginate_by = 10
