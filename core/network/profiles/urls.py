@@ -29,7 +29,7 @@ urlpatterns = [
     ),
     path(
         "<str:username>/photos_albums/",
-        views.PhotoAlbumFullView.as_view(),
+        views.PhotoAlbumView.as_view(),
         name="profile_photos_albums",
     ),
     # Follow

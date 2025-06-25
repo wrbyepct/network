@@ -51,6 +51,8 @@ class ProfilePhotoBaseView(PartialPhotoTabMixin, ProfileBaseTabView):
 
 
 # Photo uploads view
+# TODO infinite scroll loading for uploads tab
+# TODO click on the photo will take user to the post it's asscoiated
 class PhotosUploadsView(ProfilePhotoBaseView):
     """Profile photos view that handles partial and full request."""
 
@@ -58,7 +60,7 @@ class PhotosUploadsView(ProfilePhotoBaseView):
 
 
 # Photo albums view
-class PhotoAlbumFullView(ProfilePhotoBaseView):
+class PhotoAlbumView(ProfilePhotoBaseView):
     """View to handle profile albums page."""
 
     active_tab = "albums"
@@ -80,6 +82,7 @@ class FollowersView(ProfileBaseTabView):
     profile_tab = "followers"
 
 
+# TODO infinite scroll loading for posts tab
 class PostsView(ProfileBaseTabView):
     """Profile Posts view that handles partial and full request."""
 
