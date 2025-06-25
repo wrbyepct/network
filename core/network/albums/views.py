@@ -3,7 +3,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
 from django.shortcuts import get_object_or_404
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, UpdateView
 
 from network.common.mixins import SetOwnerProfileMixin
@@ -46,7 +46,7 @@ class AlbumCreateView(SetOwnerProfileMixin, LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         """Get profile album url."""
-        return reverse("profile_photos_albums", args=[self._profile])
+        return reverse_lazy("profile_photos_albums", args=[self._profile.username])
 
 
 class AlbumUpdate(SetOwnerProfileMixin, LoginRequiredMixin, UpdateView):
@@ -59,7 +59,7 @@ class AlbumUpdate(SetOwnerProfileMixin, LoginRequiredMixin, UpdateView):
         """Get back to the request album detail page."""
         album_pk = self.kwargs.get("album_pk")
 
-        return reverse("album_detail", args=[album_pk, self._profile.username])
+        return reverse_lazy("album_detail", args=[album_pk, self._profile.username])
 
     def get_object(self):
         """Return the specified album owned by the profile."""
@@ -89,7 +89,7 @@ class AlbumDeleteView(SetOwnerProfileMixin, DeleteView):
 
     def get_success_url(self):
         """Go back to albums pages of the requesting profile."""
-        return reverse("profile_photos_albums", args=[self._profile.username])
+        return reverse_lazy("profile_photos_albums", args=[self._profile.username])
 
     def get_object(self, queryset=None):
         """Get the album owned by requesting user."""
