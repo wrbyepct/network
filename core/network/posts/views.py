@@ -7,6 +7,7 @@ from django.urls import reverse_lazy
 from django.views.generic import (
     CreateView,
     DeleteView,
+    DetailView,
     ListView,
     UpdateView,
     View,
@@ -31,6 +32,17 @@ class PostListView(ListView):
     def get_queryset(self):
         """Get optimized post queryset."""
         return Post.objects.for_list_data()
+
+
+class PostDetailView(DetailView):
+    """Detail view for specified post."""
+
+    context_object_name = "post"
+    template_name = "posts/detail.html"
+
+    def get_object(self, queryset=None):
+        """Get post by id."""
+        return get_object_or_404(Post, id=self.kwargs.get("post_id"))
 
 
 class PostCreateView(LoginRequiredMixin, CreateView):

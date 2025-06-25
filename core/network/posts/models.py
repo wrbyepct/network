@@ -3,6 +3,7 @@
 from django.conf import settings
 from django.db import models
 
+from network.common.mixins import ProfileInfoMixin
 from network.common.models import MediaBaseModel, TimestampedModel
 from network.profiles.models import Profile
 
@@ -10,7 +11,7 @@ from .managers import PostManger
 
 
 # Create your models here.
-class Post(TimestampedModel):
+class Post(ProfileInfoMixin, TimestampedModel):
     """Post model."""
 
     content = models.TextField(max_length=1280)

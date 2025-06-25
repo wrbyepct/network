@@ -2,6 +2,7 @@
 
 from django.db.models import Max
 from django.forms import ValidationError
+from django.utils.functional import cached_property
 
 from network.common.models import MediaBaseModel
 
@@ -48,3 +49,24 @@ class SetOwnerProfileMixin:
         """Set profile instance for later access."""
         self._profile = self.request.user.profile
         return super().dispatch(request, *args, **kwargs)
+
+
+class ProfileInfoMixin:
+    """
+    Mixin for model to provide profile info.
+
+    cached_proterties:
+        - profile picture url
+        - username
+
+    """
+
+    @cached_property
+    def profile_picture_url(self):
+        """Return profile picture url."""
+        return self.user.profile.profile_picture.url
+
+    @cached_property
+    def username(self):
+        """Return profile username."""
+        return self.user.profile.username
