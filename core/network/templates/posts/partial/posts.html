@@ -26,7 +26,7 @@
   
             <!-- Card Body -->
             <div class="card-body">
-              <p class="mb-3">{{ post.content }}</p>
+              <p class="mb-3">{{ post.content|linebreaks }}</p>
   
               {% with post.medias.all as medias %}
 
@@ -102,7 +102,7 @@
                 <span class="text-muted ps-1">{{ post.like_count }} Likes</span>
               </div>
 
-              <a href="#" class="text-decoration-none ms-auto">💬 Comment</a>
+              <a href="{% url 'post_detail' post.id %}" class="text-decoration-none ms-auto">💬 Comment</a>
             </div>
           </div>
         {% empty %}
