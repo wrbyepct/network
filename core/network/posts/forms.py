@@ -1,37 +1,16 @@
 """Post forms."""
 
 from django import forms
-from django.db.models import Max
 
+from network.common.constants import ALLOWED_POST_IMAGE_NUM, ALLOWED_POST_VIDEO_NUM
 from network.common.fields import MultipleFileField
+from network.common.mixins import MediaMixin
+from network.common.validators import validate_image_extension, validate_video_extension
 
-from .constants import ALLOWED_POST_IMAGE_NUM, ALLOWED_POST_VIDEO_NUM
-from .models import Album, AlbumMedia, MediaBaseModel, Post, PostMedia
-from .validators import (
-    validate_image_extension,
-    validate_media_extension,
-    validate_video_extension,
-)
+from .models import MediaBaseModel, Post, PostMedia
 
 
-def get_max_order(obj):
-    """Get max order of an object that has medias."""
-    return obj.medias.aggregate(max_order=Max("order"))["max_order"] or 0
-
-
-def get_media_type(media):
-    """Get media type."""
-    content_type = media.content_type
-
-    if content_type.startswith("image/"):
-        return MediaBaseModel.MediaType.IMAGE
-
-    if content_type.startswith("video/"):
-        return MediaBaseModel.MediaType.VIDEO
-    return forms.ValidationError(f"{media.name} Unknown file content type.")
-
-
-class PostForm(forms.ModelForm):
+class PostForm(MediaMixin, forms.ModelForm):
     """Form for create/edit form."""
 
     content = forms.CharField(
@@ -56,7 +35,7 @@ class PostForm(forms.ModelForm):
         images = self.cleaned_data.get("images")
         video = self.cleaned_data.get("video")
         if images:
-            max_order = get_max_order(post)
+            max_order = self.get_max_order(post)
             PostMedia.objects.bulk_create(
                 [
                     PostMedia(
@@ -110,30 +89,3 @@ class PostForm(forms.ModelForm):
             raise forms.ValidationError(msg)
 
     # TODO (extra) implement validate media size
-
-
-class AlbumForm(forms.ModelForm):
-    """Album form."""
-
-    medias = MultipleFileField(required=False, validators=[validate_media_extension])
-
-    class Meta:
-        model = Album
-        fields = ["name"]
-
-    def save_medias(self, album):
-        """Save valid uploaded media to album."""
-        medias = self.cleaned_data.get("medias")
-        max_order = get_max_order(album)
-        if medias:
-            AlbumMedia.objects.bulk_create(
-                [
-                    AlbumMedia(
-                        album=album,
-                        file=media,
-                        order=index,
-                        type=get_media_type(media),
-                    )
-                    for index, media in enumerate(medias, start=max_order + 1)
-                ]
-            )
