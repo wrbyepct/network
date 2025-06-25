@@ -2,7 +2,7 @@
 
 from django.contrib import admin
 
-from .models import Album, Post, PostMedia
+from .models import Post, PostMedia
 
 
 @admin.register(Post)
@@ -20,8 +20,3 @@ class PostAdmin(admin.ModelAdmin):
 @admin.register(PostMedia)
 class PostMediaAdmin(admin.ModelAdmin):
     """Custome PostMeida admin."""
-
-
-@admin.register(Album)
-class AlbumAdmin(admin.ModelAdmin):
-    """Custome Album admin."""
