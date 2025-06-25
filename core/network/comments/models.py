@@ -4,11 +4,12 @@ from django.conf import settings
 from django.core.validators import MinLengthValidator
 from django.db import models
 
+from network.common.mixins import ProfileInfoMixin
 from network.common.models import TimestampedModel
 from network.posts.models import Post
 
 
-class Comment(TimestampedModel):
+class Comment(ProfileInfoMixin, TimestampedModel):
     """Commnet model associated with a Post."""
 
     content = models.TextField(validators=[MinLengthValidator(1)])
