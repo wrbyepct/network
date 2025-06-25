@@ -21,4 +21,9 @@ urlpatterns = [
         views.AlbumUpdate.as_view(),
         name="album_edit",
     ),
+    path(
+        "albums/<uuid:album_id>/delete/",
+        views.AlbumDeleteView.as_view(),
+        name="album_delete",
+    ),
 ]

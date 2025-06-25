@@ -4,8 +4,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
-from django.views.generic import CreateView, DetailView, UpdateView
+from django.views.generic import CreateView, DeleteView, DetailView, UpdateView
 
+from network.common.mixins import SetOwnerProfileMixin
 from network.profiles.models import Profile
 
 from .forms import AlbumForm
@@ -17,7 +18,7 @@ class AlbumDetailView(LoginRequiredMixin, DetailView):
     """Album detail view."""
 
     context_object_name = "album"
-    template_name = "profiles/album_detail.html"
+    template_name = "albums/detail.html"
 
     def get_object(self, queryset=None):
         """Directly return the album obect."""
@@ -26,7 +27,7 @@ class AlbumDetailView(LoginRequiredMixin, DetailView):
         return get_object_or_404(Album, pk=self.kwargs.get("album_pk"), profile=profile)
 
 
-class AlbumCreateView(LoginRequiredMixin, CreateView):
+class AlbumCreateView(SetOwnerProfileMixin, LoginRequiredMixin, CreateView):
     """View to create Album."""
 
     template_name = "albums/create.html"
@@ -37,7 +38,7 @@ class AlbumCreateView(LoginRequiredMixin, CreateView):
         """Associate profile with album."""
         with transaction.atomic():
             form.instance.profile = (
-                self.request.user.profile
+                self._profile
             )  # associate the profile with the album
             resp = super().form_valid(form)
             form.save_medias(self.object)
@@ -45,11 +46,10 @@ class AlbumCreateView(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         """Get profile album url."""
-        profile = self.request.user.profile
-        return reverse("profile_photos_albums", args=[profile.username])
+        return reverse("profile_photos_albums", args=[self._profile])
 
 
-class AlbumUpdate(LoginRequiredMixin, UpdateView):
+class AlbumUpdate(SetOwnerProfileMixin, LoginRequiredMixin, UpdateView):
     """View to update album."""
 
     template_name = "albums/edit.html"
@@ -58,16 +58,14 @@ class AlbumUpdate(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         """Get back to the request album detail page."""
         album_pk = self.kwargs.get("album_pk")
-        user = self.request.user
-        profile = user.profile
-        return reverse("album_detail", args=[album_pk, profile.username])
+
+        return reverse("album_detail", args=[album_pk, self._profile.username])
 
     def get_object(self):
         """Return the specified album owned by the profile."""
         album_pk = self.kwargs.get("album_pk")
-        user = self.request.user
 
-        return get_object_or_404(Album, profile=user.profile, pk=album_pk)
+        return get_object_or_404(Album, profile=self._profile, pk=album_pk)
 
     def get_context_data(self, **kwargs):
         """Provide existing medias in album in context."""
@@ -84,3 +82,17 @@ class AlbumUpdate(LoginRequiredMixin, UpdateView):
             resp = super().form_valid(form)
             form.save_medias(self.object)
         return resp
+
+
+class AlbumDeleteView(SetOwnerProfileMixin, DeleteView):
+    """View to delete a album owned by the requesting user."""
+
+    def get_success_url(self):
+        """Go back to albums pages of the requesting profile."""
+        return reverse("profile_photos_albums", args=[self._profile.username])
+
+    def get_object(self, queryset=None):
+        """Get the album owned by requesting user."""
+        return get_object_or_404(
+            Album, id=self.kwargs.get("album_id"), profile=self._profile
+        )
