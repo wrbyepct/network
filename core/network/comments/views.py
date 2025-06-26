@@ -18,12 +18,19 @@ from .models import Comment
 class CommentCreateView(LoginRequiredMixin, CreateView):
     """Comment Create view."""
 
+    template_name = "posts/detail.html"  # will be used on form_invalid
     form_class = CommentForm
 
     def dispatch(self, request, *args, **kwargs):
         """Save post object for later use."""
         self._post = get_object_or_404(Post, id=self.kwargs.get("post_id"))
         return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        """Add post in context data."""
+        context = super().get_context_data(**kwargs)
+        context["post"] = self._post
+        return context
 
     def get_success_url(self):
         """Return to the post detail page."""
