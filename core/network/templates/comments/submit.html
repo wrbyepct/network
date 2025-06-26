@@ -1,0 +1,19 @@
+<div>
+  <div class="input-group">
+    <textarea 
+        name="content" 
+        class="form-control comment-body" 
+        placeholder="Write a comment..."
+        rows="1"
+        required
+        style="resize: none; overflow: hidden;"
+        oninput="autoResize(this)" ></textarea>
+    <button class="btn btn-outline-primary border-0" type="submit"><i class="bi bi-send"></i></button>
+  </div>
+  {% if form.content.errors  %}
+    {% for error in form.content.errors %}
+    <div class="m-1 text-danger">{{ error }}</div>
+    {% endfor %}
+  {% endif %}
+
+</div>
