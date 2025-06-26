@@ -33,10 +33,10 @@
             <div class="card-body border-top">
                 {% for comment in post.comments.all %}
                 <div class="d-flex mb-3">
-                    <img src="{{ comment.profile_pictur_url }}" class="rounded-circle me-2" width="36" height="36" alt="">
+                    <img src="{{ comment.profile_picture_url }}" class="rounded-circle me-2" width="36" height="36" alt="">
                     <div class="bg-light rounded px-3 py-2">
                     <strong>{{ comment.username }}</strong>
-                    <p class="mb-1">{{ comment.content }}</p>
+                    <p class="mb-1">{{ comment.content|linebreaks }}</p>
                     <small class="text-muted">{{ comment.created_at|timesince }} ago</small>
                     </div>
                 </div>
@@ -47,7 +47,7 @@
         
             <!-- Add Comment -->
             <div class="card-footer bg-light">
-                <form method="post" action="#">
+                <form method="post" action="{% url 'comment_create' post.id %}">
                 {% csrf_token %}
                 <div class="input-group">
                     <textarea 
@@ -56,8 +56,9 @@
                       class="form-control" 
                       placeholder="Write a comment..."
                       rows="1"
+                      required
                       style="resize: none; overflow: hidden;"
-                      oninput="autoResize(this)"></textarea>
+                      oninput="autoResize(this)" ></textarea>
                     <button class="btn btn-outline-primary border-0" type="submit"><i class="bi bi-send"></i></button>
                 </div>
                 </form>
@@ -66,8 +67,8 @@
     </div>
     <script>
         function autoResize(textarea) {
-          textarea.style.height = "auto";  // Reset height
-          textarea.style.height = (textarea.scrollHeight) + "px"; // Adjust height
+          textarea.style.height = "auto";  // Reset height - goes back to default height
+          textarea.style.height = (textarea.scrollHeight) + "px"; // Detect if need scrolling and resize the box
         }
     </script>
 {% endblock %}
