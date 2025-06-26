@@ -47,13 +47,12 @@
         
             <!-- Add Comment -->
             <div class="card-footer bg-light">
-                <form method="post" action="{% url 'comment_create' post.id %}">
+                <form class="comment-form" method="post" action="{% url 'comment_create' post.id %}" >
                 {% csrf_token %}
                 <div class="input-group">
                     <textarea 
-                      id="comment-body" 
                       name="content" 
-                      class="form-control" 
+                      class="form-control comment-body" 
                       placeholder="Write a comment..."
                       rows="1"
                       required
@@ -61,14 +60,33 @@
                       oninput="autoResize(this)" ></textarea>
                     <button class="btn btn-outline-primary border-0" type="submit"><i class="bi bi-send"></i></button>
                 </div>
+                {% if form.content.errors  %}
+                  {% for error in form.content.errors %}
+                    <div class="m-1 text-danger">{{ error }}</div>
+                  {% endfor %}
+                {% endif %}
                 </form>
             </div>
         </div>
     </div>
     <script>
-        function autoResize(textarea) {
-          textarea.style.height = "auto";  // Reset height - goes back to default height
-          textarea.style.height = (textarea.scrollHeight) + "px"; // Detect if need scrolling and resize the box
-        }
+      // Control text field resizing
+      function autoResize(textarea) {
+        textarea.style.height = "auto";  // Reset height - goes back to default height
+        textarea.style.height = (textarea.scrollHeight) + "px"; // Detect if need scrolling and resize the box
+      }
+    </script>
+    <script>
+        // Prevent empty comment submission in frontend
+      document.querySelectorAll(".comment-form").forEach(form => {
+        form.addEventListener("submit", function (e) {
+          const text = document.querySelector(".comment-body").value.trim();
+            if (!text) {
+              e.preventDefault();
+                // Optional: Toast or inline error
+              Swal.fire("Oops!", "Comment cannot be blank.", "warning");
+            }
+          })
+      });
     </script>
 {% endblock %}
