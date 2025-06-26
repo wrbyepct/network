@@ -33,49 +33,57 @@
 
             <!-- Comments -->
             <div class="card-body border-top">
-                {% for comment in post.comments.all %}
-                  <div 
+              {% for comment in post.comments.all %}
+                <div 
                     class="d-flex mb-3"
-                    x-data="{ isHovering: false }"
+                    x-data="{ isHovering: false, editing: false }"
                     @mouseover="isHovering = true"
                     @mouseleave="isHovering = false"
                     >
                       <img src="{{ comment.profile_picture_url }}" class="rounded-circle me-2" width="36" height="36" alt="">
-                      <div class="bg-light rounded px-3 py-2">
-                        <strong>{{ comment.username }}</strong>
-                        <p class="mb-1">{{ comment.content|linebreaks }}</p>
-                        <small class="text-muted">{{ comment.created_at|timesince }} ago</small>
+                      <!-- Comment and time  -->
+                      <div 
+                        class="d-flex"
+                        id="{{ post.id }}-comment"
+                        :class="{ 'd-none': editing === true }">
+                        <div>
+                          <div class="bg-light rounded px-3 py-2">
+                            <strong>{{ comment.username }}</strong>
+                            <p class="mb-1">{{ comment.content|linebreaks }}</p>
+                          </div>
+                          <small class="text-muted bg-white">{{ comment.created_at|timesince }} ago</small>
+                        </div>
+
+                        <!-- Comment 3-dot menu -->
+                        {% if request.user == comment.user %}
+                          {% include 'comments/dropdown.html' %}
+                        {% endif %}
                       </div>
-                      <!-- Comment 3-dot menu -->
-                      {% if request.user == comment.user %}
-                        {% include 'comments/dropdown.html' %}
-                      {% endif %}
-                  </div>
-                {% empty %}
+                      <!-- Edit form -->
+                      <form 
+                        class="d-none flex-grow-1" 
+                        method="post" 
+                        action="#" 
+                        :class="{ 'd-none': editing === false }"
+                        x-transition>
+                        {% include 'comments/submit.html' %}
+                        <a 
+                          class="btn link-primary link-opacity-50-hover text-decoration-none" 
+                          @click="editing = false">Cancel</a>
+                      </form>
+ 
+   
+                </div>
+              {% empty %}
                 <p class="text-muted">No comments yet.</p>
-                {% endfor %}
+              {% endfor %}
             </div>
         
             <!-- Add Comment -->
             <div class="card-footer bg-light">
                 <form class="comment-form" method="post" action="{% url 'comment_create' post.id %}" >
                 {% csrf_token %}
-                <div class="input-group">
-                    <textarea 
-                      name="content" 
-                      class="form-control comment-body" 
-                      placeholder="Write a comment..."
-                      rows="1"
-                      required
-                      style="resize: none; overflow: hidden;"
-                      oninput="autoResize(this)" ></textarea>
-                    <button class="btn btn-outline-primary border-0" type="submit"><i class="bi bi-send"></i></button>
-                </div>
-                {% if form.content.errors  %}
-                  {% for error in form.content.errors %}
-                    <div class="m-1 text-danger">{{ error }}</div>
-                  {% endfor %}
-                {% endif %}
+                  {% include 'comments/submit.html' %}
                 </form>
             </div>
           </div>
