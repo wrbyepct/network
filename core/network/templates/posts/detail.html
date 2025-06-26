@@ -2,7 +2,9 @@
 
 {% block body %}
     <div class="container my-5">
-        <div class="card shadow-sm">
+      <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6" >
+          <div class="card shadow-sm">
             <!-- Header -->
             <div class="card-body d-flex align-items-center">
                 <img src="{{ post.profile_picture_url }}" class="rounded-circle me-3" width="50" height="50">
@@ -76,8 +78,12 @@
                 {% endif %}
                 </form>
             </div>
+          </div>
         </div>
+      </div>
     </div>
+        
+
     <script>
       // Control text field resizing
       function autoResize(textarea) {
