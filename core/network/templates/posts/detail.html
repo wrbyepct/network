@@ -61,15 +61,17 @@
                       </div>
                       <!-- Edit form -->
                       <form 
-                        class="d-none flex-grow-1" 
+                        class="d-none flex-grow-1 comment-form" 
                         method="post" 
-                        action="#" 
+                        action="{% url 'comment_edit' comment.id %}" 
                         :class="{ 'd-none': editing === false }"
-                        x-transition>
-                        {% include 'comments/submit.html' %}
+                        >
+                        {% csrf_token %}
+                          {% include 'comments/submit.html' %}
                         <a 
                           class="btn link-primary link-opacity-50-hover text-decoration-none" 
                           @click="editing = false">Cancel</a>
+   
                       </form>
  
    
@@ -102,14 +104,25 @@
     <script>
         // Prevent empty comment submission in frontend
       document.querySelectorAll(".comment-form").forEach(form => {
-        form.addEventListener("submit", function (e) {
-          const text = document.querySelector(".comment-body").value.trim();
-            if (!text) {
-              e.preventDefault();
-                // Optional: Toast or inline error
-              Swal.fire("Oops!", "Comment cannot be blank.", "warning");
-            }
-          })
+        const textarea = form.querySelector(".comment-body");
+        const submitBtn = form.querySelector(".submit-btn");
+
+        // Set inital submit btn state
+        const initialText = textarea.value.trim() 
+        submitBtn.disabled = initialText === "";
+
+        // Change submit btn state based key stroke
+        textarea.addEventListener("input", () => {
+          const text = textarea.value.trim()
+          submitBtn.disabled = text === "";
+        });
+
+        // Prevent submit if the content is empty
+        form.addEventListener("submit", (e) => {
+          if (textarea.value.trim() === "") {
+            e.preventDefault();
+          }
+        })
       });
     </script>
 {% endblock %}
