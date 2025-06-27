@@ -1,17 +1,16 @@
-<div>
-  <div 
-   class="input-group"
-   x-init="this.querySelector(".submit-btn");"
-  >
-    <textarea 
-        name="content" 
-        class="form-control comment-body" 
-        placeholder="Write a comment..."
-        rows="1"
-        required
-        style="resize: none; overflow: hidden;"
-        oninput="autoResize(this)" ></textarea>
-    <button class="btn btn-outline-primary border-0 submit-btn" type="submit"><i class="bi bi-send"></i></button>
-  </div>
 
+<div class="input-group">
+  <textarea 
+    name="content" 
+    class="form-control comment-body" 
+    placeholder="Write a comment..."
+    rows="1"
+    required
+    style="resize: none; overflow: hidden;"
+    oninput="autoResize(this)" 
+    ></textarea>
+  <button 
+    class="btn btn-outline-primary border-0 submit-btn" 
+    type="submit"
+    ><i class="bi bi-send"></i></button>
 </div>

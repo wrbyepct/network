@@ -83,10 +83,10 @@
         
             <!-- Add Comment -->
             <div class="card-footer bg-light">
-                <form class="comment-form" method="post" action="{% url 'comment_create' post.id %}" >
-                {% csrf_token %}
-                  {% include 'comments/submit.html' %}
-                </form>
+              <form class="comment-form" method="post" action="{% url 'comment_create' post.id %}" >
+              {% csrf_token %}
+                {% include 'comments/submit.html' %}
+              </form>
             </div>
           </div>
         </div>
