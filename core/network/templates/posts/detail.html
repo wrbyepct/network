@@ -1,5 +1,5 @@
 {% extends 'network/layout.html' %}
-
+{% load post_extra %}
 {% block body %}
     <div class="container my-5">
       <div class="row justify-content-center">
@@ -64,7 +64,10 @@
                           <strong>{{ comment.username }}</strong>
                           <p class="mb-1">{{ comment.content|linebreaks }}</p>
                         </div>
-                        <small class="text-muted bg-white">{{ comment.created_at|timesince }} ago</small>
+                        <div class="d-flex">
+                          <small class="text-muted bg-white">{{ comment.created_at|timesince_simple }} ago</small>
+                          {% include 'comments/like_button.html' %}
+                        </div>
                     </div>
 
                     <!-- Comment 3-dot menu -->

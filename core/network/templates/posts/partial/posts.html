@@ -71,35 +71,29 @@
   
             <!-- Card Footer -->
             <div class="card-footer bg-white d-flex justify-content-start align-items-center">
-              {% csrf_token %} 
+              {% csrf_token %}
               {% if not request.user.is_authenticated %}
                 <a class="btn btn-sm btn-outline-danger border-0" href="{% url 'account_login' %}">
-                  <span 
-                  >
-                    <span>🤍</span>
-                </span>
+                  <span>🤍</span>
                 </a>
               {% else %}
                 <a
-                class="btn btn-sm btn-outline-danger border-0"
-                hx-post="{% url 'post_like' post.id %}"
-                hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-                hx-target="#post-like-{{ post.id }}"
-                hx-swap="innerHTML"
-                x-data="{'liked': {{ post|liked_by_user:request.user|yesno:'true,false' }}}"
-
+                  class="btn btn-outline-danger border-0 p-0"
+                  hx-post="{% url 'post_like' post.id %}"
+                  hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                  hx-target="#post-like-{{ post.id }}"
+                  hx-swap="innerHTML"
+                  x-data="{'liked': {{ post|liked_by_user:request.user|yesno:'true,false' }}}"
                 >
                 <span 
                   @click="liked = !liked"
-                  x-text="liked ? '❤️' : '🤍'"
-                  class="heart-transition"
-                  >
+                  x-text="liked ? '❤️' : '🤍'">
                 </span>
                </a>
               {% endif%}
 
               <div id="post-like-{{ post.id }}">
-                <span class="text-muted ps-1">{{ post.like_count }} Likes</span>
+                <span class="text-muted ps-1">{{ post.like_count }}</span>
               </div>
 
               <a href="{% url 'post_detail' post.id %}" class="text-decoration-none ms-auto">💬 Comment</a>
