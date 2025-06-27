@@ -6,10 +6,17 @@
         <div class="col-12 col-md-8 col-lg-6" >
           <div 
             class="card shadow-sm" 
-            x-data="{ resize(textarea) { 
-              textarea.style.height = 'auto'; 
-              textarea.style.height = textarea.scrollHeight + 'px'; 
-            } }">
+            x-data="{ 
+              resize(textarea) { 
+                textarea.style.height = 'auto'; 
+                textarea.style.height = textarea.scrollHeight + 'px'; 
+              },
+              preventSubmit(e) {
+                if (this.$refs.textarea.value.trim() === '') {
+                  e.preventDefault();
+                }
+              }
+            }">
             <!-- Header -->
             <div class="card-body d-flex align-items-center">
                 <img src="{{ post.profile_picture_url }}" class="rounded-circle me-3" width="50" height="50">
@@ -40,48 +47,48 @@
             <div class="card-body border-top">
               {% for comment in post.comments.all %}
                 <div 
-                    class="d-flex mb-3"
-                    x-data="{ isHovering: false, editing: false }"
-                    @mouseover="isHovering = true"
-                    @mouseleave="isHovering = false"
-                    >
-                      <img src="{{ comment.profile_picture_url }}" class="rounded-circle me-2" width="36" height="36" alt="">
-                      <!-- Comment and time  -->
-                      <div 
-                        id="{{ post.id }}-comment"
-                        x-show="!editing"
-                        :class="{ 'd-flex': !editing }">
-                        <div>
-                          <div class="bg-light rounded px-3 py-2">
-                            <strong>{{ comment.username }}</strong>
-                            <p class="mb-1">{{ comment.content|linebreaks }}</p>
-                          </div>
-                          <small class="text-muted bg-white">{{ comment.created_at|timesince }} ago</small>
+                  class="d-flex mb-3"
+                  x-data="{ isHovering: false, editing: false }"
+                  @mouseover="isHovering = true"
+                  @mouseleave="isHovering = false"
+                  >
+                    <!-- Profile picture -->
+                    <img src="{{ comment.profile_picture_url }}" class="rounded-circle me-2" width="36" height="36" alt="">
+                    
+                    <!-- Comment and time  -->
+                    <div 
+                      id="{{ post.id }}-comment"
+                      x-show="!editing"
+                      >
+                        <div class="bg-light rounded px-3 py-2">
+                          <strong>{{ comment.username }}</strong>
+                          <p class="mb-1">{{ comment.content|linebreaks }}</p>
                         </div>
+                        <small class="text-muted bg-white">{{ comment.created_at|timesince }} ago</small>
+                    </div>
 
-                        <!-- Comment 3-dot menu -->
-                        {% if request.user == comment.user %}
-                          {% include 'comments/dropdown.html' %}
-                        {% endif %}
-                      </div>
-                      <!-- Edit form -->
-                      <form 
-                        class="flex-grow-1 comment-form" 
-                        method="post" 
-                        action="{% url 'comment_edit' comment.id %}" 
-                        x-show="editing"
-                        x-cloak
-                        x-transition
-                        >
-                        {% csrf_token %}
-                          {% include 'comments/submit.html' %}
-                        <a 
-                          class="btn link-primary link-opacity-50-hover text-decoration-none" 
-                          @click="editing = false">Cancel</a>
-   
-                      </form>
- 
-   
+                    <!-- Comment 3-dot menu -->
+                    {% if request.user == comment.user %}
+                      {% include 'comments/dropdown.html' %}
+                    {% endif %}
+                      
+                    <!-- Edit form (initially hidden) -->
+                    <form 
+                      class="flex-grow-1 comment-form" 
+                      method="post" 
+                      action="{% url 'comment_edit' comment.id %}" 
+                      x-show="editing"
+                      x-cloak
+                      x-transition
+                      @submit="preventSubmit($event)"
+                      >
+                      {% csrf_token %}
+                        {% include 'comments/submit.html' %}
+                      <a 
+                        class="btn link-primary link-opacity-50-hover text-decoration-none" 
+                        @click="editing = false">Cancel</a>
+  
+                    </form>
                 </div>
               {% empty %}
                 <p class="text-muted">No comments yet.</p>
@@ -90,7 +97,12 @@
         
             <!-- Add Comment -->
             <div class="card-footer bg-light">
-              <form class="comment-form" method="post" action="{% url 'comment_create' post.id %}" >
+              <form 
+                class="comment-form" 
+                method="post" 
+                action="{% url 'comment_create' post.id %}" 
+                @submit="preventSubmit($event)"
+              >
               {% csrf_token %}
                 {% include 'comments/submit.html' %}
               </form>
@@ -100,28 +112,4 @@
       </div>
     </div>
         
-    <script>
-        // Prevent empty comment submission in frontend
-      document.querySelectorAll(".comment-form").forEach(form => {
-        const textarea = form.querySelector(".comment-body");
-        const submitBtn = form.querySelector(".submit-btn");
-
-        // Set inital submit btn state
-        const initialText = textarea.value.trim() 
-        submitBtn.disabled = initialText === "";
-
-        // Change submit btn state based key stroke
-        textarea.addEventListener("input", () => {
-          const text = textarea.value.trim()
-          submitBtn.disabled = text === "";
-        });
-
-        // Prevent submit if the content is empty
-        form.addEventListener("submit", (e) => {
-          if (textarea.value.trim() === "") {
-            e.preventDefault();
-          }
-        })
-      });
-    </script>
 {% endblock %}
