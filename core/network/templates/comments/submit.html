@@ -1,5 +1,9 @@
 
-<div class="input-group">
+<div 
+  class="input-group"
+  x-data="{ commentBody: '' }"
+  x-init="commentBody = $refs.textarea.value.trim()"
+  >
   <textarea 
     name="content" 
     class="form-control comment-body" 
@@ -8,12 +12,14 @@
     required
     style="resize: none; overflow: hidden;"
     x-ref="textarea"
-
-    @transitionend="resize($el)"
+    x-model="commentBody"
+    @transitionend="resize($el);"
     @input="resize($el)"
+
     >{% if comment %}{{ comment.content }}{% endif %}</textarea>
   <button 
     class="btn btn-outline-primary border-0 submit-btn" 
     type="submit"
+    :disabled="commentBody.trim() === ''"
     ><i class="bi bi-send"></i></button>
 </div>

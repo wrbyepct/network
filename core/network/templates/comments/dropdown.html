@@ -4,7 +4,8 @@
       type="button" 
       data-bs-toggle="dropdown" 
       aria-expanded="false"
-      :class="{ 'opacity-0': isHovering === false }">
+      :class="{ 'opacity-0': isHovering === false }"
+      x-show="!editing">
         <i class="bi bi-three-dots"></i>
   </button>
   <ul class="dropdown-menu p-0">
