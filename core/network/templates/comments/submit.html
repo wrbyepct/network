@@ -8,7 +8,7 @@
     required
     style="resize: none; overflow: hidden;"
     oninput="autoResize(this)" 
-    ></textarea>
+    >{% if comment %} {{ comment.content }} {% endif %}</textarea>
   <button 
     class="btn btn-outline-primary border-0 submit-btn" 
     type="submit"
