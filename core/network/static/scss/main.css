@@ -13,4 +13,7 @@
 .heart-transition {
   transition: all 0.3s ease-in-out; }
 
+[x-cloak] {
+  display: none !important; }
+
 /*# sourceMappingURL=main.css.map */

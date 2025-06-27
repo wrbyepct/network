@@ -4,7 +4,12 @@
     <div class="container my-5">
       <div class="row justify-content-center">
         <div class="col-12 col-md-8 col-lg-6" >
-          <div class="card shadow-sm">
+          <div 
+            class="card shadow-sm" 
+            x-data="{ resize(textarea) { 
+              textarea.style.height = 'auto'; 
+              textarea.style.height = textarea.scrollHeight + 'px'; 
+            } }">
             <!-- Header -->
             <div class="card-body d-flex align-items-center">
                 <img src="{{ post.profile_picture_url }}" class="rounded-circle me-3" width="50" height="50">
@@ -43,9 +48,9 @@
                       <img src="{{ comment.profile_picture_url }}" class="rounded-circle me-2" width="36" height="36" alt="">
                       <!-- Comment and time  -->
                       <div 
-                        class="d-flex"
                         id="{{ post.id }}-comment"
-                        :class="{ 'd-none': editing === true }">
+                        x-show="!editing"
+                        :class="{ 'd-flex': !editing }">
                         <div>
                           <div class="bg-light rounded px-3 py-2">
                             <strong>{{ comment.username }}</strong>
@@ -61,10 +66,12 @@
                       </div>
                       <!-- Edit form -->
                       <form 
-                        class="d-none flex-grow-1 comment-form" 
+                        class="flex-grow-1 comment-form" 
                         method="post" 
                         action="{% url 'comment_edit' comment.id %}" 
-                        :class="{ 'd-none': editing === false }"
+                        x-show="editing"
+                        x-cloak
+                        x-transition
                         >
                         {% csrf_token %}
                           {% include 'comments/submit.html' %}
@@ -93,14 +100,6 @@
       </div>
     </div>
         
-
-    <script>
-      // Control text field resizing
-      function autoResize(textarea) {
-        textarea.style.height = "auto";  // Reset height - goes back to default height
-        textarea.style.height = (textarea.scrollHeight) + "px"; // Detect if need scrolling and resize the box
-      }
-    </script>
     <script>
         // Prevent empty comment submission in frontend
       document.querySelectorAll(".comment-form").forEach(form => {
