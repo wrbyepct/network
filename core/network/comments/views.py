@@ -3,7 +3,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import CreateView
+from django.views.generic import CreateView, UpdateView
 
 from network.posts.models import Post
 
@@ -15,6 +15,8 @@ from .models import Comment
 
 
 # TODO later change comment create view to partial html
+
+
 class CommentCreateView(LoginRequiredMixin, CreateView):
     """Comment Create view."""
 
@@ -58,3 +60,32 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
             Comment, id=self.kwargs.get("comment_id")
         )
         return form
+
+
+# TODO display user orignal comment content while editing
+# TODO prevent user from submitting empty
+class CommentUpdateView(UpdateView):
+    """Comment update view."""
+
+    template_name = "posts/detail.html"
+    form_class = CommentForm
+
+    def get_object(self, queryset=None):
+        """Get comment owned by the user."""
+        comment = get_object_or_404(
+            Comment,
+            id=self.kwargs.get("comment_id"),
+            user=self.request.user,
+        )
+        self._post = comment.post
+        return comment
+
+    def get_success_url(self):
+        """Return to the post detail page."""
+        return reverse_lazy("post_detail", args=[self._post.id])
+
+    def get_context_data(self, **kwargs):
+        """Add post in context data."""
+        context = super().get_context_data(**kwargs)
+        context["post"] = self._post
+        return context

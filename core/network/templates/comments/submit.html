@@ -1,5 +1,8 @@
 <div>
-  <div class="input-group">
+  <div 
+   class="input-group"
+   x-init="this.querySelector(".submit-btn");"
+  >
     <textarea 
         name="content" 
         class="form-control comment-body" 
@@ -8,12 +11,7 @@
         required
         style="resize: none; overflow: hidden;"
         oninput="autoResize(this)" ></textarea>
-    <button class="btn btn-outline-primary border-0" type="submit"><i class="bi bi-send"></i></button>
+    <button class="btn btn-outline-primary border-0 submit-btn" type="submit"><i class="bi bi-send"></i></button>
   </div>
-  {% if form.content.errors  %}
-    {% for error in form.content.errors %}
-    <div class="m-1 text-danger">{{ error }}</div>
-    {% endfor %}
-  {% endif %}
 
 </div>
