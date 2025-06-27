@@ -9,5 +9,10 @@ urlpatterns = [
         "<uuid:post_id>/create/",
         views.CommentCreateView.as_view(),
         name="comment_create",
-    )
+    ),
+    path(
+        "<uuid:comment_id>/edit/",
+        views.CommentUpdateView.as_view(),
+        name="comment_edit",
+    ),
 ]
