@@ -1,0 +1,27 @@
+{% load post_extra %}
+<div class="d-flex ms-4">
+    {% csrf_token %}
+    {% if not request.user.is_authenticated %}
+      <a class="btn btn-sm btn-outline-danger border-0 p-0" href="{% url 'account_login' %}">
+        <span>🤍</span>
+      </a>
+    {% else %}
+      <a
+        class="btn btn-sm btn-outline-danger border-0 p-0"
+        hx-post="#"
+        hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+        hx-target="#post-like-{{ post.id }}"
+        hx-swap="innerHTML"
+        x-data="{'liked': false }"
+      >
+        <span 
+            @click="liked = !liked"
+            x-text="liked ? '❤️' : '🤍'">
+        </span>
+     </a>
+    {% endif%}
+
+    <div id="post-like-{{ comment.id }}">
+      <span class="text-muted ps-1">{{ 0 }}</span>
+    </div>
+</div>
