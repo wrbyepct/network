@@ -3,7 +3,7 @@
 from django.conf import settings
 from django.db import models
 
-from network.common.mixins import ProfileInfoMixin
+from network.common.mixins import LikeCountMixin, ProfileInfoMixin
 from network.common.models import MediaBaseModel, TimestampedModel
 from network.profiles.models import Profile
 
@@ -11,11 +11,10 @@ from .managers import PostManger
 
 
 # Create your models here.
-class Post(ProfileInfoMixin, TimestampedModel):
+class Post(LikeCountMixin, ProfileInfoMixin, TimestampedModel):
     """Post model."""
 
     content = models.TextField(max_length=1280)
-    like_count = models.PositiveIntegerField(default=0)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="posts"
     )
@@ -39,7 +38,7 @@ class PostLike(TimestampedModel):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="likes")
 
-    class Meta:
+    class Meta(TimestampedModel.Meta):
         constraints = [
             models.UniqueConstraint(
                 fields=["user", "post"], name="unique_like_for_post_per_user"

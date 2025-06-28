@@ -18,4 +18,5 @@ def liked_by_user(obj, user):
 def timesince_simple(value):
     """Return fisrt part of timesince."""
     result = timesince(value)
+
     return result.split(",")[0]

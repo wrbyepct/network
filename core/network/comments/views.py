@@ -1,14 +1,15 @@
 """Comment Views."""
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import get_object_or_404
+from django.db import transaction
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
-from django.views.generic import CreateView, DeleteView, UpdateView
+from django.views.generic import CreateView, DeleteView, UpdateView, View
 
 from network.posts.models import Post
 
 from .forms import CommentForm
-from .models import Comment
+from .models import Comment, CommentLike
 
 # TODO create comment on post
 # TODO user see immediate comments update to comment section
@@ -100,3 +101,24 @@ class CommentUpdateView(CommentUrlContextMixin, CommentObjectBaseMixin, UpdateVi
 
 class CommentDeleteView(CommentUrlContextMixin, CommentObjectBaseMixin, DeleteView):
     """Delete a comment owned by user."""
+
+
+class LikeCommentView(View):
+    """View to like/unlike a comment."""
+
+    def post(self, request, *args, **kwargs):
+        """Like the post and syncs with comment's like_count field."""
+        comment = get_object_or_404(Comment, id=kwargs.get("comment_id"))
+        user = request.user
+        with transaction.atomic():
+            like, created = CommentLike.objects.get_or_create(
+                user=user, comment=comment
+            )
+            if not created:
+                like.delete()
+            comment.update_like_count()
+        return render(
+            request,
+            "posts/partial/like_count.html",
+            {"like_count": comment.like_count},
+        )
