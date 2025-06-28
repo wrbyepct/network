@@ -109,7 +109,7 @@ class LikePost(View):
             if not created:
                 like.delete()
 
-            post.like_count = post.likes.count()
+            post.update_like_count()
             post.save()
 
         return render(

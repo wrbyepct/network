@@ -1,6 +1,6 @@
 """Custom common mixins for views."""
 
-from django.db.models import Max
+from django.db.models import Max, PositiveSmallIntegerField
 from django.forms import ValidationError
 from django.utils.functional import cached_property
 
@@ -70,3 +70,21 @@ class ProfileInfoMixin:
     def username(self):
         """Return profile username."""
         return self.user.profile.username
+
+
+class LikeCountMixin:
+    """
+    Mixin to track and update like count.
+
+    Fields:
+        - like_count: PostiveSmallIntergerField
+    Methods:
+        - update_like_count: update like_count with db count.
+
+    """
+
+    like_count = PositiveSmallIntegerField(default=0)
+
+    def update_like_count(self):
+        """Update like count."""
+        self.like_count = self.likes.count()
