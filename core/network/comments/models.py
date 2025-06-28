@@ -9,7 +9,7 @@ from network.common.models import TimestampedModel
 from network.posts.models import Post
 
 
-class Comment(LikeCountMixin, ProfileInfoMixin, TimestampedModel):
+class Comment(ProfileInfoMixin, LikeCountMixin, TimestampedModel):
     """Commnet model associated with a Post."""
 
     content = models.TextField(validators=[MinLengthValidator(1)])
@@ -25,6 +25,9 @@ class Comment(LikeCountMixin, ProfileInfoMixin, TimestampedModel):
         on_delete=models.CASCADE,
         related_name="children",
     )
+
+    class Meta(TimestampedModel.Meta):
+        pass
 
     def __str__(self) -> str:
         """Return string: 'User: {self.user.id} comment on Post: {self.post.id}'."""

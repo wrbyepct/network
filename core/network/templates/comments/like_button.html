@@ -8,11 +8,11 @@
     {% else %}
       <a
         class="btn btn-sm btn-outline-danger border-0 p-0"
-        hx-post="#"
+        hx-post="{% url 'comment_like' comment.id %}"
         hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-        hx-target="#post-like-{{ post.id }}"
+        hx-target="#comment-like-{{ comment.id }}"
         hx-swap="innerHTML"
-        x-data="{'liked': false }"
+        x-data="{'liked': {{ comment|liked_by_user:request.user|yesno:'true,false' }} }"
       >
         <span 
             @click="liked = !liked"
@@ -21,7 +21,7 @@
      </a>
     {% endif%}
 
-    <div id="post-like-{{ comment.id }}">
-      <span class="text-muted ps-1">{{ 0 }}</span>
+    <div id="comment-like-{{ comment.id }}">
+      <span class="text-muted ps-1">{{ comment.like_count }}</span>
     </div>
 </div>
