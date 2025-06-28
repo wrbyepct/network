@@ -110,7 +110,6 @@ class LikePost(View):
                 like.delete()
 
             post.update_like_count()
-            post.save()
 
         return render(
             request,
