@@ -1,0 +1,5 @@
+<div class="my-1">
+    {% for reply in replies %}
+        {% include 'comments/comment.html' with request=request comment=reply post=reply.post padding=50 %}
+    {% endfor %}
+</div>

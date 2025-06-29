@@ -47,7 +47,6 @@
             <div class="card-body border-top">
               {% for comment in post.comments.all %}
                 {% include 'comments/comment.html' with request=request comment=comment post=post padding=0 %}
-
               {% empty %}
                 <p class="text-muted">No comments yet.</p>
               {% endfor %}
