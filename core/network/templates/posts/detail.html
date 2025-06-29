@@ -48,7 +48,7 @@
               {% for comment in post.comments.all %}
                 <div x-data="{ isHovering: false, editing: false, replying: false }">
                   <div 
-                    class="d-flex mb-3"
+                    class="d-flex"
                     @mouseover="isHovering = true"
                     @mouseleave="isHovering = false"
                     >
@@ -99,6 +99,11 @@
     
                       </form>
                   </div>
+                  <!-- Replies count  -->
+                  {% if comment.children_count %}
+                    <div class="btn btn-sm text-muted ps-5 mb-3">See other {{ comment.children_count }} repl{{ comment.children_count|pluralize:'y,ies' }}</div>
+                  {% endif %}
+                  <div></div>
                   <!-- Reply form (initially hidden) -->
                   <form 
                     class="comment-form ps-5" 
