@@ -51,11 +51,8 @@ class PostDetailView(DetailView):
     def get_object(self, queryset=None):
         """Get prefechted post object."""
         qs = self.get_queryset()
-        post = get_object_or_404(qs, id=self.kwargs.get("post_id"))
-        if not post:
-            msg = "Post not Found"
-            raise AttributeError(msg)
-        return post
+
+        return get_object_or_404(qs, id=self.kwargs.get("post_id"))
 
 
 class PostCreateView(LoginRequiredMixin, CreateView):
