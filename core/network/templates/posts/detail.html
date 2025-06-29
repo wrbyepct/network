@@ -103,7 +103,7 @@
                   <form 
                     class="comment-form ps-5" 
                     method="post" 
-                    action="#" 
+                    action="{% url 'comment_create' post.id %}" 
                     x-data="{ commentBody: '' }"
                     x-show="replying"
                     x-cloak
@@ -112,6 +112,7 @@
                     >
                     {% csrf_token %}
                       {% include 'comments/submit.html' %}
+                    <input type="hidden" name="comment_id" value="{{ comment.id }}">
                     <a 
                       class="btn link-primary link-opacity-50-hover text-decoration-none" 
                       @click="replying = false">Cancel</a>

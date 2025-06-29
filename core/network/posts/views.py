@@ -2,6 +2,7 @@
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
+from django.db.models import Prefetch
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
 from django.views.generic import (
@@ -13,6 +14,7 @@ from django.views.generic import (
     View,
 )
 
+from network.comments.models import Comment
 from network.common.mixins import RefererRedirectMixin
 
 from .forms import PostForm
@@ -40,9 +42,20 @@ class PostDetailView(DetailView):
     context_object_name = "post"
     template_name = "posts/detail.html"
 
+    def get_queryset(self):
+        """Get prefecthed Posts with only top level comments."""
+        return Post.objects.prefetch_related(
+            Prefetch("comments", queryset=Comment.objects.filter(parent__isnull=True))
+        )
+
     def get_object(self, queryset=None):
-        """Get post by id."""
-        return get_object_or_404(Post, id=self.kwargs.get("post_id"))
+        """Get prefechted post object."""
+        qs = self.get_queryset()
+        post = get_object_or_404(qs, id=self.kwargs.get("post_id"))
+        if not post:
+            msg = "Post not Found"
+            raise AttributeError(msg)
+        return post
 
 
 class PostCreateView(LoginRequiredMixin, CreateView):
