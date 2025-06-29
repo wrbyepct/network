@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
-from django.views.generic import CreateView, DeleteView, UpdateView, View
+from django.views.generic import CreateView, DeleteView, ListView, UpdateView, View
 
 from network.posts.models import Post
 
@@ -98,6 +98,25 @@ class CommentUpdateView(CommentUrlContextMixin, CommentObjectBaseMixin, UpdateVi
 
 class CommentDeleteView(CommentUrlContextMixin, CommentObjectBaseMixin, DeleteView):
     """Delete a comment owned by user."""
+
+
+# TODO: make sure this query is optimized
+class CommentChildrenView(ListView):
+    """Comment Children Partial response view."""
+
+    context_object_name = "replies"
+    template_name = "comments/replies.html"
+
+    def get_context_data(self, **kwargs):
+        """Provide request in context for partial template."""
+        context = super().get_context_data(**kwargs)
+        context["request"] = self.request
+        return context
+
+    def get_queryset(self):
+        """Return comment's children as queryset."""
+        comment = get_object_or_404(Comment, id=self.kwargs.get("comment_id"))
+        return comment.children.all()
 
 
 class LikeCommentView(View):
