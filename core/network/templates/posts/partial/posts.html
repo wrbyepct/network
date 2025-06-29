@@ -16,7 +16,7 @@
                 </a>
               <div>
                 <strong>{{ post.user.profile.username }}</strong><br>
-                <small class="text-muted">{{ post.created_at|date:"M d, Y H:i" }}</small>
+                <small class="text-muted">{{ post.created_at|timesince_simple }}</small>
               </div>
               <!-- Dropdown btn -->
               {% if request.user == post.user %}

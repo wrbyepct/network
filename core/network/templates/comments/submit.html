@@ -1,8 +1,6 @@
 
 <div 
   class="input-group"
-  x-data="{ commentBody: '' }"
-  x-init="commentBody = $refs.textarea.value.trim()"
   >
   <textarea 
     name="content" 
@@ -16,7 +14,7 @@
     @transitionend="resize($el);"
     @input="resize($el)"
 
-    >{% if comment %}{{ comment.content }}{% endif %}</textarea>
+    ></textarea>
   <button 
     class="btn btn-outline-primary border-0 submit-btn" 
     type="submit"
