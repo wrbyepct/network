@@ -56,24 +56,26 @@
         </form>
     </div>
 
-     <div
-      x-data="{ showReplies: false }">
-        <!-- Replies count  -->
-        {% if comment.children_count %}
-        <div 
-          class="btn btn-sm text-muted ps-5 mb-3"
-          x-show="!showReplies"
-          @click="showReplies = true">See other {{ comment.children_count }} repl{{ comment.children_count|pluralize:'y,ies' }}</div>
-        {% endif %}
+ 
+    <!-- Replies count  -->
+    {% if comment.children_count %}
+    <div 
+        class="btn btn-sm text-muted ps-5 mb-3"
+        x-data="{ showReplies: false }"
+        x-show="!showReplies"
+        @click="showReplies = true"
+        hx-get="{% url 'comment_children' comment.id %}"
+        hx-trigger="click"
+        hx-target="#replies-{{ comment.id }}"
+        hx-swap="innerHTML">See other {{ comment.children_count }} repl{{ comment.children_count|pluralize:'y,ies' }}</div>
+    {% endif %}
 
-        <!-- Children replies -->
-         <!-- TODO make it dynamically fetch -->
-        <div class="my-2" x-show="showReplies">
-            {% for reply in comment.children.all %}
-                {% include 'comments/comment.html' with request=request comment=reply post=post padding=50 %}
-            {% endfor %}
-        </div>
-     </div>
+    <!-- Children replies (Dynamically fetched) -->
+    <div 
+        id="replies-{{ comment.id }}"
+        >
+    </div>
+
 
 
     <!-- Reply form (initially hidden) -->
