@@ -11,9 +11,7 @@ from network.posts.models import Post
 from .forms import CommentForm
 from .models import Comment, CommentLike
 
-# TODO create comment on post
 # TODO user see immediate comments update to comment section
-
 
 # TODO later change comment create view to partial html
 
@@ -92,7 +90,6 @@ class CommentCreateView(CommentUrlContextMixin, CreateView):
         return super().form_valid(form)
 
 
-# TODO display user orignal comment content while editing
 class CommentUpdateView(CommentUrlContextMixin, CommentObjectBaseMixin, UpdateView):
     """Comment update view."""
 
