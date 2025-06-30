@@ -44,12 +44,17 @@
 
 
             <!-- Comments -->
-            <div class="card-body border-top">
-              {% for comment in post.comments.all %}
-                {% include 'comments/comment.html' with request=request comment=comment post=post padding=0 %}
-              {% empty %}
-                <p class="text-muted">No comments yet.</p>
-              {% endfor %}
+            <div 
+              class="card-body border-top"
+              hx-get="{% url 'comment_list' post.id %}"
+              hx-trigger="load"
+              hx-swap="beforeend"
+              hx-target="#load-more-comments"
+              >
+              <div id="load-more-comments">
+                {% include 'comments/paginator.html' with post=post %}
+              </div>
+
             </div>
         
             <!-- Add Comment -->
