@@ -6,6 +6,11 @@ from . import views
 
 urlpatterns = [
     path(
+        "<uuid:post_id>/list/",
+        views.CommentPaginatedView.as_view(),
+        name="comment_list",
+    ),
+    path(
         "<uuid:post_id>/create/",
         views.CommentCreateView.as_view(),
         name="comment_create",
