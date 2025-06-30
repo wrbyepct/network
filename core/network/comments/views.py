@@ -1,14 +1,13 @@
 """Comment Views."""
 
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
 from django.shortcuts import get_object_or_404, render
-from django.urls import reverse
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView, View
 
 from network.posts.models import Post
 
 from .forms import CommentForm
+from .mixins import CommentObjectOwnedMixin, CommentRenderMixin, CommentSetPostMixin
 from .models import Comment, CommentLike
 
 # TODO user see immediate comments update to comment section
@@ -16,90 +15,40 @@ from .models import Comment, CommentLike
 # TODO later change comment create view to partial html
 
 
-class CommentUrlContextMixin(LoginRequiredMixin):
-    """
-    Mixin to provide success url and context needed for failed submission.
-
-    Properties:
-     - template_name: "posts/detail.html"
-
-    Methods:
-     - get_success_url(): Return post page the comment is on.
-     - get_context_data(): Store post data in
-
-    """
-
-    template_name = "posts/detail.html"  # will be used on form_invalid
-
-    def get_success_url(self):
-        """Return to the post detail page."""
-        return reverse("post_detail", args=[self._post.id])
-
-    def get_context_data(self, **kwargs):
-        """Add post in context data."""
-        context = super().get_context_data(**kwargs)
-        context["post"] = self._post
-        return context
-
-
-class CommentObjectBaseMixin:
-    """
-    Base mixin for Views that access specific comment object.
-
-    Methods:
-     - dispatch(): set self.comment and self._post
-     - get_object(): Get comment owned by the user
-
-
-    """
-
-    def dispatch(self, request, *args, **kwargs):
-        """Set self.comment and self._post."""
-        self.comment = get_object_or_404(
-            Comment,
-            id=self.kwargs.get("comment_id"),
-            user=self.request.user,
-        )
-        self._post = self.comment.post
-        return super().dispatch(request, *args, **kwargs)
-
-    def get_object(self):
-        """Get comment owned by the user."""
-        return self.comment
-
-
-class CommentPaginatedView(ListView):
+class CommentPaginatedView(CommentSetPostMixin, ListView):
     """Comment Paginated list View."""
 
     context_object_name = "comments"
     template_name = "comments/paginator.html"
     paginate_by = 10
 
-    def dispatch(self, request, *args, **kwargs):
-        """Save post for later use."""
-        self.post = get_object_or_404(Post, id=self.kwargs.get("post_id"))
-        return super().dispatch(request, *args, **kwargs)
+    def get_post(self):
+        """Overrise get post."""
+        return get_object_or_404(Post, id=self.kwargs.get("post_id"))
+
+    def get_context_data(self, **kwargs):
+        """Provide request in context for partial template."""
+        context = super().get_context_data(**kwargs)
+        context["request"] = self.request
+        return context
 
     def get_queryset(self):
         """Get top level comments."""
-        return Comment.objects.filter(post=self.post, parent__isnull=True)
-
-    def get_context_data(self, **kwargs):
-        """Provide post in context."""
-        context = super().get_context_data(**kwargs)
-        context["post"] = self.post
-        return context
+        return Comment.objects.filter(post=self._post, parent__isnull=True)
 
 
-class CommentCreateView(CommentUrlContextMixin, CreateView):
+class CommentCreateView(
+    CommentRenderMixin,
+    CommentSetPostMixin,
+    CreateView,
+):
     """Comment Create view."""
 
     form_class = CommentForm
 
-    def dispatch(self, request, *args, **kwargs):
-        """Save post object for later use."""
-        self._post = get_object_or_404(Post, id=self.kwargs.get("post_id"))
-        return super().dispatch(request, *args, **kwargs)
+    def get_post(self):
+        """Overrise get post."""
+        return get_object_or_404(Post, id=self.kwargs.get("post_id"))
 
     def form_valid(self, form):
         """Attach post, user, and optional parent to the comment."""
@@ -113,33 +62,61 @@ class CommentCreateView(CommentUrlContextMixin, CreateView):
         return super().form_valid(form)
 
 
-class CommentUpdateView(CommentUrlContextMixin, CommentObjectBaseMixin, UpdateView):
+class CommentUpdateView(
+    CommentSetPostMixin,
+    CommentObjectOwnedMixin,
+    CommentRenderMixin,
+    UpdateView,
+):
     """Comment update view."""
 
     form_class = CommentForm
 
+    def get_post(self):
+        """Overrise get post."""
+        return self.comment.post
 
-class CommentDeleteView(CommentUrlContextMixin, CommentObjectBaseMixin, DeleteView):
+
+class CommentDeleteView(
+    CommentSetPostMixin,
+    CommentObjectOwnedMixin,
+    CommentRenderMixin,
+    DeleteView,
+):
     """Delete a comment owned by user."""
+
+    def get_post(self):
+        """Overrise get post."""
+        return self.comment.post
 
 
 # TODO: make sure this query is optimized
-class CommentChildrenView(ListView):
+class CommentChildrenPaginatedView(CommentSetPostMixin, ListView):
     """Comment Children Partial response view."""
 
     context_object_name = "replies"
     template_name = "comments/replies.html"
+    paginate_by = 5
+
+    def get_post(self):
+        """Override get post."""
+        return self.comment.post
+
+    def dispatch(self, request, *args, **kwargs):
+        """Override to set comemnt instance in dispatch."""
+        self.comment = get_object_or_404(Comment, id=self.kwargs.get("comment_id"))
+        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         """Provide request in context for partial template."""
         context = super().get_context_data(**kwargs)
         context["request"] = self.request
+        context["comment"] = self.comment
         return context
 
     def get_queryset(self):
         """Return comment's children as queryset."""
-        comment = get_object_or_404(Comment, id=self.kwargs.get("comment_id"))
-        return comment.children.all()
+        return Comment.objects.filter(parent=self.comment)
 
 
 class LikeCommentView(View):
