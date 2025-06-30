@@ -68,6 +68,29 @@ class CommentObjectBaseMixin:
         return self.comment
 
 
+class CommentPaginatedView(ListView):
+    """Comment Paginated list View."""
+
+    context_object_name = "comments"
+    template_name = "comments/paginator.html"
+    paginate_by = 10
+
+    def dispatch(self, request, *args, **kwargs):
+        """Save post for later use."""
+        self.post = get_object_or_404(Post, id=self.kwargs.get("post_id"))
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_queryset(self):
+        """Get top level comments."""
+        return Comment.objects.filter(post=self.post, parent__isnull=True)
+
+    def get_context_data(self, **kwargs):
+        """Provide post in context."""
+        context = super().get_context_data(**kwargs)
+        context["post"] = self.post
+        return context
+
+
 class CommentCreateView(CommentUrlContextMixin, CreateView):
     """Comment Create view."""
 
