@@ -27,7 +27,7 @@ urlpatterns = [
     ),
     path(
         "<uuid:comment_id>/children/",
-        views.CommentChildrenView.as_view(),
+        views.CommentChildrenPaginatedView.as_view(),
         name="comment_children",
     ),
     path(
