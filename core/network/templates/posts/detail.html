@@ -11,10 +11,18 @@
                 textarea.style.height = 'auto'; 
                 textarea.style.height = textarea.scrollHeight + 'px'; 
               },
-              preventSubmit(e) {
+              preventEmptySubmit(e) {
                 if (this.$refs.textarea.value.trim() === '') {
                   e.preventDefault();
-                }
+                  return;
+                };
+                e.target.reset();
+              },
+              scrollAfterCommented() {
+                const first = $el.firstElementChild;
+                  if (first) {
+                    first.scrollIntoView({behavior: 'smooth', block: 'center'})
+                  };
               }
             }">
             <!-- Header -->
@@ -43,7 +51,7 @@
             </div>
 
 
-            <!-- Comments -->
+            <!-- Comments - load first batch after load-->
             <div 
               class="card-body border-top"
               hx-get="{% url 'comment_list' post.id %}"
@@ -51,7 +59,11 @@
               hx-swap="beforeend"
               hx-target="#load-more-comments"
               >
-              <div id="load-more-comments">
+              <!-- Watch for new content insert and scroll to view -->
+              <div 
+                id="load-more-comments"
+                @comment-created.window="scrollAfterCommented()"
+                >
               </div>
 
             </div>
@@ -59,13 +71,12 @@
             <!-- Add Comment -->
             <div class="card-footer bg-light">
               <form 
-                class="comment-form" 
-                method="post" 
-                action="{% url 'comment_create' post.id %}" 
+                hx-post="{% url 'comment_create' post.id %}"
+                hx-swap="afterbegin"
+                hx-target="#load-more-comments"
                 x-data="{ commentBody: '' }"
-                @submit="preventSubmit($event)"
+                @htmx:before-request="preventEmptySubmit($event)"
               >
-              {% csrf_token %}
                 {% include 'comments/submit.html' %}
               </form>
             </div>
