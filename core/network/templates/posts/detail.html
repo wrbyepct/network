@@ -1,7 +1,7 @@
 {% extends 'network/layout.html' %}
 {% load post_extra %}
 {% block body %}
-    <div class="container my-5">
+    <div class="container my-5"  hx-ext="response-targets">
       <div class="row justify-content-center">
         <div class="col-12 col-md-8 col-lg-6" >
           <div 
@@ -62,7 +62,6 @@
               <!-- Watch for new content insert and scroll to view -->
               <div 
                 id="load-more-comments"
-                @comment-created.window="scrollAfterCommented()"
                 >
               </div>
 
@@ -72,12 +71,13 @@
             <div class="card-footer bg-light">
               <form 
                 hx-post="{% url 'comment_create' post.id %}"
-                hx-swap="afterbegin"
+                hx-target-error="#form-error-{{ post.id }}"
                 hx-target="#load-more-comments"
+                hx-swap="afterbegin show:window:top"
                 x-data="{ commentBody: '' }"
                 @htmx:before-request="preventEmptySubmit($event)"
               >
-                {% include 'comments/submit.html' %}
+                {% include 'comments/submit.html' with suffix=post.id %}
               </form>
             </div>
           </div>

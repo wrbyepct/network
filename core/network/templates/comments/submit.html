@@ -1,22 +1,25 @@
 
-<div 
-  class="input-group"
-  >
-  <textarea 
-    name="content" 
-    class="form-control comment-body" 
-    placeholder="Write a comment..."
-    rows="1"
-    required
-    style="resize: none; overflow: hidden;"
-    x-ref="textarea"
-    x-model="commentBody"
-    @transitionend="resize($el);"
-    @input="resize($el)"
-    ></textarea>
-  <button 
-    class="btn btn-outline-primary border-0 submit-btn" 
-    type="submit"
-    :disabled="commentBody.trim() === ''"
-    ><i class="bi bi-send"></i></button>
+<div>
+  <div class="input-group">
+    <textarea 
+      name="content" 
+      class="form-control comment-body" 
+      placeholder="Write a comment..."
+      rows="1"
+      required
+      style="resize: none; overflow: hidden;"
+      x-ref="textarea"
+      x-model="commentBody"
+      @transitionend="resize($el);"
+      @input="resize($el)"
+      ></textarea>
+    <button 
+      class="btn btn-outline-primary border-0 submit-btn" 
+      type="submit"
+      :disabled="commentBody === ''"
+      ><i class="bi bi-send"></i></button>
+  </div>
+  <div
+    id="form-error-{{ suffix }}">
+  </div>
 </div>
