@@ -45,8 +45,24 @@ class CommentCreateView(CreateView):
     context_object_name = "comment"
     form_class = CommentForm
 
+    def get_response(self):
+        """Get partial response."""
+        context = {
+            "request": self.request,
+            "comment": self.object,
+            "padding": 0,
+        }
+        html = render_to_string("comments/comment.html", context)
+        resp = HttpResponse(html)
+        resp["HX-Trigger"] = "comment-created"
+        return resp
+
     def form_valid(self, form):
-        """Attach post, user, and optional parent to the comment."""
+        """
+        Attach post, user, and optional parent to the comment.
+
+        And provide partial comment html.
+        """
         form.instance.post = get_object_or_404(Post, id=self.kwargs.get("post_id"))
         form.instance.user = self.request.user
 
@@ -56,14 +72,16 @@ class CommentCreateView(CreateView):
 
         self.object = form.save()
 
+        return self.get_response()
+
+    def form_invalid(self, form):
+        """Provide partial form error html and swap strategy."""
         context = {
-            "request": self.request,
-            "comment": self.object,
-            "padding": 0,
+            "form": form,
         }
-        html = render_to_string("comments/comment.html", context)
-        resp = HttpResponse(html)
-        resp["HX-Trigger"] = "comment-created"
+        html = render_to_string("comments/submit_error.html", context)
+        resp = HttpResponse(html, status=400)
+        resp["HX-Reswap"] = "innerHTML"
         return resp
 
 
