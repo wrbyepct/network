@@ -1,7 +1,9 @@
 """Comment Views."""
 
 from django.db import transaction
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
+from django.template.loader import render_to_string
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView, View
 
 from network.posts.models import Post
@@ -37,29 +39,32 @@ class CommentPaginatedView(CommentSetPostMixin, ListView):
         return Comment.objects.filter(post=self._post, parent__isnull=True)
 
 
-class CommentCreateView(
-    CommentRenderMixin,
-    CommentSetPostMixin,
-    CreateView,
-):
+class CommentCreateView(CreateView):
     """Comment Create view."""
 
+    context_object_name = "comment"
     form_class = CommentForm
-
-    def get_post(self):
-        """Overrise get post."""
-        return get_object_or_404(Post, id=self.kwargs.get("post_id"))
 
     def form_valid(self, form):
         """Attach post, user, and optional parent to the comment."""
-        form.instance.post = self._post
+        form.instance.post = get_object_or_404(Post, id=self.kwargs.get("post_id"))
         form.instance.user = self.request.user
 
         parent_id = self.request.POST.get("comment_id")
         if parent_id:
             form.instance.parent = get_object_or_404(Comment, id=parent_id)
 
-        return super().form_valid(form)
+        self.object = form.save()
+
+        context = {
+            "request": self.request,
+            "comment": self.object,
+            "padding": 0,
+        }
+        html = render_to_string("comments/comment.html", context)
+        resp = HttpResponse(html)
+        resp["HX-Trigger"] = "comment-created"
+        return resp
 
 
 class CommentUpdateView(
@@ -78,15 +83,15 @@ class CommentUpdateView(
 
 
 class CommentDeleteView(
-    CommentSetPostMixin,
     CommentObjectOwnedMixin,
+    CommentSetPostMixin,
     CommentRenderMixin,
     DeleteView,
 ):
     """Delete a comment owned by user."""
 
     def get_post(self):
-        """Overrise get post."""
+        """Override get post."""
         return self.comment.post
 
 

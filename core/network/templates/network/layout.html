@@ -47,7 +47,7 @@
             </div>
           </nav>
         
-        <div class="body">
+        <div class="body" hx-headers='{"x-csrftoken": "{{ csrf_token }}"}'>
             {% block body %}
             {% endblock %}
         </div>
