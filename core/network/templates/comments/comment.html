@@ -81,7 +81,7 @@
     <form 
         class="comment-form ps-5" 
         method="post" 
-        action="{% url 'comment_create' post.id %}" 
+        action="{% url 'comment_create' comment.post.id %}" 
         x-data="{ commentBody: '' }"
         x-show="replying"
         x-cloak
