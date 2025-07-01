@@ -26,11 +26,13 @@ class MediaBaseModel(TimestampedModel):
 
     Fields:
         - file(file): file saved is uploaded to what 'post_media_path' specifies
-        - order(int)
+        - order(int):
         - type(char): 'image' or 'video'
+
     Methods:
         - is_image: check if the instance is from type image
         - is_video : check if the instance is from type video
+
     """
 
     class MediaType(models.TextChoices):
