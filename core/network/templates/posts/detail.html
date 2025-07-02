@@ -1,11 +1,11 @@
 {% extends 'network/layout.html' %}
 {% load post_extra %}
 {% block body %}
-    <div class="container my-5"  hx-ext="response-targets">
+    <div class="container my-5" hx-ext="response-targets">
       <div class="row justify-content-center">
         <div class="col-12 col-md-8 col-lg-6" >
           <div 
-            class="card shadow-sm" 
+            class="card shadow-sm"
             x-data="{ 
               resize(textarea) { 
                 textarea.style.height = 'auto'; 
@@ -18,12 +18,6 @@
                 };
                 e.target.reset();
               },
-              scrollAfterCommented() {
-                const first = $el.firstElementChild;
-                  if (first) {
-                    first.scrollIntoView({behavior: 'smooth', block: 'center'})
-                  };
-              }
             }">
             <!-- Header -->
             <div class="card-body d-flex align-items-center">
@@ -59,11 +53,7 @@
               hx-swap="beforeend"
               hx-target="#load-more-comments"
               >
-              <!-- Watch for new content insert and scroll to view -->
-              <div 
-                id="load-more-comments"
-                >
-              </div>
+              <div id="load-more-comments"></div>
 
             </div>
         
@@ -71,11 +61,11 @@
             <div class="card-footer bg-light">
               <form 
                 hx-post="{% url 'comment_create' post.id %}"
-                hx-target-error="#form-error-{{ post.id }}"
                 hx-target="#load-more-comments"
                 hx-swap="afterbegin show:window:top"
                 x-data="{ commentBody: '' }"
                 @htmx:before-request="preventEmptySubmit($event)"
+                @error="() => { alert($event.detail.value); }"
               >
                 {% include 'comments/submit.html' with suffix=post.id %}
               </form>
