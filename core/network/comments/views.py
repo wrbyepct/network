@@ -52,7 +52,6 @@ class CommentCreateView(CreateView):
         context = {
             "request": self.request,
             "comment": self.object,
-            "padding": 0,
         }
         html = render_to_string("comments/comment.html", context)
         return HttpResponse(html)
@@ -66,7 +65,8 @@ class CommentCreateView(CreateView):
         form.instance.post = get_object_or_404(Post, id=self.kwargs.get("post_id"))
         form.instance.user = self.request.user
 
-        parent_id = self.request.POST.get("comment_id")
+        parent_id = self.request.POST.get("parent_id")
+
         if parent_id:
             form.instance.parent = get_object_or_404(Comment, id=parent_id)
 
