@@ -1,17 +1,28 @@
 <div>
+    
     {% for reply in replies %}
-        {% include 'comments/comment.html' with comment=reply request=request post=post padding=50 %}
+        {% include 'comments/comment.html' with comment=reply request=request post=post %}
     {% endfor %}
+    
     {% if page_obj.has_next %}
+    <!-- Teleport show more button out of replies append container and re-process htmx -->
+    <template 
+        x-teleport="#replies-wrapper-{{ comment.id }}" >
         <div
-          class="btn btn-sm text-muted ps-5"
-          x-data="{ showMore: false }"
-          @click="showMore = true"
-          x-show="!showMore"
-          hx-get="{% url 'comment_children' comment.id %}?page={{ page_obj.next_page_number }}"
-          hx-trigger="click"
-          hx-swap="beforeend"
-          hx-target="#replies-{{ comment.id }}"
+            class="btn btn-sm text-muted ps-5"
+            x-data="{ showMore: false }"
+            x-show="!showMore"
+            x-init="
+                setTimeout(() => {
+                    htmx.process($el);
+                }, 10)
+            "
+            @click="showMore = true"
+            hx-get="{% url 'comment_children' comment.id %}?page={{ page_obj.next_page_number }}"
+            hx-trigger="click"
+            hx-swap="beforeend"
+            hx-target="#replies-{{ comment.id }}"
         >More replies</div>
+    </template>   
     {% endif %}
 </div>
