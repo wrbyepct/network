@@ -1,5 +1,7 @@
 """Comment Views."""
 
+import json
+
 from django.db import transaction
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
@@ -53,9 +55,7 @@ class CommentCreateView(CreateView):
             "padding": 0,
         }
         html = render_to_string("comments/comment.html", context)
-        resp = HttpResponse(html)
-        resp["HX-Trigger"] = "comment-created"
-        return resp
+        return HttpResponse(html)
 
     def form_valid(self, form):
         """
@@ -76,12 +76,18 @@ class CommentCreateView(CreateView):
 
     def form_invalid(self, form):
         """Provide partial form error html and swap strategy."""
-        context = {
-            "form": form,
-        }
-        html = render_to_string("comments/submit_error.html", context)
-        resp = HttpResponse(html, status=400)
-        resp["HX-Reswap"] = "innerHTML"
+        resp = HttpResponse(status=400)
+
+        # Messag for alert.
+        error_str = "\n".join(
+            [
+                f"{field}: {error}"
+                for field, errors in form.errors.items()
+                for error in errors
+            ]
+        )
+
+        resp["HX-Trigger"] = json.dumps({"error": error_str})
         return resp
 
 
