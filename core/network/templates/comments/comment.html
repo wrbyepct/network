@@ -1,7 +1,7 @@
 {% load post_extra %}
 <div 
-    x-data="{ isHovering: false, editing: false, replying: false }"
-    style="padding-left: {{ padding }}px" >
+    class="to-append"
+    x-data="{ isHovering: false, editing: false, replying: false}">
     <div 
         class="d-flex"
         @mouseover="isHovering = true"
@@ -55,7 +55,11 @@
         </form>
     </div>
 
- 
+    <!-- Children replies (Dynamically fetched) -->
+    <div id="replies-wrapper-{{ comment.id }}">
+        <div class="ps-5" id="replies-{{ comment.id }}"></div>
+    </div>
+    
     <!-- Replies count  -->
     {% if comment.children_count %}
     <div 
@@ -69,29 +73,22 @@
         hx-swap="innerHTML">See other {{ comment.children_count }} repl{{ comment.children_count|pluralize:'y,ies' }}</div>
     {% endif %}
 
-    <!-- Children replies (Dynamically fetched) -->
-    <div 
-        id="replies-{{ comment.id }}"
-        >
-    </div>
-
-
-
     <!-- Reply form (initially hidden) -->
     <form 
         class="comment-form ps-5" 
-        method="post" 
-        action="{% url 'comment_create' comment.post.id %}" 
+        hx-post="{% url 'comment_create' comment.post.id %}"
+        hx-target="#replies-{{ comment.id }}"
+        hx-swap="beforeend"
         x-data="{ commentBody: '' }"
         x-show="replying"
         x-cloak
         x-transition
-        @submit="preventSubmit($event)"
+        @htmx:before-request="preventEmptySubmit($event)"
     >
-        {% csrf_token %}
-    <!-- Comment submit textarea -->
+        <!-- Comment submit textarea -->
         {% include 'comments/submit.html' %}
-        <input type="hidden" name="comment_id" value="{{ comment.id }}">
+        <!-- Parent comment input -->
+        <input type="hidden" name="parent_id" value="{{ comment.id }}">
         <a 
             class="btn link-primary link-opacity-50-hover text-decoration-none" 
             @click="replying = false">Cancel</a>
