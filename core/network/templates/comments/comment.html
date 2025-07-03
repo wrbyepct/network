@@ -1,6 +1,5 @@
 {% load post_extra %}
 <div 
-    class="to-append"
     x-data="{ isHovering: false, editing: false, replying: false}">
     <div 
         class="d-flex"
@@ -8,14 +7,18 @@
         @mouseleave="isHovering = false"
         >
         <!-- Profile picture -->
-        <img src="{{ comment.profile_picture_url }}" class="rounded-circle me-2" width="36" height="36" alt="">
+        <img src="{{ comment.profile_picture_url }}" class="rounded-full w-11 h-11 object-cover me-2" alt="">
         
         <!-- Comment  -->
         <div 
             x-show="!editing"
         >   
             <!-- Username and Content -->
-            <div class="bg-light rounded px-3 py-2">
+            <div
+                x-data="{ newComment: {{ is_new_comment|yesno:'true,false' }} }"
+                :class="newComment ? 'bg-gray-300' : 'bg-gray-50'"
+                x-effect="if(newComment) $nextTick(() => newComment = false)"
+                class="rounded px-3 py-2  transition-colors duration-1000 delay-1000">
                 <strong>{{ comment.username }}</strong>
                 <p class="mb-1">{{ comment.content|linebreaks }}</p>
             </div>

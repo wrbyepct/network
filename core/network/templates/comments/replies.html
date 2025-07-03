@@ -12,11 +12,7 @@
             class="btn btn-sm text-muted ps-5"
             x-data="{ showMore: false }"
             x-show="!showMore"
-            x-init="
-                setTimeout(() => {
-                    htmx.process($el);
-                }, 10)
-            "
+            x-init="$nextTick(() => htmx.process($el))"
             @click="showMore = true"
             hx-get="{% url 'comment_children' comment.id %}?page={{ page_obj.next_page_number }}"
             hx-trigger="click"

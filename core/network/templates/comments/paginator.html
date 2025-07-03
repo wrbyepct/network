@@ -1,6 +1,6 @@
 <div>
     {% for comment in comments %}
-        {% include 'comments/comment.html' with comment=comment request=request padding=0 %}
+        {% include 'comments/comment.html' with comment=comment request=request %}
     {% endfor %}
     {% if page_obj.has_next %}
         <div
