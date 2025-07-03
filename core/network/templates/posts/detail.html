@@ -4,21 +4,7 @@
     <div class="container my-5" hx-ext="response-targets">
       <div class="row justify-content-center">
         <div class="col-12 col-md-8 col-lg-6" >
-          <div 
-            class="card shadow-sm"
-            x-data="{ 
-              resize(textarea) { 
-                textarea.style.height = 'auto'; 
-                textarea.style.height = textarea.scrollHeight + 'px'; 
-              },
-              preventEmptySubmit(e) {
-                if (this.$refs.textarea.value.trim() === '') {
-                  e.preventDefault();
-                  return;
-                };
-                e.target.reset();
-              },
-            }">
+          <div class="card shadow-sm">
             <!-- Header -->
             <div class="card-body d-flex align-items-center">
                 <img src="{{ post.profile_picture_url }}" class="rounded-full w-15 h-15 object-cover me-3">
