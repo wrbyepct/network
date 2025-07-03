@@ -38,7 +38,7 @@ class CommentPaginatedView(CommentSetPostMixin, ListView):
 
     def get_queryset(self):
         """Get top level comments."""
-        return Comment.objects.filter(post=self._post, parent__isnull=True)
+        return Comment.objects.top_level_for(self._post)
 
 
 class CommentCreateView(CreateView):
@@ -130,23 +130,25 @@ class CommentChildrenPaginatedView(CommentSetPostMixin, ListView):
 
     def get_post(self):
         """Override get post."""
-        return self.comment.post
+        return self.parent_comment.post
 
     def dispatch(self, request, *args, **kwargs):
         """Override to set comemnt instance in dispatch."""
-        self.comment = get_object_or_404(Comment, id=self.kwargs.get("comment_id"))
+        self.parent_comment = get_object_or_404(
+            Comment, id=self.kwargs.get("parent_id")
+        )
         return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         """Provide request in context for partial template."""
         context = super().get_context_data(**kwargs)
         context["request"] = self.request
-        context["comment"] = self.comment
+        context["comment"] = self.parent_comment
         return context
 
     def get_queryset(self):
         """Return comment's children as queryset."""
-        return Comment.objects.filter(parent=self.comment)
+        return Comment.objects.get_children(parent=self.parent_comment)
 
 
 class LikeCommentView(View):

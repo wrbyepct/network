@@ -16,7 +16,7 @@
             <!-- Username and Content -->
             <div
                 x-data="{ newComment: {{ is_new_comment|yesno:'true,false' }} }"
-                :class="newComment ? 'bg-gray-300' : 'bg-gray-50'"
+                :class="newComment ? 'bg-sky-100' : 'bg-gray-50'"
                 x-effect="if(newComment) $nextTick(() => newComment = false)"
                 class="rounded px-3 py-2  transition-colors duration-1000 delay-1000">
                 <strong>{{ comment.username }}</strong>
@@ -79,14 +79,15 @@
     <!-- Reply form (initially hidden) -->
     <form 
         class="comment-form ps-5" 
-        hx-post="{% url 'comment_create' comment.post.id %}"
-        hx-target="#replies-{{ comment.id }}"
-        hx-swap="beforeend"
-        x-data="{ commentBody: '' }"
+        x-data="{ commentBody: '@{{ comment.username }} ' }"
+        x-trap="replying"
         x-show="replying"
         x-cloak
         x-transition
         @htmx:before-request="preventEmptySubmit($event)"
+        hx-post="{% url 'comment_create' comment.post.id %}"
+        hx-target="#replies-{{ comment.id }}"
+        hx-swap="beforeend"
     >
         <!-- Comment submit textarea -->
         {% include 'comments/submit.html' %}

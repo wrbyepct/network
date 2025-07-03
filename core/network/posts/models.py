@@ -2,6 +2,7 @@
 
 from django.conf import settings
 from django.db import models
+from django.utils.functional import cached_property
 
 from network.common.mixins import LikeCountMixin, ProfileInfoMixin
 from network.common.models import MediaBaseModel, TimestampedModel
@@ -30,6 +31,16 @@ class Post(LikeCountMixin, ProfileInfoMixin, TimestampedModel):
     def __str__(self) -> str:
         """Return string <user-profile-username>'s post: <post-title>."""
         return f"Post by: {self.user.profile.username}"
+
+    @cached_property
+    def latest_two_comments(self):
+        """Fetch first 2 top level comments."""
+        return self.comments.top_level_for(self)[:2]
+
+    @cached_property
+    def comment_count(self):
+        """Return comment count."""
+        return self.comments.all().count()
 
 
 class PostLike(TimestampedModel):
