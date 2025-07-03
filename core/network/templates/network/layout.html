@@ -49,7 +49,23 @@
             </div>
           </nav>
         
-        <div class="body" hx-headers='{"x-csrftoken": "{{ csrf_token }}"}'>
+        <div 
+          class="body" 
+          hx-headers='{"x-csrftoken": "{{ csrf_token }}"}'
+          x-data="{ 
+            resize(textarea) { 
+              textarea.style.height = 'auto'; 
+              textarea.style.height = textarea.scrollHeight + 'px'; 
+            },
+            preventEmptySubmit(e) {
+              if (this.$refs.textarea.value.trim() === '') {
+                e.preventDefault();
+                return;
+              };
+              e.target.reset();
+            },
+          }"
+          >
             {% block body %}
             {% endblock %}
         </div>
