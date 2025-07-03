@@ -80,7 +80,6 @@
                 <a
                   class="btn btn-outline-danger border-0 p-0"
                   hx-post="{% url 'post_like' post.id %}"
-                  hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
                   hx-target="#post-like-{{ post.id }}"
                   hx-swap="innerHTML"
                   x-data="{'liked': {{ post|liked_by_user:request.user|yesno:'true,false' }}}"
@@ -96,7 +95,9 @@
                 <span class="text-muted ps-1">{{ post.like_count }}</span>
               </div>
 
-              <a href="{% url 'post_detail' post.id %}" class="text-decoration-none ms-auto">💬 Comment</a>
+              <a 
+                href="{% url 'post_detail' post.id %}" 
+                class="text-decoration-none ms-auto">{{ post.comment_count }} 💬</a>
             </div>
             <!-- Comment section - Display only 2 -->
              <div class="p-3 border-top">

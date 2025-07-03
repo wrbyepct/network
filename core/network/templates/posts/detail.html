@@ -19,7 +19,24 @@
             <!-- Content -->
             <div class="card-body">
                 <p class="mb-3"> {{ post.content|linebreaks }} </p>
+                <!-- Like and comment stats -->
+                <div class="mt-10 flex justify-between self-center">
+                  <a
+                    class="btn border-0 p-0"
+                    x-data="{
+                      liked: {{ post|liked_by_user:request.user|yesno:'true,false' }},
+                      likeCount: {{ post.like_count }}
+                    }"
+                  >
+                    <span
+                      x-text="liked ? `❤️ You and ${ likeCount } others` : `❤️ ${ likeCount }`"
+                      ></span>
+                  </a>
+                  <span>{{ post.comment_count }} comment{{ post.comment_count|pluralize }}</span>
+                </div>
             </div>
+
+
              
             <!-- Like/Comment/Share -->
             <div class="card-footer bg-white border-top">
