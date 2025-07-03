@@ -31,5 +31,5 @@ class PostManger(models.Manager):
         return self.get_queryset().with_media()
 
     def for_list_data(self):
-        """Return optimized posts with medias and profile data."""
+        """Return optimized posts with medias, profile and comment data."""
         return self.get_queryset().with_media().with_profile()
