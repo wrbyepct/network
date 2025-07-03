@@ -52,6 +52,7 @@ class CommentCreateView(CreateView):
         context = {
             "request": self.request,
             "comment": self.object,
+            "is_new_comment": True,
         }
         html = render_to_string("comments/comment.html", context)
         return HttpResponse(html)
