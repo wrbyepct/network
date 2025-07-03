@@ -47,7 +47,9 @@
 
             <!-- Comments - load first batch after load-->
             <div 
-              class="card-body border-top"
+              id="comments"
+              class="card-body border-top overflow-y-auto"
+              style="height: 25rem;"
               hx-get="{% url 'comment_list' post.id %}"
               hx-trigger="load"
               hx-swap="beforeend"
@@ -62,7 +64,7 @@
               <form 
                 hx-post="{% url 'comment_create' post.id %}"
                 hx-target="#load-more-comments"
-                hx-swap="afterbegin show:window:top"
+                hx-swap="afterbegin scroll:#comments:top"
                 x-data="{ commentBody: '' }"
                 @htmx:before-request="preventEmptySubmit($event)"
                 @error="() => { alert($event.detail.value); }"
