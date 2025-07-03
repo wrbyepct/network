@@ -9,6 +9,8 @@ from network.common.mixins import LikeCountMixin, ProfileInfoMixin
 from network.common.models import TimestampedModel
 from network.posts.models import Post
 
+from .managers import CommentManager
+
 
 class Comment(ProfileInfoMixin, LikeCountMixin, TimestampedModel):
     """Commnet model associated with a Post."""
@@ -26,6 +28,8 @@ class Comment(ProfileInfoMixin, LikeCountMixin, TimestampedModel):
         on_delete=models.CASCADE,
         related_name="children",
     )
+
+    objects = CommentManager()
 
     class Meta(TimestampedModel.Meta):
         pass

@@ -80,7 +80,7 @@
     <form 
         class="comment-form ps-5" 
         x-data="{ commentBody: '@{{ comment.username }} ' }"
-        x-trap.noreturn="replying"
+        x-trap="replying"
         x-show="replying"
         x-cloak
         x-transition

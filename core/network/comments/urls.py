@@ -26,7 +26,7 @@ urlpatterns = [
         name="comment_delete",
     ),
     path(
-        "<uuid:comment_id>/children/",
+        "<uuid:parent_id>/children/",
         views.CommentChildrenPaginatedView.as_view(),
         name="comment_children",
     ),
