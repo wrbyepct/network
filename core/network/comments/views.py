@@ -6,6 +6,7 @@ from django.db import transaction
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.template.loader import render_to_string
+from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView, View
 
 from network.posts.models import Post
@@ -109,15 +110,11 @@ class CommentUpdateView(
 
 class CommentDeleteView(
     CommentObjectOwnedMixin,
-    CommentSetPostMixin,
-    CommentRenderMixin,
     DeleteView,
 ):
     """Delete a comment owned by user."""
 
-    def get_post(self):
-        """Override get post."""
-        return self.comment.post
+    success_url = reverse_lazy("empty")
 
 
 # TODO: make sure this query is optimized
