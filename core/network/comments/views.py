@@ -1,5 +1,6 @@
 """Comment Views."""
 
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
@@ -12,7 +13,6 @@ from network.posts.models import Post
 from .forms import CommentForm
 from .mixins import (
     CommentObjectOwnedMixin,
-    CommentSetPostMixin,
     FormInvalidReturnErrorHXTriggerMixin,
 )
 from .models import Comment, CommentLike
@@ -22,21 +22,23 @@ from .models import Comment, CommentLike
 # TODO later change comment create view to partial html
 
 
-class CommentPaginatedView(CommentSetPostMixin, ListView):
+class CommentPaginatedView(ListView):
     """Comment Paginated list View."""
 
     context_object_name = "comments"
     template_name = "comments/paginator.html"
     paginate_by = 10
 
-    def get_post(self):
-        """Overrise get post."""
-        return get_object_or_404(Post, id=self.kwargs.get("post_id"))
+    def dispatch(self, request, *args, **kwargs):
+        """Save post for later use."""
+        self._post = get_object_or_404(Post, id=self.kwargs.get("post_id"))
+        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         """Provide request in context for partial template."""
         context = super().get_context_data(**kwargs)
         context["request"] = self.request
+        context["post"] = self._post
         return context
 
     def get_queryset(self):
@@ -44,7 +46,11 @@ class CommentPaginatedView(CommentSetPostMixin, ListView):
         return Comment.objects.top_level_for(self._post)
 
 
-class CommentCreateView(FormInvalidReturnErrorHXTriggerMixin, CreateView):
+class CommentCreateView(
+    LoginRequiredMixin,
+    FormInvalidReturnErrorHXTriggerMixin,
+    CreateView,
+):
     """Comment Create view."""
 
     context_object_name = "comment"
@@ -80,6 +86,7 @@ class CommentCreateView(FormInvalidReturnErrorHXTriggerMixin, CreateView):
 
 
 class CommentUpdateView(
+    LoginRequiredMixin,
     FormInvalidReturnErrorHXTriggerMixin,
     CommentObjectOwnedMixin,
     UpdateView,
@@ -87,10 +94,6 @@ class CommentUpdateView(
     """Comment update view."""
 
     form_class = CommentForm
-
-    def get_post(self):
-        """Overrise get post."""
-        return self.comment.post
 
     def form_valid(self, form):
         """Return partial comment as response."""
@@ -110,19 +113,15 @@ class CommentDeleteView(
 
 
 # TODO: make sure this query is optimized
-class CommentChildrenPaginatedView(CommentSetPostMixin, ListView):
+class CommentChildrenPaginatedView(ListView):
     """Comment Children Partial response view."""
 
     context_object_name = "replies"
     template_name = "comments/replies.html"
     paginate_by = 5
 
-    def get_post(self):
-        """Override get post."""
-        return self.parent_comment.post
-
     def dispatch(self, request, *args, **kwargs):
-        """Override to set comemnt instance in dispatch."""
+        """Override to set parent comemnt instance in dispatch."""
         self.parent_comment = get_object_or_404(
             Comment, id=self.kwargs.get("parent_id")
         )
@@ -140,7 +139,7 @@ class CommentChildrenPaginatedView(CommentSetPostMixin, ListView):
         return Comment.objects.get_children(parent=self.parent_comment)
 
 
-class LikeCommentView(View):
+class LikeCommentView(LoginRequiredMixin, View):
     """View to like/unlike a comment."""
 
     def post(self, request, *args, **kwargs):
