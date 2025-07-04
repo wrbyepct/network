@@ -8,6 +8,7 @@
         newComment: {{ is_new_comment|yesno:'true,false' }}, 
         isOwner: {% if request.user == comment.user%}true{% else %}false{%endif%},
         setReplyTo() { return this.isOwner ? '' : '@{{ comment.username }} ' },
+        collapse: true,
     }">
     <div 
         class="d-flex"
@@ -21,13 +22,19 @@
         <div 
             x-show="!editing"
         >   
-            <!-- Username and Content -->
+            <!-- Username and collapsable content -->
             <div
                 :class="newComment ? 'bg-sky-100' : 'bg-gray-50'"
                 x-effect="if(newComment) $nextTick(() => newComment = false)"
                 class="rounded px-3 py-2  transition-colors duration-1000 delay-1000">
                 <strong>{{ comment.username }}</strong>
-                <p class="mb-1">{{ comment.content|linebreaks }}</p>
+                <p 
+                    class="mb-1"
+      
+                    :class="collapse && 'line-clamp-3'"
+                    >{{ comment.content|linebreaksbr }}
+                </p>
+                {% include 'common/collapse.html' %}
             </div>
             <!-- Time and Reply button -->
             <div class="d-flex mb-1">
