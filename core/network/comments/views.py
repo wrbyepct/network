@@ -1,7 +1,5 @@
 """Comment Views."""
 
-import json
-
 from django.db import transaction
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
@@ -12,7 +10,11 @@ from django.views.generic import CreateView, DeleteView, ListView, UpdateView, V
 from network.posts.models import Post
 
 from .forms import CommentForm
-from .mixins import CommentObjectOwnedMixin, CommentSetPostMixin
+from .mixins import (
+    CommentObjectOwnedMixin,
+    CommentSetPostMixin,
+    FormInvalidReturnErrorHXTriggerMixin,
+)
 from .models import Comment, CommentLike
 
 # TODO user see immediate comments update to comment section
@@ -42,7 +44,7 @@ class CommentPaginatedView(CommentSetPostMixin, ListView):
         return Comment.objects.top_level_for(self._post)
 
 
-class CommentCreateView(CreateView):
+class CommentCreateView(FormInvalidReturnErrorHXTriggerMixin, CreateView):
     """Comment Create view."""
 
     context_object_name = "comment"
@@ -76,24 +78,9 @@ class CommentCreateView(CreateView):
 
         return self.get_response()
 
-    def form_invalid(self, form):
-        """Provide partial form error html and swap strategy."""
-        resp = HttpResponse(status=400)
-
-        # Messag for alert.
-        error_str = "\n".join(
-            [
-                f"{field}: {error}"
-                for field, errors in form.errors.items()
-                for error in errors
-            ]
-        )
-
-        resp["HX-Trigger"] = json.dumps({"error": error_str})
-        return resp
-
 
 class CommentUpdateView(
+    FormInvalidReturnErrorHXTriggerMixin,
     CommentObjectOwnedMixin,
     UpdateView,
 ):
@@ -111,22 +98,6 @@ class CommentUpdateView(
         context = {"comment": self.object, "request": self.request}
         html = render_to_string("comments/comment.html", context)
         return HttpResponse(html)
-
-    def form_invalid(self, form):
-        """Provide partial form error html and swap strategy."""
-        resp = HttpResponse(status=400)
-
-        # Messag for alert.
-        error_str = "\n".join(
-            [
-                f"{field}: {error}"
-                for field, errors in form.errors.items()
-                for error in errors
-            ]
-        )
-
-        resp["HX-Trigger"] = json.dumps({"error": error_str})
-        return resp
 
 
 class CommentDeleteView(

@@ -1,7 +1,14 @@
 {% load post_extra %}
 <div 
     id="comment-{{ comment.id }}"
-    x-data="{ isHovering: false, editing: false, replying: false}">
+    x-data="{ 
+        isHovering: false, 
+        editing: false, 
+        replying: false,
+        newComment: {{ is_new_comment|yesno:'true,false' }}, 
+        isOwner: {% if request.user == comment.user%}true{% else %}false{%endif%},
+        setReplyTo() { return this.isOwner ? '' : '@{{ comment.username }} ' },
+    }">
     <div 
         class="d-flex"
         @mouseover="isHovering = true"
@@ -16,7 +23,6 @@
         >   
             <!-- Username and Content -->
             <div
-                x-data="{ newComment: {{ is_new_comment|yesno:'true,false' }} }"
                 :class="newComment ? 'bg-sky-100' : 'bg-gray-50'"
                 x-effect="if(newComment) $nextTick(() => newComment = false)"
                 class="rounded px-3 py-2  transition-colors duration-1000 delay-1000">
@@ -45,8 +51,9 @@
             hx-post="{% url 'comment_edit' comment.id %}"
             hx-target="#comment-{{ comment.id }}"
             hx-swap="outerHTML"
-            x-data="{ commentBody: '{{ comment.content|escapejs }}' }"
+            x-data="{commentBody: '{{ comment.content|escapejs }}'}"
             x-show="editing"
+            x-trap="editing"
             x-cloak
             x-transition
             @submit="preventSubmit($event)"
@@ -74,17 +81,19 @@
         hx-get="{% url 'comment_children' comment.id %}"
         hx-trigger="click"
         hx-target="#replies-{{ comment.id }}"
-        hx-swap="innerHTML">See other {{ comment.children_count }} repl{{ comment.children_count|pluralize:'y,ies' }}</div>
+        hx-swap="innerHTML">See other {{ comment.children_count }} repl{{ comment.children_count|pluralize:'y,ies' }}
+    </div>
     {% endif %}
 
     <!-- Reply form (initially hidden) -->
     <form 
         class="comment-form ps-5" 
-        x-data="{ commentBody: '@{{ comment.username }} ' }"
+        x-data="{ commentBody: setReplyTo() }"
         x-trap="replying"
         x-show="replying"
         x-cloak
         x-transition
+        x-effect="if(replying) commentBody = setReplyTo()"
         @htmx:before-request="preventEmptySubmit($event)"
         hx-post="{% url 'comment_create' comment.post.id %}"
         hx-target="#replies-{{ comment.id }}"

@@ -4,7 +4,6 @@
     <textarea 
       name="content" 
       class="form-control comment-body" 
-      placeholder="Write a comment..."
       rows="1"
       required
       style="resize: none; overflow: hidden;"
@@ -12,6 +11,7 @@
       x-model="commentBody"
       @transitionend="resize($el);"
       @input="resize($el)"
+      :placeholder="replying ? 'Replay to {{ comment.username }}' : 'Write a comment...'  " 
       ></textarea>
     <button 
       class="btn btn-outline-primary border-0 submit-btn" 

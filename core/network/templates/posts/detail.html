@@ -68,7 +68,7 @@
                 hx-post="{% url 'comment_create' post.id %}"
                 hx-target="#load-more-comments"
                 hx-swap="afterbegin scroll:#comments:top"
-                x-data="{ commentBody: '' }"
+                x-data="{ commentBody: '', replying: false }"
                 @htmx:before-request="preventEmptySubmit($event)"
               >
                 {% include 'comments/submit.html' with suffix=post.id %}

@@ -65,7 +65,7 @@
               e.target.reset();
             },
           }"
-          @error.window="() => { alert($event.detail.value); }"
+          @form-error.window="() => { alert($event.detail.value); }"
           >
             {% block body %}
             {% endblock %}
