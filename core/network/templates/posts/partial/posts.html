@@ -100,7 +100,9 @@
                 class="text-decoration-none ms-auto">{{ post.comment_count }} 💬</a>
             </div>
             <!-- Comment section - Display only 2 -->
-             <div class="p-3 border-top">
+            <div 
+              id="post-comments-{{ post.id }}"
+              class="p-3 border-top">
               {% if post.comment_count > 2 %}
      
                 <a class="text-decoration-none text-muted fs-6 d-block mb-3 " href="{% url 'post_detail' post.id %}">See More</a>
@@ -109,7 +111,19 @@
               {% for comment in post.latest_two_comments %}
                 {% include 'comments/comment.html' %}
               {% endfor %}
-             </div>
+            </div>
+            <!-- Comment submit form -->
+            <div class="card-footer bg-light">
+              <form 
+                hx-post="{% url 'comment_create' post.id %}"
+                hx-target="#post-comments-{{ post.id }}"
+                hx-swap="beforeend"
+                x-data="{ commentBody: '', replying: false }"
+                @htmx:before-request="preventEmptySubmit($event)"
+              >
+                {% include 'comments/submit.html' %}
+              </form>
+            </div>
           </div>
         {% empty %}
           <p class="text-center text-muted">No posts to display.</p>
