@@ -1,7 +1,16 @@
 {% extends 'network/layout.html' %}
 {% load post_extra %}
 {% block body %}
-    <div class="container my-5" hx-ext="response-targets">
+    <div 
+    class="container my-5" 
+    x-data="{
+      commentBody: '', 
+      replying: false,
+      liked: {{ post|liked_by_user:request.user|yesno:'true,false' }},
+      likeCount: {{ post.like_count }},
+      collapse: {{ post.need_collapse|yesno:'true,false' }}
+    }"
+    hx-ext="response-targets">
       <div class="row justify-content-center">
         <div class="col-12 col-md-8 col-lg-6" >
           <div class="card shadow-sm">
@@ -17,9 +26,7 @@
                 {% endif %}
             </div>
             <!-- Content --> 
-            <div 
-              class="card-body"
-              x-data="{ collapse: true }">
+            <div class="card-body">
                 <p 
                   class="mb-3"
                   :class="collapse && 'line-clamp-5'"
@@ -30,10 +37,6 @@
                 <div class="mt-10 flex justify-between self-center">
                   <a
                     class="btn border-0 p-0"
-                    x-data="{
-                      liked: {{ post|liked_by_user:request.user|yesno:'true,false' }},
-                      likeCount: {{ post.like_count }}
-                    }"
                   >
                     <span
                       x-text="liked ? `❤️ You and ${ likeCount } others` : `❤️ ${ likeCount }`"
@@ -58,7 +61,7 @@
             <!-- Comments - load first batch after load-->
             <div 
               id="comments"
-              class="card-body border-top overflow-y-auto"
+              class="card-body border-top overflow-y-auto break-words w-full max-w-full overflow-x-hidden"
               style="height: 25rem;"
               hx-get="{% url 'comment_list' post.id %}"
               hx-trigger="load"
@@ -72,11 +75,15 @@
             <!-- Comment submit form -->
             <div class="card-footer bg-light">
               <form 
-                hx-post="{% url 'comment_create' post.id %}"
-                hx-target="#load-more-comments"
-                hx-swap="afterbegin scroll:#comments:top"
-                x-data="{ commentBody: '', replying: false }"
-                @htmx:before-request="preventEmptySubmit($event)"
+                {% if request.user.is_authenticated %}
+                  hx-post="{% url 'comment_create' post.id %}"
+                  hx-target="#load-more-comments"
+                  hx-swap="afterbegin scroll:#comments:top"
+                  @htmx:before-request="preventEmptySubmit($event)"
+                {% else %}
+                  @click="window.location.href='{% url 'account_login' %}'"
+                  @submit.prevent
+                {% endif %}
               >
                 {% include 'comments/submit.html' %}
               </form>
