@@ -10,7 +10,7 @@
               commentBody: '', 
               replying: false,
               liked: {{ post|liked_by_user:request.user|yesno:'true,false' }},
-              collapse: false,
+              collapse: {{ post.need_collapse|yesno:'true,false' }}
             }"
             class="card mb-4 shadow-sm"
             >
@@ -125,10 +125,15 @@
             <!-- Comment submit form -->
             <div class="card-footer bg-light">
               <form 
-                hx-post="{% url 'comment_create' post.id %}"
-                hx-target="#post-comments-{{ post.id }}"
-                hx-swap="beforeend"
-                @htmx:before-request="preventEmptySubmit($event)"
+                {% if request.user.is_authenticated %}
+                  hx-post="{% url 'comment_create' post.id %}"
+                  hx-target="#post-comments-{{ post.id }}"
+                  hx-swap="beforeend"
+                  @htmx:before-request="preventEmptySubmit($event)"
+                {% else %}
+                  @click="window.location.href='{% url 'account_login' %}'"
+                  @submit.prevent
+                {% endif %}
               >
                 {% include 'comments/submit.html' %}
               </form>
