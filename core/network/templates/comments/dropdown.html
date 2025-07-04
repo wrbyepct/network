@@ -14,8 +14,11 @@
           @click="editing = true">Edit</a></li>
     <li><hr class="dropdown-divider m-0"></li>
     <li>  
-      <form method="post" action="{% url 'comment_delete' comment.id %}">
-        {% csrf_token %}
+      <form 
+        hx-post="{% url 'comment_delete' comment.id %}"
+        hx-target="#comment-{{ comment.id }}"
+        hx-swap="outerHTML"
+        >
         <button type="submit" class="dropdown-item py-1 text-danger hover-bg-danger border-0 bg-transparent w-100 text-start">
             Delete
         </button>

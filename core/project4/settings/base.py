@@ -8,6 +8,7 @@ MY_APPS = [
     "network.posts",
     "network.albums",
     "network.comments",
+    "network.common",
 ]
 
 BASE_APPS = [
