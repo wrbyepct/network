@@ -8,7 +8,7 @@
         newComment: {{ is_new_comment|yesno:'true,false' }}, 
         isOwner: {% if request.user == comment.user%}true{% else %}false{%endif%},
         setReplyTo() { return this.isOwner ? '' : '@{{ comment.username }} ' },
-        collapse: true,
+        collapse: {{ comment.need_collapse|yesno:'true,false' }},
     }">
     <div 
         class="d-flex"
@@ -29,9 +29,9 @@
                 class="rounded px-3 py-2  transition-colors duration-1000 delay-1000">
                 <strong>{{ comment.username }}</strong>
                 <p 
-                    class="mb-1"
-      
-                    :class="collapse && 'line-clamp-3'"
+                    class="mb-1 w-4/5"
+                    style="max-width: 20rem;"
+                    :class="collapse && 'line-clamp-2'"
                     >{{ comment.content|linebreaksbr }}
                 </p>
                 {% include 'common/collapse.html' %}
@@ -39,9 +39,15 @@
             <!-- Time and Reply button -->
             <div class="d-flex mb-1">
                 <small class="text-muted bg-white">{{ comment.created_at|timesince_simple }}</small>
+                
                 <small 
-                    class="py-0 btn btn-sm"
-                    @click="replying = true">Reply</small>
+                  class="py-0 btn btn-sm"
+                {% if request.user.is_authenticated %}
+                  @click="replying = true"
+                {% else %}
+                  @click="window.location.href='{% url "account_login" %}'"
+                {% endif %}
+                >Reply</small>
                 {% include 'comments/like_button.html' %}
             </div>
 
