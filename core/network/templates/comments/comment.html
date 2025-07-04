@@ -42,15 +42,15 @@
         <!-- Edit form (initially hidden) -->
         <form 
             class="flex-grow-1 comment-form" 
-            method="post" 
-            action="{% url 'comment_edit' comment.id %}" 
+            hx-post="{% url 'comment_edit' comment.id %}"
+            hx-target="#comment-{{ comment.id }}"
+            hx-swap="outerHTML"
             x-data="{ commentBody: '{{ comment.content|escapejs }}' }"
             x-show="editing"
             x-cloak
             x-transition
             @submit="preventSubmit($event)"
             >
-            {% csrf_token %}
                 {% include 'comments/submit.html' %}
             <a 
                 class="btn link-primary link-opacity-50-hover text-decoration-none" 
