@@ -16,9 +16,16 @@
                     {% include 'posts/partial/dropdown.html' %}
                 {% endif %}
             </div>
-            <!-- Content -->
-            <div class="card-body">
-                <p class="mb-3"> {{ post.content|linebreaks }} </p>
+            <!-- Content --> 
+            <div 
+              class="card-body"
+              x-data="{ collapse: true }">
+                <p 
+                  class="mb-3"
+                  :class="collapse && 'line-clamp-5'"
+                  > {{ post.content|linebreaksbr }}</p>
+                
+                  {% include 'common/collapse.html' %}
                 <!-- Like and comment stats -->
                 <div class="mt-10 flex justify-between self-center">
                   <a
