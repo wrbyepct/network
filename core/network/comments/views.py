@@ -12,7 +12,7 @@ from django.views.generic import CreateView, DeleteView, ListView, UpdateView, V
 from network.posts.models import Post
 
 from .forms import CommentForm
-from .mixins import CommentObjectOwnedMixin, CommentRenderMixin, CommentSetPostMixin
+from .mixins import CommentObjectOwnedMixin, CommentSetPostMixin
 from .models import Comment, CommentLike
 
 # TODO user see immediate comments update to comment section
@@ -94,9 +94,7 @@ class CommentCreateView(CreateView):
 
 
 class CommentUpdateView(
-    CommentSetPostMixin,
     CommentObjectOwnedMixin,
-    CommentRenderMixin,
     UpdateView,
 ):
     """Comment update view."""
@@ -106,6 +104,29 @@ class CommentUpdateView(
     def get_post(self):
         """Overrise get post."""
         return self.comment.post
+
+    def form_valid(self, form):
+        """Return partial comment as response."""
+        form.save()
+        context = {"comment": self.object, "request": self.request}
+        html = render_to_string("comments/comment.html", context)
+        return HttpResponse(html)
+
+    def form_invalid(self, form):
+        """Provide partial form error html and swap strategy."""
+        resp = HttpResponse(status=400)
+
+        # Messag for alert.
+        error_str = "\n".join(
+            [
+                f"{field}: {error}"
+                for field, errors in form.errors.items()
+                for error in errors
+            ]
+        )
+
+        resp["HX-Trigger"] = json.dumps({"error": error_str})
+        return resp
 
 
 class CommentDeleteView(
