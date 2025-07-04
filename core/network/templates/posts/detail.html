@@ -70,7 +70,6 @@
                 hx-swap="afterbegin scroll:#comments:top"
                 x-data="{ commentBody: '' }"
                 @htmx:before-request="preventEmptySubmit($event)"
-                @error="() => { alert($event.detail.value); }"
               >
                 {% include 'comments/submit.html' with suffix=post.id %}
               </form>
