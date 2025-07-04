@@ -1,29 +1,12 @@
 """Comment Mixins."""
 
+import json
+
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
-from django.urls import reverse
 
 from .models import Comment
-
-
-class CommentRenderMixin:
-    """
-    Mixin to render succuss url and template to render on failed.
-
-    Properties:
-        - template_name: "posts/detail.html"
-
-    Methods:
-        - get_success_url(): Return post page the comment is on.
-
-    """
-
-    template_name = "posts/detail.html"  # will be used on form_invalid
-
-    def get_success_url(self):
-        """Return to the post detail page."""
-        return reverse("post_detail", args=[self._post.id])
 
 
 class CommentSetPostMixin(LoginRequiredMixin):
@@ -72,3 +55,23 @@ class CommentObjectOwnedMixin:
     def get_object(self):
         """Get comment owned by the user."""
         return self.comment
+
+
+class FormInvalidReturnErrorHXTriggerMixin:
+    """Mixin to return error hx trigger when form is invalid."""
+
+    def form_invalid(self, form):
+        """Return 400 response with error HX-trigger for alert message."""
+        resp = HttpResponse(status=400)
+
+        # Messag for alert.
+        error_str = "\n".join(
+            [
+                f"{field}: {error}"
+                for field, errors in form.errors.items()
+                for error in errors
+            ]
+        )
+
+        resp["HX-Trigger"] = json.dumps({"form-error": error_str})
+        return resp
