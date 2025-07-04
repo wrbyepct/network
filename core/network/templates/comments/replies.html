@@ -1,7 +1,7 @@
 <div>
     
     {% for reply in replies %}
-        {% include 'comments/comment.html' with comment=reply request=request post=post %}
+        {% include 'comments/comment.html' with comment=reply request=request %}
     {% endfor %}
     
     {% if page_obj.has_next %}
