@@ -5,7 +5,15 @@
     <div class="row">
       <div class="col-lg-8 mx-auto">
         {% for post in posts %}
-          <div class="card mb-4 shadow-sm">
+          <div 
+            x-data="{
+              commentBody: '', 
+              replying: false,
+              liked: {{ post|liked_by_user:request.user|yesno:'true,false' }},
+              collapse: false,
+            }"
+            class="card mb-4 shadow-sm"
+            >
             <!-- Card Header -->
             <div class="card-header d-flex align-items-center bg-white border-bottom">
                 <a href="{% url 'profile_about' post.user.profile.username %}">
@@ -26,8 +34,11 @@
   
             <!-- Card Body -->
             <div class="card-body">
-              <p class="mb-3">{{ post.content|linebreaks }}</p>
-  
+              <p 
+                class="mb-3"
+                :class="collapse && 'line-clamp-5'"
+                >{{ post.content|linebreaksbr }}</p>
+              {% include 'common/collapse.html' %}
               {% with post.medias.all as medias %}
 
                 {# Separate out videos #}
@@ -82,12 +93,11 @@
                   hx-post="{% url 'post_like' post.id %}"
                   hx-target="#post-like-{{ post.id }}"
                   hx-swap="innerHTML"
-                  x-data="{'liked': {{ post|liked_by_user:request.user|yesno:'true,false' }}}"
                 >
-                <span 
-                  @click="liked = !liked"
-                  x-text="liked ? '❤️' : '🤍'">
-                </span>
+                  <span 
+                    @click="liked = !liked"
+                    x-text="liked ? '❤️' : '🤍'">
+                  </span>
                </a>
               {% endif%}
 
@@ -118,7 +128,6 @@
                 hx-post="{% url 'comment_create' post.id %}"
                 hx-target="#post-comments-{{ post.id }}"
                 hx-swap="beforeend"
-                x-data="{ commentBody: '', replying: false }"
                 @htmx:before-request="preventEmptySubmit($event)"
               >
                 {% include 'comments/submit.html' %}
