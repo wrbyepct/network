@@ -1,5 +1,6 @@
 {% load post_extra %}
 <div 
+    id="comment-{{ comment.id }}"
     x-data="{ isHovering: false, editing: false, replying: false}">
     <div 
         class="d-flex"

@@ -12,10 +12,10 @@ class CommentRenderMixin:
     Mixin to render succuss url and template to render on failed.
 
     Properties:
-     - template_name: "posts/detail.html"
+        - template_name: "posts/detail.html"
 
     Methods:
-         - get_success_url(): Return post page the comment is on.
+        - get_success_url(): Return post page the comment is on.
 
     """
 
