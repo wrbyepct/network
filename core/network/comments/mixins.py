@@ -2,39 +2,15 @@
 
 import json
 
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 
 from .models import Comment
 
 
-class CommentSetPostMixin(LoginRequiredMixin):
-    """
-    Mixin to provide success url and context needed for failed submission.
-
-    Methods:
-     - dispatch: set self._post with custom self.get_post() method.
-
-     - get_context_data(): Store post data in context.
-
-    """
-
-    def dispatch(self, request, *args, **kwargs):
-        """Save post for later use."""
-        self._post = self.get_post()
-        return super().dispatch(request, *args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        """Add post in context data."""
-        context = super().get_context_data(**kwargs)
-        context["post"] = self._post
-        return context
-
-
 class CommentObjectOwnedMixin:
     """
-    Base mixin for Views that access specific comment object.
+    Base mixin for Views that access user owned comment object.
 
     Methods:
      - dispatch(): set self.comment
