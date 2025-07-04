@@ -71,7 +71,7 @@
                 x-data="{ commentBody: '', replying: false }"
                 @htmx:before-request="preventEmptySubmit($event)"
               >
-                {% include 'comments/submit.html' with suffix=post.id %}
+                {% include 'comments/submit.html' %}
               </form>
             </div>
           </div>
