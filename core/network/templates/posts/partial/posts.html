@@ -103,19 +103,20 @@
               {% else %}
                 <a
                   class="btn btn-outline-danger border-0 p-0"
+                  @click="liked = !liked"
                   hx-post="{% url 'post_like' post.id %}"
-                  hx-target="#post-like-{{ post.id }}"
+                  hx-target="#post-like-stat-{{ post.id }}"
                   hx-swap="innerHTML"
                 >
-                  <span 
-                    @click="liked = !liked"
-                    x-text="liked ? '❤️' : '🤍'">
-                  </span>
+                  <span x-text="liked ? '❤️' : '🤍'"> </span>
                </a>
               {% endif%}
 
-              <div id="post-like-{{ post.id }}">
-                <span class="text-muted ps-1">{{ post.like_count }}</span>
+              <div id="post-like-stat-{{ post.id }}">
+                <span 
+                  class="text-muted ps-1"
+                  x-text="liked ? 'You and {{ post.like_count }} others' : {{ post.like_count }}"
+                  ></span>
               </div>
 
               <a 

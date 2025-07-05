@@ -3,7 +3,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView, View
@@ -153,8 +153,6 @@ class LikeCommentView(LoginRequiredMixin, View):
             if not created:
                 like.delete()
             comment.update_like_count()
-        return render(
-            request,
-            "posts/partial/like_count.html",
-            {"like_count": comment.like_count},
-        )
+        resp = HttpResponse(str(comment.like_count), content_type="text/plain")
+        resp["HX-Trigger"] = "like-update"
+        return resp
