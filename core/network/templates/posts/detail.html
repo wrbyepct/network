@@ -26,10 +26,23 @@
                 {% endif %}
             </div>
             <!-- Content --> 
-            <div class="card-body">
+            <div 
+              x-data="{
+                collapse: true,
+                showMore: false,
+                init() {
+                    $nextTick(() => this.checkClamp());
+                },
+                checkClamp() {
+                    const content = this.$refs.content;
+                    this.showMore = content.scrollHeight > content.clientHeight;
+                },
+              }"
+             class="card-body">
                 <p 
                   class="mb-3"
-                  :class="collapse && 'line-clamp-5'"
+                  x-ref="content"
+                  :class="collapse && 'line-clamp-3'"
                   > {{ post.content|linebreaksbr }}</p>
                 
                   {% include 'common/collapse.html' %}

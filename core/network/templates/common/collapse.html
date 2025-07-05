@@ -1,5 +1,6 @@
 <button 
+    x-show="showMore"
     class="text-muted" 
-    @click="collapse = !collapse">
-    <span x-show="collapse">Show more</span>
+    @click="collapse = !collapse; showMore = !showMore">
+    <span>Show more</span>
 </button>
