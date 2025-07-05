@@ -51,8 +51,9 @@
                   <a
                     class="btn border-0 p-0"
                   >
+                    <span>❤️ </span>
                     <span
-                      x-text="liked ? `❤️ You and ${ likeCount } others` : `❤️ ${ likeCount }`"
+                      x-text="liked ? `You and ${ likeCount } others` : `${ likeCount }`"
                       ></span>
                   </a>
                   <span>{{ post.comment_count }} comment{{ post.comment_count|pluralize }}</span>
