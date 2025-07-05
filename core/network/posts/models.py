@@ -4,7 +4,6 @@ from django.conf import settings
 from django.db import models
 from django.utils.functional import cached_property
 
-from network.common.constants import COLLAPSE_LENTH_POST
 from network.common.mixins import LikeCountMixin, ProfileInfoMixin
 from network.common.models import MediaBaseModel, TimestampedModel
 from network.profiles.models import Profile
@@ -42,11 +41,6 @@ class Post(LikeCountMixin, ProfileInfoMixin, TimestampedModel):
     def comment_count(self):
         """Return comment count."""
         return self.comments.all().count()
-
-    @cached_property
-    def need_collapse(self):
-        """Return true if the content is too long."""
-        return len(self.content) > COLLAPSE_LENTH_POST
 
 
 class PostLike(TimestampedModel):
