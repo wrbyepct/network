@@ -106,7 +106,7 @@ class PostDeleteView(RefererRedirectMixin, DeleteView):
         return get_object_or_404(Post, id=post_id, user=self.request.user)
 
 
-class LikePost(View):
+class LikePost(LoginRequiredMixin, View):
     """Like/Unlike a post view that returns the partial html of likes count."""
 
     def post(self, request, *args, **kwargs):
@@ -118,11 +118,14 @@ class LikePost(View):
             like, created = PostLike.objects.get_or_create(post=post, user=user)
             if not created:
                 like.delete()
+                like_stat = post.like_count - 1
+            else:
+                like_stat = f"You and {post.like_count} others"
 
             post.update_like_count()
 
         return render(
             request,
             "posts/partial/like_count.html",
-            {"like_count": post.like_count},
+            {"like_stat": like_stat},
         )

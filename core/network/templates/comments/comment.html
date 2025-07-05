@@ -47,19 +47,42 @@
                 </p>
                 {% include 'common/collapse.html' %}
             </div>
-            <!-- Time and Reply button -->
-            <div class="d-flex mb-1">
-                <small class="text-muted bg-white">{{ comment.created_at|timesince_simple }}</small>
-                
-                <small 
-                  class="py-0 btn btn-sm"
-                {% if request.user.is_authenticated %}
-                  @click="replying = true"
-                {% else %}
-                  @click="window.location.href='{% url "account_login" %}'"
-                {% endif %}
-                >Reply</small>
-                {% include 'comments/like_button.html' %}
+            <!-- Time, like & Reply button -->
+            <div
+                x-data="{ likeCount: {{ comment.like_count }} }"
+                @like-update="$nextTick(() => {likeCount = parseInt($refs.likes.innerText)} )"
+                class="flex justify-between mb-1">
+                <div class="flex self-center">
+                    <small class="p-0 me-2 bg-white">{{ comment.created_at|timesince_simple }}</small>
+
+                    <small 
+                      class="p-0 me-2 btn btn-sm"
+                      {% if request.user.is_authenticated %}
+                        hx-post="{% url 'comment_like' comment.id %}"
+                        hx-target="#comment-like-stat-{{ comment.id }}"
+                        hx-swap="textContent"
+                      {% else %}
+                        @click="window.location.href='{% url "account_login" %}'"
+                      {% endif %}>Like</small>
+    
+                    <small 
+                      class="p-0 me-2 btn btn-sm"
+                    {% if request.user.is_authenticated %}
+                      @click="replying = true"
+                    {% else %}
+                      @click="window.location.href='{% url "account_login" %}'"
+                    {% endif %}
+                    >Reply</small>
+                </div>
+
+                <div x-show="likeCount > 0">
+                    <span
+                        x-ref="likes"  
+                        id="comment-like-stat-{{ comment.id }}"
+                        class="text-muted"
+                    >{{ comment.like_count }}</span> 
+                    <span>❤️</span> 
+                </div>
             </div>
 
         </div>
