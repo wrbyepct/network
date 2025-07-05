@@ -19,8 +19,8 @@
                 <a href="{% url 'profile_about' post.user.profile.username %}">
                   <img src="{{ post.user.profile.profile_picture.url }}"
                       alt="avatar"
-                      class="rounded-circle me-3"
-                      width="48" height="48">
+                      class="rounded-full w-12 h-12 object-cover me-3"
+                      >
                 </a>
               <div>
                 <strong>{{ post.user.profile.username }}</strong><br>
@@ -33,12 +33,25 @@
             </div>
   
             <!-- Card Body -->
-            <div class="card-body">
+            <div 
+              x-data="{
+                collapse: true,
+                showMore: false,
+                init() {
+                    $nextTick(() => this.checkClamp());
+                },
+                checkClamp() {
+                    const content = this.$refs.content;
+                    this.showMore = content.scrollHeight > content.clientHeight;
+                },
+              }"
+              class="card-body">
               <p 
+                x-ref="content"
                 class="mb-3"
-                :class="collapse && 'line-clamp-5'"
+                :class="collapse && 'line-clamp-3'"
                 >{{ post.content|linebreaksbr }}</p>
-              {% include 'common/collapse.html' %}
+                {% include 'common/collapse.html' %}
               {% with post.medias.all as medias %}
 
                 {# Separate out videos #}

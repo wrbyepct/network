@@ -5,7 +5,6 @@ from django.core.validators import MinLengthValidator
 from django.db import models
 from django.utils.functional import cached_property
 
-from network.common.constants import COLLAPSE_LENTH_COMMENT
 from network.common.mixins import LikeCountMixin, ProfileInfoMixin
 from network.common.models import TimestampedModel
 from network.posts.models import Post
@@ -43,11 +42,6 @@ class Comment(ProfileInfoMixin, LikeCountMixin, TimestampedModel):
     def children_count(self):
         """Return children replies count."""
         return self.children.count()
-
-    @cached_property
-    def need_collapse(self):
-        """Return true if the content is too long."""
-        return len(self.content) > COLLAPSE_LENTH_COMMENT
 
 
 class CommentLike(TimestampedModel):
