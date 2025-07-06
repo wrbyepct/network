@@ -6,9 +6,15 @@
     x-data="{
       commentBody: '', 
       replying: false,
-      liked: {{ post|liked_by_user:request.user|yesno:'true,false' }},
-      likeCount: {{ post.like_count }},
-      collapse: {{ post.need_collapse|yesno:'true,false' }}
+      collapse: {{ post.need_collapse|yesno:'true,false' }},
+      postLiked: {{ post|liked_by_user:request.user|yesno:'true,false' }},
+      postLikeCount: {{ post.like_count }},
+      postLikeStat: '',
+      init() {
+        this.postLikeStat = this.postLiked 
+          ? `You and ${this.postLikeCount - 1} others` 
+          : this.postLikeCount;
+      }
     }"
     hx-ext="response-targets">
       <div class="row justify-content-center">
@@ -53,7 +59,8 @@
                   >
                     <span>❤️ </span>
                     <span
-                      x-text="liked ? `You and ${ likeCount } others` : `${ likeCount }`"
+                      id="post-like-stat-{{ post.id }}"
+                      x-text="postLikeStat"
                       ></span>
                   </a>
                   <span>{{ post.comment_count }} comment{{ post.comment_count|pluralize }}</span>
@@ -65,7 +72,27 @@
             <!-- Like/Comment/Share -->
             <div class="card-footer bg-white border-top">
                 <div class="d-flex justify-content-around text-muted small">
-                <a href="#" class="text-decoration-none"><i class="bi bi-hand-thumbs-up me-1"></i> Like</a>
+                <a 
+                  class="text-decoration-none cursor-pointer"
+                  hx-post="{% url 'post_like' post.id %}"
+                  hx-target="#post-like-stat-{{ post.id }}"
+                  hx-swap="textContent"
+                  @post-like-update="$nextTick(() => {postLiked = !postLiked; console.log('post like updated') })"
+                  >
+                  <!-- Hollow Thumbs up -->
+                  <template x-if="!postLiked">
+                    <i class="bi bi-hand-thumbs-up me-1"></i>
+                  </template>
+                  <!-- Filled Thumbs up -->
+                  <template x-if="postLiked">
+                    <i class="bi bi-hand-thumbs-up-fill"></i>
+                  </template>
+
+                  <span 
+                    x-text="postLiked ? 'Liked' : 'Like'"
+                    :class="postLiked && 'fw-bold'"
+                    ></span> 
+                </a>
                 <a href="#" class="text-decoration-none"><i class="bi bi-chat-left me-1"></i> Comment</a>
                 <a href="#" class="text-decoration-none"><i class="bi bi-share me-1"></i> Share</a>
                 </div>
