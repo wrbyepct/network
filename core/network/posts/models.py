@@ -40,7 +40,9 @@ class Post(LikeCountMixin, ProfileInfoMixin, TimestampedModel):
     @cached_property
     def comment_count(self):
         """Return comment count."""
-        return self.comments.all().count()
+        from network.comments.models import Comment
+
+        return Comment.objects.filter(post=self).count()
 
 
 class PostLike(TimestampedModel):
