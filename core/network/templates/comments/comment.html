@@ -19,9 +19,7 @@
         <img src="{{ comment.profile_picture_url }}" class="rounded-full w-11 h-11 object-cover me-2" alt="">
         
         <!-- Comment  -->
-        <div 
-            x-show="!editing"
-        >   
+        <div x-show="!editing">   
             <!-- Username and collapsable content -->
             <div
                 x-data="{
@@ -40,7 +38,7 @@
                 class="rounded px-3 py-2  transition-colors duration-1000 delay-1000">
                 <strong>{{ comment.username }}</strong>
                 <p 
-                    class="mb-1 w-4/5"
+                    class="mb-1"
                     x-ref="content"
                     style="max-width: 20rem;"
                     :class="collapse && 'line-clamp-2'"
@@ -64,7 +62,7 @@
                         hx-post="{% url 'comment_like' comment.id %}"
                         hx-target="#comment-like-stat-{{ comment.id }}"
                         hx-swap="textContent"
-                        @like-update="$nextTick(() => { 
+                        @comment-like-update="$nextTick(() => { 
                             likeCount = parseInt($refs.likes.innerText); console.log('Like updated');
                             liked = !liked;
                         })"
@@ -126,15 +124,12 @@
         <div class="ps-5" id="replies-{{ comment.id }}"></div>
     </div>
     
-    <!-- Replies count  -->
+    <!-- Show more reply button  -->
     {% if comment.children_count %}
     <div 
         class="btn btn-sm text-muted ps-5 mb-3"
-        x-data="{ showReplies: false }"
-        x-show="!showReplies"
-        @click="showReplies = true"
+        @click="$nextTick(() => $el.remove())"
         hx-get="{% url 'comment_children' comment.id %}"
-        hx-trigger="click"
         hx-target="#replies-{{ comment.id }}"
         hx-swap="innerHTML">See other {{ comment.children_count }} repl{{ comment.children_count|pluralize:'y,ies' }}
     </div>
