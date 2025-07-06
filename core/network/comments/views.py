@@ -154,5 +154,5 @@ class LikeCommentView(LoginRequiredMixin, View):
                 like.delete()
             comment.update_like_count()
         resp = HttpResponse(str(comment.like_count), content_type="text/plain")
-        resp["HX-Trigger"] = "like-update"
+        resp["HX-Trigger"] = "comment-like-update"
         return resp
