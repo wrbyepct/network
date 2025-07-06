@@ -12,5 +12,4 @@ urlpatterns = [
     path("posts/", include("network.posts.urls")),
     path("albums/", include("network.albums.urls")),
     path("comments/", include("network.comments.urls")),
-    path("common/", include("network.common.urls")),
 ]

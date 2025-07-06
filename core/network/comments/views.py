@@ -5,13 +5,13 @@ from django.db import transaction
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
-from django.urls import reverse_lazy
-from django.views.generic import CreateView, DeleteView, ListView, UpdateView, View
+from django.views.generic import CreateView, ListView, UpdateView, View
 
 from network.posts.models import Post
 
 from .forms import CommentForm
 from .mixins import (
+    CommentCountUpdatedMixin,
     CommentObjectOwnedMixin,
     FormInvalidReturnErrorHXTriggerMixin,
 )
@@ -49,6 +49,7 @@ class CommentPaginatedView(ListView):
 class CommentCreateView(
     LoginRequiredMixin,
     FormInvalidReturnErrorHXTriggerMixin,
+    CommentCountUpdatedMixin,
     CreateView,
 ):
     """Comment Create view."""
@@ -64,7 +65,13 @@ class CommentCreateView(
             "is_new_comment": True,
         }
         html = render_to_string("comments/comment.html", context)
-        return HttpResponse(html)
+
+        resp = HttpResponse(html)
+
+        post = self.object.post
+        return self.attach_new_comment_count(
+            resp=resp, comment_count=post.comment_count
+        )
 
     def form_valid(self, form):
         """
@@ -105,11 +112,22 @@ class CommentUpdateView(
 
 class CommentDeleteView(
     CommentObjectOwnedMixin,
-    DeleteView,
+    CommentCountUpdatedMixin,
+    View,
 ):
     """Delete a comment owned by user."""
 
-    success_url = reverse_lazy("empty")
+    def post(self, request, comment_id, **kwargs):
+        """Do the default and override response."""
+        comment = get_object_or_404(Comment, id=comment_id, user=request.user)
+        post = comment.post
+
+        comment.delete()
+
+        resp = HttpResponse()
+        return self.attach_new_comment_count(
+            resp=resp, comment_count=post.comment_count
+        )
 
 
 # TODO: make sure this query is optimized
