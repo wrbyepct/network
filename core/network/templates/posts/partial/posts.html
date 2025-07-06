@@ -5,20 +5,19 @@
     <div class="row">
       <div class="col-lg-8 mx-auto">
         {% for post in posts %}
+        
+
           <div 
+            class="card mb-4 shadow-sm"
+            {% with post_liked=post|liked_by_user:request.user %}
             x-data="{
               commentBody: '', 
               replying: false,
-              postLiked: {{ post|liked_by_user:request.user|yesno:'true,false' }},
+              postLiked: {{ post_liked|yesno:'true,false' }},
               postLikeCount: {{ post.like_count }},
-              postLikeStat: '',
-              init() {
-                this.postLikeStat = this.postLiked 
-                  ? `You and ${this.postLikeCount - 1} others` 
-                  : this.postLikeCount;
-              }
+              postLikeStat: '{{ post.like_count|like_stat_str:post_liked }}',
             }"
-            class="card mb-4 shadow-sm"
+            {% endwith %}
             >
             <!-- Card Header -->
             <div class="card-header d-flex align-items-center bg-white border-bottom">
@@ -109,10 +108,10 @@
               {% else %}
                 <a
                   class="btn btn-outline-danger border-0 p-0"
-                  @click="postLiked = !postLiked"
                   hx-post="{% url 'post_like' post.id %}"
                   hx-target="#post-like-stat-{{ post.id }}"
                   hx-swap="textContent"
+                  @post-like-update="postLiked = !postLiked"
                 >
                   <span x-text="postLiked ? '❤️' : '🤍'"> </span>
                </a>
