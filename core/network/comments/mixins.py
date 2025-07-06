@@ -51,3 +51,12 @@ class FormInvalidReturnErrorHXTriggerMixin:
 
         resp["HX-Trigger"] = json.dumps({"form-error": error_str})
         return resp
+
+
+class CommentCountUpdatedMixin:
+    """Mixin to attach new comment count in HX-Trigger event."""
+
+    def attach_new_comment_count(self, resp, comment_count):
+        """Attach new comment count in HX-Trigger event."""
+        resp["HX-Trigger"] = json.dumps({"comment-count-updated": comment_count})
+        return resp

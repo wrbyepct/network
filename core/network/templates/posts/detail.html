@@ -7,6 +7,7 @@
       x-data="{
         commentBody: '', 
         replying: false,
+        commentCount: {{ post.comment_count }},
         postLiked: {{ post_liked|yesno:'true,false' }},
         postLikeCount: {{ post.like_count }},
         postLikeStat: '{{ post.like_count|like_stat_str:post_liked }}',
@@ -59,7 +60,16 @@
                       x-text="postLikeStat"
                       ></span>
                   </a>
-                  <span>{{ post.comment_count }} comment{{ post.comment_count|pluralize }}</span>
+                  <div x-show="commentCount > 0">
+                    <span  
+                      @comment-count-updated.window="
+                        commentCount = $event.detail.value; 
+                        console.log('comment count updated');
+                      "
+                      x-text="commentCount"
+                    > </span>
+                    <span x-text="commentCount == 1 ? 'comment' : 'comments'"></span>
+                  </div>
                 </div>
             </div>
 
