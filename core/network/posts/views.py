@@ -20,6 +20,7 @@ from network.common.mixins import RefererRedirectMixin
 
 from .forms import PostForm
 from .models import Post, PostLike, PostMedia
+from .utils import get_like_stat
 
 # TODO (extra) cache the posts result
 # TODO (extra) make media load faster
@@ -119,11 +120,10 @@ class LikePost(LoginRequiredMixin, View):
             like, created = PostLike.objects.get_or_create(post=post, user=user)
             if not created:
                 like.delete()
-                like_stat = post.like_count - 1
-            else:
-                like_stat = f"You and {post.like_count} others"
 
             post.update_like_count()
+
+            like_stat = get_like_stat(post.like_count, liked=created)
 
         resp = HttpResponse(like_stat, content_type="text/plain")
         resp["HX-Trigger"] = "post-like-update"
