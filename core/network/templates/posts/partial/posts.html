@@ -9,7 +9,14 @@
             x-data="{
               commentBody: '', 
               replying: false,
-              liked: {{ post|liked_by_user:request.user|yesno:'true,false' }},
+              postLiked: {{ post|liked_by_user:request.user|yesno:'true,false' }},
+              postLikeCount: {{ post.like_count }},
+              postLikeStat: '',
+              init() {
+                this.postLikeStat = this.postLiked 
+                  ? `You and ${this.postLikeCount - 1} others` 
+                  : this.postLikeCount;
+              }
             }"
             class="card mb-4 shadow-sm"
             >
@@ -102,21 +109,22 @@
               {% else %}
                 <a
                   class="btn btn-outline-danger border-0 p-0"
-                  @click="liked = !liked"
+                  @click="postLiked = !postLiked"
                   hx-post="{% url 'post_like' post.id %}"
                   hx-target="#post-like-stat-{{ post.id }}"
-                  hx-swap="innerHTML"
+                  hx-swap="textContent"
                 >
-                  <span x-text="liked ? '❤️' : '🤍'"> </span>
+                  <span x-text="postLiked ? '❤️' : '🤍'"> </span>
                </a>
               {% endif%}
 
-              <div id="post-like-stat-{{ post.id }}">
-                <span 
-                  class="text-muted ps-1"
-                  x-text="liked ? 'You and {{ post.like_count }} others' : {{ post.like_count }}"
-                  ></span>
-              </div>
+              
+              <span 
+                id="post-like-stat-{{ post.id }}"
+                class="text-muted ps-1"
+                x-text="postLikeStat"
+              ></span>
+             
 
               <a 
                 href="{% url 'post_detail' post.id %}" 
