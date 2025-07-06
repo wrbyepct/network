@@ -3,7 +3,8 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
 from django.db.models import Prefetch
-from django.shortcuts import get_object_or_404, render
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import (
     CreateView,
@@ -124,8 +125,7 @@ class LikePost(LoginRequiredMixin, View):
 
             post.update_like_count()
 
-        return render(
-            request,
-            "posts/partial/like_count.html",
-            {"like_stat": like_stat},
-        )
+        resp = HttpResponse(like_stat, content_type="text/plain")
+        resp["HX-Trigger"] = "post-like-update"
+
+        return resp
