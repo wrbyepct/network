@@ -59,7 +59,7 @@
                     <small 
                       class="p-0 me-2 cursor-pointer hover:underline"
                       x-text="liked ? 'Liked' : 'Like'"
-                      :class="liked && 'text-info'"
+                      :class="liked && 'text-primary fw-bold'"
                       {% if request.user.is_authenticated %}
                         hx-post="{% url 'comment_like' comment.id %}"
                         hx-target="#comment-like-stat-{{ comment.id }}"
