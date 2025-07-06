@@ -3,20 +3,16 @@
 {% block body %}
     <div 
     class="container my-5" 
-    x-data="{
-      commentBody: '', 
-      replying: false,
-      collapse: {{ post.need_collapse|yesno:'true,false' }},
-      postLiked: {{ post|liked_by_user:request.user|yesno:'true,false' }},
-      postLikeCount: {{ post.like_count }},
-      postLikeStat: '',
-      init() {
-        this.postLikeStat = this.postLiked 
-          ? `You and ${this.postLikeCount - 1} others` 
-          : this.postLikeCount;
-      }
-    }"
-    hx-ext="response-targets">
+    {% with post_liked=post|liked_by_user:request.user %}
+      x-data="{
+        commentBody: '', 
+        replying: false,
+        postLiked: {{ post_liked|yesno:'true,false' }},
+        postLikeCount: {{ post.like_count }},
+        postLikeStat: '{{ post.like_count|like_stat_str:post_liked }}',
+      }"
+    {% endwith %}
+    >
       <div class="row justify-content-center">
         <div class="col-12 col-md-8 col-lg-6" >
           <div class="card shadow-sm">
