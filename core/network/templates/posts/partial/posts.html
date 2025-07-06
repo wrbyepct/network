@@ -13,6 +13,7 @@
             x-data="{
               commentBody: '', 
               replying: false,
+              commentCount: {{ post.comment_count }},
               postLiked: {{ post_liked|yesno:'true,false' }},
               postLikeCount: {{ post.like_count }},
               postLikeStat: '{{ post.like_count|like_stat_str:post_liked }}',
@@ -127,7 +128,10 @@
 
               <a 
                 href="{% url 'post_detail' post.id %}" 
-                class="text-decoration-none ms-auto">{{ post.comment_count }} 💬</a>
+                class="text-decoration-none ms-auto"
+                @comment-count-updated.window="
+                commentCount = $event.detail.value; console.log('comment count updated');"
+                ><span x-text="commentCount"></span> 💬</a>
             </div>
             <!-- Comment section - Display only 2 -->
             <div 
