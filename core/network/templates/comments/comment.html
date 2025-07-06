@@ -8,6 +8,7 @@
         newComment: {{ is_new_comment|yesno:'true,false' }}, 
         isOwner: {% if request.user == comment.user%}true{% else %}false{%endif%},
         setReplyTo() { return this.isOwner ? '' : '@{{ comment.username }} ' },
+        liked: {{ comment|liked_by_user:request.user|yesno:'true,false' }}
     }">
     <div 
         class="d-flex"
@@ -49,24 +50,30 @@
             </div>
             <!-- Time, like & Reply button -->
             <div
+                class="flex justify-between mb-1"
                 x-data="{ likeCount: {{ comment.like_count }} }"
-                @like-update="$nextTick(() => {likeCount = parseInt($refs.likes.innerText)} )"
-                class="flex justify-between mb-1">
+                >
                 <div class="flex self-center">
                     <small class="p-0 me-2 bg-white">{{ comment.created_at|timesince_simple }}</small>
 
                     <small 
-                      class="p-0 me-2 btn btn-sm"
+                      class="p-0 me-2 cursor-pointer hover:underline"
+                      x-text="liked ? 'Liked' : 'Like'"
+                      :class="liked && 'text-info'"
                       {% if request.user.is_authenticated %}
                         hx-post="{% url 'comment_like' comment.id %}"
                         hx-target="#comment-like-stat-{{ comment.id }}"
                         hx-swap="textContent"
+                        @like-update="$nextTick(() => { 
+                            likeCount = parseInt($refs.likes.innerText); console.log('Like updated');
+                            liked = !liked;
+                        })"
                       {% else %}
                         @click="window.location.href='{% url "account_login" %}'"
                       {% endif %}>Like</small>
     
                     <small 
-                      class="p-0 me-2 btn btn-sm"
+                      class="p-0 me-2 cursor-pointer hover:underline"
                     {% if request.user.is_authenticated %}
                       @click="replying = true"
                     {% else %}
@@ -77,9 +84,10 @@
 
                 <div x-show="likeCount > 0">
                     <span
-                        x-ref="likes"  
                         id="comment-like-stat-{{ comment.id }}"
                         class="text-muted"
+                        x-ref="likes"
+   
                     >{{ comment.like_count }}</span> 
                     <span>❤️</span> 
                 </div>
@@ -103,7 +111,7 @@
             x-trap="editing"
             x-cloak
             x-transition
-            @submit="preventSubmit($event)"
+            @htmx:before-request="preventEmptySubmit($event)"
             >
                 {% include 'comments/submit.html' %}
             <a 
