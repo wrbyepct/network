@@ -71,25 +71,10 @@ class PhotoAlbumView(ProfilePhotoBaseView):
         return "profiles/tabs/full/photos.html"
 
 
-class AboutView(ProfileBaseTabView):
-    """Profile about view that handles partial and full request."""
+class ProfileBaseMixin:
+    """Profile base view."""
 
-    profile_tab = "about"
-
-
-class FollowersView(ProfileBaseTabView):
-    """Profile Followers view that handles partial and full request."""
-
-    profile_tab = "followers"
-
-
-# TODO infinite scroll loading for posts tab
-class PostsView(ListView):
-    """Profile Posts view that handles partial and full request."""
-
-    profile_tab = "posts"
-    context_object_name = "posts"
-    paginate_by = 10
+    tabs = profile_tabs
 
     def dispatch(self, request, *args, **kwargs):
         """Save requesting profile obj and HX-Request for later use."""
@@ -98,25 +83,47 @@ class PostsView(ListView):
         return super().dispatch(request, *args, **kwargs)
 
     def get_template_names(self):
-        """Provide partial or full template based on partail request or not."""
-        if self.is_partial_request:
-            return ["profiles/tabs/partial/posts.html"]
-        return ["profiles/tabs/full/posts.html"]
+        """Provide partial or full template based on partial request or not."""
+        _, tab = self.request.path.rstrip("/").rsplit("/", 1)
 
-    def get_queryset(self):
-        """Get prefetched post queryset."""
-        return Post.objects.for_list_data().by_user(user=self.profile.user)
+        if self.is_partial_request:
+            return [f"profiles/tabs/partial/{tab}.html"]
+        return [f"profiles/tabs/full/{tab}.html"]
 
     def get_context_data(self, **kwargs):
         """Provide context data based on partial request."""
         context = super().get_context_data(**kwargs)
         if not self.is_partial_request:
-            context["tabs"] = profile_tabs
-            context["current_tab"] = self.profile_tab
+            context["tabs"] = self.tabs
+            context["current_tab"] = self.current_tab
 
         context["profile"] = self.profile
 
         return context
+
+
+class PostsView(ProfileBaseMixin, ListView):
+    """Profile Posts view that handles partial and full request."""
+
+    context_object_name = "posts"
+    current_tab = "posts"
+    paginate_by = 10
+
+    def get_queryset(self):
+        """Get prefetched post queryset."""
+        return Post.objects.for_list_data().by_user(user=self.profile.user)
+
+
+class AboutView(ProfileBaseMixin, TemplateView):
+    """Profile about view that handles partial and full request."""
+
+    current_tab = "about"
+
+
+class FollowersView(ProfileBaseMixin, TemplateView):
+    """Profile Followers view that handles partial and full request."""
+
+    current_tab = "followers"
 
 
 class ProfileEditView(LoginRequiredMixin, UpdateView):
