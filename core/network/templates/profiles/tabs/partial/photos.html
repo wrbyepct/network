@@ -19,15 +19,10 @@
             class="nav-link"
             :class="{ 'active': activeTab === '{{ tab }}' }"
             @click="activeTab = '{{ tab }}'"
-            hx-get="{% url 'profile_photos' profile.username %}"
-            hx-vals='{"photo_partial_key": "{{ tab }}"}'
+            hx-get="{% url 'profile_photos_'|add:tab profile.username %}"
             hx-swap="innerHTML"
-            hx-target="#mediaContainer"
-            {% if tab == "albums" %}
-              hx-push-url="{% url 'profile_photos_albums' profile.username %}"
-            {% else %}
-              hx-push-url="{% url 'profile_photos' profile.username %}"
-            {% endif %}
+            hx-target="#media-container"
+            hx-push-url="{% url 'profile_photos_'|add:tab profile.username %}"
           >
             {{ tab|title }}
           </a>
@@ -37,7 +32,13 @@
       </ul>
     </div>
 
-      <div class="row g-2" id="mediaContainer">
-        {{ photo_content|safe }}
-      </div>
+    <div 
+      id="media-container"
+      class="row g-2"
+      hx-get="{% url 'profile_photos_'|add:current_photo_tab profile.username %}"
+      hx-trigger="load"
+      hx-swap="innerHTML"
+      hx-target="#media-container"
+    >
+    </div>
 </div>
