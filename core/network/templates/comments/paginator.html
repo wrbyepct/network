@@ -1,6 +1,14 @@
 <div>
     {% for comment in comments %}
         {% include 'comments/comment.html' with comment=comment request=request %}
+    {% empty %}
+        <div 
+            x-show="commentCount == 0"
+            class="text-center fs-2 text-muted">
+            <div class="fs-4">No Turtles yet...</div>
+            <div>Leave your first Turtle!</div>
+            <div>🐢</div>
+        </div>
     {% endfor %}
     {% if page_obj.has_next %}
         <div
