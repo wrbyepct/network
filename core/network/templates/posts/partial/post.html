@@ -1,0 +1,159 @@
+
+
+{% load post_extra %}
+<div 
+	class="card mb-4 shadow-sm"
+	{% with post_liked=post|liked_by_user:request.user %}
+	x-data="{
+		commentBody: '', 
+		replying: false,
+		commentCount: {{ post.comment_count }},
+		postLiked: {{ post_liked|yesno:'true,false' }},
+		postLikeCount: {{ post.like_count }},
+		postLikeStat: '{{ post.like_count|like_stat_str:post_liked }}',
+	}"
+	{% endwith %}
+	>
+	<!-- Card Header -->
+	<div class="card-header d-flex align-items-center bg-white border-bottom">
+			<a href="{% url 'profile_about' post.user.profile.username %}">
+				<img src="{{ post.user.profile.profile_picture.url }}"
+						alt="avatar"
+						class="rounded-full w-12 h-12 object-cover me-3"
+						>
+			</a>
+		<div>
+			<strong>{{ post.user.profile.username }}</strong><br>
+			<small class="text-muted">{{ post.created_at|timesince_simple }}</small>
+		</div>
+		<!-- Dropdown btn -->
+		{% if request.user == post.user %}
+			{% include 'posts/partial/dropdown.html' %}
+		{% endif %}
+	</div>
+
+	<!-- Card Body -->
+	<div 
+		x-data="{
+			collapse: true,
+			showMore: false,
+			init() {
+					$nextTick(() => this.checkClamp());
+			},
+			checkClamp() {
+					const content = this.$refs.content;
+					this.showMore = content.scrollHeight > content.clientHeight;
+			},
+		}"
+		class="card-body">
+		<p 
+			x-ref="content"
+			class="mb-3"
+			:class="collapse && 'line-clamp-3'"
+			>{{ post.content|linebreaksbr }}</p>
+			{% include 'common/collapse.html' %}
+		{% with post.medias.all as medias %}
+
+			{# Separate out videos #}
+			{% for media in medias %}
+				{% if media.is_video %}
+					<div class="mb-3">
+						<video class="w-100 rounded" controls>
+							<source src="{{ media.file.url }}">
+							Your browser does not support the video tag.
+						</video>
+					</div>
+				{% endif %}
+			{% endfor %}
+
+			<div id="carousel{{ forloop.counter }}" class="carousel slide" data-bs-ride="carousel">
+				<div class="carousel-inner rounded">
+					{% for media in medias %}
+						<div class="carousel-item {% if forloop.first %}active{% endif %}">
+							{% if media.is_image %}
+								<img src="{{ media.file.url }}" class="img-fluid w-100" alt="media image">
+							{% endif %}
+						</div>
+					{% endfor %}
+				</div>
+
+				{% if post.medias.count > 1 %}
+					<button class="carousel-control-prev" type="button"
+									data-bs-target="#carousel{{ forloop.counter }}" data-bs-slide="prev">
+						<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+						<span class="visually-hidden">Previous</span>
+					</button>
+					<button class="carousel-control-next" type="button"
+									data-bs-target="#carousel{{ forloop.counter }}" data-bs-slide="next">
+						<span class="carousel-control-next-icon" aria-hidden="true"></span>
+						<span class="visually-hidden">Next</span>
+					</button>
+				{% endif %}
+			</div>
+			{% endwith %}
+	</div>
+
+	<!-- Card Footer - Like & Comment stat   -->
+	<div class="card-footer bg-white d-flex justify-content-start align-items-center">
+
+			<a
+				class="btn btn-outline-danger border-0 p-0"
+				{% if not request.user.is_authenticated %}
+				href="{% url 'account_login' %}"
+				{% else %}
+				hx-post="{% url 'post_like' post.id %}"
+				hx-target="#post-like-stat-{{ post.id }}"
+				hx-swap="textContent"
+				@post-like-update="postLiked = !postLiked"
+				{% endif %}
+			>
+				<span x-text="postLiked ? '❤️' : '🤍'"> </span>
+		</a>
+
+		
+		<span 
+			id="post-like-stat-{{ post.id }}"
+			class="text-muted ps-1"
+			x-text="postLikeStat"
+		></span>
+	
+
+		<a 
+			href="{% url 'post_detail' post.id %}" 
+			class="text-decoration-none ms-auto"
+			@comment-count-updated.window="
+			commentCount = $event.detail.value; console.log('comment count updated');"
+			><span x-text="commentCount"></span> 💬</a>
+	</div>
+
+	<!-- Comment section - Display only 2 -->
+	<div 
+		id="post-comments-{{ post.id }}"
+		class="p-3 border-top">
+		{% if post.comment_count > 2 %}
+
+			<a class="text-decoration-none text-muted fs-6 d-block mb-3 " href="{% url 'post_detail' post.id %}">See More</a>
+
+		{% endif %}
+		{% for comment in post.latest_two_comments %}
+			{% include 'comments/comment.html' %}
+		{% endfor %}
+	</div>
+
+	<!-- Comment submit form -->
+	<div class="card-footer bg-light">
+		<form 
+			{% if request.user.is_authenticated %}
+				hx-post="{% url 'comment_create' post.id %}"
+				hx-target="#post-comments-{{ post.id }}"
+				hx-swap="beforeend"
+				@htmx:before-request="preventEmptySubmit($event)"
+			{% else %}
+				@click="window.location.href='{% url 'account_login' %}'"
+				@submit.prevent
+			{% endif %}
+		>
+			{% include 'comments/submit.html' %}
+		</form>
+	</div>
+</div>

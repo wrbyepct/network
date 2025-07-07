@@ -102,7 +102,6 @@
         <!-- Edit form (initially hidden) -->
         <form 
             class="flex-grow-1 comment-form" 
-            focused="true"
             hx-post="{% url 'comment_edit' comment.id %}"
             hx-target="#comment-{{ comment.id }}"
             hx-swap="outerHTML"
