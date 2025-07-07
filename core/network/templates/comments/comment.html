@@ -5,6 +5,7 @@
         isHovering: false, 
         editing: false, 
         replying: false,
+        commentBody: '{{ comment.content|escapejs }}',
         newComment: {{ is_new_comment|yesno:'true,false' }}, 
         isOwner: {% if request.user == comment.user%}true{% else %}false{%endif%},
         setReplyTo() { return this.isOwner ? '' : '@{{ comment.username }} ' },
@@ -101,12 +102,12 @@
         <!-- Edit form (initially hidden) -->
         <form 
             class="flex-grow-1 comment-form" 
+            focused="true"
             hx-post="{% url 'comment_edit' comment.id %}"
             hx-target="#comment-{{ comment.id }}"
             hx-swap="outerHTML"
-            x-data="{commentBody: '{{ comment.content|escapejs }}'}"
             x-show="editing"
-            x-trap="editing"
+            x-effect="if(editing) $focus.first()"
             x-cloak
             x-transition
             @htmx:before-request="preventEmptySubmit($event)"
@@ -139,11 +140,10 @@
     <form 
         class="comment-form ps-5" 
         x-data="{ commentBody: setReplyTo() }"
-        x-trap="replying"
         x-show="replying"
         x-cloak
         x-transition
-        x-effect="if(replying) commentBody = setReplyTo()"
+        x-effect="if(replying) {commentBody = setReplyTo(); $focus.first() }"
         @htmx:before-request="preventEmptySubmit($event)"
         hx-post="{% url 'comment_create' comment.post.id %}"
         hx-target="#replies-{{ comment.id }}"
