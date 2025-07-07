@@ -14,24 +14,19 @@
         {% if profile.user == request.user %}
           <a href="{% url 'profile_edit' %}">Edit</a>
         {% else %}
-        <div x-data="{ has_followed: {{ profile|has_followed:request.user|yesno:'true,false' }}}">
-
+          <a 
+            class="btn"
+            x-data="{ hasFollowed: {{ profile|has_followed:request.user|yesno:'true,false' }}}"
+            :class="hasFollowed ? 'btn-primary' : 'btn-outline-primary'"
+            x-text="hasFollowed ? 'Followed' : 'Follow'"
           {% if request.user.is_authenticated %}
-            <a 
-              class="btn"
-              @click="has_followed = !has_followed"
-              :class="has_followed ? 'btn-primary' : 'btn-outline-primary'"
-              x-text="has_followed ? 'Followed' : 'Follow'"
-              hx-post="{% url 'follow' profile.username %}"
-              hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-              hx-target="#follow_message"
-            >
-            </a>
+            @click="hasFollowed = !hasFollowed"
+            hx-post="{% url 'follow' profile.username %}"
+            hx-target="#follow_message"
           {% else %}
-            <a class="btn btn-outline-primary" href="{% url 'account_login' %}" >Follow</a>
+            href="{% url 'account_login' %}"
           {% endif %}
-
-        </div>
+            ></a>
         {% endif %}
     </div>
 
@@ -44,7 +39,6 @@
             :class="{ 'active': activeTab === '{{ tab }}' }"
             @click="activeTab = '{{ tab }}'"
             hx-get="{% url 'profile_'|add:tab profile.username %}"
-            hx-vals='{"is_partial_request": true}'
             hx-target="#tab-content"
             hx-push-url="{% url 'profile_'|add:tab profile.username %}"
             hx-swap="innerHTML">
