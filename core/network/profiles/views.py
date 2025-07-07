@@ -13,6 +13,7 @@ from django.views.generic import (
 
 from network.posts.models import Post
 
+from .constants import profile_tabs
 from .forms import ProfileForm
 from .mixins import PartialPhotoTabMixin, ProfileContextMixin, ProfileTabMixin
 from .models import Profile
@@ -83,18 +84,38 @@ class FollowersView(ProfileBaseTabView):
 
 
 # TODO infinite scroll loading for posts tab
-class PostsView(ProfileBaseTabView):
+class PostsView(ListView):
     """Profile Posts view that handles partial and full request."""
 
     profile_tab = "posts"
+    context_object_name = "posts"
+    paginate_by = 10
+
+    def dispatch(self, request, *args, **kwargs):
+        """Save requesting profile obj and HX-Request for later use."""
+        self.is_partial_request = bool(self.request.headers.get("HX-Request", False))
+        self.profile = get_object_or_404(Profile, username=kwargs.get("username"))
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_template_names(self):
+        """Provide partial or full template based on partail request or not."""
+        if self.is_partial_request:
+            return ["profiles/tabs/partial/posts.html"]
+        return ["profiles/tabs/full/posts.html"]
+
+    def get_queryset(self):
+        """Get prefetched post queryset."""
+        return Post.objects.for_list_data().by_user(user=self.profile.user)
 
     def get_context_data(self, **kwargs):
-        """Retrieve only user's posts."""
+        """Provide context data based on partial request."""
         context = super().get_context_data(**kwargs)
-        user = self._profile.user
-        # self.request.user.posts can't use custom query methods
-        # So we have to use Post model directly
-        context["posts"] = Post.objects.for_list_data().by_user(user=user)
+        if not self.is_partial_request:
+            context["tabs"] = profile_tabs
+            context["current_tab"] = self.profile_tab
+
+        context["profile"] = self.profile
+
         return context
 
 
