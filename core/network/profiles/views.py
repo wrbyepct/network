@@ -13,72 +13,22 @@ from django.views.generic import (
 
 from network.posts.models import Post
 
-from .constants import profile_tabs
+from .constants import PHOTO_TABS, PROFILE_TABS
 from .forms import ProfileForm
-from .mixins import PartialPhotoTabMixin, ProfileContextMixin, ProfileTabMixin
 from .models import Profile
 
-
-class ProfileBaseTabView(ProfileContextMixin, ProfileTabMixin, TemplateView):
-    """Profile base view."""
-
-    def get_template_names(self):
-        """Dynamically return partial or full tab template based on requests."""
-        return [self.get_tab_template_path()]
-
-    def get_context_data(self, **kwargs):
-        """Provide user profile and profile tab context."""
-        context = super().get_context_data(**kwargs)
-        context.update(self.get_profile_context())
-        context.update(self.get_tab_context())
-
-        return context
-
-
-# Base photo view.
-class ProfilePhotoBaseView(PartialPhotoTabMixin, ProfileBaseTabView):
-    """Base view photo page."""
-
-    profile_tab = "photos"
-
-    def get_context_data(self, **kwargs):
-        """Provide photo tabs constant for frontend."""
-        context = super().get_context_data(**kwargs)
-
-        if self.photo_partial_key is None:  # Fallbacks to full page request
-            # Render data for photo_content block in partial photos.html
-            context["photo_content"] = self.get_partial_rendered_string(context)
-        return context
-
-
 # Photo uploads view
-# TODO infinite scroll loading for uploads tab
 # TODO click on the photo will take user to the post it's asscoiated
-class PhotosUploadsView(ProfilePhotoBaseView):
-    """Profile photos view that handles partial and full request."""
-
-    active_tab = "uploads"
 
 
-# Photo albums view
-class PhotoAlbumView(ProfilePhotoBaseView):
-    """View to handle profile albums page."""
-
-    active_tab = "albums"
-
-    def get_template_names(self):
-        """Return full photo page html."""
-        return "profiles/tabs/full/photos.html"
-
-
-class ProfileBaseMixin:
+class ProfileTabsBaseMixin:
     """Profile base view."""
 
-    tabs = profile_tabs
+    tabs = PROFILE_TABS
 
     def dispatch(self, request, *args, **kwargs):
         """Save requesting profile obj and HX-Request for later use."""
-        self.is_partial_request = bool(self.request.headers.get("HX-Request", False))
+        self.is_partial_request = bool(request.headers.get("HX-Request", False))
         self.profile = get_object_or_404(Profile, username=kwargs.get("username"))
         return super().dispatch(request, *args, **kwargs)
 
@@ -102,11 +52,60 @@ class ProfileBaseMixin:
         return context
 
 
-class PostsView(ProfileBaseMixin, ListView):
+class PhotoTabsBaseMixin:
+    """Mixin to provide context needed for photo tab view."""
+
+    current_tab = "photos"
+    photo_tabs = PHOTO_TABS
+
+    def get_context_data(self, **kwargs):
+        """Provide context data based on partial request."""
+        context = super().get_context_data(**kwargs)
+        context["photo_tabs"] = self.photo_tabs
+        context["current_photo_tab"] = self.current_photo_tab
+
+        return context
+
+
+class PhotosView(
+    PhotoTabsBaseMixin,
+    ProfileTabsBaseMixin,
+    TemplateView,
+):
+    """
+    Profile Photos view that handles partial and full request.
+
+    Default to fetch photo tab view.
+    """
+
+    current_photo_tab = "uploads"
+
+
+class PhotosUploadsView(
+    PhotoTabsBaseMixin,
+    ProfileTabsBaseMixin,
+    TemplateView,
+):
+    """Photo uploads tab view."""
+
+    current_photo_tab = "uploads"
+
+
+class PhotosAlbumsView(
+    PhotoTabsBaseMixin,
+    ProfileTabsBaseMixin,
+    TemplateView,
+):
+    """Photos albums tab view."""
+
+    current_photo_tab = "albums"
+
+
+class PostsView(ProfileTabsBaseMixin, ListView):
     """Profile Posts view that handles partial and full request."""
 
-    context_object_name = "posts"
     current_tab = "posts"
+    context_object_name = "posts"
     paginate_by = 10
 
     def get_queryset(self):
@@ -114,13 +113,13 @@ class PostsView(ProfileBaseMixin, ListView):
         return Post.objects.for_list_data().by_user(user=self.profile.user)
 
 
-class AboutView(ProfileBaseMixin, TemplateView):
+class AboutView(ProfileTabsBaseMixin, TemplateView):
     """Profile about view that handles partial and full request."""
 
     current_tab = "about"
 
 
-class FollowersView(ProfileBaseMixin, TemplateView):
+class FollowersView(ProfileTabsBaseMixin, TemplateView):
     """Profile Followers view that handles partial and full request."""
 
     current_tab = "followers"
