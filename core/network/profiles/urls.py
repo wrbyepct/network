@@ -24,12 +24,17 @@ urlpatterns = [
     ),
     path(
         "<str:username>/photos/",
-        views.PhotosUploadsView.as_view(),
+        views.PhotosView.as_view(),
         name="profile_photos",
     ),
     path(
-        "<str:username>/photos_albums/",
-        views.PhotoAlbumView.as_view(),
+        "<str:username>/photos/uploads/",
+        views.PhotosUploadsView.as_view(),
+        name="profile_photos_uploads",
+    ),
+    path(
+        "<str:username>/photos/albums/",
+        views.PhotosAlbumsView.as_view(),
         name="profile_photos_albums",
     ),
     # Follow
