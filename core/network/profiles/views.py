@@ -11,6 +11,7 @@ from django.views.generic import (
     View,
 )
 
+from network.albums.models import Album
 from network.posts.models import Post, PostMedia
 
 from .constants import PHOTO_TABS, PROFILE_TABS
@@ -80,7 +81,6 @@ class PhotosView(
     current_photo_tab = "uploads"
 
 
-# TODO Make sure this query is optimized.
 class PhotosUploadsView(
     PhotoTabsBaseMixin,
     ProfileTabsBaseMixin,
@@ -102,9 +102,36 @@ class PhotosAlbumsView(
     ProfileTabsBaseMixin,
     TemplateView,
 ):
-    """Photos albums tab view."""
+    """
+    Photos albums tab view.
+
+    Return basic album template, then fetch albums on load via AlbumsPaginateView
+    """
 
     current_photo_tab = "albums"
+
+
+class AlbumsPaginateView(ListView):
+    """Album paginate view that handle partial albums paginate retreive."""
+
+    template_name = "profiles/tabs/partial/album_batch.html"
+    context_object_name = "albums"
+    paginate_by = 10
+
+    def dispatch(self, request, *args, **kwargs):
+        """Save profile for later use."""
+        self.profile = get_object_or_404(Profile, username=self.kwargs.get("username"))
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_queryset(self):
+        """Get albums owned by the profile."""
+        return Album.objects.prefetch_related("medias").filter(profile=self.profile)
+
+    def get_context_data(self, **kwargs):
+        """Inject profile into context."""
+        context = super().get_context_data(**kwargs)
+        context["profile"] = self.profile
+        return context
 
 
 class PostsView(ProfileTabsBaseMixin, ListView):

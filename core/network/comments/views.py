@@ -117,7 +117,7 @@ class CommentDeleteView(
 ):
     """Delete a comment owned by user."""
 
-    def post(self, request, comment_id, **kwargs):
+    def delete(self, request, comment_id, **kwargs):
         """Do the default and override response."""
         comment = get_object_or_404(Comment, id=comment_id, user=request.user)
         post = comment.post

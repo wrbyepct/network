@@ -32,7 +32,7 @@
 
 {% if page_obj.has_next %}
 <div
-  class="col-6 col-md-4 col-lg-3"
+  class="col-6 col-md-4 col-lg-3 "
   hx-get="{% url 'profile_photos_uploads' profile.username %}"
   hx-vals='{"page": {{ page_obj.next_page_number }}}'
   hx-target="#media-container"
@@ -40,7 +40,6 @@
   hx-trigger="revealed once"
   @htmx:after-request="if($event.detail.successful) $el.remove();"
   >
-  <img src="/media/defaults/loading.gif" class="img-fluid w-100 h-100" style="object-fit: cover;" alt="">
+  {% include 'profiles/partials/loading.html' %}
 </div>
-
 {% endif %}

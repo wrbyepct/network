@@ -15,11 +15,13 @@
     <li><hr class="dropdown-divider m-0"></li>
     <li>  
       <form 
-        hx-post="{% url 'comment_delete' comment.id %}"
+        hx-delete="{% url 'comment_delete' comment.id %}"
         hx-target="#comment-{{ comment.id }}"
-        hx-swap="outerHTML"
+
         >
-        <button type="submit" class="dropdown-item py-1 text-danger hover-bg-danger border-0 bg-transparent w-100 text-start">
+        <button 
+          type="submit" 
+          class="dropdown-item py-1 text-danger hover-bg-danger border-0 bg-transparent w-100 text-start">
             Delete
         </button>
       </form></li>
