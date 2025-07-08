@@ -20,3 +20,5 @@ class PostAdmin(admin.ModelAdmin):
 @admin.register(PostMedia)
 class PostMediaAdmin(admin.ModelAdmin):
     """Custome PostMeida admin."""
+
+    list_filter = ["profile"]
