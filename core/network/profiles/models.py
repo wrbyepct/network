@@ -3,6 +3,7 @@
 from django.conf import settings
 from django.core.exceptions import BadRequest
 from django.db import models
+from django.utils.functional import cached_property
 from phonenumber_field.modelfields import PhoneNumberField
 
 from network.common.models import TimestampedModel
@@ -62,3 +63,8 @@ class Profile(TimestampedModel, FollowMixin):
         if not self.username:
             self.username = self.user.email
         return super().save(*args, **kwargs)
+
+    @cached_property
+    def albums_count(self):
+        """Return profile's albums count."""
+        return self.albums.count()

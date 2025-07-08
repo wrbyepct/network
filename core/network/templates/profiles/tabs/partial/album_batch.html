@@ -1,0 +1,44 @@
+{% for album in albums %}
+<div class="col-6 col-md-4 col-lg-3">
+  <a 
+    class="card h-100 shadow-sm btn" 
+    href="{% url 'album_detail' album.pk profile.username %}">
+  {% if album.medias.first %}
+  <!-- First media as cover -->
+    <img 
+      src="{{ album.medias.first.file.url }}" 
+      class="card-img-top object-fit-cover" 
+      style="height: 180px;" 
+      alt="Album cover"
+    >
+  {% else %}
+  <!-- Or default cover -->
+  <div 
+    class="card-img-top d-flex align-items-center justify-content-center bg-secondary bg-opacity-25" 
+    style="height: 180px;"
+  >
+      <span class="text-muted">No cover</span>
+  </div>
+  {% endif %}
+  <div class="card-body text-center">
+      <h5 class="card-title mb-1">{{ album.name }}</h5>
+      <p class="text-muted small mb-0">{{ album.media_count }} photo{{ album.media_count|pluralize }}</p>
+  </div>
+  </a>
+</div>
+{% endfor %}
+
+{% if page_obj.has_next %}
+  <div
+    class="col-6 col-md-4 col-lg-3"
+    hx-get="{% url "albums_paginate" profile.username %}"
+    hx-vals='{"page": {{ page_obj.next_page_number }}}'
+    hx-target="#albums-container"
+    hx-swap="beforeend"
+    hx-trigger="revealed once"
+    @htmx:after-request="if($event.detail.successful) $el.remove()"
+  >
+  {% include 'profiles/partials/loading.html' %}
+  </div>
+
+{% endif %}
