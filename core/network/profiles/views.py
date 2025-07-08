@@ -11,16 +11,15 @@ from django.views.generic import (
     View,
 )
 
-from network.posts.models import Post
+from network.posts.models import Post, PostMedia
 
 from .constants import PHOTO_TABS, PROFILE_TABS
 from .forms import ProfileForm
 from .models import Profile
 
+
 # Photo uploads view
 # TODO click on the photo will take user to the post it's asscoiated
-
-
 class ProfileTabsBaseMixin:
     """Profile base view."""
 
@@ -81,14 +80,21 @@ class PhotosView(
     current_photo_tab = "uploads"
 
 
+# TODO Make sure this query is optimized.
 class PhotosUploadsView(
     PhotoTabsBaseMixin,
     ProfileTabsBaseMixin,
-    TemplateView,
+    ListView,
 ):
     """Photo uploads tab view."""
 
     current_photo_tab = "uploads"
+    context_object_name = "medias"
+    paginate_by = 10
+
+    def get_queryset(self):
+        """Get uploads media owned by the profile."""
+        return PostMedia.objects.filter(profile=self.profile)
 
 
 class PhotosAlbumsView(
