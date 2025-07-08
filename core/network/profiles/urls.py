@@ -37,6 +37,11 @@ urlpatterns = [
         views.PhotosAlbumsView.as_view(),
         name="profile_photos_albums",
     ),
+    path(
+        "<str:username>/paginate/albums/",
+        views.AlbumsPaginateView.as_view(),
+        name="albums_paginate",
+    ),
     # Follow
     path("<str:username>/follow/", views.FollowView.as_view(), name="follow"),
     # Following
