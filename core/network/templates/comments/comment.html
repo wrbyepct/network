@@ -49,40 +49,37 @@
                 {% include 'common/collapse.html' %}
             </div>
             <!-- Time, like & Reply button -->
-            <div
-                class="flex justify-between mb-1"
-                x-data=""
-                >
-                <div class="flex self-center">
-                    <small class="p-0 me-2 bg-white">{{ comment.created_at|timesince_simple }}</small>
+            <div class="flex justify-between mb-1">
+              <div class="flex self-center">
+                  <small class="p-0 me-2 bg-white">{{ comment.created_at|timesince_simple }}</small>
 
-                    <small 
-                      class="p-0 me-2 cursor-pointer hover:underline"
-                      x-text="liked ? 'Liked' : 'Like'"
-                      :class="liked && 'text-primary fw-bold'"
-                      {% if request.user.is_authenticated %}
-                        hx-post="{% url 'comment_like' comment.id %}"
-                        hx-target="#comment-like-count-{{ comment.id }}"
-                        hx-swap="outerHTML"
-                        @htmx:after-request="if($event.detail.successful) liked = !liked;"
-                      {% else %}
-                        @click="window.location.href='{% url "account_login" %}'"
-                      {% endif %}>Like</small>
-    
-                    <small 
-                      class="p-0 me-2 cursor-pointer hover:underline"
+                  <small 
+                    class="p-0 me-2 cursor-pointer hover:underline"
+                    x-text="liked ? 'Liked' : 'Like'"
+                    :class="liked && 'text-primary fw-bold'"
                     {% if request.user.is_authenticated %}
-                      @click="replying = true"
+                      hx-post="{% url 'comment_like' comment.id %}"
+                      hx-target="#comment-like-count-{{ comment.id }}"
+                      hx-swap="outerHTML"
+                      @htmx:after-request="if($event.detail.successful) liked = !liked;"
                     {% else %}
                       @click="window.location.href='{% url "account_login" %}'"
-                    {% endif %}
-                    >Reply</small>
-                </div>
+                    {% endif %}>Like</small>
+  
+                  <small 
+                    class="p-0 me-2 cursor-pointer hover:underline"
+                  {% if request.user.is_authenticated %}
+                    @click="replying = true"
+                  {% else %}
+                    @click="window.location.href='{% url "account_login" %}'"
+                  {% endif %}
+                  >Reply</small>
+              </div>
 
-                <div x-show="likeCount > 0">
-                    {% include 'comments/like_count.html' %}
-                    <span>❤️</span> 
-                </div>
+              <div x-show="likeCount > 0">
+                  {% include 'comments/like_count.html' %}
+                  <span>❤️</span> 
+              </div>
             </div>
 
         </div>
