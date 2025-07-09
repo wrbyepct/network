@@ -121,9 +121,7 @@
 		<a 
 			href="{% url 'post_detail' post.id %}" 
 			class="text-decoration-none ms-auto"
-			@comment-count-updated.window="
-			commentCount = $event.detail.value; console.log('comment count updated');"
-			><span x-text="commentCount"></span> 💬</a>
+			><span id="post-comment-count-{{ post.id }}" x-text="commentCount"></span> 💬</a>
 	</div>
 
 	<!-- Comment section - Display only 2 -->
@@ -132,7 +130,9 @@
 		class="p-3 border-top">
 		{% if post.comment_count > 2 %}
 
-			<a class="text-decoration-none text-muted fs-6 d-block mb-3 " href="{% url 'post_detail' post.id %}">See More</a>
+			<a 
+				class="text-decoration-none text-muted fs-6 d-block mb-3 " 
+				href="{% url 'post_detail' post.id %}">See More</a>
 
 		{% endif %}
 		{% for comment in post.latest_two_comments %}
