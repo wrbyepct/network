@@ -158,6 +158,8 @@ class CommentChildrenPaginatedView(ListView):
 class LikeCommentView(LoginRequiredMixin, View):
     """View to like/unlike a comment."""
 
+    template_name = "comments/like_count.html"
+
     def post(self, request, *args, **kwargs):
         """Like the post and syncs with comment's like_count field."""
         comment = get_object_or_404(Comment, id=kwargs.get("comment_id"))
@@ -169,6 +171,7 @@ class LikeCommentView(LoginRequiredMixin, View):
             if not created:
                 like.delete()
             comment.update_like_count()
-        resp = HttpResponse(str(comment.like_count), content_type="text/plain")
-        resp["HX-Trigger"] = "comment-like-update"
-        return resp
+
+        context = {"comment": comment}
+
+        return render(self.request, self.template_name, context)
