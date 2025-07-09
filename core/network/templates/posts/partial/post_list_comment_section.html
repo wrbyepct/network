@@ -1,0 +1,14 @@
+<div 
+  id="comment-section-{{ post.id }}"
+  class="p-3 border-top">
+  {% if post.comment_count > 2 %}
+
+    <a 
+      class="text-decoration-none text-muted fs-6 d-block mb-3 " 
+      href="{% url 'post_detail' post.id %}">See More</a>
+
+  {% endif %}
+  {% for comment in post.latest_two_comments %}
+      {% include 'comments/comment.html' %}
+  {% endfor %}
+</div>
