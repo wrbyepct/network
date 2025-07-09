@@ -3,7 +3,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from django.template.loader import render_to_string
 from django.views.generic import CreateView, ListView, UpdateView, View
 
@@ -59,19 +59,13 @@ class CommentCreateView(
 
     def get_response(self):
         """Get partial response."""
+        post = self.object.post
         context = {
-            "request": self.request,
             "comment": self.object,
             "is_new_comment": True,
+            "post": post,
         }
-        html = render_to_string("comments/comment.html", context)
-
-        resp = HttpResponse(html)
-
-        post = self.object.post
-        return self.attach_new_comment_count(
-            resp=resp, comment_count=post.comment_count
-        )
+        return render(self.request, "comments/comment.html", context)
 
     def form_valid(self, form):
         """
@@ -124,9 +118,13 @@ class CommentDeleteView(
 
         comment.delete()
 
-        resp = HttpResponse()
-        return self.attach_new_comment_count(
-            resp=resp, comment_count=post.comment_count
+        context = {"post": post}
+
+        return render(
+            self.request,
+            "posts/partial/comment_count.html",
+            context,
+            status=200,
         )
 
 
