@@ -1,7 +1,6 @@
 {% load post_extra %}
 <div 
     id="comment-{{ comment.id }}"
-    x-ref="comment"
     x-data="{ 
         isHovering: false, 
         editing: false, 
@@ -10,7 +9,8 @@
         newComment: {{ is_new_comment|yesno:'true,false' }}, 
         isOwner: {% if request.user == comment.user%}true{% else %}false{%endif%},
         setReplyTo() { return this.isOwner ? '' : '@{{ comment.username }} ' },
-        liked: {{ comment|liked_by_user:request.user|yesno:'true,false' }}
+        liked: {{ comment|liked_by_user:request.user|yesno:'true,false' }},
+        likeCount: 0 
     }">
     <div 
         class="d-flex"
@@ -51,7 +51,7 @@
             <!-- Time, like & Reply button -->
             <div
                 class="flex justify-between mb-1"
-                x-data="{ likeCount: {{ comment.like_count }} }"
+                x-data=""
                 >
                 <div class="flex self-center">
                     <small class="p-0 me-2 bg-white">{{ comment.created_at|timesince_simple }}</small>
@@ -62,12 +62,9 @@
                       :class="liked && 'text-primary fw-bold'"
                       {% if request.user.is_authenticated %}
                         hx-post="{% url 'comment_like' comment.id %}"
-                        hx-target="#comment-like-stat-{{ comment.id }}"
-                        hx-swap="textContent"
-                        @comment-like-update="$nextTick(() => { 
-                            likeCount = parseInt($refs.likes.innerText); console.log('Like updated');
-                            liked = !liked;
-                        })"
+                        hx-target="#comment-like-count-{{ comment.id }}"
+                        hx-swap="outerHTML"
+                        @htmx:after-request="if($event.detail.successful) liked = !liked;"
                       {% else %}
                         @click="window.location.href='{% url "account_login" %}'"
                       {% endif %}>Like</small>
@@ -83,12 +80,7 @@
                 </div>
 
                 <div x-show="likeCount > 0">
-                    <span
-                        id="comment-like-stat-{{ comment.id }}"
-                        class="text-muted"
-                        x-ref="likes"
-   
-                    >{{ comment.like_count }}</span> 
+                    {% include 'comments/like_count.html' %}
                     <span>❤️</span> 
                 </div>
             </div>
