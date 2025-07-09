@@ -1,0 +1,27 @@
+<div class="card-footer bg-white border-top">
+  <div class="d-flex justify-content-around text-muted small">
+  <a 
+    class="text-decoration-none cursor-pointer"
+    hx-post="{% url 'post_like' post.id %}"
+    hx-target="#post-like-stat-{{ post.id }}"
+    hx-swap="textContent"
+    @post-like-update="postLiked = !postLiked; console.log('post like updated');"
+    >
+    <!-- Hollow Thumbs up -->
+    <template x-if="!postLiked">
+      <i class="bi bi-hand-thumbs-up me-1"></i>
+    </template>
+    <!-- Filled Thumbs up -->
+    <template x-if="postLiked">
+      <i class="bi bi-hand-thumbs-up-fill"></i>
+    </template>
+
+    <span 
+      x-text="postLiked ? 'Liked' : 'Like'"
+      :class="postLiked && 'fw-bold'"
+      ></span> 
+  </a>
+  <a href="#" class="text-decoration-none"><i class="bi bi-chat-left me-1"></i> Comment</a>
+  <a href="#" class="text-decoration-none"><i class="bi bi-share me-1"></i> Share</a>
+  </div>
+</div>
