@@ -123,7 +123,7 @@ class LikePost(LoginRequiredMixin, View):
 
             post.update_like_count()
 
-            like_stat = get_like_stat(post.like_count, liked=created)
+        like_stat = get_like_stat(post.like_count, liked=created)
 
         resp = HttpResponse(like_stat, content_type="text/plain")
         resp["HX-Trigger"] = "post-like-update"
