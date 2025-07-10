@@ -44,6 +44,11 @@ class Post(LikeCountMixin, ProfileInfoMixin, TimestampedModel):
 
         return Comment.objects.filter(post=self).count()
 
+    @cached_property
+    def medias_count(self):
+        """Return medias count."""
+        return self.medias.count()
+
 
 class PostLike(TimestampedModel):
     """Like model."""
