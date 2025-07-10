@@ -52,7 +52,7 @@ class PostForm(MediaMixin, forms.ModelForm):
             PostMedia.objects.create(
                 post=post,
                 profile=post.user.profile,
-                file=video,
+                file=video[0],
                 type=PostMedia.MediaType.VIDEO,
                 order=-1,
             )
@@ -66,7 +66,7 @@ class PostForm(MediaMixin, forms.ModelForm):
             limit_num=ALLOWED_POST_IMAGE_NUM,
         )
         self._validate_allowed_media_num(
-            objs=[cleaned_data.get("video")],  # clean data of video is not a list.
+            objs=cleaned_data.get("video"),
             media_type=MediaBaseModel.MediaType.VIDEO,
             limit_num=ALLOWED_POST_VIDEO_NUM,
         )
@@ -85,7 +85,7 @@ class PostForm(MediaMixin, forms.ModelForm):
         total = existing_count + new_upload_count
 
         if total > limit_num:
-            msg = f"You can only upload up to {limit_num} {media_type}"
+            msg = f"You can only upload up to {limit_num} {media_type} at a time."
             raise forms.ValidationError(msg)
 
     # TODO (extra) implement validate media size
