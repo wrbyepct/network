@@ -18,7 +18,12 @@
         @mouseleave="isHovering = false"
         >
         <!-- Profile picture -->
-        <img src="{{ comment.profile_picture_url }}" class="rounded-full w-11 h-11 object-cover me-2" alt="">
+        <a href="{% url 'profile_about' comment.username  %}">
+            <img 
+            src="{{ comment.profile_picture_url }}" 
+            class="rounded-full w-11 h-11 object-cover me-2" 
+            alt="profile picture">
+        </a>
         
         <!-- Comment  -->
         <div x-show="!editing">   
