@@ -1,5 +1,9 @@
 {% extends 'posts/partial/post_base.html' %}
 
+{% block media_gallery %}
+  {% include 'posts/partial/media_gallery.html' with medias=post.ordered_medias %}
+{% endblock %}
+
 {% block post_stats %}
   {% include 'posts/partial/post_stats.html' %}
 {% endblock %}
