@@ -49,6 +49,11 @@ class Post(LikeCountMixin, ProfileInfoMixin, TimestampedModel):
         """Return medias count."""
         return self.medias.count()
 
+    @cached_property
+    def ordered_medias(self):
+        """Get acending medias of this post."""
+        return self.medias.all().order_by("order")
+
 
 class PostLike(TimestampedModel):
     """Like model."""

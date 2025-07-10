@@ -1,0 +1,8 @@
+{% if media.is_image %}
+  <img class="w-full h-full object-cover" src="{{ media.file.url }}" alt="">
+{% else %}
+  <video class="w-full h-full" controls>
+    <source src="{{ media.file.url }}" type="video/mp4">
+    Your browser does not support video playback.
+  </video>
+{% endif %}
