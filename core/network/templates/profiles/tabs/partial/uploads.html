@@ -5,7 +5,7 @@
     {% if media.is_image %}
       <div 
         class="aspect-square rounded overflow-hidden shadow-sm cursor-pointer"
-        @click="selectedMedia = { type: 'image', src: '{{ media.file.url }}' }; showModal = true"
+        @click="selectedMedia = { type: 'image', src: '{{ media.file.url }}' }; showModal = true;"
         >
         <img src="{{ media.file.url }}" alt="Photo" 
         class="w-full h-full object-cover" />
@@ -13,16 +13,17 @@
     
     {% elif media.is_video %}
       <div 
-        class="aspect-square rounded overflow-hidden shadow-sm cursor-pointer"
-        @click="selectedMedia = { type: 'video', src: '{{ media.file.url }}' }; showModal = true">
-        <video class="w-full h-full object-cover" muted preload="metadata">
+        class="relative aspect-square rounded overflow-hidden shadow-sm cursor-pointer group"
+        @click="selectedMedia = { type: 'video', src: '{{ media.file.url }}' }; showModal = true;">
+        <video class="w-full h-full object-cover group-hover:brightness-110 transition ease-in-out duration-100" muted preload="metadata">
           <source src="{{ media.file.url }}" type="video/mp4">
           Your browser does not support the video tag.
         </video>
         
         <!-- Play icon overlay -->
-        <div class="absolute inset-0 flex items-center justify-center">
-          <i class="bi bi-play-circle-fill text-white text-4xl opacity-75"></i>
+        <div class="absolute inset-0 flex items-center justify-center 
+         group-hover:scale-125 transform transition ease-in-out duration-100">
+          <i class="bi bi-play-circle-fill text-black text-4xl"></i>
         </div>
       </div>
     {% endif %}
