@@ -1,27 +1,29 @@
 
 {% for media in medias %}
-  <div class="col-6 col-md-4 col-lg-3">
+  <div class="col-span-1">
 
     {% if media.is_image %}
-      <div class="position-relative ratio ratio-1x1 rounded overflow-hidden shadow-sm">
-        <img src="{{ media.file.url }}" alt="Photo" class="img-fluid w-100 h-100" style="object-fit: cover;" />
+      <div 
+        class="aspect-square rounded overflow-hidden shadow-sm cursor-pointer"
+        @click="selectedMedia = { type: 'image', src: '{{ media.file.url }}' }; showModal = true"
+        >
+        <img src="{{ media.file.url }}" alt="Photo" 
+        class="w-full h-full object-cover" />
       </div>
     
     {% elif media.is_video %}
-      <div class="position-relative ratio ratio-1x1 rounded overflow-hidden shadow-sm">
-        <video class="w-100 h-100" muted preload="metadata" style="object-fit: cover;">
+      <div 
+        class="aspect-square rounded overflow-hidden shadow-sm cursor-pointer"
+        @click="selectedMedia = { type: 'video', src: '{{ media.file.url }}' }; showModal = true">
+        <video class="w-full h-full object-cover" muted preload="metadata">
           <source src="{{ media.file.url }}" type="video/mp4">
           Your browser does not support the video tag.
         </video>
         
         <!-- Play icon overlay -->
-        <button 
-          class="btn btn-light rounded-circle shadow position-absolute top-50 start-50 translate-middle"
-          style="width: 48px; height: 48px;"
-          aria-label="Play video"
-        >
-          <i class="bi bi-play-circle-fill fs-4 text-white opacity-75"></i>
-        </button>
+        <div class="absolute inset-0 flex items-center justify-center">
+          <i class="bi bi-play-circle-fill text-white text-4xl opacity-75"></i>
+        </div>
       </div>
     {% endif %}
 
@@ -32,7 +34,7 @@
 
 {% if page_obj.has_next %}
 <div
-  class="col-6 col-md-4 col-lg-3 "
+  class="col-span-1"
   hx-get="{% url 'profile_photos_uploads' profile.username %}"
   hx-vals='{"page": {{ page_obj.next_page_number }}}'
   hx-target="#media-container"
