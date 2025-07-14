@@ -17,6 +17,11 @@ urlpatterns = [
     ),
     path(
         "<uuid:post_id>/detail/",
+        views.PostModalView.as_view(),
+        name="post_modal",
+    ),
+    path(
+        "<uuid:post_id>/detail/",
         views.PostDetailView.as_view(),
         name="post_detail",
     ),
