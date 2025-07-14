@@ -1,0 +1,11 @@
+
+<div class="flex flex-col lg:flex-row h-full" >
+  <!-- Media slider -->
+  <div class="grow bg-black me-3 lg:w-4/6 ">
+    {% include 'posts/partial/media_slider.html' %}
+  </div>
+  <!-- Post -->
+  <div class="row min-w-100 lg:w-2/6">
+      {% include 'posts/partial/post_detail_card.html' with comment_insert_at_top=True %}
+  </div>
+</div>   
