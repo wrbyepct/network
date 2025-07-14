@@ -2,7 +2,7 @@
 
 <div 
   class="container"
-  x-data="{ showModal: false, selectedMedia: null }"
+  x-data="{ showModal: false, showPostModal: true , selectedMedia: null, clickedMedia: null }"
 >
     <div class="d-flex justify-content-between mb-3">
         <h2 class="text-dark">Photos</h2>
@@ -37,8 +37,7 @@
 
     <div 
       id="media-container"
-      class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2"
-    >
+      class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
       <div 
         class="col-span-1"
         hx-get="{% url 'profile_photos_'|add:current_photo_tab profile.username %}"
@@ -49,5 +48,9 @@
         {% include 'profiles/partials/loading.html' %}
       </div>
     </div>
+    <!-- Media modal -->
     {% include 'common/media_modal.html' %}
+
+    <!-- Post Modal when clicked on the medias asscoiated with a post -->
+    <div id="post-modal"></div>
 </div>

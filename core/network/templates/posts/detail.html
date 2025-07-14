@@ -2,23 +2,14 @@
 {% load post_extra %}
 {% block body %}
 
-{% if post.medias_count > 0 %}
+  {% if post.medias_count > 0 %}
 
-  <div class="flex flex-col lg:flex-row my-5 mx-auto  lg:w-5/6 lg:h-6/10 " >
-    <!-- Media slider -->
-    <div class="grow bg-black me-3 relative lg:w-4/6 ">
-      {% include 'posts/partial/media_slider.html' %}
-    </div>
-    <!-- Post -->
-    <div class="row min-w-100 lg:w-2/6">
-        {% include 'posts/partial/post_detail_card.html' with for_post_detail=True %}
-    </div>
-  </div>    
+    {% include 'posts/partial/post_with_media_slider.html' %}  
 
   {% else %}
 
   <div class="w-full lg:w-1/2 mx-auto mt-5">
-    {% include 'posts/partial/post_detail_card.html' with for_post_detail=True %}
+    {% include 'posts/partial/post_detail_card.html' with comment_insert_at_top=True %}
   </div>
 
   {% endif %}

@@ -38,6 +38,17 @@ class PostListView(ListView):
         return Post.objects.for_list_data()
 
 
+class PostModalView(DetailView):
+    """View to provide modal window of a post."""
+
+    context_object_name = "post"
+    template_name = "posts/partial/post_modal.html"
+
+    def get_object(self):
+        """Get post by id."""
+        return get_object_or_404(Post, id=self.kwargs.get("post_id"))
+
+
 class PostDetailView(DetailView):
     """Detail view for specified post."""
 
