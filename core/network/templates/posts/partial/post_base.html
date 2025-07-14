@@ -68,7 +68,7 @@
       {% if request.user.is_authenticated %}
         hx-post="{% url 'comment_create' post.id %}"
         hx-target="#comment-section-{{ post.id }}"
-        {% if for_post_detail %}
+        {% if comment_insert_at_top %}
           hx-swap="afterbegin scroll:#comments:top"
         {% else %}
           hx-swap="beforeend"

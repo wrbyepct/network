@@ -1,0 +1,19 @@
+<!-- TODO post modal's media slider is not showing correctly -->
+
+<div
+  id="post-modal"
+  x-show="showPostModal"
+  x-transition
+  class="fixed inset-0 bg-black/60 backdrop-blur-sm
+    flex justify-center items-center z-50"
+  @keydown.escape.window="showPostModal = false"
+>
+  <!-- Modal container -->
+  <div
+    class="w-4/5 h-9/10"
+    @click.outside="showPostModal = false"
+  >
+    {% include 'posts/partial/post_with_media_slider.html' %}
+  </div>
+  
+</div>
