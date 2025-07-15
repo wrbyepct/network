@@ -1,12 +1,12 @@
-<!-- TODO Detail with overflow x later -->
+
 <div 
-  id="comment-section-{{ post.id }}"
+  id="post-detail-comment-section-{{ post.id }}"
   class="card-body border-top overflow-y-auto"
   style="height: 25rem;"
   hx-get="{% url 'comment_list' post.id %}"
   hx-trigger="load"
   hx-swap="beforeend"
-  hx-target="#comment-section-{{ post.id }}"
+  hx-target="#post-detail-comment-section-{{ post.id }}"
   >
   <!-- Default empty dsiplay -->
   {% include 'posts/partial/no_comment_yet.html' %}

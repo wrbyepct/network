@@ -49,6 +49,7 @@
         {% include 'common/collapse.html' %}
 
   </div>
+  <!-- Post medias -->
   {% block media_gallery %}
   {% endblock %}
   <!-- Like and comment stats -->
@@ -67,12 +68,8 @@
     <form 
       {% if request.user.is_authenticated %}
         hx-post="{% url 'comment_create' post.id %}"
-        hx-target="#comment-section-{{ post.id }}"
-        {% if comment_insert_at_top %}
-          hx-swap="afterbegin scroll:#comments:top"
-        {% else %}
-          hx-swap="beforeend"
-        {% endif %}
+        :hx-target="isPostDetail ? '#post-detail-comment-section-{{ post.id }}' : '#post-list-comment-section-{{ post.id }}'"
+        :hx-swap="isPostDetail ? 'afterbegin scroll:#comments:top' : 'beforeend'"
         @htmx:before-request="preventEmptySubmit($event)"
       {% else %}
         @click="window.location.href='{% url 'account_login' %}'"
