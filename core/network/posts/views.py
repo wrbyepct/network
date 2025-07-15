@@ -2,7 +2,6 @@
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
-from django.db.models import Prefetch
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
 from django.views.generic import (
@@ -14,7 +13,6 @@ from django.views.generic import (
     View,
 )
 
-from network.comments.models import Comment
 from network.common.mixins import RefererRedirectMixin
 
 from .forms import PostForm
@@ -41,30 +39,11 @@ class PostModalView(DetailView):
     """View to provide modal window of a post."""
 
     context_object_name = "post"
-    template_name = "posts/partial/post_modal.html"
+    template_name = "posts/post/modal.html"
 
     def get_object(self):
         """Get post by id."""
         return get_object_or_404(Post, id=self.kwargs.get("post_id"))
-
-
-class PostDetailView(DetailView):
-    """Detail view for specified post."""
-
-    context_object_name = "post"
-    template_name = "posts/detail.html"
-
-    def get_queryset(self):
-        """Get prefecthed Posts with only top level comments."""
-        return Post.objects.prefetch_related(
-            Prefetch("comments", queryset=Comment.objects.filter(parent__isnull=True))
-        )
-
-    def get_object(self, queryset=None):
-        """Get prefechted post object."""
-        qs = self.get_queryset()
-
-        return get_object_or_404(qs, id=self.kwargs.get("post_id"))
 
 
 class PostCreateView(LoginRequiredMixin, CreateView):
@@ -129,13 +108,13 @@ class LikePost(LoginRequiredMixin, View):
         post = get_object_or_404(Post, id=kwargs.get("post_id"))
 
         with transaction.atomic():
-            like, new_liked = PostLike.objects.get_or_create(post=post, user=user)
-            if not new_liked:
+            like, created = PostLike.objects.get_or_create(post=post, user=user)
+            if not created:
                 like.delete()
 
             post.update_like_count()
 
-        like_stat = get_like_stat(post.like_count, liked=new_liked)
+        like_stat = get_like_stat(post.like_count, liked=created)
 
         context = {
             "like_stat": like_stat,
