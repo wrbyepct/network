@@ -7,23 +7,24 @@
     {% else %}
     hx-post="{% url 'post_like' post.id %}"
     hx-target="#post-like-stat-{{ post.id }}"
-    hx-swap="textContent"
-    @post-like-update="postLiked = !postLiked"
+    hx-swap="outerHTML"
     {% endif %}
   >
-      <span x-text="postLiked ? '❤️' : '🤍'"> </span>
-</a>
+      <span x-text="postLiked ? '❤️' : '🤍'"></span>
+  </a>
 
-
-<span 
-  id="post-like-stat-{{ post.id }}"
-  class="text-muted ps-1"
-  x-text="postLikeStat"
-></span>
+  <span 
+    id="post-like-stat-{{ post.id }}"
+    class="text-muted ps-1"
+    x-text="postLikeStat"
+  ></span>
 
 
 <a 
-  href="{% url 'post_detail' post.id %}" 
-  class="text-decoration-none ms-auto"
+  hx-get="{% url 'post_modal' post.id %}" 
+  hx-target="#post-modal"
+  hs-swap="outerHTML"
+  @click="showPostModal = true"
+  class="text-decoration-none ms-auto cursor-pointer"
   ><span id="post-comment-count-{{ post.id }}" x-text="commentCount"></span> 💬</a>
 </div>
