@@ -3,12 +3,13 @@
 
 {% if medias.0.is_video %}
   <!-- For layout containing video -->
+   <!-- First place the video then the image gallery -->
   <div class="grid grid-cols-1">
     {% include "posts/partial/media_item.html" with media=medias.0 %}
   </div>
   {% include "posts/partial/media_gallery.html" with medias=medias|slice:"1:" %}
 {% else %}
-  <!-- For image only layot -->
+  <!-- For image only layout -->
   {% if medias %}
     <div 
       class="grid"
@@ -20,15 +21,14 @@
         'grid-cols-2': mediasCount > 1
       }"
     >
-        {% for media in medias %}
-        <div 
-          :class="{
-            'col-span-2': mediasCount === 3 && {{ forloop.first|yesno:'true,false' }},
-            'h-[15rem]': mediasCount === 3 && !({{ forloop.first|yesno:'true,false' }})
-          }">
-          {% include "posts/partial/media_item.html" with media=media %}
-        </div>
-        {% endfor %}
+    {% for media in medias %}
+      <div 
+        :class="{
+          'col-span-2': mediasCount === 3 && {{ forloop.first|yesno:'true,false' }},
+        }">
+        {% include "posts/partial/media_item.html" with media=media %}
+      </div>
+    {% endfor %}
     </div>
   {% endif %}
 

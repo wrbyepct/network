@@ -1,8 +1,12 @@
 
 
-<div class="col-lg-8 mx-auto">
+<div 
+  x-data="{ isPostDetail: false }" 
+  class="col-lg-8 mx-auto">
   {% for post in posts %}
-    {% include 'posts/partial/post_list_card.html' %}
+  <div class="mb-4">
+	  {% include 'posts/post/list_card.html' %}
+  </div>
   {% empty %}
 		<div>No Turtles Yet!</div>
 	{% endfor %}

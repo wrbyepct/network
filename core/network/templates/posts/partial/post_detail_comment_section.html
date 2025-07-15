@@ -1,8 +1,7 @@
 
 <div 
   id="post-detail-comment-section-{{ post.id }}"
-  class="card-body border-top overflow-y-auto"
-  style="height: 25rem;"
+  class="card-body border-top overflow-y-auto h-[25rem]"
   hx-get="{% url 'comment_list' post.id %}"
   hx-trigger="load"
   hx-swap="beforeend"
