@@ -21,11 +21,6 @@ urlpatterns = [
         name="post_modal",
     ),
     path(
-        "<uuid:post_id>/detail/",
-        views.PostDetailView.as_view(),
-        name="post_detail",
-    ),
-    path(
         "edit/<uuid:post_id>/",
         views.PostEditView.as_view(),
         name="post_edit",
