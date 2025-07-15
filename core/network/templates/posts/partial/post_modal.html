@@ -1,7 +1,7 @@
-<!-- TODO post modal's media slider is not showing correctly -->
 
 <div
   id="post-modal"
+  x-init="isPostDetail = true"
   x-show="showPostModal"
   x-transition
   class="fixed inset-0 bg-black/60 backdrop-blur-sm
@@ -13,7 +13,11 @@
     class="w-4/5 h-9/10"
     @click.outside="showPostModal = false"
   >
-    {% include 'posts/partial/post_with_media_slider.html' %}
+    {% if post.medias_count %}
+      {% include 'posts/partial/post_with_media_slider.html' %}
+    {% else %}
+      {% include 'posts/partial/post_detail_card.html' with for_post_detail=True %}
+    {% endif %}
   </div>
   
 </div>

@@ -1,7 +1,7 @@
 
 
 <div x-data="{
-        active: null,
+        active: clickedMedia ? null : 0 ,
         items: {{ post.medias.all|length }},
         prev() { this.active = (this.active - 1 + this.items) % this.items; },
         next() { this.active = (this.active + 1) % this.items; },

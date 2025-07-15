@@ -10,7 +10,7 @@
         isOwner: {% if request.user == comment.user%}true{% else %}false{%endif%},
         setReplyTo() { return this.isOwner ? '' : '@{{ comment.username }} ' },
         liked: {{ comment|liked_by_user:request.user|yesno:'true,false' }},
-        likeCount: 0 
+        likeCount: {{ comment.like_count }},
     }">
     <div 
         class="d-flex"
@@ -66,7 +66,6 @@
                       hx-post="{% url 'comment_like' comment.id %}"
                       hx-target="#comment-like-count-{{ comment.id }}"
                       hx-swap="outerHTML"
-                      @htmx:after-request="if($event.detail.successful) liked = !liked;"
                     {% else %}
                       @click="window.location.href='{% url "account_login" %}'"
                     {% endif %}>Like</small>
@@ -82,7 +81,12 @@
               </div>
 
               <div x-show="likeCount > 0">
-                  {% include 'comments/like_count.html' %}
+                  <span 
+                    id="comment-like-count-{{ comment.id }}"
+                    class="text-muted"
+                    x-text="likeCount"
+                  ></span> 
+
                   <span>❤️</span> 
               </div>
             </div>
@@ -100,6 +104,7 @@
             hx-post="{% url 'comment_edit' comment.id %}"
             hx-target="#comment-{{ comment.id }}"
             hx-swap="outerHTML"
+            hx-select-oob="#comment-{{ comment.id }}"
             x-show="editing"
             x-effect="if(editing) $focus.first()"
             x-cloak
@@ -116,7 +121,10 @@
 
     <!-- Children replies (Dynamically fetched) -->
     <div id="replies-wrapper-{{ comment.id }}">
-        <div class="ps-5" id="replies-{{ comment.id }}"></div>
+      <div 
+        class="ps-5"
+        :id=" isPostDetail ? 'post-detail-replies-{{ comment.id }}' : 'post-list-replies-{{ comment.id }}'"
+        ></div>
     </div>
     
     <!-- Show more reply button  -->
@@ -125,8 +133,9 @@
         class="btn btn-sm text-muted ps-5 mb-3"
         @click="$nextTick(() => $el.remove())"
         hx-get="{% url 'comment_children' comment.id %}"
-        hx-target="#replies-{{ comment.id }}"
-        hx-swap="innerHTML">See other {{ comment.children_count }} repl{{ comment.children_count|pluralize:'y,ies' }}
+        hx-swap="innerHTML"
+        :hx-target="isPostDetail ? '#post-detail-replies-{{ comment.id }}' : '#post-list-replies-{{ comment.id }}'"
+      >See other {{ comment.children_count }} repl{{ comment.children_count|pluralize:'y,ies' }}
     </div>
     {% endif %}
 
@@ -140,8 +149,8 @@
         x-effect="if(replying) {commentBody = setReplyTo(); $focus.first() }"
         @htmx:before-request="preventEmptySubmit($event)"
         hx-post="{% url 'comment_create' comment.post.id %}"
-        hx-target="#replies-{{ comment.id }}"
         hx-swap="beforeend"
+        :hx-target="isPostDetail ? '#post-detail-replies-{{ comment.id }}' : '#post-list-replies-{{ comment.id }}'"
     >
         <!-- Comment submit textarea -->
         {% include 'comments/submit.html' %}

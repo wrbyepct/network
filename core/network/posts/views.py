@@ -3,8 +3,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
 from django.db.models import Prefetch
-from django.http import HttpResponse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
 from django.views.generic import (
     CreateView,
@@ -122,21 +121,25 @@ class PostDeleteView(RefererRedirectMixin, DeleteView):
 class LikePost(LoginRequiredMixin, View):
     """Like/Unlike a post view that returns the partial html of likes count."""
 
+    template_name = "posts/partial/like_stat.html"
+
     def post(self, request, *args, **kwargs):
         """Like the post and syncs with post's like_count field."""
         user = self.request.user
         post = get_object_or_404(Post, id=kwargs.get("post_id"))
 
         with transaction.atomic():
-            like, created = PostLike.objects.get_or_create(post=post, user=user)
-            if not created:
+            like, new_liked = PostLike.objects.get_or_create(post=post, user=user)
+            if not new_liked:
                 like.delete()
 
             post.update_like_count()
 
-        like_stat = get_like_stat(post.like_count, liked=created)
+        like_stat = get_like_stat(post.like_count, liked=new_liked)
 
-        resp = HttpResponse(like_stat, content_type="text/plain")
-        resp["HX-Trigger"] = "post-like-update"
+        context = {
+            "like_stat": like_stat,
+            "post_id": post.id,
+        }
 
-        return resp
+        return render(request, self.template_name, context)
