@@ -14,9 +14,9 @@
     @click.outside="showPostModal = false"
   >
     {% if post.medias_count %}
-      {% include 'posts/partial/post_with_media_slider.html' %}
+      {% include 'posts/post/with_media_slider.html' %}
     {% else %}
-      {% include 'posts/partial/post_detail_card.html' with for_post_detail=True %}
+      {% include 'posts/post/detail_card.html' %}
     {% endif %}
   </div>
   

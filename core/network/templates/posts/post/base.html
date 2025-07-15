@@ -1,7 +1,7 @@
 {% load post_extra %}
 <!-- Post -->
 <div 
-  class="card shadow-sm mb-4"
+  class="card shadow-sm"
   {% with post_liked=post|liked_by_user:request.user %}
     x-data="{
       commentBody: '', 
