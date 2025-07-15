@@ -16,7 +16,7 @@ urlpatterns = [
         name="post_create",
     ),
     path(
-        "<uuid:post_id>/detail/",
+        "<uuid:post_id>/modal/",
         views.PostModalView.as_view(),
         name="post_modal",
     ),

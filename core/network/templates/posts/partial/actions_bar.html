@@ -4,8 +4,7 @@
     class="text-decoration-none cursor-pointer"
     hx-post="{% url 'post_like' post.id %}"
     hx-target="#post-like-stat-{{ post.id }}"
-    hx-swap="textContent"
-    @post-like-update="postLiked = !postLiked; console.log('post like updated');"
+    hx-swap="outerHTML"
     >
     <!-- Hollow Thumbs up -->
     <template x-if="!postLiked">
