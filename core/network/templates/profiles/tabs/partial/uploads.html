@@ -1,6 +1,8 @@
 
 {% for media in medias %}
-  <div class="col-span-1">
+  <div class="col-span-1" 
+      @click="showPostModal = true; clickedMedia = '{{ media.id }}'"
+  >
 
     {% if media.is_image %}
       <div 
@@ -8,10 +10,12 @@
         hx-get="{% url 'post_modal' media.post.id %}"
         hx-target="#post-modal"
         hx-swap="outerHTML"
-        @click="showPostModal = true; clickedMedia = '{{ media.id }}'"
         >
-        <img src="{{ media.file.url }}" alt="Photo" 
-        class="w-full h-full object-cover" />
+        <img 
+          class="w-full h-full object-cover" 
+          src="{{ media.file.url }}" 
+          alt="Photo" 
+        />
       </div>
     
     {% elif media.is_video %}
@@ -20,7 +24,7 @@
         hx-get="{% url 'post_modal' media.post.id %}"
         hx-target="#post-modal"
         hx-swap="outerHTML"
-        @click="showPostModal = true; clickedMedia = {{ forloop.counter0 }};">
+      >
         <video class="w-full h-full object-cover group-hover:brightness-110 transition ease-in-out duration-100" muted preload="metadata">
           <source src="{{ media.file.url }}" type="video/mp4">
           Your browser does not support the video tag.
