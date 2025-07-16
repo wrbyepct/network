@@ -8,7 +8,7 @@ from network.common.mixins import LikeCountMixin, ProfileInfoMixin
 from network.common.models import MediaBaseModel, TimestampedModel
 from network.profiles.models import Profile
 
-from .managers import PostManger
+from .managers import PostManager
 
 
 # Create your models here.
@@ -20,7 +20,7 @@ class Post(LikeCountMixin, ProfileInfoMixin, TimestampedModel):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="posts"
     )
 
-    objects = PostManger()
+    objects = PostManager()
 
     class Meta(TimestampedModel.Meta):
         indexes = [
@@ -90,7 +90,7 @@ class PostMedia(MediaBaseModel):
         ]
 
     def __str__(self) -> str:
-        """Return string "Media Type: {self.type}. Order: {self.order}. From post: {self.post.pkid}."""
+        """Return string Media Type: {type}. Order: {order}. From post: {post.pkid}."""
         return (
             f"Media Type: {self.type}. Order: {self.order}. From post: {self.post.pkid}"
         )

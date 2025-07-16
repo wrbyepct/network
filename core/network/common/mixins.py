@@ -88,7 +88,17 @@ class LikeCountMixin(Model):
     class Meta:
         abstract = True
 
-    def update_like_count(self):
+    def sync_like_count(self):
         """Update like_count in object and save it."""
         self.like_count = self.likes.count()
-        self.save()
+        self.save(update_fields=["like_count"])
+
+    def add_one_like_count(self):
+        """Add 1 like count."""
+        self.like_count = self.like_count + 1
+        self.save(update_fields=["like_count"])
+
+    def subtract_one_like_count(self):
+        """Subtract 1 like count."""
+        self.like_count = self.like_count - 1
+        self.save(update_fields=["like_count"])
