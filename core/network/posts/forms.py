@@ -4,14 +4,14 @@ from django import forms
 
 from network.common.constants import ALLOWED_POST_IMAGE_NUM, ALLOWED_POST_VIDEO_NUM
 from network.common.fields import MultipleFileField
-from network.common.mixins import MediaMixin
 from network.common.models import MediaBaseModel
 from network.common.validators import validate_image_extension, validate_video_extension
 
 from .models import Post, PostMedia
+from .services import PostMediaService
 
 
-class PostForm(MediaMixin, forms.ModelForm):
+class PostForm(forms.ModelForm):
     """Form for create/edit form."""
 
     content = forms.CharField(
@@ -32,31 +32,10 @@ class PostForm(MediaMixin, forms.ModelForm):
         fields = ["content"]
 
     def save_media(self, post):
-        """Save media(images/vidoe) after validation if any."""
+        """Save cleaned medias."""
         images = self.cleaned_data.get("images")
         video = self.cleaned_data.get("video")
-        if images:
-            max_order = self.get_max_order(post)
-            PostMedia.objects.bulk_create(
-                [
-                    PostMedia(
-                        post=post,
-                        file=image,
-                        type=PostMedia.MediaType.IMAGE,
-                        order=index,
-                        profile=post.user.profile,
-                    )
-                    for index, image in enumerate(images, start=max_order + 1)
-                ]
-            )
-        if video:
-            PostMedia.objects.create(
-                post=post,
-                profile=post.user.profile,
-                file=video[0],
-                type=PostMedia.MediaType.VIDEO,
-                order=-1,
-            )
+        PostMediaService.save_media(post, images, video)
 
     def clean(self):
         """Validate allowed media amount."""
