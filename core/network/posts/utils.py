@@ -1,7 +1,7 @@
 """Post Service."""
 
 
-def get_like_stat(like_count, liked):
+def get_like_stat(like_count, liked) -> str:
     """Return dynamic like stat string to display at the frontend."""
     if like_count == 0:
         return ""
@@ -11,4 +11,4 @@ def get_like_stat(like_count, liked):
             return "You"
         return f"You and {like_count - 1} others"
 
-    return like_count
+    return str(like_count)

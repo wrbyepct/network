@@ -5,9 +5,10 @@ from django import forms
 from network.common.constants import ALLOWED_POST_IMAGE_NUM, ALLOWED_POST_VIDEO_NUM
 from network.common.fields import MultipleFileField
 from network.common.mixins import MediaMixin
+from network.common.models import MediaBaseModel
 from network.common.validators import validate_image_extension, validate_video_extension
 
-from .models import MediaBaseModel, Post, PostMedia
+from .models import Post, PostMedia
 
 
 class PostForm(MediaMixin, forms.ModelForm):
@@ -18,7 +19,7 @@ class PostForm(MediaMixin, forms.ModelForm):
         widget=forms.Textarea(
             attrs={
                 "class": "form-control",
-                "row": "4",
+                "rows": "4",
                 "placeholder": "What's on your mind?",
             }
         ),

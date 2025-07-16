@@ -170,7 +170,7 @@ class LikeCommentView(LoginRequiredMixin, View):
             )
             if not created:
                 like.delete()
-            comment.update_like_count()
+            comment.sync_like_count()
 
         context = {"comment": comment}
 
