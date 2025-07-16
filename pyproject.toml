@@ -53,9 +53,11 @@ ignore = [
     "ANN001", # Missing type annotation for function argument
     "ANN201", # Check return type annotation
     "ANN202", # Missing return type annotation for private function
+    "ANN205", # Missing return type annotation for staticmethod
     "ANN002", # Missing type annotation for `*args`
     "ANN003", # Missing type annotation for `**extra_fields`
     "ARG002", # Unused method argument
+    "DOC",
     "D106", # Missing docstring in public nested class
     "D107", # Missing docstring in `__init__`
     "D203", # 1 blank line required before class docstring
