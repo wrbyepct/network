@@ -63,17 +63,21 @@ class PostCreateView(LoginRequiredMixin, CreateView):
         return resp
 
 
-class PostEditView(LoginRequiredMixin, UpdateView):
-    """Post update view."""
-
-    template_name = "posts/edit.html"
-    form_class = PostForm
-    success_url = reverse_lazy("post_list")
+class GetUserPostMixin:
+    """Mixin to override get_object to retrieve user owned post."""
 
     def get_object(self, queryset=None):
         """Return the requesting post object."""
         post_id = self.kwargs.get("post_id")
         return get_object_or_404(Post, id=post_id, user=self.request.user)
+
+
+class PostEditView(LoginRequiredMixin, GetUserPostMixin, UpdateView):
+    """Post update view."""
+
+    template_name = "posts/edit.html"
+    form_class = PostForm
+    success_url = reverse_lazy("post_list")
 
     def form_valid(self, form):
         """Handle deleting old files and add new files."""
@@ -86,15 +90,10 @@ class PostEditView(LoginRequiredMixin, UpdateView):
         return resp
 
 
-class PostDeleteView(RefererRedirectMixin, DeleteView):
+class PostDeleteView(RefererRedirectMixin, GetUserPostMixin, DeleteView):
     """Post Delete View."""
 
     fallback_url = reverse_lazy("post_list")
-
-    def get_object(self, queryset=None):
-        """Return the requesting post object."""
-        post_id = self.kwargs.get("post_id")
-        return get_object_or_404(Post, id=post_id, user=self.request.user)
 
 
 class LikePost(LoginRequiredMixin, View):
@@ -109,10 +108,11 @@ class LikePost(LoginRequiredMixin, View):
 
         with transaction.atomic():
             like, created = PostLike.objects.get_or_create(post=post, user=user)
-            if not created:
+            if created:
+                post.add_one_like_count()
+            else:
                 like.delete()
-
-            post.update_like_count()
+                post.subtract_one_like_count()
 
         like_stat = get_like_stat(post.like_count, liked=created)
 

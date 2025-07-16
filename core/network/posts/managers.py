@@ -19,7 +19,7 @@ class PostQuerySet(models.QuerySet):
         return self.filter(user=user)
 
 
-class PostManger(models.Manager):
+class PostManager(models.Manager):
     """Post Manager."""
 
     def get_queryset(self):
