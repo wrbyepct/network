@@ -1,7 +1,8 @@
 
 {% for media in medias %}
-  <div class="col-span-1" 
-      @click="showPostModal = true; clickedMedia = '{{ media.id }}'"
+  <div 
+    class="col-span-1" 
+    @click="showPostModal = true; clickedMedia = '{{ media.id }}'"
   >
 
     {% if media.is_image %}
@@ -25,7 +26,8 @@
         hx-target="#post-modal"
         hx-swap="outerHTML"
       >
-        <video class="w-full h-full object-cover group-hover:brightness-110 transition ease-in-out duration-100" muted preload="metadata">
+        <video 
+          class="w-full h-full object-cover group-hover:brightness-110 transition ease-in-out duration-100" muted preload="metadata">
           <source src="{{ media.file.url }}" type="video/mp4">
           Your browser does not support the video tag.
         </video>
