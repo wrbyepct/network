@@ -2,31 +2,24 @@
 {% load socialaccount %}
 
 {% block auth_content %}
+  <h2 class="text-2xl font-semibold text-center text-gray-800 mb-6">Log in</h2>
 
-    <h2 class="text-center mb-4">Login</h2>
+  {% include "account/partials/traditional_login.html" %}
 
-    {% include "network/partials/messages.html" %}
+  {% get_providers as socialaccount_providers %}
+  {% if socialaccount_providers %}
+    <div class="relative my-6">
+      <div class="absolute inset-0 flex items-center">
+        <div class="w-full border-t border-gray-300"></div>
+      </div>
+      <div class="relative flex justify-center text-sm">
+        <span class="px-2 bg-white text-gray-500">Or continue with</span>
+      </div>
+    </div>
+
+    <!-- Social providers -->
+  {% include 'account/partials/social_providers.html' %}
   
-
-        {% include "account/partials/traditional_login.html" %}
-        
-        <div class="d-flex align-content-center">
-            <hr class="flex-fill ">
-            <span class="mt-1 mx-1 text-black-50">Or</span>
-            <hr class="flex-fill ">
-        </div>
-
-        <ul class="list-unstyled text-center mt-2">
-        {% get_providers as socialaccount_providers %}
-        {% for provider in socialaccount_providers %}
-            <li class="my-1">
-            <a class="btn btn-outline-dark w-100" href="{% provider_login_url provider.id %}">
-                {{ provider.name }}
-            </a>
-            </li>
-        {% endfor %}
-        </ul>
-
-
+  {% endif %}
 
 {% endblock %}
