@@ -1,7 +1,7 @@
 
 
 <div x-data="{
-        active: clickedMedia ? null : 0 ,
+        active: null,
         items: {{ post.medias.all|length }},
         prev() { this.active = (this.active - 1 + this.items) % this.items; },
         next() { this.active = (this.active + 1) % this.items; },
@@ -21,7 +21,16 @@
         {% if media.is_image %}
           <img src="{{ media.file.url }}" class="object-contain" alt="picture">
         {% else %} 
-          <video src="{{ media.file.url }}" class="object-contain" controls></video>
+          <video 
+            src="{{ media.file.url }}" 
+            class="object-contain" 
+            controls
+            x-effect="
+              if (active === {{ forloop.counter0 }}) {
+                $el.play();
+              } else { 
+                if(!$el.paused) $el.pause();
+              }"></video>
         {% endif %}
     </div>
     {% endfor %}
