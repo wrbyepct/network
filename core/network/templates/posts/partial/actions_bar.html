@@ -2,9 +2,13 @@
   <div class="d-flex justify-content-around text-muted small">
   <a 
     class="text-decoration-none cursor-pointer"
-    hx-post="{% url 'post_like' post.id %}"
-    hx-target="#post-like-stat-{{ post.id }}"
-    hx-swap="outerHTML"
+    {% if request.user.is_authenticated %}
+      hx-post="{% url 'post_like' post.id %}"
+      hx-target="#post-like-stat-{{ post.id }}"
+      hx-swap="outerHTML"
+    {% else %}
+      href="{% url 'account_login' %}"
+    {% endif %}
     >
     <!-- Hollow Thumbs up -->
     <template x-if="!postLiked">
