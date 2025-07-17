@@ -32,33 +32,31 @@
       {% for media in medias %}
         <div class="col-6 col-md-4 col-lg-3">
           <div 
-            class="position-relative ratio ratio-1x1 rounded overflow-hidden shadow-sm border cursor-pointer"
-            @click="showMediaModal = true; clickedMedia = '{{ media.id }}'; console.log(showMediaModal)"
+            class="relative ratio ratio-1x1 rounded overflow-hidden shadow-sm border cursor-pointer group"
+            @click="showMediaModal = true; clickedMedia = '{{ media.id }}';"
           >
             
             {% if media.is_image %}
               <img 
                 src="{{ media.file.url }}" 
                 alt="Album Image"
-                class="img-fluid w-full h-ful object-cover"
+                class="img-fluid w-full h-full object-cover"
               />
 
             {% elif media.is_video %}
+            <!-- TODO what is preload  -->
               <video 
-                class="w-full h-full object-cover" 
+                class="w-full h-full object-cover group-hover:brightness-110" 
                 preload="metadata">
                 <source src="{{ media.file.url }}" type="video/mp4">
                 Your browser does not support the video tag.
               </video>
 
-              <!-- Play Icon Overlay -->
-              <button 
-                class="btn btn-light rounded-circle shadow position-absolute top-50 start-50 translate-middle"
-                style="width: 48px; height: 48px;"
-                aria-label="Play video"
-              >
-                <i class="bi bi-play-circle-fill fs-3 text-primary opacity-75"></i>
-              </button>
+              <!-- Play icon overlay -->
+              <div class="absolute inset-0 flex items-center justify-center 
+              group-hover:scale-125 transform transition ease-in-out duration-100">
+                <i class="bi bi-play-circle-fill text-black text-4xl"></i>
+              </div>
             {% endif %}
 
           </div>
@@ -78,6 +76,6 @@
     <!-- Media modal -->
     {% include 'common/media_modal.html' %}
   </div>
-
+  <!-- TODO dynamic fetch more medias -->
   {% endwith %}
 {% endblock %}

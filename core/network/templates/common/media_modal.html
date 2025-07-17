@@ -11,21 +11,21 @@
   x-show="showMediaModal"
   x-cloak
   x-transition
-  @keydown.escape.window="showMediaModal = false"
+  @keydown.escape.window="showMediaModal = false; $el.innerHTML = '';"
 >
 
 <!-- Slide container -->
 
   <div 
     x-data="{
-      active: clickedMedia ? null : 0 ,
+      active: null,
       items: {{ medias|length }},
       prev() { this.active = (this.active - 1 + this.items) % this.items; },
       next() { this.active = (this.active + 1) % this.items; },
     }"
     
     class="relative w-10/11 h-full flex justify-center items-center"
-    @click.outside="showMediaModal = false">
+    @click.outside="showMediaModal = false; if (!$refs.video.paused) $refs.video.pause();">
 
     <!-- Slides -->
       {% for media in medias %}
@@ -41,7 +41,17 @@
           {% if media.is_image %}
             <img src="{{ media.file.url }}" class="object-contain" alt="picture">
           {% else %} 
-            <video src="{{ media.file.url }}" class="object-contain" controls></video>
+            <video 
+              src="{{ media.file.url }}" 
+              class="object-contain" 
+              controls
+              x-ref="video"
+              x-effect="
+                if (active === {{ forloop.counter0 }}) {
+                  $el.play();
+                } else { 
+                  if(!$el.paused) $el.pause();
+                } "></video>
           {% endif %}
       </div>
       {% endfor %}
