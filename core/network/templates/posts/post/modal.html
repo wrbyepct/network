@@ -6,12 +6,12 @@
   x-transition
   class="fixed inset-0 bg-black/60 backdrop-blur-sm
     flex justify-center items-center z-50"
-  @keydown.escape.window="showPostModal = false"
+  @keydown.escape.window="showPostModal = false; $el.innerHTML = '';"
 >
   <!-- Modal container -->
   <div
     class="w-4/5 h-9/10"
-    @click.outside="showPostModal = false"
+    @click.outside="showPostModal = false; $event.target.innerHTML = '';"
   >
     {% if post.medias_count %}
       {% include 'posts/post/with_media_slider.html' %}

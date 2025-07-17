@@ -360,6 +360,19 @@ files = [
 ]
 
 [[package]]
+name = "dj-static"
+version = "0.0.6"
+description = "Serve production static files with Django."
+optional = false
+python-versions = "*"
+files = [
+    {file = "dj-static-0.0.6.tar.gz", hash = "sha256:032ec1c532617922e6e3e956d504a6fb1acce4fc1c7c94612d0fda21828ce8ef"},
+]
+
+[package.dependencies]
+static3 = "*"
+
+[[package]]
 name = "django"
 version = "5.2.1"
 description = "A high-level Python web framework that encourages rapid development and clean, pragmatic design."
@@ -1256,6 +1269,30 @@ dev = ["build", "hatch"]
 doc = ["sphinx"]
 
 [[package]]
+name = "static-ranges"
+version = "0.2.0"
+description = "WSGI middleware for handling HTTP byte-ranges"
+optional = false
+python-versions = "*"
+files = [
+    {file = "static-ranges-0.2.0.tar.gz", hash = "sha256:c9eb86adfc27d1aefa6619cff7c8d5043937873c08eb86073cd822d4e32cae86"},
+]
+
+[[package]]
+name = "static3"
+version = "0.7.0"
+description = "A really simple WSGI way to serve static (or mixed) content."
+optional = false
+python-versions = "*"
+files = [
+    {file = "static3-0.7.0.tar.gz", hash = "sha256:674641c64bc75507af2eb20bef7e7e3593dca993dec6674be108fa15b42f47c8"},
+]
+
+[package.extras]
+genshimagic = ["Genshi"]
+kidmagic = ["kid"]
+
+[[package]]
 name = "termcolor"
 version = "2.5.0"
 description = "ANSI color formatting for output in terminal"
@@ -1370,4 +1407,4 @@ watchdog = ["watchdog (>=2.3)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "65cc5793fe3b25191418aa4a7b43762c22dacb4e858674a70daf24201127fc60"
+content-hash = "ec259dc473a0c0dcf853bfe58935b52f751e7db7ed1a3899724bd09c0103be89"
