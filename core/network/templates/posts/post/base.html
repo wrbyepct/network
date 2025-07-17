@@ -72,7 +72,6 @@
         :hx-swap="isPostDetail ? 'afterbegin scroll:#comments:top' : 'beforeend'"
         @htmx:before-request="preventEmptySubmit($event)"
       {% else %}
-        @click="window.location.href='{% url 'account_login' %}'"
         @submit.prevent
       {% endif %}
     >

@@ -7,11 +7,20 @@
       rows="1"
       required
       style="resize: none; overflow: hidden;"
+      :placeholder="replying ? 'Replay to {{ comment.username }}' : 'Write a comment...'  " 
+      {% if request.user.is_authenticated %}
       x-ref="textarea"
       x-model="commentBody"
       @transitionend="resize($el);"
       @input="resize($el)"
-      :placeholder="replying ? 'Replay to {{ comment.username }}' : 'Write a comment...'  " 
+      {% else %}
+        tabindex="-1"
+        hx-get="{% url 'account_login' %}"
+        hx-trigger="click"
+        hx-target="#login-modal-container"
+        hx-select="#login-modal-content"
+        @htmx:after-request="if($event.detail.successful) showLoginModal = true;"
+      {% endif %}
       ></textarea>
     <button 
       class="btn btn-outline-primary border-0 submit-btn" 

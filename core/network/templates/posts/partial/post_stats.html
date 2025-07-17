@@ -8,7 +8,10 @@
     hx-target="#post-like-stat-{{ post.id }}"
     hx-swap="outerHTML"
     {% else %}
-     href="{% url 'account_login' %}"
+     hx-get="{% url 'account_login' %}"
+     hx-target="#login-modal-container"
+     hx-select="#login-modal-content"
+     @htmx:after-request="if($event.detail.successful) showLoginModal = true;"
     {% endif %}
   >
       <span x-text="postLiked ? '❤️' : '🤍'"></span>
@@ -28,7 +31,10 @@
     hx-swap="outerHTML"
     @click="showPostModal = true"
   {% else %}
-    href="{% url 'account_login' %}"
+    hx-get="{% url 'account_login' %}"
+    hx-target="#login-modal-container"
+    hx-select="#login-modal-content"
+    @htmx:after-request="if($event.detail.successful) showLoginModal = true;"
   {% endif %}
   class="text-decoration-none ms-auto cursor-pointer"
   ><span id="post-comment-count-{{ post.id }}" x-text="commentCount"></span> 💬</a>
