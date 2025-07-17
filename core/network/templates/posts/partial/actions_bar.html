@@ -7,7 +7,10 @@
       hx-target="#post-like-stat-{{ post.id }}"
       hx-swap="outerHTML"
     {% else %}
-      href="{% url 'account_login' %}"
+      hx-get="{% url 'account_login' %}"
+      hx-target="#login-modal-container"
+      hx-select="#login-modal-content"
+      @htmx:after-request="if($event.detail.successful) showLoginModal = true;"
     {% endif %}
     >
     <!-- Hollow Thumbs up -->
