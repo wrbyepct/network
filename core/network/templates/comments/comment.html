@@ -67,7 +67,10 @@
                       hx-target="#comment-like-count-{{ comment.id }}"
                       hx-swap="outerHTML"
                     {% else %}
-                      @click="window.location.href='{% url "account_login" %}'"
+                      hx-get="{% url 'account_login' %}"
+                      hx-target="#login-modal-container"
+                      hx-select="#login-modal-content"
+                      @htmx:after-request="if($event.detail.successful) showLoginModal = true;"
                     {% endif %}>Like</small>
   
                   <small 
@@ -75,7 +78,10 @@
                   {% if request.user.is_authenticated %}
                     @click="replying = true"
                   {% else %}
-                    @click="window.location.href='{% url "account_login" %}'"
+                    hx-get="{% url 'account_login' %}"
+                    hx-target="#login-modal-container"
+                    hx-select="#login-modal-content"
+                    @htmx:after-request="if($event.detail.successful) showLoginModal = true;"
                   {% endif %}
                   >Reply</small>
               </div>
