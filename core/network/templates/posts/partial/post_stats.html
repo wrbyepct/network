@@ -2,12 +2,13 @@
 
   <a
     class="btn btn-outline-danger border-0 p-0"
-    {% if not request.user.is_authenticated %}
+    {% if request.user.is_authenticated %}
     href="{% url 'account_login' %}"
-    {% else %}
     hx-post="{% url 'post_like' post.id %}"
     hx-target="#post-like-stat-{{ post.id }}"
     hx-swap="outerHTML"
+    {% else %}
+     href="{% url 'account_login' %}"
     {% endif %}
   >
       <span x-text="postLiked ? '❤️' : '🤍'"></span>
@@ -21,10 +22,14 @@
 
 
 <a 
-  hx-get="{% url 'post_modal' post.id %}" 
-  hx-target="#post-modal"
-  hx-swap="outerHTML"
-  @click="showPostModal = true"
+  {% if request.user.is_authenticated %}
+    hx-get="{% url 'post_modal' post.id %}" 
+    hx-target="#post-modal"
+    hx-swap="outerHTML"
+    @click="showPostModal = true"
+  {% else %}
+    href="{% url 'account_login' %}"
+  {% endif %}
   class="text-decoration-none ms-auto cursor-pointer"
   ><span id="post-comment-count-{{ post.id }}" x-text="commentCount"></span> 💬</a>
 </div>
