@@ -4,31 +4,30 @@
 
 {% block auth_content %}
 
-    <h4 class="mb-4 text-center">Sign Up</h4>
-        <ul class="list-unstyled text-center mt-2">
-            {% get_providers as socialaccount_providers %}
-            {% for provider in socialaccount_providers %}
-                <li class="my-1">
-                <a class="btn btn-outline-dark w-100" href="{% provider_login_url provider.id %}">
-                   Continue with {{ provider.name }}
-                </a>
-                </li>
-            {% endfor %}
-        </ul>
+    <h2 class="text-2xl font-semibold text-center text-gray-800 mb-6">Sign Up</h2>
 
+    <!-- Social Providers  -->
+    {% include 'account/partials/social_providers.html' %}
 
-        <div class="d-flex align-content-center">
-            <hr class="flex-fill ">
-            <span class="mt-1 mx-1 text-black-50">Or</span>
-            <hr class="flex-fill ">
+    <!-- Divider -->
+    <div class="relative my-6">
+        <div class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-gray-300"></div>
         </div>
+        <div class="relative flex justify-center text-sm">
+            <span class="px-2 bg-white text-gray-500">Or sign up with email</span>
+        </div>
+    </div>
 
-        {% include "account/partials/traditional_signup.html" %}
+    <!-- Traditional Signup -->
+    {% include "account/partials/traditional_signup.html" %}
 
-        <p class="mt-4 text-center text-muted">
-            Already have an account?
-            <a href="{% url 'account_login' %}">Log in here</a>.
-        </p>
-
+    <!-- Footer Link -->
+    <p class="mt-6 text-center text-sm text-gray-600">
+    Already have an account?
+    <a href="{% url 'account_login' %}" class="text-blue-600 hover:underline font-medium">
+        Log in here
+    </a>
+    </p>
 
 {% endblock %}

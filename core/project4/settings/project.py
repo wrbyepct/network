@@ -30,9 +30,9 @@ ACCOUNT_EMAIL_VERIFICATION = None
 
 # login logout
 
-LOGIN_REDIRECT_URL = "/"  # After login, where to go
+LOGIN_REDIRECT_URL = "/posts/all/"  # After login, where to go
 ACCOUNT_LOGOUT_REDIRECT_URL = "/accounts/login/"  # After logout
-
+ACCOUNT_LOGOUT_ON_GET = True
 
 # Require email? Optional. For now, no email verification
 SITE_ID = 1
