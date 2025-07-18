@@ -12,6 +12,11 @@ urlpatterns = [
         name="album_create",
     ),
     path(
+        "albums/<uuid:album_id>/medias/",
+        views.AlbumMediasPaginator.as_view(),
+        name="album_media_list",
+    ),
+    path(
         "albums/<int:album_pk>/<str:username>/detail/",
         views.AlbumDetailView.as_view(),
         name="album_detail",

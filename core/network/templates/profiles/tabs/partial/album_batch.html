@@ -6,6 +6,7 @@
     href="{% url 'album_detail' album.pk profile.username %}">
   {% if album.medias.first %}
   <!-- First media as cover -->
+   <!-- TODO fix if first one is not image but a video -->
     <img 
       src="{{ album.medias.first.file.url }}" 
       class="card-img-top object-fit-cover" 
