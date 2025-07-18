@@ -1,0 +1,47 @@
+
+{% for media in medias %}
+<div class="col-span-1">
+    <div 
+    class="relative aspect-square rounded overflow-hidden shadow-sm cursor-pointer group"
+    @click="showMediaModal = true; clickedMedia = '{{ media.id }}';"
+    >
+    
+    {% if media.is_image %}
+        <img 
+        src="{{ media.file.url }}" 
+        alt="Album Image"
+        class="w-full h-full object-cover"
+        />
+
+    {% elif media.is_video %}
+    <!-- TODO what is preload  -->
+        <video 
+        class="w-full h-full object-cover group-hover:brightness-110" 
+        preload="metadata">
+        <source src="{{ media.file.url }}" type="video/mp4">
+        Your browser does not support the video tag.
+        </video>
+
+        <!-- Play icon overlay -->
+        <div class="absolute inset-0 flex items-center justify-center 
+        group-hover:scale-125 transform transition ease-in-out duration-100">
+        <i class="bi bi-play-circle-fill text-black text-4xl"></i>
+        </div>
+    {% endif %}
+
+    </div>
+</div>
+{% empty %}
+<!-- Empty State -->
+<div class="col-span-4 text-center mt-5">
+    <i class="bi bi-image fs-1 text-muted d-block mb-2"></i>
+    <p class="text-muted">This album is empty.</p>
+    {% if request.user == album.profile.user %}
+    <a href="#" class="btn btn-primary btn-sm">Add Media</a>
+    {% endif %}
+</div>
+{% endfor %}
+
+<!-- Next media batch trigger -->
+{% url 'album_media_list' album.id as fetch_url %}
+{% include 'common/next_media_batch.html' with fetch_url=fetch_url %}

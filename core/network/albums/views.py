@@ -4,13 +4,38 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DeleteView, DetailView, UpdateView
+from django.views.generic import (
+    CreateView,
+    DeleteView,
+    DetailView,
+    ListView,
+    UpdateView,
+)
 
 from network.common.mixins import SetOwnerProfileMixin
 from network.profiles.models import Profile
 
 from .forms import AlbumForm
 from .models import Album, AlbumMedia
+
+
+class AlbumMediasPaginator(ListView):
+    """Album Photos paginator view."""
+
+    context_object_name = "medias"
+    template_name = "albums/paginator.html"
+    paginate_by = 10
+
+    def get_queryset(self):
+        """Get album medias paginated by 10."""
+        self.album = get_object_or_404(Album, id=self.kwargs.get("album_id"))
+        return self.album.medias.all()
+
+    def get_context_data(self, **kwargs):
+        """Inject album instance in context."""
+        context = super().get_context_data(**kwargs)
+        context["album"] = self.album
+        return context
 
 
 # Create your views here.

@@ -34,19 +34,9 @@
       </ul>
     </div>
 
-    <div 
-      id="media-container"
-      class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
-      <div 
-        class="col-span-1"
-        hx-get="{% url 'profile_photos_'|add:current_photo_tab profile.username %}"
-        hx-target="#media-container"
-        hx-swap="innerHTML"
-        hx-trigger="load"
-      >
-        {% include 'profiles/partials/loading.html' %}
-      </div>
-    </div>
+    {% url 'profile_photos_'|add:current_photo_tab profile.username as fetch_url %}
+    {% include 'profiles/partials/media_container.html' with fetch_url=fetch_url %}
+
  
 
 </div>

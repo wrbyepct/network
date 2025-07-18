@@ -17,7 +17,7 @@ class Album(TimestampedModel):
     )
 
     @cached_property
-    def media_count(self):
+    def medias_count(self):
         """Return photo count."""
         return self.medias.count()
 
