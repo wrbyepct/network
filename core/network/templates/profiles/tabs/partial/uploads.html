@@ -1,4 +1,4 @@
-
+<!-- TODO Refactor media grid into usable piece -->
 {% for media in medias %}
   <div 
     class="col-span-1" 
@@ -45,16 +45,6 @@
   <span class="text-muted">No photos yet! Upload more!</span>
 {% endfor %}
 
-{% if page_obj.has_next %}
-<div
-  class="col-span-1"
-  hx-get="{% url 'profile_photos_uploads' profile.username %}"
-  hx-vals='{"page": {{ page_obj.next_page_number }}}'
-  hx-target="#media-container"
-  hx-swap="beforeend"
-  hx-trigger="revealed once"
-  @htmx:after-request="if($event.detail.successful) $el.remove();"
-  >
-  {% include 'profiles/partials/loading.html' %}
-</div>
-{% endif %}
+
+{% url 'profile_photos_uploads' profile.username as fetch_url %}
+{% include 'common/next_media_batch.html' with fetch_url=fetch_url %}

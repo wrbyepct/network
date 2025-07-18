@@ -1,9 +1,8 @@
 {% extends 'network/layout.html' %}
 
 <!-- TODO Change the bootstrap class to tailwind later -->
-
+<!-- TODO fetch albums dynamically -->
 {% block body %}
-  {% with medias=album.medias.all %}
   <div class="container py-4" >
 
     <!-- Album Header -->
@@ -18,64 +17,12 @@
     </div>
 
     <!-- Media Grid -->
-    <div class="row g-3" id="mediaContainer">
-      {% if request.user == album.profile.user %}
-        <div class="col-6 col-md-4 col-lg-3">
-          <a href="{% url 'album_edit' album.pk %}" class="text-decoration-none">
-            <div class="card h-100 border-dashed text-center d-flex justify-content-center align-items-center p-3 bg-light">
-              <div class="fs-1 text-primary">＋</div>
-              <div class="fw-bold">Add more photos</div>
-            </div>
-          </a>
-        </div>
-      {% endif %}
-      {% for media in medias %}
-        <div class="col-6 col-md-4 col-lg-3">
-          <div 
-            class="relative ratio ratio-1x1 rounded overflow-hidden shadow-sm border cursor-pointer group"
-            @click="showMediaModal = true; clickedMedia = '{{ media.id }}';"
-          >
-            
-            {% if media.is_image %}
-              <img 
-                src="{{ media.file.url }}" 
-                alt="Album Image"
-                class="img-fluid w-full h-full object-cover"
-              />
-
-            {% elif media.is_video %}
-            <!-- TODO what is preload  -->
-              <video 
-                class="w-full h-full object-cover group-hover:brightness-110" 
-                preload="metadata">
-                <source src="{{ media.file.url }}" type="video/mp4">
-                Your browser does not support the video tag.
-              </video>
-
-              <!-- Play icon overlay -->
-              <div class="absolute inset-0 flex items-center justify-center 
-              group-hover:scale-125 transform transition ease-in-out duration-100">
-                <i class="bi bi-play-circle-fill text-black text-4xl"></i>
-              </div>
-            {% endif %}
-
-          </div>
-        </div>
-      {% empty %}
-        <!-- Empty State -->
-        <div class="col-12 text-center mt-5">
-          <i class="bi bi-image fs-1 text-muted d-block mb-2"></i>
-          <p class="text-muted">This album is empty. Upload something memorable!</p>
-          {% if request.user == album.profile.user %}
-            <a href="#" class="btn btn-primary btn-sm">Add Media</a>
-          {% endif %}
-        </div>
-      {% endfor %}
-    </div>
-
+    {% url 'album_media_list' album.id as fetch_url %}
+    {% include 'profiles/partials/media_container.html' with in_album_detail=True fetch_url=fetch_url %}
+  
     <!-- Media modal -->
-    {% include 'common/media_modal.html' %}
+     <!-- TODO Make medias in modal retrieval more optimized later -->
+    {% include 'common/media_modal.html' with medias=album.medias.all %}
   </div>
-  <!-- TODO dynamic fetch more medias -->
-  {% endwith %}
+
 {% endblock %}
