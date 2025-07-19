@@ -1,7 +1,7 @@
 {% extends 'network/layout.html' %}
 
 <!-- TODO Change the bootstrap class to tailwind later -->
-<!-- TODO fetch albums dynamically -->
+
 {% block body %}
   <div class="container py-4" >
 
@@ -9,7 +9,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
       <div>
         <h2 class="h4 mb-0">{{ album.name }}</h2>
-        <p class="text-muted small mb-0">{{ album.media_count }} media item{{ album.media_count|pluralize }}</p>
+        <p class="text-muted small mb-0">{{ album.medias_count }} media item{{ album.medias_count|pluralize }}</p>
       </div>
       <a href="{% url 'profile_photos_albums' album.profile.username %}" class="btn btn-outline-secondary btn-sm">
         ← Back to albums
@@ -17,11 +17,19 @@
     </div>
 
     <!-- Media Grid -->
-    {% url 'album_media_list' album.id as fetch_url %}
-    {% include 'profiles/partials/media_container.html' with in_album_detail=True fetch_url=fetch_url %}
+    
+    <div
+      hx-get="{% url 'album_media_paginate' album.id %}"
+      hx-target="#media-container"
+      hx-trigger="load"
+      hx-swap="beforeend"
+      @htmx:after-request="if($event.detail.successful) $el.remove();">
+    </div>
+
+    {% include 'profiles/partials/media_container.html' with in_album_detail=True %}
   
     <!-- Media modal -->
-     <!-- TODO Make medias in modal retrieval more optimized later -->
+     <!-- TODO Consider making medias in modal retrieve on click -->
     {% include 'common/media_modal.html' with medias=album.medias.all %}
   </div>
 
