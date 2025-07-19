@@ -24,23 +24,11 @@
   {% endif %}
   <div class="card-body text-center">
       <h5 class="card-title mb-1">{{ album.name }}</h5>
-      <p class="text-muted small mb-0">{{ album.media_count }} photo{{ album.media_count|pluralize }}</p>
+      <p class="text-muted small mb-0">{{ album.medias_count }} photo{{ album.medias_count|pluralize }}</p>
   </div>
   </a>
 </div>
 {% endfor %}
 
-{% if page_obj.has_next %}
-  <div
-    class="col-span-1"
-    hx-get="{% url "albums_paginate" profile.username %}"
-    hx-vals='{"page": {{ page_obj.next_page_number }}}'
-    hx-target="#media-container"
-    hx-swap="beforeend"
-    hx-trigger="revealed once"
-    @htmx:after-request="if($event.detail.successful) {$el.remove(); console.log('ho')}"
-  >
-  {% include 'profiles/partials/loading.html' %}
-  </div>
-
-{% endif %}
+{% url 'albums_paginate' profile.username as fetch_url %}
+{% include 'common/next_media_batch.html' with fetch_url=fetch_url %}

@@ -1,3 +1,4 @@
+<!-- Media container -->
 <div 
 	id="media-container"
 	class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
@@ -17,16 +18,5 @@
 		{% endif %}
 	{% endif %}
 	
-	{% if album.medias_count %}
-	<div 
-		class="col-span-1"
-		hx-get="{{ fetch_url }}"
-		hx-target="#media-container"
-		hx-swap="beforeend"
-		hx-trigger="load"
-		@htmx:after-request="if($event.detail.successful) $el.remove();"
-		>
-		{% include 'profiles/partials/loading.html' %}
-  </div>
-	{% endif %}
+	
 </div>
