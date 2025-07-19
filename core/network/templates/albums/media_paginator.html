@@ -43,5 +43,5 @@
 {% endfor %}
 
 <!-- Next media batch trigger -->
-{% url 'album_media_list' album.id as fetch_url %}
+{% url 'album_media_paginate' album.id as fetch_url %}
 {% include 'common/next_media_batch.html' with fetch_url=fetch_url %}
