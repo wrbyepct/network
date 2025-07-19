@@ -19,7 +19,7 @@ urlpatterns = [
     path(
         "albums/<uuid:album_id>/medias/",
         views.AlbumMediasPaginator.as_view(),
-        name="album_media_list",
+        name="album_media_paginate",
     ),
     path(
         "albums/<int:album_pk>/<str:username>/detail/",
