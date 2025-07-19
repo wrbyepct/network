@@ -11,7 +11,6 @@ from django.views.generic import (
     View,
 )
 
-from network.albums.models import Album
 from network.posts.models import Post, PostMedia
 
 from .constants import PHOTO_TABS, PROFILE_TABS
@@ -20,7 +19,6 @@ from .models import Profile
 
 
 # Photo uploads view
-# TODO click on the photo will take user to the post it's asscoiated
 class ProfileTabsBaseMixin:
     """Profile base view."""
 
@@ -109,29 +107,6 @@ class PhotosAlbumsView(
     """
 
     current_photo_tab = "albums"
-
-
-class AlbumsPaginateView(ListView):
-    """Album paginate view that handle partial albums paginate retreive."""
-
-    template_name = "profiles/tabs/partial/album_batch.html"
-    context_object_name = "albums"
-    paginate_by = 10
-
-    def dispatch(self, request, *args, **kwargs):
-        """Save profile for later use."""
-        self.profile = get_object_or_404(Profile, username=self.kwargs.get("username"))
-        return super().dispatch(request, *args, **kwargs)
-
-    def get_queryset(self):
-        """Get albums owned by the profile."""
-        return Album.objects.prefetch_related("medias").filter(profile=self.profile)
-
-    def get_context_data(self, **kwargs):
-        """Inject profile into context."""
-        context = super().get_context_data(**kwargs)
-        context["profile"] = self.profile
-        return context
 
 
 class PostsView(ProfileTabsBaseMixin, ListView):

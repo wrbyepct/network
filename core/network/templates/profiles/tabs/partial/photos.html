@@ -34,8 +34,16 @@
       </ul>
     </div>
 
-    {% url 'profile_photos_'|add:current_photo_tab profile.username as fetch_url %}
-    {% include 'profiles/partials/media_container.html' with fetch_url=fetch_url %}
+    <div 
+      hx-get="{% url 'profile_photos_'|add:current_photo_tab profile.username%}"
+      hx-target="#media-container"
+      hx-trigger="load"
+      @htmx:after-request="if($event.detail.successful) $el.remove()"
+    >
+
+    </div>
+    
+    {% include 'profiles/partials/media_container.html'  %}
 
  
 

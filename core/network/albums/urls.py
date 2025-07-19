@@ -7,6 +7,11 @@ from . import views
 urlpatterns = [
     # Album
     path(
+        "<str:username>/paginate/albums/",
+        views.AlbumsPaginateView.as_view(),
+        name="albums_paginate",
+    ),
+    path(
         "albums/create/",
         views.AlbumCreateView.as_view(),
         name="album_create",
