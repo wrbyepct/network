@@ -18,7 +18,7 @@
         hx-get="{% url 'account_login' %}"
         hx-trigger="click"
         hx-target="#login-modal-container"
-        hx-select="#login-modal-content"
+        hx-select="#auth-modal-content"
         @htmx:after-request="if($event.detail.successful) showLoginModal = true;"
       {% endif %}
       ></textarea>
