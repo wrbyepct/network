@@ -40,49 +40,49 @@
                 <!-- Right: Menu Items -->
                 <ul class="flex space-x-2">
 
-                    {% if user.is_authenticated %}
-                        <li>
-                            <a href="{% url 'profile_about' user.profile.username %}"
-                              class="bg-[#FFD66F] text-black border-4 border-[#D2A679] px-2 py-1 shadow-[4px_4px_0px_#D2A679] hover:bg-[#A8D5A0] hover:text-white transition-none">
-                                {{ user.profile.username }}
-                            </a>
-                        </li>
-                    {% endif %}
-
+                  {% if user.is_authenticated %}
                     <li>
-                        <a href="{% url 'post_list' %}"
-                          class="bg-[#FFD66F] text-black border-4 border-[#D2A679] px-2 py-1 shadow-[4px_4px_0px_#D2A679] hover:bg-[#A8D5A0] hover:text-white transition-none">
-                            All Posts
-                        </a>
+                      <a href="{% url 'profile_about' user.profile.username %}"
+                        class="bg-[#FFD66F] text-black border-4 border-[#D2A679] px-2 py-1 shadow-[4px_4px_0px_#D2A679] hover:bg-[#A8D5A0] hover:text-white transition-none">
+                          {{ user.profile.username }}
+                      </a>
                     </li>
+                  {% endif %}
 
-                    {% if user.is_authenticated %}
-                        <li>
-                            <a href="{% url 'following' user.profile.username %}"
-                              class="bg-[#FFD66F] text-black border-4 border-[#D2A679] px-2 py-1 shadow-[4px_4px_0px_#D2A679] hover:bg-[#A8D5A0] hover:text-white transition-none">
-                                Following
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{% url 'account_logout' %}"
-                              class="bg-[#FFD66F] text-black border-4 border-[#D2A679] px-2 py-1 shadow-[4px_4px_0px_#D2A679] hover:bg-[#A8D5A0] hover:text-white transition-none">
-                                Log Out
-                            </a>
-                        </li>
-                    {% else %}
-                        <li>
-                            <a href="{% url 'account_login' %}"
-                              class="bg-[#FFD66F] text-black border-4 border-[#D2A679] px-2 py-1 shadow-[4px_4px_0px_#D2A679] hover:bg-[#A8D5A0] hover:text-white transition-none">
-                                Log In
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{% url 'account_signup' %}"
-                              class="bg-[#FFD66F] text-black border-4 border-[#D2A679] px-2 py-1 shadow-[4px_4px_0px_#D2A679] hover:bg-[#A8D5A0] hover:text-white transition-none">
-                                Sign Up
-                            </a>
-                        </li>
-                    {% endif %}
+                  <li>
+                      <a href="{% url 'post_list' %}"
+                        class="bg-[#FFD66F] text-black border-4 border-[#D2A679] px-2 py-1 shadow-[4px_4px_0px_#D2A679] hover:bg-[#A8D5A0] hover:text-white transition-none">
+                          All Posts
+                      </a>
+                  </li>
+
+                  {% if user.is_authenticated %}
+                      <li>
+                        <a href="{% url 'following' user.profile.username %}"
+                          class="bg-[#FFD66F] text-black border-4 border-[#D2A679] px-2 py-1 shadow-[4px_4px_0px_#D2A679] hover:bg-[#A8D5A0] hover:text-white transition-none">
+                            Following
+                        </a>
+                      </li>
+                      <li>
+                        <a href="{% url 'account_logout' %}"
+                          class="bg-[#FFD66F] text-black border-4 border-[#D2A679] px-2 py-1 shadow-[4px_4px_0px_#D2A679] hover:bg-[#A8D5A0] hover:text-white transition-none">
+                            Log Out
+                        </a>
+                      </li>
+                  {% else %}
+                      <li>
+                        <a href="{% url 'account_login' %}"
+                          class="bg-[#FFD66F] text-black border-4 border-[#D2A679] px-2 py-1 shadow-[4px_4px_0px_#D2A679] hover:bg-[#A8D5A0] hover:text-white transition-none">
+                            Log In
+                        </a>
+                      </li>
+                      <li>
+                        <a href="{% url 'account_signup' %}"
+                          class="bg-[#FFD66F] text-black border-4 border-[#D2A679] px-2 py-1 shadow-[4px_4px_0px_#D2A679] hover:bg-[#A8D5A0] hover:text-white transition-none">
+                            Sign Up
+                        </a>
+                      </li>
+                  {% endif %}
 
                 </ul>
 
@@ -96,7 +96,7 @@
           x-data="{ 
             showMediaModal: false,
             showPostModal: false,
-            showLoginModal: false,
+            showModal: false,
             selectedMedia: null, 
             clickedMedia: null,
             resize(textarea) { 
@@ -115,20 +115,20 @@
           >
             {% block body %}
             {% endblock %}
-            <!-- Post modal -->
-            <div id="post-modal"></div>
-            <!-- Login modal -->
+        
+            <!-- Modal -->
             <div 
-              id="login-modal"
+              id="modal-bg"
               class="fixed inset-0 bg-black/60 backdrop-blur-sm
                 flex justify-center items-center z-50"
-              x-show="showLoginModal"
+              x-show="showModal"
               x-cloak
               x-transition
-              @keydown.escape.window="showLoginModal = false"
+              @keydown.escape.window="showModal = false;  $el.firstChild.innerHTML = '';"
               ><div 
-                id="login-modal-container" 
-                @click.outside="showLoginModal = false"></div>
+                id="modal-container" 
+                x-ref="modalContainer"
+                class="w-4/5 h-9/10 flex justify-center items-center"></div>
             </div>
         </div>
         <!-- Bootstrap js -->

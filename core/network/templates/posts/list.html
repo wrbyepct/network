@@ -1,12 +1,12 @@
 {% extends 'network/layout.html' %} 
 
 {% block body %}
-    
+  <div x-data="{ isPostDetail: false, showCreatePostModal: false }" > 
     <div>
         <a class="text-dark text-decoration-none" href={% url 'post_create' %}>Create post</a>
     </div>
     <div
-      x-data="{ isPostDetail: false }" 
+      
       class="container mt-4 ">
       <div class="row ">
         <div class="col-lg-8 mx-auto ">
@@ -31,5 +31,12 @@
         </div>
     
     </div>
+    <div 
+      id="create-post-modal"
+      
+      ></div>
+    
+  </div>
+
 
 {% endblock %} 

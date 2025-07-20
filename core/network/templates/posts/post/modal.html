@@ -1,17 +1,10 @@
 
-<div
-  id="post-modal"
-  x-init="isPostDetail = true"
-  x-show="showPostModal"
-  x-transition
-  class="fixed inset-0 bg-black/60 backdrop-blur-sm
-    flex justify-center items-center z-50"
-  @keydown.escape.window="showPostModal = false; $el.innerHTML = '';"
->
-  <!-- Modal container -->
-  <div
-    class="w-4/5 h-9/10"
-    @click.outside="showPostModal = false; $event.target.innerHTML = '';"
+
+  <!-- Post Modal content -->
+  <div 
+    class="w-full h-full" 
+    x-init="isPostDetail = true"
+    @click.outside="showModal = false; $refs.modalContainer.innerHTML = '';"
   >
     {% if post.medias_count %}
       {% include 'posts/post/with_media_slider.html' %}
@@ -20,4 +13,3 @@
     {% endif %}
   </div>
   
-</div>
