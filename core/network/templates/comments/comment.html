@@ -69,7 +69,7 @@
                     {% else %}
                       hx-get="{% url 'account_login' %}"
                       hx-target="#login-modal-container"
-                      hx-select="#login-modal-content"
+                      hx-select="#auth-modal-content"
                       @htmx:after-request="if($event.detail.successful) showLoginModal = true;"
                     {% endif %}>Like</small>
   
@@ -80,7 +80,7 @@
                   {% else %}
                     hx-get="{% url 'account_login' %}"
                     hx-target="#login-modal-container"
-                    hx-select="#login-modal-content"
+                    hx-select="#auth-modal-content"
                     @htmx:after-request="if($event.detail.successful) showLoginModal = true;"
                   {% endif %}
                   >Reply</small>
