@@ -6,9 +6,8 @@
     <a 
       class="text-decoration-none text-muted fs-6 d-block mb-3 cursor-pointer" 
       hx-get="{% url 'post_modal' post.id %}"
-      hx-swap="outerHTML"
-      hx-target="#post-modal"
-      @click="showPostModal = true">See More</a>
+      hx-target="#modal-container"
+      @click="showModal = true">See More</a>
 
   {% endif %}
   {% for comment in post.latest_two_comments %}
