@@ -21,40 +21,73 @@
     </head>
     <body>
       <!-- Nav bar -->
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="/">Network</a>
-          
-            <div>
-              <ul class="navbar-nav mr-auto">
-                {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link"
-                        href="{% url 'profile_about' user.profile.username %}"
-                         ><strong>{{ user.profile.username }}</strong></a>
-                    </li>
-                {% endif %}
+     <nav class="bg-[#A8D5A0] border-b-4 border-[#D2A679] px-4 py-2 font-mono"
+            style="font-family: 'Press Start 2P', monospace; font-size: 10px; image-rendering: pixelated;">
 
-                <li class="nav-item">
-                  <a class="nav-link" href="{% url 'post_list' %}">All Posts</a>
-                </li>
-                {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'following' user.profile.username %}">Following</a>
+            <div class="flex items-center justify-between">
+
+              <!-- Left: Logo and App Name -->
+              <a href="/" class="flex items-center space-x-2 no-underline group">
+                  <img src="/media/defaults/turtle.png" alt="Turtly Fine"
+                      class="w-10 h-10">
+                  <span class="text-[#3B3B3B] uppercase tracking-widest cursor-pointer
+                              transform transition-transform duration-200 ease-in-out
+                              group-hover:scale-110">
+                      Turtly Fine
+                  </span>
+              </a>
+
+                <!-- Right: Menu Items -->
+                <ul class="flex space-x-2">
+
+                    {% if user.is_authenticated %}
+                        <li>
+                            <a href="{% url 'profile_about' user.profile.username %}"
+                              class="bg-[#FFD66F] text-black border-4 border-[#D2A679] px-2 py-1 shadow-[4px_4px_0px_#D2A679] hover:bg-[#A8D5A0] hover:text-white transition-none">
+                                {{ user.profile.username }}
+                            </a>
+                        </li>
+                    {% endif %}
+
+                    <li>
+                        <a href="{% url 'post_list' %}"
+                          class="bg-[#FFD66F] text-black border-4 border-[#D2A679] px-2 py-1 shadow-[4px_4px_0px_#D2A679] hover:bg-[#A8D5A0] hover:text-white transition-none">
+                            All Posts
+                        </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'account_logout' %}">Log Out</a>
-                    </li>
-                {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'account_login' %}">Log In</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'account_signup' %}">Sign up</a>
-                    </li>
-                {% endif %}
-              </ul>
+
+                    {% if user.is_authenticated %}
+                        <li>
+                            <a href="{% url 'following' user.profile.username %}"
+                              class="bg-[#FFD66F] text-black border-4 border-[#D2A679] px-2 py-1 shadow-[4px_4px_0px_#D2A679] hover:bg-[#A8D5A0] hover:text-white transition-none">
+                                Following
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'account_logout' %}"
+                              class="bg-[#FFD66F] text-black border-4 border-[#D2A679] px-2 py-1 shadow-[4px_4px_0px_#D2A679] hover:bg-[#A8D5A0] hover:text-white transition-none">
+                                Log Out
+                            </a>
+                        </li>
+                    {% else %}
+                        <li>
+                            <a href="{% url 'account_login' %}"
+                              class="bg-[#FFD66F] text-black border-4 border-[#D2A679] px-2 py-1 shadow-[4px_4px_0px_#D2A679] hover:bg-[#A8D5A0] hover:text-white transition-none">
+                                Log In
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'account_signup' %}"
+                              class="bg-[#FFD66F] text-black border-4 border-[#D2A679] px-2 py-1 shadow-[4px_4px_0px_#D2A679] hover:bg-[#A8D5A0] hover:text-white transition-none">
+                                Sign Up
+                            </a>
+                        </li>
+                    {% endif %}
+
+                </ul>
+
             </div>
-          </nav>
+        </nav>
         
         <div 
           class="body"
