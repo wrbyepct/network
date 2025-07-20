@@ -8,9 +8,9 @@
       hx-swap="outerHTML"
     {% else %}
       hx-get="{% url 'account_login' %}"
-      hx-target="#login-modal-container"
+      hx-target="#modal-container"
       hx-select="#auth-modal-content"
-      @htmx:after-request="if($event.detail.successful) showLoginModal = true;"
+      @htmx:after-request="if($event.detail.successful) showModal = true;"
     {% endif %}
     >
     <!-- Hollow Thumbs up -->
