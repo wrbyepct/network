@@ -1,9 +1,8 @@
 <div 
   class="w-full h-full cursor-pointer"
-  @click="showPostModal = true; clickedMedia = '{{ media.id }}'"
   hx-get="{% url 'post_modal' post.id %}"
-  hx-target="#post-modal"
-  hx-swap="outerHTML"
+  hx-target="#modal-container"
+  @htmx:after-request="if($event.detail.successful) { showModal = true; clickedMedia = '{{ media.id }}'; }"
 >
 
   {% if media.is_image %}
