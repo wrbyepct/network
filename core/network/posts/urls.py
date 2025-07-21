@@ -16,17 +16,17 @@ urlpatterns = [
         name="post_modal",
     ),
     path(
-        "edit/<uuid:post_id>/",
+        "<uuid:post_id>/edit/",
         views.PostEditView.as_view(),
         name="post_edit",
     ),
     path(
-        "delete/<uuid:post_id>/",
+        "<uuid:post_id>/delete/",
         views.PostDeleteView.as_view(),
         name="post_delete",
     ),
     path(
-        "like/<uuid:post_id>",
+        "<uuid:post_id>/like/",
         views.LikePost.as_view(),
         name="post_like",
     ),
