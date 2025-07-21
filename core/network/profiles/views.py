@@ -16,6 +16,7 @@ from network.posts.models import Post, PostMedia
 from .constants import PHOTO_TABS, PROFILE_TABS
 from .forms import ProfileForm
 from .models import Profile
+from .services.activity import get_activity_obj
 
 
 # Photo uploads view
@@ -125,6 +126,13 @@ class AboutView(ProfileTabsBaseMixin, TemplateView):
     """Profile about view that handles partial and full request."""
 
     current_tab = "about"
+
+    def get_context_data(self, **kwargs):
+        """Inject user activity status in context."""
+        context = super().get_context_data(**kwargs)
+        user_id = self.profile.user.id
+        context["activity"] = get_activity_obj(user_id)
+        return context
 
 
 class FollowersView(ProfileTabsBaseMixin, TemplateView):

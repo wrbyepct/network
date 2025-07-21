@@ -50,6 +50,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     # Required by latest django-allauth
     "allauth.account.middleware.AccountMiddleware",
+    "network.profiles.middlewares.activity.ActivityStatusMiddleware",
 ]
 
 ROOT_URLCONF = "project4.urls"
