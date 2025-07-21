@@ -2,16 +2,14 @@
 {% for media in medias %}
   <div 
     class="col-span-1" 
-    @click="showPostModal = true; clickedMedia = '{{ media.id }}'"
+    hx-get="{% url 'post_modal' media.post.id %}"
+    hx-target="#modal-container"
+    @htmx:after-request="if($event.detail.successful) { showModal = true; clickedMedia = '{{ media.id }}'; }"
+
   >
 
     {% if media.is_image %}
-      <div 
-        class="aspect-square rounded overflow-hidden shadow-sm cursor-pointer"
-        hx-get="{% url 'post_modal' media.post.id %}"
-        hx-target="#post-modal"
-        hx-swap="outerHTML"
-        >
+      <div class="aspect-square rounded overflow-hidden shadow-sm cursor-pointer">
         <img 
           class="w-full h-full object-cover" 
           src="{{ media.file.url }}" 
@@ -20,12 +18,7 @@
       </div>
     
     {% elif media.is_video %}
-      <div 
-        class="relative aspect-square rounded overflow-hidden shadow-sm cursor-pointer group"
-        hx-get="{% url 'post_modal' media.post.id %}"
-        hx-target="#post-modal"
-        hx-swap="outerHTML"
-      >
+      <div class="relative aspect-square rounded overflow-hidden shadow-sm cursor-pointer group">
         <video 
           class="w-full h-full object-cover group-hover:brightness-110 transition ease-in-out duration-100" muted preload="metadata">
           <source src="{{ media.file.url }}" type="video/mp4">

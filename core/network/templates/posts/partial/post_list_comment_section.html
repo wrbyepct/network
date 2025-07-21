@@ -7,7 +7,8 @@
       class="text-decoration-none text-muted fs-6 d-block mb-3 cursor-pointer" 
       hx-get="{% url 'post_modal' post.id %}"
       hx-target="#modal-container"
-      @click="showModal = true">See More</a>
+      @htmx:after-request="if($event.detail.successful) showModal = true;"
+      >See More</a>
 
   {% endif %}
   {% for comment in post.latest_two_comments %}
