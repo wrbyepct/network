@@ -1,9 +1,7 @@
 """View."""
 
-from django.views.generic import TemplateView
+from network.posts.views import PostListView
 
 
-class IndexView(TemplateView):
+class IndexView(PostListView):
     """Index view."""
-
-    template_name = "network/index.html"
