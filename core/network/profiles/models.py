@@ -4,6 +4,7 @@ from django.conf import settings
 from django.core.exceptions import BadRequest
 from django.db import models
 from django.utils.functional import cached_property
+from django.utils.timezone import now
 from phonenumber_field.modelfields import PhoneNumberField
 
 from network.common.models import TimestampedModel
@@ -33,6 +34,21 @@ class FollowMixin:
 class Profile(TimestampedModel, FollowMixin):
     """User's Profile model."""
 
+    class ActivityStatus:
+        SWIMMING = "swimming"
+        RESTING = "resting"
+        EXPLORING = "exploring"
+        SUNBATHING = "sunbathing"
+        HIDING = "hiding_in_shell"
+
+        CHOICES = [
+            (SWIMMING, "Swimming"),
+            (RESTING, "Resting"),
+            (EXPLORING, "Exploring"),
+            (SUNBATHING, "Sunbathing"),
+            (HIDING, "Hiding in Shell"),
+        ]
+
     username = models.CharField(max_length=255, blank=True, unique=True)
     first_name = models.CharField(max_length=255, blank=True)
     last_name = models.CharField(max_length=255, blank=True)
@@ -46,6 +62,10 @@ class Profile(TimestampedModel, FollowMixin):
 
     bio = models.TextField(blank=True)
 
+    activity_status = models.CharField(
+        max_length=20, choices=ActivityStatus.CHOICES, default=ActivityStatus.EXPLORING
+    )
+
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profile"
     )
@@ -53,6 +73,8 @@ class Profile(TimestampedModel, FollowMixin):
     followers = models.ManyToManyField(
         "self", symmetrical=False, related_name="following", blank=True
     )
+
+    last_seen = models.DateTimeField(default=now)
 
     def __str__(self) -> str:
         """Return string Profile of the user: <user-email>."""
