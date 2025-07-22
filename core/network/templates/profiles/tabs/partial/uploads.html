@@ -5,7 +5,6 @@
     hx-get="{% url 'post_modal' media.post.id %}"
     hx-target="#modal-container"
     @htmx:after-request="if($event.detail.successful) { showModal = true; clickedMedia = '{{ media.id }}'; }"
-
   >
 
     {% if media.is_image %}
