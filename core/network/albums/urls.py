@@ -18,7 +18,7 @@ urlpatterns = [
     ),
     path(
         "albums/<uuid:album_id>/medias/",
-        views.AlbumMediasPaginator.as_view(),
+        views.AlbumMediasPaginatorView.as_view(),
         name="album_media_paginate",
     ),
     path(
