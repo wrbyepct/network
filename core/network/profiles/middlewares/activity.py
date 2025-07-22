@@ -1,14 +1,8 @@
 """Custom middleware."""
 
-import logging
-
-from network.profiles.services.activity import (
-    increment_active_count,
-    update_timestamp,
-    get_activity_status,
+from network.profiles.services.activity_service import (
+    update_activity_state,
 )
-
-logger = logging.getLogger(__name__)
 
 
 # TODO For demo concept, make it complete later.
@@ -34,17 +28,10 @@ class ActivityStatusMiddleware:
     def process_view(self, request, view_func, view_args, view_kwargs):
         if not request.user.is_authenticated:
             return
-
-        user_id = request.user.id
         path = request.path.lower()
 
-        logger.info("Activity Middleware is running")
-        logger.info(f"Requesting: {path}")
-
-        if any(active_path in path for active_path in ACTIVE_PATHS):
-            increment_active_count(user_id)
-
-            logger.info("Active path requested")
-
-        update_timestamp(user_id, "last_request")
-        logger.info(get_activity_status(user_id))
+        is_active_request = any(active_path in path for active_path in ACTIVE_PATHS)
+        update_activity_state(
+            user_id=request.user.id,
+            is_active_request=is_active_request,
+        )
