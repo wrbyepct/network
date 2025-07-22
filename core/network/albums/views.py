@@ -42,7 +42,7 @@ class AlbumsPaginateView(ListView):
         return context
 
 
-class AlbumMediasPaginator(ListView):
+class AlbumMediasPaginatorView(ListView):
     """Album Photos paginator view."""
 
     context_object_name = "medias"
