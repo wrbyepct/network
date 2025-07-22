@@ -1,27 +1,23 @@
-<!-- Modal -->
 
-<div
-  class="fixed inset-0 bg-black/60 backdrop-blur-sm
-    flex justify-center items-center z-50"
-  x-show="showMediaModal"
-  x-cloak
-  x-transition
-  @keydown.escape.window="showMediaModal = false; $el.innerHTML = '';"
->
+<!-- This get swapped in modal container  -->
 
-<!-- Slide container -->
-
+<!-- Media Slider modal content -->
+<template x-teleport="#modal-container">
   <div 
+  
     x-data="{
       active: null,
       items: {{ medias|length }},
       prev() { this.active = (this.active - 1 + this.items) % this.items; },
       next() { this.active = (this.active + 1) % this.items; },
+      close() { showModal = false; if (!$refs.video.paused) $refs.video.pause(); }
     }"
     
-    class="relative w-10/11 h-full flex justify-center items-center"
-    @click.outside="showMediaModal = false; if (!$refs.video.paused) $refs.video.pause();">
-
+    class="relative w-full h-full flex justify-center items-center"
+    @keydown.escape.window="close()"
+    @click.outside="close()"
+  >
+  <!-- TODO make a cancel btn for album media modal later -->
     <!-- Slides -->
       {% for media in medias %}
       <div 
@@ -31,7 +27,6 @@
         }"
         x-show="active === {{ forloop.counter0 }}"
         x-cloak
-        
       >
           {% if media.is_image %}
             <img src="{{ media.file.url }}" class="object-contain" alt="picture">
@@ -53,14 +48,16 @@
     
 
     <!-- Controls -->
+     <!-- TODO refactor this to resuable piece later -->
     {% if medias|length > 1 %}
-      <button @click="prev" class="absolute start-0 -translate-y-1/2 top-1/2 z-30 p-4 text-white bg-transparent hover:scale-120 hover:-translate-x-2 transform transition">
+      <button x-ref="slideControl" @click="prev" class="absolute start-0 -translate-y-1/2 top-1/2 z-30 p-4 text-white bg-transparent hover:scale-120 hover:-translate-x-2 transform transition">
         <i class="bi bi-arrow-left-circle text-4xl "></i>
       </button>
-      <button @click="next" class="absolute end-0 -translate-y-1/2 top-1/2 z-30 p-4 text-white bg-transparent hover:scale-120 hover:translate-x-2 transform transition">
+      <button x-ref="slideControl" @click="next" class="absolute end-0 -translate-y-1/2 top-1/2 z-30 p-4 text-white bg-transparent hover:scale-120 hover:translate-x-2 transform transition">
         <i class="bi bi-arrow-right-circle text-4xl"></i>
       </button>
     {% endif %}
 
   </div>
- </div>
+ 
+</template>
