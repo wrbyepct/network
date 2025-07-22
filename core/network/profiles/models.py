@@ -4,7 +4,6 @@ from django.conf import settings
 from django.core.exceptions import BadRequest
 from django.db import models
 from django.utils.functional import cached_property
-from django.utils.timezone import now
 from phonenumber_field.modelfields import PhoneNumberField
 
 from network.common.models import TimestampedModel
@@ -54,8 +53,6 @@ class Profile(TimestampedModel, FollowMixin):
     followers = models.ManyToManyField(
         "self", symmetrical=False, related_name="following", blank=True
     )
-
-    last_seen = models.DateTimeField(default=now)
 
     def __str__(self) -> str:
         """Return string Profile of the user: <user-email>."""
