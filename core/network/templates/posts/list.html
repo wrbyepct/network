@@ -3,7 +3,14 @@
 {% block body %}
   <div x-data="{ isPostDetail: false, showCreatePostModal: false }" > 
     <div>
-        <a class="text-dark text-decoration-none" href={% url 'post_create' %}>Create post</a>
+        <a 
+          hx-boost="true"
+          class="text-dark text-decoration-none" 
+          href={% url 'post_create' %}
+          hx-target="#modal-container"
+          hx-select="#post-create-container"
+          @htmx:after-request="if($event.detail.successful) showModal = true;"
+        >Create post</a>
     </div>
     <div
       

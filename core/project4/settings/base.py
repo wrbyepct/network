@@ -35,6 +35,15 @@ THIRD_PARTY_APPS = [
     "sass_processor",  # SCSS
     # Debug
     "django_extensions",
+    # HTMX
+    "django_htmx",
+    # Crispy forms
+    "crispy_forms",
+    "crispy_tailwind",
+    # Real-time
+    "django_eventstream",
+    # Dev
+    "django_browser_reload",
 ]
 
 INSTALLED_APPS = BASE_APPS + MY_APPS + THIRD_PARTY_APPS
@@ -50,6 +59,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     # Required by latest django-allauth
     "allauth.account.middleware.AccountMiddleware",
+    "django_htmx.middleware.HtmxMiddleware",
     "network.profiles.middlewares.activity.ActivityStatusMiddleware",
 ]
 
