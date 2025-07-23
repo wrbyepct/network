@@ -29,5 +29,5 @@ class User(AbstractUser):
 
     @property
     def is_logged_out(self):
-        """Return True if user is logging in."""
+        """Return True if user is current logged out."""
         return self.last_logout > self.last_login
