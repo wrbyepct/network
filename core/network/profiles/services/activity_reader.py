@@ -5,13 +5,13 @@ from django.utils.timezone import now
 
 """
 Logged in:
-    - Swimming: Hit active request 5 times within a time window.
+    - Swimming: Hit active request 3 times within a time window.
     - Exploring: Any non-active request
-    - Resting: No requests for 10 mins
+    - Resting: No requests for x window
 
 Logged out
-    - Sunbathing: Logged out but (last seen < X hours ago).
-    - Hiding: No login in 7 days.
+    - Sunbathing: Logged out but (last logout < x time).
+    - Hiding: No login in x time .
 """
 
 

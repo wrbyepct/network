@@ -51,7 +51,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 
     template_name = "posts/create.html"
     form_class = PostForm
-    success_url = reverse_lazy("/")
+    success_url = reverse_lazy("index")
 
     def form_valid(self, form):
         """Save images and videos to PostMedia if they are valid."""
@@ -77,7 +77,7 @@ class PostEditView(LoginRequiredMixin, GetUserPostMixin, UpdateView):
 
     template_name = "posts/edit.html"
     form_class = PostForm
-    success_url = reverse_lazy("/")
+    success_url = reverse_lazy("index")
 
     def form_valid(self, form):
         """Handle deleting old files and add new files."""
@@ -93,7 +93,7 @@ class PostEditView(LoginRequiredMixin, GetUserPostMixin, UpdateView):
 class PostDeleteView(RefererRedirectMixin, GetUserPostMixin, DeleteView):
     """Post Delete View."""
 
-    fallback_url = reverse_lazy("/")
+    fallback_url = reverse_lazy("index")
 
 
 class LikePost(LoginRequiredMixin, View):
