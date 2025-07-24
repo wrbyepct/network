@@ -74,3 +74,17 @@ This document captures brainstormed feature ideas that align with the core theme
         *   Use Alpine.js for gentle fade-in/out tab transitions.
         *   Implement subtle, pixel-art-style hover effects.
         *   Consider adding a looping ambient animation (e.g., swaying seaweed) to bring the page to life.
+
+---
+
+### Idea 6: Design the 'Turtle Shell' Post Composer
+
+*   **Vision:** Transform the "Create Post" button into a delightful, narrative-driven invitation. Instead of a standard button, we will craft a mock composer component that looks like a simplified, inactive version of the full post creation form. This provides a low-pressure entry point and frames the action as "starting a thought."
+*   **Anatomy:**
+    *   **The Container (The "Shell"):** A clickable `div` with soft, rounded corners, a light earthy green background (`#F0F5F0`), and a subtle inner shadow for depth.
+    *   **The User Avatar:** Placed on the far left to personalize the component.
+    *   **The Mock Input Field:** A pill-shaped element with placeholder text like `"Share your thoughts..."`.
+    *   **The Icon (The "Turtle Trigger"):** A stylized turtle icon holding a "+" sign on the far right.
+*   **Interaction (HTMX):**
+    *   The entire component will have an `hx-get` attribute to fetch the full post creation form.
+    *   On click, `hx-swap="outerHTML"` will replace the mock composer with the real form, creating a seamless transition.

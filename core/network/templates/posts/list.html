@@ -2,21 +2,11 @@
 
 {% block body %}
   <div x-data="{ isPostDetail: false, showCreatePostModal: false }" > 
-    <div>
-        <a 
-          hx-boost="true"
-          class="text-dark text-decoration-none" 
-          href={% url 'post_create' %}
-          hx-target="#modal-container"
-          hx-select="#post-create-container"
-          @htmx:after-request="if($event.detail.successful) showModal = true;"
-        >Create post</a>
-    </div>
-    <div
-      
-      class="container mt-4 ">
+ 
+    <div class="container mt-4 ">
       <div class="row ">
         <div class="col-lg-8 mx-auto ">
+          {% include 'posts/partial/post_composer.html' %}
           {% for post in posts %}
               <div class="mb-4">
                 {% include 'posts/post/list_card.html' %}
