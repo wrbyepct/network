@@ -1,10 +1,32 @@
 
 
-<div class="d-flex flex-column">
-    {% for follower in profile.followers.all %}
-        <div>{{ follower.username }}</div>
-    {% empty %}
-        <div class="text-muted">Have no followers yet.</div>
-    {% endfor %}
-  
+<div class="community-pond-container p-4 bg-gradient-to-b from-emerald-50 to-emerald-100 min-h-screen">
+    {% if profile.followers.exists %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {% for follower in profile.followers.all %}
+                <div class="follower-lily-pad {% cycle 'bg-emerald-50' 'bg-rose-50' 'bg-purple-50' %}
+ rounded-2xl shadow-md p-4 flex items-center space-x-4 border border-emerald-400 hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-105 hover:-translate-y-0.5">
+                    {# User Avatar #}
+                    <a href="{% url 'profile_about' follower.username %}">
+                        <img src="{{ follower.profile_picture.url }}" alt="{{ follower.username }} Avatar" class="w-12 h-12 rounded-full object-cover border-4 border-sky-300">
+                    </a>
+
+                    {# Username #}
+                    <a href="{% url 'profile_about' follower.username %}" class="text-lg font-semibold text-emerald-800 hover:underline">
+                        {{ follower.username }}
+                    </a>
+
+                    {# Follow/Unfollow Button (Conditional, HTMX-powered) #}
+                    {# This part would need a separate include or logic to determine if the current user can follow/unfollow this follower #}
+                    {# Example: {% include 'profiles/partial/follow_button.html' with target_user=follower %} #}
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-pond-message text-center text-emerald-400 py-8 italic">
+            <p>This pond is a bit quiet right now...</p>
+            <p>No followers yet.</p>
+            {# Optional: Add a small pixel-art lonely turtle image here #}
+        </div>
+    {% endif %}
 </div>
