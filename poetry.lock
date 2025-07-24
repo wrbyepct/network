@@ -458,6 +458,17 @@ asgiref = ">=3.6"
 django = ">=4.2"
 
 [[package]]
+name = "django-cleanup"
+version = "9.0.0"
+description = "Deletes old files."
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "django_cleanup-9.0.0-py3-none-any.whl", hash = "sha256:19f8b0e830233f9f0f683b17181f414672a0f48afe3ea3cc80ba47ae40ad880c"},
+    {file = "django_cleanup-9.0.0.tar.gz", hash = "sha256:bb9fb560aaf62959c81e31fa40885c36bbd5854d5aa21b90df2c7e4ba633531e"},
+]
+
+[[package]]
 name = "django-crispy-forms"
 version = "2.4"
 description = "Best way to have Django DRY forms"
@@ -1594,4 +1605,4 @@ watchdog = ["watchdog (>=2.3)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "1494d0fdb4d3a98bb15464648326ffdfb2ae827ec1727c22ce5dc21776ddeb88"
+content-hash = "ad28fa84f3179c829d31eb16888593627cb989da5f770e9cea91cdab2e35c122"

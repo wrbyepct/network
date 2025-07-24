@@ -31,3 +31,24 @@ This document captures brainstormed feature ideas that align with the core theme
 *   **Implementation Plan:**
     *   **Models:** This is more complex. We'd need a `Journey` model and a `JourneyStep` model. Each `JourneyStep` would have a foreign key to the `Journey`, the `Profile` who created it, and the content (text/media). We'd also need a field to track whose "turn" it is.
     *   **UI/UX:** Visually, this could be stunning. Imagine a horizontal, scrolling timeline of pixel art and text, showing the path of the Journey. It becomes a beautiful, co-created artifact.
+
+---
+
+### Idea 4: "Media Pond" - Instant Previews for Uploads
+
+*   **Concept:** Provide immediate visual feedback for image and video uploads on the post creation page.
+*   **Why it's "Turtle-like":** It creates a calm, contained space for media, making the upload process feel less like a technical task and more like placing items into a serene environment.
+*   **Implementation Plan:**
+    *   **The "Media Pond" Area:** Introduce a new, visually distinct section below the upload buttons. This container will be styled with our theme: warm background (`bg-amber-100`), thick, pixel-style border (`border-4 border-emerald-700`), and a subtle shadow.
+    *   **Image Previews (Multiple):**
+        *   Thumbnails will appear within the "Media Pond" when images are selected.
+        *   Each thumbnail will be a small, square preview, framed by a thin, pixelated border (`border-2 border-emerald-600`).
+        *   A small, pixelated "x" icon (or a cute, thematic icon like a tiny leaf or bubble) will be overlaid on each thumbnail for easy removal.
+        *   Multiple images will arrange in a responsive grid within the pond.
+    *   **Video Preview (Single):**
+        *   A small, embedded video player (or static thumbnail) will appear within the "Media Pond" when a video is selected.
+        *   It will have a thematic border and a "remove" icon.
+    *   **User Feedback & States:**
+        *   **Empty State:** Display a subtle, pixel-art illustration (e.g., sleeping turtle, calm pond) with text like "Your media will appear here..."
+        *   **Loading State:** Show a subtle, pixelated loading animation (e.g., tiny turtle swimming) for larger files.
+        *   **Error State:** Display a clear, thematic error message with a sad pixelated turtle icon for invalid files.
