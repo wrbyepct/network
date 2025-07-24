@@ -5,7 +5,11 @@
         {# HTMX messages will appear here #}
     </div>
 
-    <div class="container-sm mt-5 p-4 bg-gradient-to-b from-blue-100 to-blue-200 min-h-screen rounded-lg shadow-lg">
+    <div 
+      class="container-sm mt-5 p-4 bg-gradient-to-b from-blue-100 to-blue-200 min-h-screen rounded-lg shadow-lg"
+      style="font-family: 'Press Start 2P', monospace; font-size: 10px; image-rendering: pixelated;"
+
+    >
         {% if following %}
             <div class="space-y-4"> {# Use space-y for vertical spacing between cards #}
                 {% for profile in following %}
