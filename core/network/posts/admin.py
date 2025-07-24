@@ -22,3 +22,6 @@ class PostMediaAdmin(admin.ModelAdmin):
     """Custome PostMeida admin."""
 
     list_filter = ["profile"]
+    list_display = ["id"]
+    search_fields = ["id"]
+    ordering = ["created_at"]

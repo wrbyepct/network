@@ -44,6 +44,8 @@ THIRD_PARTY_APPS = [
     "django_eventstream",
     # Dev
     "django_browser_reload",
+    # Cleaup media
+    "django_cleanup.apps.CleanupConfig",
 ]
 
 INSTALLED_APPS = BASE_APPS + MY_APPS + THIRD_PARTY_APPS
