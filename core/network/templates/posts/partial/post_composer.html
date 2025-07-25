@@ -1,10 +1,16 @@
     <div id="post-composer"
-         hx-get="{% url 'post_create' %}"
-         hx-target="#modal-container"
-         hx-select="#post-create-container"
-         @htmx:after-request="if($event.detail.successful) showModal = true;"
-         class="turtle-shell-container flex items-center p-3 rounded-lg shadow-md bg-emerald-50 hover:shadow-lg transition transform hover:-translate-y-0.5 cursor-pointer"
-         style="font-family: 'Press Start 2P', monospace; font-size: 10px; image-rendering: pixelated;"
+        {% if request.user.is_authenticated %}
+        hx-get="{% url 'post_create' %}"
+        hx-target="#modal-container"
+        hx-select="#post-create-container"
+        {% else %}
+        hx-get="{% url 'account_login' %}"
+        hx-target="#modal-container"
+        hx-select="#auth-modal-content"
+        {% endif %}
+        @htmx:after-request="if($event.detail.successful) showModal = true;"
+        class="turtle-shell-container flex items-center p-3 rounded-lg shadow-md bg-emerald-50 hover:shadow-lg transition transform hover:-translate-y-0.5 cursor-pointer"
+        style="font-family: 'Press Start 2P', monospace; font-size: 10px; image-rendering: pixelated;"
     >
 
         {# User Avatar #}
