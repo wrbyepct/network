@@ -1,5 +1,12 @@
 """Post Service."""
 
+import random
+from datetime import timedelta
+
+from django.utils import timezone
+
+from .constants import MAX_INCUBATION_MINUTES, MIN_INCUBATION_MINUTES
+
 
 def get_like_stat(like_count, liked) -> str:
     """Return dynamic like stat string to display at the frontend."""
@@ -12,3 +19,9 @@ def get_like_stat(like_count, liked) -> str:
         return f"You and {like_count - 1} others"
 
     return str(like_count)
+
+
+def get_random_publish_time():
+    """Return random publish time."""
+    random_minutes = random.randint(MIN_INCUBATION_MINUTES, MAX_INCUBATION_MINUTES)
+    return timezone.now() + timedelta(minutes=random_minutes)
