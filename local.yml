@@ -5,6 +5,7 @@ services:
     build:
       context: .
       dockerfile: ./docker/django/Dockerfile
+    entrypoint: /start
     volumes:
       - ./core:/app/core
     env_file:
@@ -15,6 +16,7 @@ services:
 
     depends_on:
       - postgres
+      - redis
 
     restart: always
     networks:
@@ -37,6 +39,23 @@ services:
       - "6379:6379"
     restart: unless-stopped
     
+    networks:
+      - web-network
+
+  celery_worker:
+    container_name: celery_worker
+    build:
+      context: .
+      dockerfile: ./docker/django/Dockerfile
+    command: celery -A project4 worker -l info
+    volumes:
+      - ./core:/app/core
+    env_file:
+      - ./.envs/.django
+      - ./.envs/.postgres
+    depends_on:
+      - redis
+      - postgres
     networks:
       - web-network
 

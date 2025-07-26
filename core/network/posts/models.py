@@ -67,9 +67,12 @@ class Post(LikeCountMixin, ProfileInfoMixin, TimestampedModel):
 
     def save(self, *args, **kwargs):
         """Override save method to schedule publish task."""
-        if self.publish_at and not self.is_published:
-            self.celery_task_id = assign_publish_task(self)
+        is_new_post = self.pk is None
         super().save(*args, **kwargs)
+
+        if is_new_post and self.publish_at and not self.is_published:
+            self.celery_task_id = assign_publish_task(self)
+            super().save(update_fields=["celery_task_id"])
 
     def delete(self, *args, **kwargs):
         """Override delete method to revoke publish task."""
