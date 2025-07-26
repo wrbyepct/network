@@ -1,30 +1,38 @@
 """Celery tasks for post apps."""
 
+import logging
+
 from celery import shared_task
+from django.utils.timezone import now
 from project4.celery import app
+
+logger = logging.getLogger(__name__)
 
 
 @shared_task
 def publish_post(post_id):
     """Celery task to publish post by setting is_publish to True."""
-    from .models import Post
+    from .models import Post  # Import inside to avoid circular imports
 
-    """Set a post's `published_at` to the current time."""
     try:
-        post = Post.objects.get(pk=post_id)
-        if not post.published_at:
+        current_time = now()
+        post = Post.objects.get(id=post_id)
+        logger.info(f"Post publish time: {post.publish_at}")
+        logger.info(f"Current time: {current_time}")
+        if post.publish_at <= current_time:
             post.is_published = True
             post.save(update_fields=["is_published"])
     except Post.DoesNotExist:
-        # The post may have been deleted before the task ran.
-        pass
+        # Optionally log a warning here
+        logger.warning(f"Post id {post_id} does not exist.")
 
 
+# TODO Consider separating tasks and tasks manager logic
 def assign_publish_task(post):
     """Assing publish post task and return task id."""
     # If the task has already been scheduled, revoke it
     if post.celery_task_id:
-        delete_task(post.id)
+        delete_task(post.celery_task_id)
 
     # Schedule the new task
     task = publish_post.apply_async(args=[post.id], eta=post.publish_at)

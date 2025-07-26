@@ -17,7 +17,7 @@ CACHES = {
     }
 }
 
-# Celery settings for local development and testing
-CELERY_ALWAYS_EAGER = True
-CELERY_BROKER_URL = "memory://"
+# Celery settings
+CELERY_BROKER_URL = "redis://redis:6379/0"
+# TODO figure out why this is set to None
 CELERY_RESULT_BACKEND = None
