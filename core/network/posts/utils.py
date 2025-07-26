@@ -24,4 +24,4 @@ def get_like_stat(like_count, liked) -> str:
 def get_random_publish_time():
     """Return random publish time."""
     random_minutes = random.randint(MIN_INCUBATION_MINUTES, MAX_INCUBATION_MINUTES)
-    return timezone.now() + timedelta(minutes=random_minutes)
+    return timezone.now() + timedelta(seconds=random_minutes)
