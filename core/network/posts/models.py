@@ -9,6 +9,9 @@ from network.common.models import MediaBaseModel, TimestampedModel
 from network.profiles.models import Profile
 
 from .managers import PostManager
+from .tasks import assign_publish_task, delete_task
+from .utils import get_random_publish_time
+from .validators import validate_publish_time
 
 
 # Create your models here.
@@ -19,6 +22,10 @@ class Post(LikeCountMixin, ProfileInfoMixin, TimestampedModel):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="posts"
     )
+    publish_at = models.DateTimeField(null=True, blank=True)
+    is_published = models.BooleanField(default=False)
+    # TODO this is ephemeral data, consider implement it other ways like cache or something.
+    celery_task_id = models.CharField(max_length=255, blank=True)
 
     objects = PostManager()
 
@@ -53,6 +60,27 @@ class Post(LikeCountMixin, ProfileInfoMixin, TimestampedModel):
     def ordered_medias(self):
         """Get acending medias of this post."""
         return self.medias.all().order_by("order")
+
+    def set_random_publish_time(self):
+        """Set random publish time."""
+        self.publish_at = get_random_publish_time()
+
+    def save(self, *args, **kwargs):
+        """Override save method to schedule publish task."""
+        if self.publish_at and not self.is_published:
+            self.celery_task_id = assign_publish_task(self)
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        """Override delete method to revoke publish task."""
+        if self.celery_task_id:
+            delete_task(self.celery_task_id)
+        super().delete(*args, **kwargs)
+
+    def clean(self):
+        """Validate that publish_at is at least 20 minutes after created_at."""
+        if self.publish_at and self.created_at:
+            validate_publish_time(self)
 
 
 class PostLike(TimestampedModel):

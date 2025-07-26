@@ -19,10 +19,8 @@ from .forms import PostForm
 from .models import Post, PostLike, PostMedia
 from .utils import get_like_stat
 
+
 # TODO (extra) cache the posts result
-# TODO (extra) make media load faster
-
-
 class PostListView(ListView):
     """Post List View."""
 
@@ -32,7 +30,7 @@ class PostListView(ListView):
 
     def get_queryset(self):
         """Get optimized post queryset."""
-        return Post.objects.for_list_data()
+        return Post.objects.published()
 
 
 class PostModalView(DetailView):
@@ -43,7 +41,9 @@ class PostModalView(DetailView):
 
     def get_object(self):
         """Get post by id."""
-        return get_object_or_404(Post, id=self.kwargs.get("post_id"))
+        return get_object_or_404(
+            Post.objects.published(), id=self.kwargs.get("post_id")
+        )
 
 
 class PostCreateView(LoginRequiredMixin, CreateView):
@@ -57,6 +57,10 @@ class PostCreateView(LoginRequiredMixin, CreateView):
         """Save images and videos to PostMedia if they are valid."""
         with transaction.atomic():
             form.instance.user = self.request.user
+            # Set a random publish_at time between 20 minutes and 24 hours from now
+
+            form.instance.set_random_publish_time()
+
             resp = super().form_valid(form)
             form.save_media(self.object)
 

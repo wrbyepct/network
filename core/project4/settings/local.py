@@ -16,3 +16,8 @@ CACHES = {
         "LOCATION": "redis://redis:6379/0",
     }
 }
+
+# Celery settings for local development and testing
+CELERY_ALWAYS_EAGER = True
+CELERY_BROKER_URL = "memory://"
+CELERY_RESULT_BACKEND = None
