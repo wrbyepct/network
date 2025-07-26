@@ -65,5 +65,3 @@ RUN adduser \
     && chmod -R 755 $APP_HOME
 
 USER django
-
-ENTRYPOINT [ "/start" ]
