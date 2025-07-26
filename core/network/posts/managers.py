@@ -18,6 +18,10 @@ class PostQuerySet(models.QuerySet):
         """Filter post by user."""
         return self.filter(user=user)
 
+    def published(self):
+        """Return only published posts."""
+        return self.filter(is_published=True)
+
 
 class PostManager(models.Manager):
     """Post Manager."""
@@ -33,3 +37,7 @@ class PostManager(models.Manager):
     def for_list_data(self):
         """Return optimized posts with medias, profile and comment data."""
         return self.get_queryset().with_media().with_profile()
+
+    def published(self):
+        """Return only published posts with necessary data."""
+        return self.for_list_data().published()
