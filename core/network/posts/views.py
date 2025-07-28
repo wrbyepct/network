@@ -1,7 +1,10 @@
 """Post views."""
 
+from http import HTTPStatus
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
 from django.views.generic import (
@@ -17,7 +20,7 @@ from network.common.mixins import RefererRedirectMixin
 
 from .forms import PostForm
 from .models import Post, PostLike, PostMedia
-from .utils import get_like_stat
+from .utils import get_like_stat, set_post_create_event
 
 
 # TODO (extra) cache the posts result
@@ -61,9 +64,11 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 
             form.instance.set_random_publish_time()
 
-            resp = super().form_valid(form)
+            super().form_valid(form)
             form.save_media(self.object)
 
+        resp = HttpResponse(HTTPStatus.CREATED)
+        resp["HX-Trigger"] = set_post_create_event()
         return resp
 
 
