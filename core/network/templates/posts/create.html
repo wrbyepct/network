@@ -5,7 +5,7 @@
 <div
     id="post-create-container"
     class="w-full max-w-2xl mx-auto bg-amber-50 border-4 border-emerald-800 rounded-lg p-4 sm:p-8 shadow-[8px_8px_0px_#25422a]"
-    @click.outside="showModal = false; $el.remove();"
+    @click.outside="showModal = false; $el.remove();" {# This click.outside might interfere with the new modal #}
     x-data="{
         selectedMedia: { 
             images: [],
@@ -38,8 +38,7 @@
             this.selectedMedia[type].splice(index, 1);
         },
  
-        submitFiles(form) {
-
+        prepareMediaThenSubmit(form) {
             // Put the newest list in media input before submit
             const imageTransfer = new DataTransfer();
             this.selectedMedia.images.forEach( image => imageTransfer.items.add(image.file));
@@ -49,7 +48,18 @@
             this.selectedMedia.videos.forEach( video => videoTransfer.items.add(video.file));
             this.$refs.videoInput.files = videoTransfer.files;
 
-            form.submit();
+        },
+        showEggModal(evt) {
+            {# Remove post create form from modal container #}
+            showModal = false;
+            $refs.modalContainer.innerHTMX = '';
+    
+            {# set eggImage from event data #}
+            const eggUrl = evt.detail.eggUrl;
+            if (eggUrl) eggImage = eggUrl;
+
+            {# show Egg modal #}
+            showIncubationModal = true;
         }
     }"
 >
@@ -66,12 +76,13 @@
     <form 
         id="post-form"  
         class="space-y-6"
-        action="{% url 'post_create' %}" 
-        method="POST" 
-        enctype="multipart/form-data" 
-        @submit.prevent="submitFiles($el)"
+        hx-post="{% url 'post_create' %}"
+        hx-trigger="submit" 
+        hx-swap="none"
+        hx-encoding="multipart/form-data"
+        @submit.prevent="prepareMediaThenSubmit($el)"
+        @post-created="showEggModal($event)"
     >
-        {% csrf_token %}
 
         {# Content Textarea #}
         <div>
@@ -151,9 +162,11 @@
                 type="submit"
                 class="w-full bg-emerald-600 text-white font-bold py-4 px-6 rounded-lg hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-300 transition duration-150 ease-in-out shadow-[4px_4px_0px_#25422a]"
             >
-                Post It
+                Incubate Egg
             </button>
         </div>
     </form>
 </div>
+
+
 {% endblock %} 

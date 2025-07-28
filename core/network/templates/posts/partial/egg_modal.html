@@ -1,0 +1,43 @@
+{# Incubation Confirmation Modal #}
+<div 
+    class="fixed inset-0 z-50 flex items-center justify-center p-4"
+    x-show="showIncubationModal"
+    x-cloak
+    x-transition:enter="transition ease-out duration-300"
+    x-transition:enter-start="opacity-0 scale-90"
+    x-transition:enter-end="opacity-100 scale-100"
+    x-transition:leave="transition ease-in duration-200"
+    x-transition:leave-start="opacity-100 scale-100"
+    x-transition:leave-end="opacity-0 scale-90"
+    x-ref="incubationModal"
+    x-data="{
+        hideIncubationModal() {
+            showIncubationModal = false;
+        }
+    }"
+>
+    {# Overlay #}
+    <div class="fixed inset-0 bg-black bg-opacity-50"></div>
+
+    {# Modal Content #}
+    <div 
+        id="egg-modal-content"
+        class="relative bg-amber-50 border-4 border-emerald-800 rounded-lg p-8 pb-0 shadow-[8px_8px_0px_#25422a] max-w-sm w-full text-center">
+        <div class="mb-10">
+            <h3 class="text-2xl font-bold text-emerald-900 mb-4 font-mono">Egg Placed in Hatchery!</h3>
+            <p class="text-emerald-800 mb-6">Your egg has been placed in the Hatchery. It will hatch sometime within the next 24 hours.</p>
+        </div>
+    
+        {# Placeholder for pixel animation #}
+       
+        <img :src="eggImage" alt="Pixel Egg Animation" class="w-60 h-auto mx-auto animate-bounce"> {# Simple bounce animation for now #}
+    
+        {# Cancel button #}
+        <button
+            class="w-full bg-amber-600 text-white font-bold py-4 px-6 mb-5 rounded-lg hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-300 transition duration-150 ease-in-out shadow-[4px_4px_0px_#25422a]"
+            @click="hideIncubationModal()"
+        >
+            Got it!
+        </button>
+    </div>
+</div>
