@@ -1,8 +1,14 @@
 """Post Serives."""
 
+import random
+
+from django.core.cache import cache
 from django.db.models import Max
 
+from .constants import DEFAULT_EGG_URL, EGG_TYPES
 from .models import PostMedia
+from .tasks import assign_publish_task
+from .utils import get_random_publish_time, get_random_timeout
 
 
 class PostMediaService:
@@ -49,3 +55,58 @@ class PostMediaService:
             PostMedia.objects.filter(post=post).aggregate(Max("order"))["order__max"]
             or 0
         )
+
+
+class IncubationService:
+    """Service for incubate a post."""
+
+    default_egg_url = DEFAULT_EGG_URL
+
+    @staticmethod
+    def get_random_egg_img_index():
+        """Return random egg img url."""
+        return random.randint(0, 8)
+
+    @staticmethod
+    def get_random_egg_type():
+        """Return random egg img url."""
+        return random.choice(EGG_TYPES)
+
+    @staticmethod
+    def get_random_egg_url():
+        """Return a random egg url."""
+        egg_num = IncubationService.get_random_egg_img_index()
+        egg_type = IncubationService.get_random_egg_type()
+        return f"media/defaults/{egg_type}/egg{egg_num}.gif"
+
+    @staticmethod
+    def incubate_post(post, egg_url):
+        """
+        Incucbate a post.
+
+        1. Set a publish time for post
+        2. Schedule publish time
+        3. Save incubating check in cache.
+        """
+        timeout = get_random_timeout()
+        post.publish_at = get_random_publish_time(timeout)
+        post.celery_task_id = assign_publish_task(post)
+        IncubationService.set_incubating_egg_url(post.user.id, egg_url, timeout)
+        post.save(update_fields=["publish_at", "celery_task_id"])
+
+    @staticmethod
+    def set_incubating_egg_url(user_id, egg_url, timeout):
+        """Set post incubating url timeout cache."""
+        key = IncubationService.cache_key(user_id)
+        return cache.set(key, egg_url, timeout=timeout)
+
+    @staticmethod
+    def get_incubating_egg_url(user_id):
+        """Get post incubating url check data."""
+        key = IncubationService.cache_key(user_id)
+        return cache.get(key)
+
+    @staticmethod
+    def cache_key(user_id):
+        """Incubation cache key."""
+        return f"incubating_egg:{user_id}"

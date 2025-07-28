@@ -3,6 +3,7 @@
 from django import template
 from django.utils.timesince import timesince
 
+from network.posts.services import IncubationService
 from network.posts.utils import get_like_stat
 
 register = template.Library()
@@ -28,3 +29,10 @@ def timesince_simple(value):
     result = timesince(value)
 
     return result.split(",")[0]
+
+
+@register.filter
+def get_incubating_egg_url(request):
+    """Return current incubating egg url in cache if exists, else return empty string."""
+    user_id = request.user.id
+    return IncubationService.get_incubating_egg_url(user_id) or ""

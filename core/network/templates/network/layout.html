@@ -1,6 +1,6 @@
 {% load static %}
 {% load sass_tags %}
-
+{% load post_extra %}
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -96,7 +96,7 @@
           x-data="{ 
             showModal: false,
             showIncubationModal: false, {# New Alpine.js variable #}
-            eggImage: 'media/defaults/regular_eggs/egg5.gif', {# defualt egg image #}
+            eggImage: '{{ request|get_incubating_egg_url }}', {# get currently incubating egg image #}
             selectedMedia: null, 
             clickedMedia: null,
             resize(textarea) { 

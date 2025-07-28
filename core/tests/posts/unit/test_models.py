@@ -27,7 +27,7 @@ def test_post_publish_at_field_can_be_future():
 def test_post_set_random_publish_time():
     """Test that set_random_publish_time sets a future publish_at."""
     post = baker.make(Post)
-    post.set_random_publish_time()
+    post.incubate_post()
     assert post.publish_at is not None
     assert post.publish_at > timezone.now()
     # Further check if it's within the random range (already covered by test_utils.py)
