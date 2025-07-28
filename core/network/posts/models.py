@@ -9,8 +9,7 @@ from network.common.models import MediaBaseModel, TimestampedModel
 from network.profiles.models import Profile
 
 from .managers import PostManager
-from .tasks import assign_publish_task, delete_task
-from .utils import get_random_publish_time
+from .tasks import delete_task
 from .validators import validate_publish_time
 
 
@@ -61,19 +60,6 @@ class Post(LikeCountMixin, ProfileInfoMixin, TimestampedModel):
         """Get acending medias of this post."""
         return self.medias.all().order_by("order")
 
-    def set_random_publish_time(self):
-        """Set random publish time."""
-        self.publish_at = get_random_publish_time()
-
-    def save(self, *args, **kwargs):
-        """Override save method to schedule publish task."""
-        is_new_post = self.pk is None
-        super().save(*args, **kwargs)
-
-        if is_new_post and self.publish_at and not self.is_published:
-            self.celery_task_id = assign_publish_task(self)
-            super().save(update_fields=["celery_task_id"])
-
     def delete(self, *args, **kwargs):
         """Override delete method to revoke publish task."""
         if self.celery_task_id:
@@ -84,6 +70,7 @@ class Post(LikeCountMixin, ProfileInfoMixin, TimestampedModel):
         """Validate that publish_at is at least 20 minutes after created_at."""
         if self.publish_at and self.created_at:
             validate_publish_time(self)
+        super().clean()
 
 
 class PostLike(TimestampedModel):

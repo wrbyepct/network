@@ -29,7 +29,7 @@ class PostForm(forms.ModelForm):
 
     class Meta:
         model = Post
-        fields = ["content"]
+        fields = ["content", "publish_at"]
 
     def save_media(self, post):
         """Save cleaned medias."""
