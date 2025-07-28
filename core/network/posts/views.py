@@ -20,6 +20,7 @@ from network.common.mixins import RefererRedirectMixin
 
 from .forms import PostForm
 from .models import Post, PostLike, PostMedia
+from .services import IncubationService
 from .utils import get_like_stat, set_post_create_event
 
 
@@ -58,17 +59,17 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         """Save images and videos to PostMedia if they are valid."""
+        user = self.request.user
         with transaction.atomic():
-            form.instance.user = self.request.user
+            form.instance.user = user
             # Set a random publish_at time between 20 minutes and 24 hours from now
-
-            form.instance.set_random_publish_time()
-
             super().form_valid(form)
             form.save_media(self.object)
 
+        egg_url = IncubationService.get_random_egg_url()
+        IncubationService.incubate_post(self.object, egg_url)
         resp = HttpResponse(HTTPStatus.CREATED)
-        resp["HX-Trigger"] = set_post_create_event()
+        resp["HX-Trigger"] = set_post_create_event(egg_url)
         return resp
 
 
