@@ -94,9 +94,9 @@
           hx-headers='{"x-csrftoken": "{{ csrf_token }}"}'
           hx-ext="multi-swap"
           x-data="{ 
-            showMediaModal: false,
-            showPostModal: false,
             showModal: false,
+            showIncubationModal: false, {# New Alpine.js variable #}
+            eggImage: 'media/defaults/regular_eggs/egg5.gif', {# defualt egg image #}
             selectedMedia: null, 
             clickedMedia: null,
             resize(textarea) { 
@@ -112,6 +112,7 @@
             },
           }"
           @form-error.window="() => { alert($event.detail.value); }"
+         
           >
             {% block body %}
             {% endblock %}
@@ -129,6 +130,7 @@
                 x-ref="modalContainer"
                 class="w-full h-full flex justify-center items-center"></div>
             </div>
+            {% include 'posts/partial/egg_modal.html' %}
         </div>
         <!-- Bootstrap js -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>

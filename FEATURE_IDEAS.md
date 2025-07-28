@@ -22,6 +22,32 @@ This document captures brainstormed feature ideas that align with the core theme
 
 *   **Design Plan:**
 
+    ### Phase UX 1: The "Incubation Chamber" – Crafting the Post Creation Experience
+
+    *   **Vision:** Transform the `posts/create.html` template into a serene, focused environment where users "lay" their content-eggs. The process should feel deliberate and intuitive, removing any sense of urgency or control over the exact publication time.
+    *   **Key Elements:**
+        *   **Visual Metaphor:** A prominent pixel-art "egg" container for the post content, subtly hinting at its future form.
+        *   **Action Button:** A single, clear "Incubate Egg" button, replacing any time-selection fields.
+        *   **Confirmation Flow:** A gentle, pixel-animated modal upon submission, showing the egg being "placed in the Hatchery" with a reassuring message about its eventual, mysterious hatching within 24 hours.
+    *   **Technologies:** Leverage Tailwind CSS for thematic styling, Alpine.js for subtle animations and interactive elements within the form, and HTMX for the form submission and modal display.
+
+    ### Phase UX 2: The "Hatchery View" – Displaying Incubating Posts to the Owner
+
+    *   **Vision:** When a user views their own feed or a dedicated "My Hatchery" section, incubating posts should appear as visually distinct, charming pixel-art eggs. This reinforces the theme and provides a unique visual cue.
+    *   **Key Elements:**
+        *   **Egg Representation:** Each incubating post will be represented by a unique pixel-art turtle egg, perhaps with a faint, non-time-specific "pulse" or "shimmer."
+        *   **Interactive Hover:** Subtle, gentle hover effects (e.g., a soft glow) with vague, reassuring tooltips like "Incubating... (will hatch within 24 hours)."
+        *   **Click-to-View:** Clicking the egg (for the owner only) reveals the post's content *inside* the egg, with thematic messages like "Still incubating... patience, little one."
+    *   **Technologies:** Django templates for conditional rendering, Tailwind CSS for styling, Alpine.js for hover and click interactions.
+
+    ### Phase UX 3: The "Hatching Moment" – The Grand Reveal
+
+    *   **Vision:** The transition from an incubating egg to a fully published post must be a moment of genuine surprise and delight, a visual reward for the user's patience.
+    *   **Key Elements:**
+        *   **Pixel-Art Animation:** A short, charming pixel-art "hatching" animation that plays directly in the owner's feed when the `publish_at` time is reached.
+        *   **Seamless Integration:** After the animation, the post seamlessly transforms into its regular, public display, becoming visible to other users.
+    *   **Technologies:** Alpine.js and CSS animations for the visual effects. We will also consider how Server-Sent Events (SSE) can be integrated to trigger this animation in real-time, enhancing the surprise element.
+
     #### 1. The "Incubation Chamber" (Post Creation Flow)
     The post creation experience is now purely about preparing the egg and entrusting it to the "Hatchery."
 
