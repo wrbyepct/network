@@ -6,7 +6,7 @@ from datetime import timedelta
 
 from django.utils import timezone
 
-from .constants import EGG_TYPES, MAX_INCUBATION_MINUTES, MIN_INCUBATION_MINUTES
+from .constants import MAX_INCUBATION_MINUTES, MIN_INCUBATION_MINUTES
 
 
 def get_like_stat(like_count, liked) -> str:
@@ -22,29 +22,16 @@ def get_like_stat(like_count, liked) -> str:
     return str(like_count)
 
 
-def get_random_publish_time():
+def get_random_timeout():
+    """Return random timeout in seconds."""
+    return random.randint(MIN_INCUBATION_MINUTES, MAX_INCUBATION_MINUTES)
+
+
+def get_random_publish_time(timeout):
     """Return random publish time."""
-    random_minutes = random.randint(MIN_INCUBATION_MINUTES, MAX_INCUBATION_MINUTES)
-    return timezone.now() + timedelta(seconds=random_minutes)
+    return timezone.now() + timedelta(seconds=timeout)
 
 
-def get_random_egg_img_index():
-    """Return random egg img url."""
-    return random.randint(0, 8)
-
-
-def get_random_egg_type():
-    """Return random egg img url."""
-    return random.choice(EGG_TYPES)
-
-
-def get_egg_img_url():
-    """Return a random egg url."""
-    egg_num = get_random_egg_img_index()
-    egg_type = get_random_egg_type()
-    return f"media/defaults/{egg_type}/egg{egg_num}.gif"
-
-
-def set_post_create_event():
+def set_post_create_event(egg_url):
     """Return post created event with random egg image url."""
-    return json.dumps({"post-created": {"eggUrl": get_egg_img_url()}})
+    return json.dumps({"post-created": {"eggUrl": egg_url}})
