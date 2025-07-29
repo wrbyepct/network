@@ -1,8 +1,6 @@
 """Custom middleware."""
 
-from network.profiles.services.activity_service import (
-    update_activity_state,
-)
+from network.profiles.services import ActivityManagerService
 
 
 # TODO For demo concept, make it complete later.
@@ -31,7 +29,7 @@ class ActivityStatusMiddleware:
         path = request.path.lower()
 
         is_active_request = any(active_path in path for active_path in ACTIVE_PATHS)
-        update_activity_state(
+        ActivityManagerService.update_activity_state(
             user_id=request.user.id,
             is_active_request=is_active_request,
         )
