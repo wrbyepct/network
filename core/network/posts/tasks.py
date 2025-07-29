@@ -15,13 +15,14 @@ def publish_post(post_id):
     from .models import Post  # Import inside to avoid circular imports
 
     try:
-        current_time = now()
         post = Post.objects.get(id=post_id)
+
+        post.is_published = True
+        post.save(update_fields=["is_published"])
+
         logger.info(f"Post publish time: {post.publish_at}")
-        logger.info(f"Current time: {current_time}")
-        if post.publish_at <= current_time:
-            post.is_published = True
-            post.save(update_fields=["is_published"])
+        logger.info(f"Current time: {now()}")
+
     except Post.DoesNotExist:
         # Optionally log a warning here
         logger.warning(f"Post id {post_id} does not exist.")
