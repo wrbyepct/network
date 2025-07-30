@@ -77,8 +77,9 @@
         id="post-form"  
         class="space-y-6"
         hx-post="{% url 'post_create' %}"
+        hx-target="#incubating-egg-container"
+        hx-swap="innerHTML"
         hx-trigger="submit" 
-        hx-swap="none"
         hx-encoding="multipart/form-data"
         @submit.prevent="prepareMediaThenSubmit($el)" {# htmx will wait for this to complete before issue a post#}
         @post-created="showEggModal($event)"

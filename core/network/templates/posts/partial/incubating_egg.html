@@ -1,6 +1,61 @@
-<div>
-  <img 
-    class="w-60 h-auto mx-auto"
-    :src="eggImage" 
-    alt="Incubating Egg">
+<div 
+  x-ref="incubatingEgg"
+  x-data="{
+    isHatching: false,
+    removeEgg() {
+      eggImage = null; 
+      $dispatch('post-hatched');
+      $refs.incubatingEgg.remove();
+    },
+    waitForHatchingEvent() {
+        showEgg = true;
+        console.log('Listening to server...');
+        let eventSource = new EventSource('{% url "post_hatch_check" post_id %}');
+        eventSource.addEventListener('hatch', event => {
+            const data = JSON.parse(event.data);
+            console.log(data.post_id);
+            if (data.post_id === '{{ post_id }}' && data.content) {
+
+                this.isHatching = true;
+
+                // Start fade-out after a short delay to allow glow
+                setTimeout(() => {
+                    this.showEgg = false;
+                }, 1000); // Adjust duration to match glow animation
+                eventSource.close();
+            }
+        });
+    }
+  }" 
+  x-init="waitForHatchingEvent()"
+  hx-get="{% url 'hatched_post' post_id %}"
+  hx-trigger="post-hatched"
+  hx-target="#hatched-posts"
+  hx-swap="afterbegin"
+>
+    <style>
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 0px rgba(255, 255, 0, 0.0); }
+            50% { box-shadow: 0 0 20px rgba(255, 255, 0, 0.8); }
+            100% { box-shadow: 0 0 0px rgba(255, 255, 0, 0.0); }
+        }
+        .animate-pulse-glow {
+            animation: pulse-glow 5s infinite alternate;
+        }
+    </style>
+
+    <div 
+        x-show="showEgg"
+        x-transition:leave="transition ease-in duration-5000 opacity-0"
+        @transitionend="removeEgg()"
+       >
+        <img
+          class="w-60 h-auto mx-auto"
+          :src="eggImage"
+          alt="Incubating Egg"
+          :class="{ 'animate-pulse-glow': isHatching }"
+        >
+    </div>
+
+ 
 </div>
