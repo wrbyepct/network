@@ -26,6 +26,16 @@ urlpatterns = [
         name="post_delete",
     ),
     path(
+        "<uuid:post_id>/hatched_post/",
+        views.HatchedPostView.as_view(),
+        name="hatched_post",
+    ),
+    path(
+        "<uuid:post_id>/hatch_check/",
+        views.PostHatchCheckView.as_view(),
+        name="post_hatch_check",
+    ),
+    path(
         "<uuid:post_id>/like/",
         views.LikePost.as_view(),
         name="post_like",

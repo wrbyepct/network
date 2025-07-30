@@ -1,10 +1,11 @@
 """Post views."""
 
-from http import HTTPStatus
+import json
 
+import redis
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
-from django.http import HttpResponse
+from django.http import StreamingHttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
 from django.views.generic import (
@@ -22,6 +23,9 @@ from .forms import PostForm
 from .models import Post, PostLike, PostMedia
 from .services import IncubationService
 from .utils import get_like_stat, set_post_create_event
+
+# Initialize Redis client
+redis_client = redis.StrictRedis(host="redis", port=6379, db=0)
 
 
 # TODO (extra) cache the posts result
@@ -68,7 +72,11 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 
         egg_url = IncubationService.get_random_egg_url()
         IncubationService.incubate_post(self.object, egg_url)
-        resp = HttpResponse(HTTPStatus.CREATED)
+        resp = render(
+            self.request,
+            "posts/partial/incubating_egg.html",
+            {"post_id": self.object.id},
+        )
         resp["HX-Trigger"] = set_post_create_event(egg_url)
         return resp
 
@@ -104,6 +112,40 @@ class PostDeleteView(RefererRedirectMixin, GetUserPostMixin, DeleteView):
     """Post Delete View."""
 
     fallback_url = reverse_lazy("index")
+
+
+class HatchedPostView(LoginRequiredMixin, DetailView):
+    """View to retrieve for hatched post list card."""
+
+    context_object_name = "post"
+    template_name = "posts/post/list_card.html"
+
+    def get_object(self):
+        """Get post by id."""
+        return get_object_or_404(
+            Post.objects.published(), id=self.kwargs.get("post_id")
+        )
+
+
+class PostHatchCheckView(LoginRequiredMixin, View):
+    """SSE endpoint to check if a post has hatched."""
+
+    def get(self, request, *args, **kwargs):
+        """Return StreamResponse for frontend to listen to hatching event."""
+
+        def event_stream():
+            pubsub = redis_client.pubsub()
+            pubsub.subscribe("post_hatch_events")
+            for message in pubsub.listen():
+                if message["type"] == "message":
+                    data = json.loads(message["data"])
+                    yield f"event: hatch\ndata: {json.dumps(data)}\n\n"
+
+        response = StreamingHttpResponse(
+            event_stream(), content_type="text/event-stream"
+        )
+        response["Cache-Control"] = "no-cache"
+        return response
 
 
 class LikePost(LoginRequiredMixin, View):

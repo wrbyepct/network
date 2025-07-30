@@ -1,10 +1,19 @@
 """Celery tasks for post apps."""
 
+import json
 import logging
 
+import redis
 from celery import shared_task
 from django.utils.timezone import now
 from project4.celery import app
+
+logger = logging.getLogger(__name__)
+
+# Initialize Redis client
+# Assuming Redis is accessible at 'redis' hostname and default port 6379
+# This should match the Redis service name in docker-compose.yml
+redis_client = redis.StrictRedis(host="redis", port=6379, db=0)
 
 logger = logging.getLogger(__name__)
 
@@ -22,6 +31,11 @@ def publish_post(post_id):
 
         logger.info(f"Post publish time: {post.publish_at}")
         logger.info(f"Current time: {now()}")
+
+        # Publish to Redis channel
+        message = {"post_id": str(post.id)}
+        redis_client.publish("post_hatch_events", json.dumps(message))
+        logger.info(f"Published hatch event for post {post.id} to Redis.")
 
     except Post.DoesNotExist:
         # Optionally log a warning here

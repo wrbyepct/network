@@ -3,7 +3,6 @@
   <a
     class="btn btn-outline-danger border-0 p-0"
     {% if request.user.is_authenticated %}
-    href="{% url 'account_login' %}"
     hx-post="{% url 'post_like' post.id %}"
     hx-target="#post-like-stat-{{ post.id }}"
     hx-swap="outerHTML"

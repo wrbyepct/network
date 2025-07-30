@@ -42,11 +42,11 @@ update-precommit() {
 
 # contrainer
 up() {
-    docker-compose -f local.yml up --build -d 
+    docker-compose -f local.yml up $@ --build -d 
 }
 
 down() {
-    docker-compose -f local.yml down
+    docker-compose -f local.yml down $@
 }
 
 prod-up() {

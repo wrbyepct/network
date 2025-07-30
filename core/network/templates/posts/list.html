@@ -6,12 +6,18 @@
     <div class="container mt-4 ">
       <div class="row ">
         <div class="col-lg-8 mx-auto ">
-          <template x-if="eggImage">
-            {% include 'posts/partial/incubating_egg.html' %}
-          </template>
-          <template x-if="!eggImage">
+
+          <div id="incubating-egg-container"></div>
+
+          <div x-show="!eggImage">
              {% include 'posts/partial/post_composer.html' %}
-          </template>
+          </div>
+          <!-- Component to wait for hatched event then retrieve hatched post -->
+          <div 
+            id="hatched-posts"
+            
+          ></div>
+   
           {% for post in posts %}
               <div class="mb-4">
                 {% include 'posts/post/list_card.html' %}
