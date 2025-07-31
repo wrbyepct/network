@@ -1,11 +1,12 @@
 """Post views."""
 
 import json
+from http import HTTPStatus
 
 import redis
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
-from django.http import StreamingHttpResponse
+from django.http import HttpResponse, StreamingHttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
 from django.views.generic import (
@@ -40,6 +41,14 @@ class PostListView(ListView):
         """Get optimized post queryset."""
         return Post.objects.published()
 
+    def get_context_data(self, **kwargs):
+        """Insert incubating post id into context."""
+        context = super().get_context_data(**kwargs)
+        context["is_incubating"] = bool(
+            IncubationService.get_incubating_post_id(self.request.user.id)
+        )
+        return context
+
 
 class PostModalView(DetailView):
     """View to provide modal window of a post."""
@@ -72,11 +81,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 
         egg_url = IncubationService.get_random_egg_url()
         IncubationService.incubate_post(self.object, egg_url)
-        resp = render(
-            self.request,
-            "posts/partial/incubating_egg.html",
-            {"post_id": self.object.id},
-        )
+        resp = HttpResponse(HTTPStatus.CREATED)
         resp["HX-Trigger"] = set_post_create_event(egg_url)
         return resp
 
@@ -112,6 +117,19 @@ class PostDeleteView(RefererRedirectMixin, GetUserPostMixin, DeleteView):
     """Post Delete View."""
 
     fallback_url = reverse_lazy("index")
+
+
+class IncubatingEggView(LoginRequiredMixin, View):
+    """View to retreive incubating egg tempalte."""
+
+    def get(self, request, **kwargs):
+        """Return incubating egg template."""
+        post_id = IncubationService.get_incubating_post_id(request.user.id)
+        return render(
+            request,
+            "posts/partial/incubating_egg.html",
+            {"post_id": post_id},
+        )
 
 
 class HatchedPostView(LoginRequiredMixin, DetailView):
