@@ -92,21 +92,34 @@ class IncubationService:
         post.publish_at = get_random_publish_time(timeout)
         post.celery_task_id = assign_publish_task(post)
         IncubationService.set_incubating_egg_url(post.user.id, egg_url, timeout)
+        IncubationService.set_incubating_post_id(post.user.id, post.id, timeout)
         post.save(update_fields=["publish_at", "celery_task_id"])
+
+    @staticmethod
+    def set_incubating_post_id(user_id, post_id, timeout):
+        """Set incubating post id."""
+        key = IncubationService.cache_key(user_id, "post_id")
+        cache.set(key, post_id, timeout=timeout)
+
+    @staticmethod
+    def get_incubating_post_id(user_id):
+        """Get incubating post id."""
+        key = IncubationService.cache_key(user_id, "post_id")
+        return cache.get(key)
 
     @staticmethod
     def set_incubating_egg_url(user_id, egg_url, timeout):
         """Set post incubating url timeout cache."""
-        key = IncubationService.cache_key(user_id)
-        return cache.set(key, egg_url, timeout=timeout)
+        key = IncubationService.cache_key(user_id, "egg")
+        cache.set(key, egg_url, timeout=timeout)
 
     @staticmethod
     def get_incubating_egg_url(user_id):
         """Get post incubating url check data."""
-        key = IncubationService.cache_key(user_id)
+        key = IncubationService.cache_key(user_id, "egg")
         return cache.get(key)
 
     @staticmethod
-    def cache_key(user_id):
+    def cache_key(user_id, suffix):
         """Incubation cache key."""
-        return f"incubating_egg:{user_id}"
+        return f"incubating:{suffix}:{user_id}"
