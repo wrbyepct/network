@@ -1,28 +1,31 @@
 <div 
   x-ref="incubatingEgg"
   x-data="{
-    isHatching: false,
+    startFadeEgg: false,
+    isHatching: false, {# Control egg hatching effect showing #}
     removeEgg() {
       eggImage = null; 
       $dispatch('post-hatched');
       $refs.incubatingEgg.remove();
     },
+    hatching() {
+        isIncubating = false;
+        this.isHatching = true;
+        this.startFadeEgg = true; {# Makes egg slowly fade away #}
+    },
     waitForHatchingEvent() {
-        showEgg = true;
         console.log('Listening to server...');
-        let eventSource = new EventSource('{% url "post_hatch_check" post_id %}');
+        let eventSource = new EventSource('{% url "post_hatch_check" %}');
         eventSource.addEventListener('hatch', event => {
             const data = JSON.parse(event.data);
-            console.log(data.post_id);
-            if (data.post_id === '{{ post_id }}' && data.content) {
-
-                this.isHatching = true;
-
-                // Start fade-out after a short delay to allow glow
-                setTimeout(() => {
-                    this.showEgg = false;
-                }, 1000); // Adjust duration to match glow animation
+            if (data.post_id === '{{ post_id }}') {
+                console.log('boom!')
+                this.hatching();
                 eventSource.close();
+            } else {
+                console.log('Post id not matched!');
+                console.log(`Even post id: ${data.post_id}`);
+                console.log('Template post id: {{ post_id }}');
             }
         });
     }
@@ -34,28 +37,56 @@
   hx-swap="afterbegin"
 >
     <style>
-        @keyframes pulse-glow {
-            0% { box-shadow: 0 0 0px rgba(255, 255, 0, 0.0); }
-            50% { box-shadow: 0 0 20px rgba(255, 255, 0, 0.8); }
-            100% { box-shadow: 0 0 0px rgba(255, 255, 0, 0.0); }
+        .pulsing-glow {
+            animation: pulseGlow 2s ease-in-out infinite;
+            width: 90px;
+            height: 120px;
+            margin: auto;
+            border-radius: 70% 70% 60% 60% / 80% 80% 60% 60%;
+            background: transparent;
+            border: 4px solid rgba(255, 255, 255, 0.15);
+            box-shadow:
+                0 0 20px 5px #fff,
+                0 0 40px 10px #ff4d00,
+                0 0 60px 20px #ff0066,
+                0 0 100px 40px #ffcc00;
+    }
+    @keyframes pulseGlow {
+        0%, 100% {
+            box-shadow:
+            0 0 20px 5px #fff,
+            0 0 40px 10px #ff4d00,
+            0 0 60px 20px #ff0066,
+            0 0 100px 40px #ffcc00;
         }
-        .animate-pulse-glow {
-            animation: pulse-glow 5s infinite alternate;
+        50% {
+            box-shadow:
+            0 0 10px 2px #fff,
+            0 0 20px 5px #ff4d00,
+            0 0 30px 10px #ff0066,
+            0 0 50px 20px #ffcc00;
         }
+    }
     </style>
 
     <div 
-        x-show="showEgg"
-        x-transition:leave="transition ease-in duration-5000 opacity-0"
-        @transitionend="removeEgg()"
+        class="relative"
+        x-show="!startFadeEgg"
+        x-transition:leave="transition delay-[5s] ease-in duration-5000 opacity-0"
+        @transitionstart="setTimeout(() => { removeEgg()}, 10000);"
        >
+        <div 
+            class="absolute -z-1 top-1/2 -translate-y-1/2 left-1/2 transform -translate-x-1/2 pulsing-glow"
+            x-show="isHatching"
+            x-transition:enter="transition-opacity ease-in duration-2000"
+            x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100"
+        ></div>
         <img
           class="w-60 h-auto mx-auto"
           :src="eggImage"
           alt="Incubating Egg"
-          :class="{ 'animate-pulse-glow': isHatching }"
         >
     </div>
 
- 
 </div>

@@ -57,6 +57,7 @@
             {# set eggImage from event data #}
             const eggUrl = evt.detail.eggUrl;
             if (eggUrl) eggImage = eggUrl;
+            isIncubating = true;
 
             {# show Egg modal #}
             showIncubationModal = true;
@@ -77,8 +78,7 @@
         id="post-form"  
         class="space-y-6"
         hx-post="{% url 'post_create' %}"
-        hx-target="#incubating-egg-container"
-        hx-swap="innerHTML"
+        hx-swap="none"
         hx-trigger="submit" 
         hx-encoding="multipart/form-data"
         @submit.prevent="prepareMediaThenSubmit($el)" {# htmx will wait for this to complete before issue a post#}
