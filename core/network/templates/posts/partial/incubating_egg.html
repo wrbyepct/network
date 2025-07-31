@@ -73,7 +73,7 @@
         class="relative"
         x-show="!startFadeEgg"
         x-transition:leave="transition delay-[5s] ease-in duration-5000 opacity-0"
-        @transitionstart="setTimeout(() => { removeEgg()}, 10000);"
+        @transitionend=" if(event.target === $el) removeEgg()"
        >
         <div 
             class="absolute -z-1 top-1/2 -translate-y-1/2 left-1/2 transform -translate-x-1/2 pulsing-glow"
