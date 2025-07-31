@@ -31,9 +31,10 @@
     }
   }" 
   x-init="waitForHatchingEvent()"
+  
   hx-get="{% url 'hatched_post' post_id %}"
   hx-trigger="post-hatched"
-  hx-target="#hatched-posts"
+  hx-target="#published-posts"
   hx-swap="afterbegin"
 >
     <style>
@@ -50,7 +51,7 @@
                 0 0 40px 10px #ff4d00,
                 0 0 60px 20px #ff0066,
                 0 0 100px 40px #ffcc00;
-    }
+        }
     @keyframes pulseGlow {
         0%, 100% {
             box-shadow:
