@@ -93,6 +93,7 @@
           class="body"
           hx-headers='{"x-csrftoken": "{{ csrf_token }}"}'
           hx-ext="multi-swap"
+          hx-ext="response-targets"
           x-data="{ 
             eggImage: '{{ request|get_incubating_egg_url }}', {# get currently incubating egg image #}
             isIncubating: {{ is_incubating|yesno:'true,false' }},

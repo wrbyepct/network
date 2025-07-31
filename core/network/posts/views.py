@@ -6,7 +6,7 @@ from http import HTTPStatus
 import redis
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
-from django.http import HttpResponse, StreamingHttpResponse
+from django.http import Http404, HttpResponse, StreamingHttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
 from django.views.generic import (
@@ -125,11 +125,14 @@ class IncubatingEggView(LoginRequiredMixin, View):
     def get(self, request, **kwargs):
         """Return incubating egg template."""
         post_id = IncubationService.get_incubating_post_id(request.user.id)
-        return render(
-            request,
-            "posts/partial/incubating_egg.html",
-            {"post_id": post_id},
-        )
+        if post_id:
+            return render(
+                request,
+                "posts/partial/incubating_egg.html",
+                {"post_id": post_id},
+            )
+        msg = "The post has hatched. No egg to return."
+        raise Http404(msg)
 
 
 class HatchedPostView(LoginRequiredMixin, DetailView):
