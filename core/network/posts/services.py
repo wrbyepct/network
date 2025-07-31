@@ -3,6 +3,7 @@
 import random
 
 from django.core.cache import cache
+from django.db import transaction
 from django.db.models import Max
 
 from .constants import DEFAULT_EGG_URL, EGG_TYPES
@@ -89,11 +90,12 @@ class IncubationService:
         3. Save incubating check in cache.
         """
         timeout = get_random_timeout()
-        post.publish_at = get_random_publish_time(timeout)
-        post.celery_task_id = assign_publish_task(post)
-        IncubationService.set_incubating_egg_url(post.user.id, egg_url, timeout)
-        IncubationService.set_incubating_post_id(post.user.id, post.id, timeout)
-        post.save(update_fields=["publish_at", "celery_task_id"])
+        with transaction.atomic():
+            post.publish_at = get_random_publish_time(timeout)
+            post.celery_task_id = assign_publish_task(post)
+            IncubationService.set_incubating_egg_url(post.user.id, egg_url, timeout)
+            IncubationService.set_incubating_post_id(post.user.id, post.id, timeout)
+            post.save(update_fields=["publish_at", "celery_task_id"])
 
     @staticmethod
     def set_incubating_post_id(user_id, post_id, timeout):

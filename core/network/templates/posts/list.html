@@ -20,24 +20,23 @@
             hx-get="{% url 'egg' %}"
             hx-trigger="egg-fetch-ready"
             hx-swap="innerHTML"
+            hx-target-error="none"
+            {# Error means the post has hatched, just refresh the page #}
+            @htmx:response-error="window.location.href = '/'"
           ></div>
 
-          <div x-show="!eggImage">
+          <div x-show="!eggImage" class="mb-4">
              {% include 'posts/partial/post_composer.html' %}
           </div>
-          <!-- Component to wait for hatched event then retrieve hatched post -->
-          <div 
-            id="hatched-posts"
-            
-          ></div>
-   
-          {% for post in posts %}
-              <div class="mb-4">
+          
+          <div id="published-posts" class="grid grid-cols-1 gap-4">
+
+            {% for post in posts %}
                 {% include 'posts/post/list_card.html' %}
-              </div>
-          {% empty %}
-            <p class="text-center text-muted">No posts to display.</p>
-          {% endfor %}
+            {% empty %}
+              <p class="text-center text-muted">No posts yet. Let's hatch One!</p>
+            {% endfor %}
+          </div>
         </div>
       </div>
       <!-- Pagination -->
