@@ -26,12 +26,17 @@ urlpatterns = [
         name="post_delete",
     ),
     path(
+        "incubating_egg/",
+        views.IncubatingEggView.as_view(),
+        name="egg",
+    ),
+    path(
         "<uuid:post_id>/hatched_post/",
         views.HatchedPostView.as_view(),
         name="hatched_post",
     ),
     path(
-        "<uuid:post_id>/hatch_check/",
+        "hatch_check/",
         views.PostHatchCheckView.as_view(),
         name="post_hatch_check",
     ),

@@ -1,13 +1,26 @@
 {% extends 'network/layout.html' %} 
 {% load post_extra %}
 {% block body %}
-  <div x-data="{ isPostDetail: false, showCreatePostModal: false }" > 
+  <div x-data="{ 
+    isPostDetail: false, 
+    showCreatePostModal: false,
+
+  
+  }" > 
  
     <div class="container mt-4 ">
       <div class="row ">
         <div class="col-lg-8 mx-auto ">
 
-          <div id="incubating-egg-container"></div>
+          <div 
+            id="incubating-egg-container"
+            x-ref="eggDiv"
+            x-effect="if(isIncubating) $nextTick(() => $dispatch('egg-fetch-ready'))"
+
+            hx-get="{% url 'egg' %}"
+            hx-trigger="egg-fetch-ready"
+            hx-swap="innerHTML"
+          ></div>
 
           <div x-show="!eggImage">
              {% include 'posts/partial/post_composer.html' %}
@@ -39,11 +52,7 @@
         </div>
     
     </div>
-    <div 
-      id="create-post-modal"
-      
-      ></div>
-    
+
   </div>
 
 

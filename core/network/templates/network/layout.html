@@ -94,10 +94,10 @@
           hx-headers='{"x-csrftoken": "{{ csrf_token }}"}'
           hx-ext="multi-swap"
           x-data="{ 
+            eggImage: '{{ request|get_incubating_egg_url }}', {# get currently incubating egg image #}
+            isIncubating: {{ is_incubating|yesno:'true,false' }},
             showModal: false,
             showIncubationModal: false, {# New Alpine.js variable #}
-            showEgg: false,
-            eggImage: '{{ request|get_incubating_egg_url }}', {# get currently incubating egg image #}
             selectedMedia: null, 
             clickedMedia: null,
             resize(textarea) { 
@@ -132,6 +132,7 @@
                 class="w-full h-full flex justify-center items-center"></div>
             </div>
             {% include 'posts/partial/egg_modal.html' %}
+
         </div>
         <!-- Bootstrap js -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
