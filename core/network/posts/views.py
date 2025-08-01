@@ -1,12 +1,11 @@
 """Post views."""
 
 import json
-from http import HTTPStatus
 
 import redis
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
-from django.http import Http404, HttpResponse, StreamingHttpResponse
+from django.http import Http404, StreamingHttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
 from django.views.generic import (
@@ -23,7 +22,7 @@ from network.common.mixins import RefererRedirectMixin
 from .forms import PostForm
 from .models import Post, PostLike, PostMedia
 from .services import IncubationService
-from .utils import get_like_stat, set_post_create_event
+from .utils import get_like_stat
 
 # Initialize Redis client
 redis_client = redis.StrictRedis(host="redis", port=6379, db=0)
@@ -81,8 +80,9 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 
         egg_url = IncubationService.get_random_egg_url()
         IncubationService.incubate_post(self.object, egg_url)
-        resp = HttpResponse(HTTPStatus.CREATED)
-        resp["HX-Trigger"] = set_post_create_event(egg_url)
+        context = {"egg_url": egg_url}
+        resp = render(self.request, "posts/partial/egg_modal.html", context)
+        resp["HX-Trigger"] = "post-created"
         return resp
 
 
@@ -125,11 +125,12 @@ class IncubatingEggView(LoginRequiredMixin, View):
     def get(self, request, **kwargs):
         """Return incubating egg template."""
         post_id = IncubationService.get_incubating_post_id(request.user.id)
+        egg_url = IncubationService.get_incubating_egg_url(request.user.id)
         if post_id:
             return render(
                 request,
                 "posts/partial/incubating_egg.html",
-                {"post_id": post_id},
+                {"post_id": post_id, "egg_url": egg_url},
             )
         msg = "The post has hatched. No egg to return."
         raise Http404(msg)
