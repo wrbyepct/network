@@ -49,19 +49,6 @@
             this.$refs.videoInput.files = videoTransfer.files;
 
         },
-        showEggModal(evt) {
-            {# Remove post create form from modal container #}
-            showModal = false;
-            $refs.modalContainer.innerHTMX = '';
-    
-            {# set eggImage from event data #}
-            const eggUrl = evt.detail.eggUrl;
-            if (eggUrl) eggImage = eggUrl;
-            isIncubating = true;
-
-            {# show Egg modal #}
-            showIncubationModal = true;
-        }
     }"
 >
 
@@ -78,11 +65,12 @@
         id="post-form"  
         class="space-y-6"
         hx-post="{% url 'post_create' %}"
-        hx-swap="none"
+        hx-target="#modal-container"
+        hx-select="#egg-modal-content"
+        hx-swap="innerHTML"
         hx-trigger="submit" 
         hx-encoding="multipart/form-data"
         @submit.prevent="prepareMediaThenSubmit($el)" {# htmx will wait for this to complete before issue a post#}
-        @post-created="showEggModal($event)"
     >
 
         {# Content Textarea #}
