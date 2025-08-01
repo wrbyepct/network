@@ -6,7 +6,6 @@ from django.core.cache import cache
 from django.db import transaction
 from django.db.models import Max
 
-from .constants import DEFAULT_EGG_URL, EGG_TYPES
 from .models import PostMedia
 from .tasks import assign_publish_task
 from .utils import get_random_publish_time, get_random_timeout
@@ -61,7 +60,9 @@ class PostMediaService:
 class IncubationService:
     """Service for incubate a post."""
 
-    default_egg_url = DEFAULT_EGG_URL
+    default_egg_url = "media/defaults/regular_eggs/egg5.gif"
+    EGG_TYPES = ["regular_eggs", "special_eggs"]
+    WEIGHTS = [0.9, 0.1]
 
     @staticmethod
     def get_random_egg_img_index():
@@ -71,7 +72,11 @@ class IncubationService:
     @staticmethod
     def get_random_egg_type():
         """Return random egg img url."""
-        return random.choice(EGG_TYPES)
+        return random.choices(
+            IncubationService.EGG_TYPES,
+            weights=IncubationService.WEIGHTS,
+            k=1,
+        )[0]
 
     @staticmethod
     def get_random_egg_url():
