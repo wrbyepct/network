@@ -1,7 +1,8 @@
 {% load post_extra %}
 <!-- Post -->
-<div 
-  class="card shadow-sm"
+<div
+  id="{{ post.id }}"
+  class="bg-white rounded-md border border-gray-200 p-[1rem]"
   {% with post_liked=post|liked_by_user:request.user %}
     x-data="{
       commentBody: '', 
