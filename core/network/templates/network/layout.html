@@ -95,10 +95,7 @@
           hx-ext="multi-swap"
           hx-ext="response-targets"
           x-data="{ 
-            eggImage: '{{ request|get_incubating_egg_url }}', {# get currently incubating egg image #}
-            isIncubating: {{ is_incubating|yesno:'true,false' }},
             showModal: false,
-            showIncubationModal: false, {# New Alpine.js variable #}
             selectedMedia: null, 
             clickedMedia: null,
             resize(textarea) { 
@@ -132,7 +129,6 @@
                 x-ref="modalContainer"
                 class="w-full h-full flex justify-center items-center"></div>
             </div>
-            {% include 'posts/partial/egg_modal.html' %}
 
         </div>
         <!-- Bootstrap js -->

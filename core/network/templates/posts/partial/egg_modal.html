@@ -1,23 +1,5 @@
 {# Incubation Confirmation Modal #}
-<div 
-    class="fixed inset-0 z-50 flex items-center justify-center p-4"
-    x-show="showIncubationModal"
-    x-cloak
-    x-transition:enter="transition ease-out duration-300"
-    x-transition:enter-start="opacity-0 scale-90"
-    x-transition:enter-end="opacity-100 scale-100"
-    x-transition:leave="transition ease-in duration-200"
-    x-transition:leave-start="opacity-100 scale-100"
-    x-transition:leave-end="opacity-0 scale-90"
-    x-ref="incubationModal"
-    x-data="{
-        hideIncubationModal() {
-            showIncubationModal = false;
-        }
-    }"
->
-    {# Overlay #}
-    <div class="fixed inset-0 bg-black bg-opacity-50"></div>
+
 
     {# Modal Content #}
     <div 
@@ -30,14 +12,13 @@
     
         {# Placeholder for pixel animation #}
        
-        <img :src="eggImage" alt="Pixel Egg Animation" class="w-60 h-auto mx-auto animate-bounce"> {# Simple bounce animation for now #}
+        <img src="{{ egg_url }}" alt="Pixel Egg Animation" class="w-60 h-auto mx-auto animate-bounce"> {# Simple bounce animation for now #}
     
         {# Cancel button #}
         <button
             class="w-full bg-amber-600 text-white font-bold py-4 px-6 mb-5 rounded-lg hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-300 transition duration-150 ease-in-out shadow-[4px_4px_0px_#25422a]"
-            @click="hideIncubationModal()"
+            @click="showModal = false"
         >
             Got it!
         </button>
     </div>
-</div>
