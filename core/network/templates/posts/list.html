@@ -20,7 +20,6 @@
             hx-get="{% url 'egg' %}"
             hx-trigger="egg-fetch-ready"
             hx-swap="innerHTML"
-            hx-target-error="none"
             {# Error means the post has hatched, just refresh the page #}
             @htmx:response-error="window.location.href = '/'"
           ></div>
