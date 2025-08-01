@@ -3,10 +3,10 @@
   x-data="{
     startFadeEgg: false,
     isHatching: false, {# Control egg hatching effect showing #}
+    glowStyleIndex: Math.floor(Math.random() * 9),
     removeEgg() {
       eggImage = null; 
       $dispatch('post-hatched');
-      $refs.incubatingEgg.remove();
     },
     hatching() {
         isIncubating = false;
@@ -36,6 +36,7 @@
   hx-trigger="post-hatched"
   hx-target="#published-posts"
   hx-swap="afterbegin"
+  @htmx:after-request="$refs.incubatingEgg.remove()"
 >
     <style>
         .pulsing-glow {
@@ -46,28 +47,101 @@
             border-radius: 70% 70% 60% 60% / 80% 80% 60% 60%;
             background: transparent;
             border: 4px solid rgba(255, 255, 255, 0.15);
-            box-shadow:
+            /* box-shadow:
                 0 0 20px 5px #fff,
                 0 0 40px 10px #ff4d00,
                 0 0 60px 20px #ff0066,
-                0 0 100px 40px #ffcc00;
+                0 0 100px 40px #ffcc00; */
         }
-    @keyframes pulseGlow {
+
+        /* Flame Pulse */
+        .glow-scheme-0 {
+        --c1: #ffffff;
+        --c2: #ff4d00;
+        --c3: #ff0066;
+        --c4: #ffcc00;
+        }
+
+        /* Alien Signal */
+        .glow-scheme-1 {
+        --c1: #ccffcc;
+        --c2: #99ff33;
+        --c3: #66ff00;
+        --c4: #339900;
+        }
+
+        /* Crystal Lotus */
+        .glow-scheme-2 {
+        --c1: #e6e6ff;
+        --c2: #ccddff;
+        --c3: #9966cc;
+        --c4: #66ffff;
+        }
+
+        /* Solar Flare */
+        .glow-scheme-3 {
+        --c1: #ffffcc;
+        --c2: #ffd700;
+        --c3: #ffcc00;
+        --c4: #ff9900;
+        }
+
+        /* Void Pulse */
+        .glow-scheme-4 {
+        --c1: #1a1a2e;
+        --c2: #5c33cc;
+        --c3: #9933ff;
+        --c4: #ff99cc;
+        }
+
+        /* Mystic Bloom */
+        .glow-scheme-5 {
+        --c1: #e0b3ff;
+        --c2: #bf80ff;
+        --c3: #9933ff;
+        --c4: #6600cc;
+        }
+
+        /* Glacier Core (Original Cool Tone) */
+        .glow-scheme-6 {
+        --c1: #e0ffff;
+        --c2: #00ffff;
+        --c3: #66ccff;
+        --c4: #9933ff;
+        }
+
+        /* Sakura Dream (Pink Theme) */
+        .glow-scheme-7 {
+        --c1: #ffe6f0;
+        --c2: #ff99cc;
+        --c3: #ff66b2;
+        --c4: #ff3399;
+        }
+
+        /* Silver Halo */
+        .glow-scheme-8 {
+        --c1: #e6e6e6;
+        --c2: #cccccc;
+        --c3: #b3b3b3;
+        --c4: #999999;
+        }
+
+        @keyframes pulseGlow {
         0%, 100% {
             box-shadow:
-            0 0 20px 5px #fff,
-            0 0 40px 10px #ff4d00,
-            0 0 60px 20px #ff0066,
-            0 0 100px 40px #ffcc00;
+            0 0 20px 5px var(--c1),
+            0 0 40px 10px var(--c2),
+            0 0 60px 20px var(--c3),
+            0 0 100px 40px var(--c4);
         }
         50% {
             box-shadow:
-            0 0 10px 2px #fff,
-            0 0 20px 5px #ff4d00,
-            0 0 30px 10px #ff0066,
-            0 0 50px 20px #ffcc00;
+            0 0 10px 2px var(--c1),
+            0 0 20px 5px var(--c2),
+            0 0 30px 10px var(--c3),
+            0 0 50px 20px var(--c4);
         }
-    }
+        }
     </style>
 
     <div 
@@ -77,6 +151,7 @@
         @transitionend=" if(event.target === $el) removeEgg()"
        >
         <div 
+            :class="`glow-scheme-${glowStyleIndex}`"
             class="absolute -z-1 top-1/2 -translate-y-1/2 left-1/2 transform -translate-x-1/2 pulsing-glow"
             x-show="isHatching"
             x-transition:enter="transition-opacity ease-in duration-2000"
