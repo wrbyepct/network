@@ -260,3 +260,69 @@ Implemented "Phase UX 1: The 'Incubation Chamber'" for the "Incubating Posts" fe
 *   **Modularity:** Separated the incubation modal into its own template (`egg_modal.html`) for better organization and reusability.
 *   **Dynamic Content:** Introduced logic to dynamically select and display different egg GIFs, adding to the thematic delight.
 *   
+
+-------Gemini's next feature impelmentation idea. Please review it first. For back up purpose--------
+The Plan: Implement Phase UX 2: The "Hatchery View"
+
+  The next step is to bring the "Hatchery View" to life, as envisioned in the FEATURE_IDEAS.md document.
+  This means that when a user creates an "incubating" post, it will appear in their own feed as a distinct,
+  interactive "egg" card instead of a regular post.
+
+  Here is the detailed breakdown of how I will implement this:
+
+  1. Target the Correct Template:
+
+   * The work will be focused entirely within the core/network/templates/posts/post/list_card.html template.
+     This is the correct place because it's the partial template responsible for rendering each individual
+     post card within the main feed loop. Modifying it allows me to change how posts are displayed on a
+     case-by-case basis.
+
+  2. Implement Conditional Rendering:
+
+   * I will introduce a primary {% if ... %} block that checks two conditions: post.is_published or post.user
+     != request.user.
+       * This logic ensures that the standard post card is only rendered if the post has already hatched
+         (is_published is True) OR if the user viewing the feed is not the post's author.
+   * The existing content of list_card.html will be placed inside this if block.
+
+  3. Create the "Egg" Card View:
+
+   * I will add an {% else %} block. The code inside this block will only execute for posts that are not
+     published and are being viewed by their owner.
+   * Inside this block, I will build the "egg" card using the precise styling defined in the feature plan:
+       * Container: A div with a unique, chunky, pixel-art-inspired look using Tailwind CSS classes:
+         bg-amber-50, border-4 border-emerald-800, rounded-lg, and a distinctive shadow
+         (shadow-[8px_8px_0px_#25422a]).
+       * Content: Thematic text like "An Egg is Incubating Here!" and "This post is still incubating. It will
+         hatch soon!".
+       * Visuals: An <img> tag pointing to a placeholder pixel egg image, as specified in the plan.
+
+  4. Add Interactivity with Alpine.js:
+
+   * To make the egg feel alive and interactive, I will add client-side behavior using Alpine.js, directly on
+     the new "egg" card container:
+       * Click-to-Reveal: The entire egg card will be clickable. I'll use x-data="{ showEggContent: false }"
+         and @click="showEggContent = !showEggContent" to manage a state variable.
+       * Hidden Content: An overlay div will use x-show="showEggContent" to conditionally appear when the egg
+         is clicked. This overlay will show the first 100 characters of the post's actual content ({{
+         post.content|truncatechars:100 }}), giving the user a peek inside without revealing the whole post.
+       * Smooth Transitions: I'll use x-transition to make the content overlay fade in and out smoothly,
+         enhancing the user experience.
+
+  Why This is the Correct Next Step
+
+   1. It Follows the Approved Roadmap: The project's guiding documents, GEMINI.md and FEATURE_IDEAS.md,
+      explicitly define the "Hatchery View" as the second phase of the "Incubating Posts" feature. Adhering to
+      this plan ensures we are building the application in a structured and intentional way.
+   2. It Completes the Core User Loop: Right now, the user experience is incomplete. A user can create an
+      incubating post, but it vanishes from their view until it hatches. This is confusing. The "Hatchery View"
+       provides the essential visual feedback, confirming to the user that their post is safe and incubating as
+       expected.
+   3. It Builds Directly on Recent Work: My analysis of the last 12 commits shows that all recent development
+      has been dedicated to building the backend and initial UX for this feature. The data model (with
+      is_published) and the necessary backend logic are already in place. This is the natural and most
+      efficient continuation of that work.
+   4. It Delivers a Key Thematic Experience: This isn't just a technical task; it's a core part of the app's
+      unique, "turtle-themed" identity. Implementing the "egg" card is a major step toward making the
+      application feel distinct and engaging, moving it from a standard social network to a unique, gamified
+      experience.
