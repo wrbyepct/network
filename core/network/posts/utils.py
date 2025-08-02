@@ -1,6 +1,5 @@
 """Post Service."""
 
-import json
 import random
 from datetime import timedelta
 
@@ -30,8 +29,3 @@ def get_random_timeout():
 def get_random_publish_time(timeout):
     """Return random publish time."""
     return timezone.now() + timedelta(seconds=timeout)
-
-
-def set_post_create_event(egg_url):
-    """Return post created event with random egg image url."""
-    return json.dumps({"post-created": {"eggUrl": egg_url}})

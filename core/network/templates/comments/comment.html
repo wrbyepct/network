@@ -86,14 +86,18 @@
                   >Reply</small>
               </div>
 
-              <div x-show="likeCount > 0">
+              <div class="flex self-center" x-show="likeCount > 0">
                   <span 
                     id="comment-like-count-{{ comment.id }}"
-                    class="text-muted"
+                    class="fw-bold"
                     x-text="likeCount"
                   ></span> 
 
-                  <span>❤️</span> 
+                  <img 
+                    class="w-5 h-auto mx-2" 
+                    src="media/defaults/thumbsup.png" 
+                    alt="Turtle Thumbsup Image"
+                  >
               </div>
             </div>
 
