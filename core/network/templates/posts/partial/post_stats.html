@@ -1,7 +1,7 @@
-<div class="d-flex justify-content-start align-items-center px-3 py-2">
+<div class="d-flex justify-content-start align-items-center py-2">
 
   <a
-    class="btn btn-outline-danger border-0 p-0"
+    class="btn hover:scale-120 border-0 p-0"
     {% if request.user.is_authenticated %}
     hx-post="{% url 'post_like' post.id %}"
     hx-target="#post-like-stat-{{ post.id }}"
@@ -12,13 +12,19 @@
      hx-select="#auth-modal-content"
      @htmx:after-request="if($event.detail.successful) showModal = true;"
     {% endif %}
-  >
-      <span x-text="postLiked ? '❤️' : '🤍'"></span>
+  >   
+    
+    <img 
+      class="w-8 h-auto" 
+      :src="postLiked ? 'media/defaults/thumbsup.png': 'media/defaults/nothumbsup.png'" 
+      alt="Turtle Thumbsup Image"
+    >
+
   </a>
 
   <span 
     id="post-like-stat-{{ post.id }}"
-    class="text-muted ps-1"
+    class="fw-bold ps-1"
     x-text="postLikeStat"
   ></span>
 
