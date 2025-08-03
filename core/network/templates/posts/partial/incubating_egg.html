@@ -13,6 +13,7 @@
       $refs.incubatingEgg.remove();
     },
     hatching() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
         this.isHatching = true;
         this.startFadeEgg = true; {# Makes egg slowly fade away #}
     },
