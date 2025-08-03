@@ -37,12 +37,12 @@
   animation: fadePulseGlow 5s ease-out forwards;
 }
 
-/* Flame Pulse */
+/* Solar Pulse */
 .glow-scheme-0 {
-  --c1: #ffffff;
-  --c2: #ff4d00;
-  --c3: #ff0066;
-  --c4: #ffcc00;
+  --c1: #ffffcc;
+  --c2: #ffd700;
+  --c3: #ffcc00;
+  --c4: #ff9900;
 }
 
 /* Alien Signal */
@@ -61,12 +61,12 @@
   --c4: #66ffff;
 }
 
-/* Solar Flare */
+/* Flame Flare */
 .glow-scheme-3 {
-  --c1: #ffffcc;
-  --c2: #ffd700;
-  --c3: #ffcc00;
-  --c4: #ff9900;
+  --c1: #ffffff;
+  --c2: #ff4d00;
+  --c3: #ff0066;
+  --c4: #ffcc00;
 }
 
 /* Void Pulse */
