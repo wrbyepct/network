@@ -1,17 +1,17 @@
-<div 
-  id="post-list-comment-section-{{ post.id }}"
-  class="p-3 border-top">
-  {% if post.comment_count > 2 %}
 
-    <a 
-      class="text-decoration-none text-muted fs-6 d-block mb-3 cursor-pointer" 
-      hx-get="{% url 'post_modal' post.id %}"
-      hx-target="#modal-container"
-      @htmx:after-request="if($event.detail.successful) showModal = true;"
-      >See More</a>
+  {% if post.comment_count %}
+  
+    {% if post.comment_count > 2 %}
+      <a 
+        class="text-decoration-none text-muted fs-6 d-block mb-3 cursor-pointer" 
+        hx-get="{% url 'post_modal' post.id %}"
+        hx-target="#modal-container"
+        @htmx:after-request="if($event.detail.successful) showModal = true;"
+        >See More</a>
 
+    {% endif %}
+    {% for comment in post.latest_two_comments %}
+        {% include 'comments/comment.html' %}
+    {% endfor %}
+    
   {% endif %}
-  {% for comment in post.latest_two_comments %}
-      {% include 'comments/comment.html' %}
-  {% endfor %}
-</div>
