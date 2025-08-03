@@ -107,8 +107,12 @@
                 e.preventDefault();
                 return;
               };
-              e.target.reset();
+
             },
+            clearUpForm(e) {
+              e.target.reset();
+              this.resize(this.$refs.textarea);
+            }
           }"
           @form-error.window="() => { alert($event.detail.value); }"
          
