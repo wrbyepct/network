@@ -2,7 +2,7 @@
 
   <!-- Post Modal content -->
   <div 
-    class="w-4/5 h-9/10" 
+    class="h-[100vh] lg:w-4/5 lg:h-9/10" 
     x-data="{ close() { showModal = false; $el.remove(); } }"
     x-init="isPostDetail = true"
     @keydown.escape.window="close()"
