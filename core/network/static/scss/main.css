@@ -141,6 +141,6 @@
   }
 
   100% {
-    box-shadow: none;
+    box-shadow: 4px 4px 0px #a8a29e;
   }
 }
