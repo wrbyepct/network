@@ -326,3 +326,7 @@ The Plan: Implement Phase UX 2: The "Hatchery View"
       unique, "turtle-themed" identity. Implementing the "egg" card is a major step toward making the
       application feel distinct and engaging, moving it from a standard social network to a unique, gamified
       experience.
+
+
+ let's review the newest entry in FEATURE_IDEAS.md and JOURNAL.md, then look at the relevant files in   │
+│    our project, so that you can have an idea of what we are going to do next, no code  
