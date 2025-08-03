@@ -79,6 +79,11 @@ class IncubationService:
         )[0]
 
     @staticmethod
+    def check_special_egg(egg_url):
+        """Return true if it's a special egg type."""
+        return "special_eggs" in egg_url
+
+    @staticmethod
     def get_random_egg_url():
         """Return a random egg url."""
         egg_num = IncubationService.get_random_egg_img_index()

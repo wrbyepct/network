@@ -80,8 +80,16 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 
         egg_url = IncubationService.get_random_egg_url()
         IncubationService.incubate_post(self.object, egg_url)
+
+        is_special_egg = IncubationService.check_special_egg(egg_url)
+
+        egg_template = (
+            "posts/partial/special_egg_modal.html"
+            if is_special_egg
+            else "posts/partial/egg_modal.html"
+        )
         context = {"egg_url": egg_url}
-        resp = render(self.request, "posts/partial/egg_modal.html", context)
+        resp = render(self.request, egg_template, context)
         resp["HX-Trigger"] = "post-created"
         return resp
 
