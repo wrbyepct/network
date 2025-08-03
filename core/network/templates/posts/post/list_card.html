@@ -9,5 +9,12 @@
 {% endblock %}
 
 {% block comment_section %}
-  {% include 'posts/partial/post_list_comment_section.html' %}
+
+<div 
+  id="post-list-comment-section-{{ post.id }}"
+  {% if post.comment_count  %} class="p-3 border-t-2 border-b-2 border-stone-300" {% endif %}
+>
+{% include 'posts/partial/post_list_comment_section.html' %}  
+</div>
+
 {% endblock %}
