@@ -19,7 +19,34 @@
         <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     </head>
-    <body>
+    <body 
+      :class="showModal && 'overflow-hidden'"
+      hx-headers='{"x-csrftoken": "{{ csrf_token }}"}'
+      hx-ext="multi-swap"
+      hx-ext="response-targets"
+      x-data="{ 
+        showModal: false,
+        selectedMedia: null, 
+        clickedMedia: null,
+        resize(textarea) { 
+          textarea.style.height = 'auto'; 
+          textarea.style.height = textarea.scrollHeight + 'px'; 
+        },
+        preventEmptySubmit(e) {
+          if (this.$refs.textarea.value.trim() === '') {
+            e.preventDefault();
+            return;
+          };
+
+        },
+        clearUpForm(e) {
+          e.target.reset();
+          this.resize(this.$refs.textarea);
+        }
+      }"
+      @form-error.window="() => { alert($event.detail.value); }"
+    
+    >
       <!-- Nav bar -->
      <nav class="bg-[#A8D5A0] border-b-4 border-[#D2A679] px-4 py-2 font-mono"
             style="font-family: 'Press Start 2P', monospace; font-size: 10px; image-rendering: pixelated;">
@@ -89,52 +116,25 @@
             </div>
         </nav>
         
+    
+        {% block body %}
+        {% endblock %}
+    
+        <!-- Modal -->
         <div 
-          class="body"
-          hx-headers='{"x-csrftoken": "{{ csrf_token }}"}'
-          hx-ext="multi-swap"
-          hx-ext="response-targets"
-          x-data="{ 
-            showModal: false,
-            selectedMedia: null, 
-            clickedMedia: null,
-            resize(textarea) { 
-              textarea.style.height = 'auto'; 
-              textarea.style.height = textarea.scrollHeight + 'px'; 
-            },
-            preventEmptySubmit(e) {
-              if (this.$refs.textarea.value.trim() === '') {
-                e.preventDefault();
-                return;
-              };
-
-            },
-            clearUpForm(e) {
-              e.target.reset();
-              this.resize(this.$refs.textarea);
-            }
-          }"
-          @form-error.window="() => { alert($event.detail.value); }"
-         
-          >
-            {% block body %}
-            {% endblock %}
-        
-            <!-- Modal -->
-            <div 
-              id="modal-bg"
-              class="fixed inset-0 bg-black/60 backdrop-blur-sm
-                flex justify-center items-center z-50"
-              x-show="showModal"
-              x-cloak
-              x-transition
-              ><div 
-                id="modal-container" 
-                x-ref="modalContainer"
-                class="w-full h-full flex justify-center items-center"></div>
-            </div>
-
+          id="modal-bg"
+          class="fixed inset-0 bg-black/60 backdrop-blur-sm
+            flex justify-center items-center z-50"
+          x-show="showModal"
+          x-cloak
+          x-transition
+          ><div 
+            id="modal-container" 
+            x-ref="modalContainer"
+            class="overflow-y-auto w-full h-full flex justify-center items-center"></div>
         </div>
+
+       
         <!-- Bootstrap js -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
         <!-- htmx core -->
