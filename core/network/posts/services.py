@@ -60,14 +60,30 @@ class PostMediaService:
 class IncubationService:
     """Service for incubate a post."""
 
-    default_egg_url = "media/defaults/regular_eggs/egg5.gif"
+    default_egg_url = "media/defaults/regular_eggs/green.gif"
     EGG_TYPES = ["regular_eggs", "special_eggs"]
+    SPECIAL_EGGS = [
+        "volcano",
+        "rainbow",
+        "devil",
+        "angel",
+        "skull",
+        "swamp",
+        "yolk",
+        "star",
+        "sakura",
+        "cyber",
+        "universe",
+    ]
+    REGULAR_EGGS = ["ceal", "orange", "yellow", "red", "green", "ice", "purple"]
     WEIGHTS = [0.9, 0.1]
 
     @staticmethod
-    def get_random_egg_img_index():
+    def get_random_egg_name(egg_type):
         """Return random egg img url."""
-        return random.randint(0, 8)
+        if egg_type == "special_eggs":
+            return random.choice(IncubationService.SPECIAL_EGGS)
+        return random.choice(IncubationService.REGULAR_EGGS)
 
     @staticmethod
     def get_random_egg_type():
@@ -86,9 +102,9 @@ class IncubationService:
     @staticmethod
     def get_random_egg_url():
         """Return a random egg url."""
-        egg_num = IncubationService.get_random_egg_img_index()
         egg_type = IncubationService.get_random_egg_type()
-        return f"media/defaults/{egg_type}/egg{egg_num}.gif"
+        egg_name = IncubationService.get_random_egg_name(egg_type)
+        return f"media/defaults/{egg_type}/{egg_name}.gif"
 
     @staticmethod
     def incubate_post(post, egg_url):

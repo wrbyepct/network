@@ -134,11 +134,16 @@ class IncubatingEggView(LoginRequiredMixin, View):
         """Return incubating egg template."""
         post_id = IncubationService.get_incubating_post_id(request.user.id)
         egg_url = IncubationService.get_incubating_egg_url(request.user.id)
+        is_special_egg = IncubationService.check_special_egg(egg_url)
         if post_id:
             return render(
                 request,
                 "posts/partial/incubating_egg.html",
-                {"post_id": post_id, "egg_url": egg_url},
+                {
+                    "post_id": post_id,
+                    "egg_url": egg_url,
+                    "is_special_egg": is_special_egg,
+                },
             )
         msg = "The post has hatched. No egg to return."
         raise Http404(msg)
