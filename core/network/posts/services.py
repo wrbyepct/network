@@ -76,7 +76,7 @@ class IncubationService:
         "universe",
     ]
     REGULAR_EGGS = ["ceal", "orange", "yellow", "red", "green", "ice", "purple"]
-    WEIGHTS = [0.9, 0.1]
+    WEIGHTS = [0, 1]
 
     @staticmethod
     def get_random_egg_name(egg_type):
