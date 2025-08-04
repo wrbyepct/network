@@ -14,62 +14,112 @@
     }"
   {% endwith %}
   >
-  <!-- Header -->
-  <div class="card-body flex items-center font-mono">
-      <a href="{% url 'profile_about' post.username  %}">
-        <img src="{{ post.profile_picture_url }}" class="rounded-full w-15 h-15 object-cover me-3 border-4 border-emerald-500">
-      </a>
-      <div>
-          <h6 class="mb-0 text-lg text-stone-800">{{ post.username }}</h6>
-          <small class="text-muted">{{ post.created_at|timesince_simple }}</small>
-      </div>
-      <!-- Display which egg this post was born from -->
-      {% if post.born_from_egg %}
-      <div 
-        class="flex items-center justify-center ms-auto" 
-        style="font-family: 'Press Start 2P', monospace; font-size: 9px;">
-        <span 
-          class="{% if post.is_from_special_egg %} text-orange-500 {% else%} text-stone-500 {% endif%}">hatched from</span> 
-        <img class="w-15 cursor-pointer" src="{{ post.born_from_egg }}" alt="The Egg image the post is born from">
-      </div>
-      {% endif %}
-      {% if request.user.id == post.user.id %}
-          {% include 'posts/partial/dropdown.html' %}
-      {% endif %}
-  </div>
-  <!-- Content collapsable --> 
   <div 
+    {% if request.user == post.user %}
+    class="relative cursor-grab"
     x-data="{
-      collapse: true,
-      showMore: false,
-      init() {
-          $nextTick(() => this.checkClamp());
+      showEditAction: false,
+      pressTimer: null,
+      startPress() {
+        this.cancelPress();  // clear any existing timers
+        this.pressTimer = setTimeout(() => {
+          this.showEditAction = true;
+        }, 2000);  // 2 seconds
       },
-      checkClamp() {
-          const content = this.$refs.content;
-          this.showMore = content.scrollHeight > content.clientHeight;
-      },
+      cancelPress() {
+        clearTimeout(this.pressTimer);
+        this.pressTimer = null;
+      }
     }"
-    class="card-body">
-      <p 
-        class="mb-3"
-        x-ref="content"
-        :class="collapse && 'line-clamp-3'"
-        > {{ post.content|linebreaksbr }}</p>
-      
-        {% include 'common/collapse.html' %}
+    @mousedown="startPress" 
+    @touchstart="startPress"
+    @mouseup="cancelPress" 
+    @mouseleave="cancelPress"
+    @touchend="cancelPress"
+    {% endif  %}
+  >
+    {% if request.user == post.user %}
+    <!-- Edit/Delete Action backdrop -->
+    <div
+      x-show="showEditAction"
+      x-transition
+      x-cloak
+      class="absolute inset-0 backdrop-blur-sm bg-white/10 flex items-center justify-center cursor-grab">
+      <div class="flex space-x-4 bg-white/30 border-4 border-black rounded-md p-4 shadow-[4px_4px_0px_#000]">
+        <!-- Cancel Button (Top-Right) -->
+        <button 
+          class="absolute top-4 right-4 px-3 py-1 bg-yellow-400 text-black font-bold border-2 border-black rounded shadow-[2px_2px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] transition-transform"
+          @click="showEditAction = false"
+        >
+          X
+        </button>
+        <a 
+          href="{% url 'post_edit' post.id %}"
+          class="px-4 py-2 bg-emerald-500 text-white font-bold border-2 border-black rounded-md shadow-[2px_2px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] transition-transform"
+          style="text-decoration: none;">Edit</a>
+          <form 
+            hx-post="{% url 'post_delete' post.id %}"
+            hx-swap="none"
+            @htmx:after-request="window.location.href = '/'"
+            >
+            <button class="px-4 py-2 bg-red-500 text-white font-bold border-2 border-black rounded-md shadow-[2px_2px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] transition-transform">Delete</button>
+          </form>  
+      </div>
+    </div>
+    {% endif %}
+    <!-- Header -->
+    <div class="card-body flex items-center font-mono">
+        <a href="{% url 'profile_about' post.username  %}">
+          <img src="{{ post.profile_picture_url }}" class="rounded-full w-15 h-15 object-cover me-3 border-4 border-emerald-500">
+        </a>
+        <div>
+            <h6 class="mb-0 text-lg text-stone-800">{{ post.username }}</h6>
+            <small class="text-muted">{{ post.created_at|timesince_simple }}</small>
+        </div>
+        <!-- Display which egg this post was born from -->
+        {% if post.born_from_egg %}
+        <div 
+          class="flex items-center justify-center ms-auto" 
+          style="font-family: 'Press Start 2P', monospace; font-size: 9px;">
+          <span 
+            class="{% if post.is_from_special_egg %} text-orange-500 {% else%} text-stone-500 {% endif%}">hatched from</span> 
+          <img class="w-15 cursor-pointer" src="{{ post.born_from_egg }}" alt="The Egg image the post is born from">
+        </div>
+        {% endif %}
+    </div>
+    <!-- Content collapsable --> 
+    <div 
+      x-data="{
+        collapse: true,
+        showMore: false,
+        init() {
+            $nextTick(() => this.checkClamp());
+        },
+        checkClamp() {
+            const content = this.$refs.content;
+            this.showMore = content.scrollHeight > content.clientHeight;
+        },
+      }"
+      class="card-body">
+        <p 
+          class="mb-3"
+          x-ref="content"
+          :class="collapse && 'line-clamp-3'"
+          > {{ post.content|linebreaksbr }}</p>
+        
+          {% include 'common/collapse.html' %}
 
+    </div>
+    <!-- Post medias -->
+    {% block media_gallery %}
+    {% endblock %}
+    <!-- Like and comment stats -->
+    {% block post_stats %}
+    {% endblock %}
+    <!-- Like/Comment/Share -->
+    {% block actions_bar %}
+    {% endblock %}
   </div>
-  <!-- Post medias -->
-  {% block media_gallery %}
-  {% endblock %}
-  <!-- Like and comment stats -->
-  {% block post_stats %}
-  {% endblock %}
-  <!-- Like/Comment/Share -->
-  {% block actions_bar %}
-  {% endblock %}
-
   <!-- Comments - load first batch after load-->
   {% block comment_section %}
   {% endblock %}
