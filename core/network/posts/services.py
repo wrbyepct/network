@@ -1,6 +1,7 @@
 """Post Serives."""
 
 import random
+from pathlib import Path
 
 from django.core.cache import cache
 from django.db import transaction
@@ -76,7 +77,7 @@ class IncubationService:
         "universe",
     ]
     REGULAR_EGGS = ["ceal", "orange", "yellow", "red", "green", "ice", "purple"]
-    WEIGHTS = [0, 1]
+    WEIGHTS = [0.5, 0.5]
 
     @staticmethod
     def get_random_egg_name(egg_type):
@@ -105,6 +106,13 @@ class IncubationService:
         egg_type = IncubationService.get_random_egg_type()
         egg_name = IncubationService.get_random_egg_name(egg_type)
         return f"media/defaults/{egg_type}/{egg_name}.gif"
+
+    @staticmethod
+    def get_static_egg_img_path(egg_url):
+        """Change Egg extenstion to .png."""
+        file = Path(egg_url)
+
+        return file.with_suffix(".png")
 
     @staticmethod
     def incubate_post(post, egg_url):

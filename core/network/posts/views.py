@@ -72,13 +72,15 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         """Save images and videos to PostMedia if they are valid."""
         user = self.request.user
+        egg_url = IncubationService.get_random_egg_url()
+        egg_static_path = IncubationService.get_static_egg_img_path(egg_url)
         with transaction.atomic():
             form.instance.user = user
+            form.instance.born_from_egg = egg_static_path
             # Set a random publish_at time between 20 minutes and 24 hours from now
             super().form_valid(form)
             form.save_media(self.object)
 
-        egg_url = IncubationService.get_random_egg_url()
         IncubationService.incubate_post(self.object, egg_url)
 
         is_special_egg = IncubationService.check_special_egg(egg_url)
