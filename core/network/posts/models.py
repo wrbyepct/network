@@ -26,6 +26,13 @@ class Post(LikeCountMixin, ProfileInfoMixin, TimestampedModel):
     # TODO this is ephemeral data, consider implement it other ways like cache or something.
     celery_task_id = models.CharField(max_length=255, blank=True)
 
+    # Egg images that the post is born from
+    born_from_egg = models.CharField(
+        max_length=255,
+        help_text="Static path like 'media/images/egg.png'",
+        blank=True,
+    )
+
     objects = PostManager()
 
     class Meta(TimestampedModel.Meta):
@@ -59,6 +66,11 @@ class Post(LikeCountMixin, ProfileInfoMixin, TimestampedModel):
     def ordered_medias(self):
         """Get acending medias of this post."""
         return self.medias.all().order_by("order")
+
+    @cached_property
+    def is_from_special_egg(self):
+        """Return True if the post is born from a special egg."""
+        return "special_eggs" in self.born_from_egg
 
     def delete(self, *args, **kwargs):
         """Override delete method to revoke publish task."""
