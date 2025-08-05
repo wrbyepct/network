@@ -3,7 +3,7 @@
   x-data="{
     startFadeEgg: false,
     isHatching: false, {# Control egg hatching effect showing #}
-    glowStyleIndex: {{ is_special_egg|yesno:'true,false' }} ? Math.floor(Math.random() * 8) + 1 : 0,
+    glowStyleIndex: {{ is_special_egg|yesno:'true,false' }} ? Math.floor(Math.random() * 12) + 1 : 0,
     addGlowEffectToPost(postId) {
         const hatchedPost = document.getElementById(postId);
         hatchedPost.classList.add(`glow-scheme-${this.glowStyleIndex}`, 'post-pulsing-glow');
