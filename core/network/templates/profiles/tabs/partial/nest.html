@@ -1,0 +1,13 @@
+
+<div class="flex">
+    <div> For eggs collection </div>
+    {% for egg in profile.eggs %}
+        <div>{{ egg.is_special }}</div>
+        <div>{{ egg.name }}</div>
+        <img src="{{ egg.url }}" alt="">
+        <div>{{ egg.qnt }}</div>
+    {% else %}
+        <!-- Place holder for interesting information for user haven't got any eggs yet  -->
+    {% endfor %}
+    <div>Nest</div>
+</div>
