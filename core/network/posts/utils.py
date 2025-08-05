@@ -2,6 +2,7 @@
 
 import random
 from datetime import timedelta
+from pathlib import Path
 
 from django.utils import timezone
 
@@ -29,3 +30,9 @@ def get_random_timeout():
 def get_random_publish_time(timeout):
     """Return random publish time."""
     return timezone.now() + timedelta(seconds=timeout)
+
+
+def get_egg_name(egg_url):
+    """Return file name of an egg_url."""
+    path = Path(egg_url)
+    return path.stem
