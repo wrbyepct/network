@@ -10,6 +10,7 @@ from network.profiles.models import Profile
 
 from .managers import PostManager
 from .tasks import delete_task
+from .utils import get_egg_name
 from .validators import validate_publish_time
 
 
@@ -71,6 +72,11 @@ class Post(LikeCountMixin, ProfileInfoMixin, TimestampedModel):
     def is_from_special_egg(self):
         """Return True if the post is born from a special egg."""
         return "special_eggs" in self.born_from_egg
+
+    @cached_property
+    def egg_name(self):
+        """Get egg name."""
+        return get_egg_name(self.born_from_egg)
 
     def delete(self, *args, **kwargs):
         """Override delete method to revoke publish task."""

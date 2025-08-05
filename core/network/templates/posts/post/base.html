@@ -82,8 +82,11 @@
           class="flex items-center justify-center ms-auto" 
           style="font-family: 'Press Start 2P', monospace; font-size: 9px;">
           <span 
-            class="{% if post.is_from_special_egg %} text-orange-500 {% else%} text-stone-500 {% endif%}">hatched from</span> 
-          <img class="w-15 cursor-pointer" src="{{ post.born_from_egg }}" alt="The Egg image the post is born from">
+            class="{% if post.is_from_special_egg %} text-orange-500 {% else%} text-stone-500 {% endif%}">hatched from</span>
+          <div class="relative group">
+            {% include 'posts/partial/egg_toolkit.html' %}
+            <img class="w-15 cursor-pointer" src="{{ post.born_from_egg }}" alt="The Egg image the post is born from">
+          </div>
         </div>
         {% endif %}
     </div>
