@@ -70,14 +70,19 @@ class IncubationService:
         "angel",
         "skull",
         "swamp",
-        "yolk",
+        "golden",
+        "silver",
+        "thunder",
+        "bubble",
+        "lucky",
+        "candy",
         "star",
         "sakura",
         "cyber",
         "universe",
     ]
-    REGULAR_EGGS = ["ceal", "orange", "yellow", "red", "green", "ice", "purple"]
-    WEIGHTS = [0.5, 0.5]
+    REGULAR_EGGS = ["ceal", "orange", "yellow", "red", "green", "blue", "purple"]
+    WEIGHTS = [0.9, 0.1]
 
     @staticmethod
     def get_random_egg_name(egg_type):
