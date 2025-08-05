@@ -21,7 +21,7 @@ from network.common.mixins import RefererRedirectMixin
 
 from .forms import PostForm
 from .models import Post, PostLike, PostMedia
-from .services import IncubationService
+from .services import EggManageService, IncubationService
 from .utils import get_like_stat
 
 # Initialize Redis client
@@ -69,6 +69,16 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     form_class = PostForm
     success_url = reverse_lazy("index")
 
+    def get_response_template(self, egg_url):
+        """Return template based on if the egg is special or not."""
+        is_special_egg = IncubationService.check_special_egg(egg_url)
+
+        return (
+            "posts/partial/special_egg_modal.html"
+            if is_special_egg
+            else "posts/partial/egg_modal.html"
+        )
+
     def form_valid(self, form):
         """Save images and videos to PostMedia if they are valid."""
         user = self.request.user
@@ -82,14 +92,9 @@ class PostCreateView(LoginRequiredMixin, CreateView):
             form.save_media(self.object)
 
         IncubationService.incubate_post(self.object, egg_url)
-
-        is_special_egg = IncubationService.check_special_egg(egg_url)
-
-        egg_template = (
-            "posts/partial/special_egg_modal.html"
-            if is_special_egg
-            else "posts/partial/egg_modal.html"
-        )
+        EggManageService.create_egg_or_update_qnt(self.user, egg_url)
+        # Render Resposne
+        egg_template = self.get_response_template(egg_url)
         context = {"egg_url": egg_url}
         resp = render(self.request, egg_template, context)
         resp["HX-Trigger"] = "post-created"
