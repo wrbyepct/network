@@ -7,6 +7,7 @@ from django.utils.functional import cached_property
 from phonenumber_field.modelfields import PhoneNumberField
 
 from network.common.models import TimestampedModel
+from network.posts.utils import get_egg_name
 from network.tools.media import generate_file_path
 
 
@@ -68,3 +69,79 @@ class Profile(TimestampedModel, FollowMixin):
     def albums_count(self):
         """Return profile's albums count."""
         return self.albums.count()
+
+
+class SpecialEggChoices(models.TextChoices):
+    """Special egg choices."""
+
+    VOLCANO = "volcano", "Volcano"
+    RAINBOW = "rainbow", "Rainbow"
+    DEVIL = "devil", "Devil"
+    ANGEL = "angel", "Angel"
+    SKULL = "skull", "Skull"
+    SWAMP = "swamp", "Swamp"
+    GOLDEN = "golden", "Golden"
+    SILVER = "silver", "Silver"
+    THUNDER = "thunder", "Thunder"
+    BUBBLE = "bubble", "Bubble"
+    LUCKY = "lucky", "Lucky"
+    CANDY = "candy", "Candy"
+    STAR = "star", "Star"
+    SAKURA = "sakura", "Sakura"
+    CYBER = "cyber", "Cyber"
+    UNIVERSE = "universe", "Universe"
+
+
+class RegularEggChoices(models.TextChoices):
+    """Regular egg choices."""
+
+    CEAL = "ceal", "Ceal"
+    ORANGE = "orange", "Orange"
+    YELLOW = "yellow", "Yellow"
+    RED = "red", "Red"
+    GREEN = "green", "Green"
+    BLUE = "blue", "Blue"
+    PURPLE = "purple", "Purple"
+
+
+class Egg(models.Model):
+    """Base egg model."""
+
+    url = models.CharField(max_length=255)
+    quantity = models.PositiveSmallIntegerField(default=1)
+
+    class Meta:
+        abstract = True
+
+    def save(self, *args, **kwargs):
+        """Override to also save egg url."""
+        self.name = get_egg_name(self.url)
+
+        super().save(*args, **kwargs)
+
+
+class SpecialEgg(Egg):
+    """Special Egg model."""
+
+    name = models.CharField(max_length=20, choices=SpecialEggChoices)
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="special_eggs"
+    )
+
+    def __str__(self) -> str:
+        """Return special egg name."""
+        return f"Special egg: {self.name}"
+
+
+class RegularEgg(Egg):
+    """Special Egg model."""
+
+    name = models.CharField(max_length=20, choices=RegularEggChoices)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="regular_eggs"
+    )
+
+    def __str__(self) -> str:
+        """Return regular egg name."""
+        return f"regular egg: {self.name}"

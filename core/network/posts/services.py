@@ -5,7 +5,9 @@ from pathlib import Path
 
 from django.core.cache import cache
 from django.db import transaction
-from django.db.models import Max
+from django.db.models import F, Max
+
+from core.network.profiles.models import RegularEgg, SpecialEgg
 
 from .models import PostMedia
 from .tasks import assign_publish_task
@@ -164,3 +166,21 @@ class IncubationService:
     def cache_key(user_id, suffix):
         """Incubation cache key."""
         return f"incubating:{suffix}:{user_id}"
+
+
+class EggManageService:
+    """Egg Create or update service."""
+
+    @staticmethod
+    def create_egg_or_update_qnt(user, egg_url):
+        """Create egg associated with user or update the egg quantity."""
+        is_special_egg = IncubationService.check_special_egg(egg_url)
+        # Associaed egg with user
+        if is_special_egg:
+            egg, created = SpecialEgg.objects.get_or_create(user=user, url=egg_url)
+        else:
+            egg, created = RegularEgg.objects.get_or_create(user=user, url=egg_url)
+
+        if not created:
+            egg.quantity = F("quantity") + 1
+            egg.save()
