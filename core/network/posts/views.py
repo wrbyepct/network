@@ -83,7 +83,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
         """Save images and videos to PostMedia if they are valid."""
         user = self.request.user
         egg_url = IncubationService.get_random_egg_url()
-        egg_static_path = IncubationService.get_static_egg_img_path(egg_url)
+        egg_static_path = EggManageService.get_static_egg_img_path(egg_url)
         with transaction.atomic():
             form.instance.user = user
             form.instance.born_from_egg = egg_static_path
@@ -92,7 +92,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
             form.save_media(self.object)
 
         IncubationService.incubate_post(self.object, egg_url)
-        EggManageService.create_egg_or_update_qnt(self.user, egg_url)
+        EggManageService.create_egg_or_update_qnt(self.request.user, egg_static_path)
         # Render Resposne
         egg_template = self.get_response_template(egg_url)
         context = {"egg_url": egg_url}

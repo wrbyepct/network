@@ -1,13 +1,37 @@
 
-<div class="flex">
-    <div> For eggs collection </div>
-    {% for egg in profile.eggs %}
-        <div>{{ egg.is_special }}</div>
-        <div>{{ egg.name }}</div>
-        <img src="{{ egg.url }}" alt="">
-        <div>{{ egg.qnt }}</div>
-    {% else %}
-        <!-- Place holder for interesting information for user haven't got any eggs yet  -->
-    {% endfor %}
-    <div>Nest</div>
+<div class="flex container">
+    <div class="grow">
+
+      <div class="p-4">
+        <div>Special Egg:</div>
+          {% for egg in special_eggs %}
+            <div class="flex">
+                <span>{{ egg.name|title }}</span>
+                <img class="w-12" src="{{ egg.url }}" alt="">
+                <span>X {{ egg.quantity }}</span>
+            </div>
+          {% empty %}
+              <!-- Place holder for interesting information for user haven't got any eggs yet  -->
+            <div>No special eggs yet!</div> 
+          {% endfor %}
+      </div>
+      <hr>
+      <div class="p-4">
+        <div>Regular Egg:</div>
+          {% for egg in regular_eggs %}
+              <div class="flex items-center">
+                  <span>{{ egg.name|title }}</span>
+                  <img class="w-12" src="{{ egg.url }}" alt="">
+                  <span>X {{ egg.quantity }}</span>
+              </div>
+          {% empty %}
+              <!-- Place holder for interesting information for user haven't got any eggs yet  -->
+              <div>No regular eggs yet!</div> 
+          {% endfor %}
+      </div>
+
+    </div>
+
+
+    <div class="border-4 flex justify-center items-center p-4 grow"><span>Nest</span></div>
 </div>

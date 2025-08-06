@@ -13,6 +13,11 @@ urlpatterns = [
         name="profile_about",
     ),
     path(
+        "<str:username>/nest/",
+        views.NestView.as_view(),
+        name="profile_nest",
+    ),
+    path(
         "<str:username>/followers/",
         views.FollowersView.as_view(),
         name="profile_followers",
