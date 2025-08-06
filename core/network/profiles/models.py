@@ -7,7 +7,6 @@ from django.utils.functional import cached_property
 from phonenumber_field.modelfields import PhoneNumberField
 
 from network.common.models import TimestampedModel
-from network.posts.utils import get_egg_name
 from network.tools.media import generate_file_path
 
 
@@ -115,7 +114,9 @@ class Egg(models.Model):
 
     def save(self, *args, **kwargs):
         """Override to also save egg url."""
-        self.name = get_egg_name(self.url)
+        from network.posts.services import EggManageService
+
+        self.name = EggManageService.get_egg_name(self.url)
 
         super().save(*args, **kwargs)
 

@@ -27,6 +27,7 @@ class ProfileTabsBaseMixin:
 
     def dispatch(self, request, *args, **kwargs):
         """Save requesting profile obj and HX-Request for later use."""
+        # TODO refector this using django htmx later
         self.is_partial_request = bool(request.headers.get("HX-Request", False))
         self.profile = get_object_or_404(Profile, username=kwargs.get("username"))
         return super().dispatch(request, *args, **kwargs)
@@ -120,6 +121,21 @@ class PostsView(ProfileTabsBaseMixin, ListView):
     def get_queryset(self):
         """Get prefetched post queryset."""
         return Post.objects.for_list_data().by_user(user=self.profile.user)
+
+
+class NestView(ProfileTabsBaseMixin, TemplateView):
+    """Profile nest view that handles partial and full request."""
+
+    current_tab = "nest"
+
+    def get_context_data(self, **kwargs):
+        """Inject user eggs into context."""
+        context = super().get_context_data(**kwargs)
+        special_eggs = self.profile.user.special_eggs.all()
+        regular_eggs = self.profile.user.regular_eggs.all()
+        context["special_eggs"] = special_eggs
+        context["regular_eggs"] = regular_eggs
+        return context
 
 
 class AboutView(ProfileTabsBaseMixin, TemplateView):
