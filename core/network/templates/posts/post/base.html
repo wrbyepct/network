@@ -5,6 +5,7 @@
   class="flex flex-col bg-stone-100 rounded-md border-4 border-stone-600 shadow-[4px_4px_0px_#a8a29e] p-4 transition-transform duration-200 ease-in-out hover:-translate-y-1 h-full"
   {% with post_liked=post|liked_by_user:request.user %}
     x-data="{
+      justHatched: false,
       commentBody: '', 
       replying: false,
       commentCount: {{ post.comment_count }},
@@ -13,6 +14,14 @@
       postLikeStat: '{{ post.like_count|like_stat_str:post_liked }}',
     }"
   {% endwith %}
+    x-init="(() => {
+        if (window.location.hash === '#{{ post.id }}') {
+          justHatched = true;
+          $el.scrollIntoView({ behavior: 'smooth' });
+          setTimeout(() => justHatched = false, 2000); // auto-remove animation flag
+        }
+    })()"
+    :class="justHatched && 'hatched-post-glow'"
   >
   <div 
     {% if request.user == post.user %}
@@ -36,6 +45,7 @@
     @mouseup="cancelPress" 
     @mouseleave="cancelPress"
     @touchend="cancelPress"
+    :
     {% endif  %}
   >
     {% if request.user == post.user %}
