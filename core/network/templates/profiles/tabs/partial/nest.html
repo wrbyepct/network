@@ -55,22 +55,29 @@
 
     <!-- Hatch Message -->
     <div 
+      x-data="{
+        hatchedPostId: null,
+      }"
       x-show="postHatched"
       x-cloak
       x-transition:enter="transition-opacity duration-700"
       x-transition:enter-start="opacity-0"
       x-transition:enter-end="opacity-100"
-      @post-hatched.window="postHatched = true; console.log($event.detail.postId)"
+      @post-hatched.window="postHatched = true; hatchedPostId = ($event.detail.postId)"
       class="text-center flex flex-col items-center gap-3"
     >
       <span class="text-green-700 font-bold text-md bg-white px-4 py-2 rounded-xl border-4 border-green-500 shadow-[4px_4px_0_#166534]">
-        🎉 Your turtle just hatched!
+        🎉 A cute turtle just hatched!
       </span>
-      <button 
+      {% if request.user == profile.user %}
+      <a 
+        :href="`{% url 'index' %}#${hatchedPostId}`"
         class="bg-emerald-300 border-4 border-emerald-800 text-white px-4 py-2 rounded-xl font-bold shadow-[2px_2px_0_#065f46] hover:scale-105 transition-transform"
+        style="text-decoration: none;"
       >
         🐢 Show me my baby!
-      </button>
+      </a>
+      {% endif %}
     </div>
   </div>
 
