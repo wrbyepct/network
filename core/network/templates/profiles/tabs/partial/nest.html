@@ -2,33 +2,25 @@
 <div class="flex container">
     <div class="grow">
 
-      <div class="p-4">
-        <div>Special Egg:</div>
-          {% for egg in special_eggs %}
-            <div class="flex">
+      
+      {% for egg_type in eggs %}
+        <div class="p-4">
+          <div>{{ egg_type.name|title }} Egg:</div>
+            {% for egg in egg_type.eggs %}
+            <div class="flex items-center justify-between">
                 <span>{{ egg.name|title }}</span>
-                <img class="w-12" src="{{ egg.url }}" alt="">
-                <span>X {{ egg.quantity }}</span>
-            </div>
-          {% empty %}
-              <!-- Place holder for interesting information for user haven't got any eggs yet  -->
-            <div>No special eggs yet!</div> 
-          {% endfor %}
-      </div>
-      <hr>
-      <div class="p-4">
-        <div>Regular Egg:</div>
-          {% for egg in regular_eggs %}
-              <div class="flex items-center">
-                  <span>{{ egg.name|title }}</span>
+                <div class="flex items-center">
                   <img class="w-12" src="{{ egg.url }}" alt="">
                   <span>X {{ egg.quantity }}</span>
-              </div>
-          {% empty %}
+                </div>
+        
+            </div>
+            {% empty %}
               <!-- Place holder for interesting information for user haven't got any eggs yet  -->
-              <div>No regular eggs yet!</div> 
-          {% endfor %}
-      </div>
+            <div>No special eggs yet!</div> 
+            {% endfor%}
+        </div>
+      {% endfor %}
 
     </div>
 

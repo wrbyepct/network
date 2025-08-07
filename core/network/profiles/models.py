@@ -103,7 +103,7 @@ class RegularEggChoices(models.TextChoices):
     PURPLE = "purple", "Purple"
 
 
-class Egg(models.Model):
+class Egg(TimestampedModel):
     """Base egg model."""
 
     url = models.CharField(max_length=255)
