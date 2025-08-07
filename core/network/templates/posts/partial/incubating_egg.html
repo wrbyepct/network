@@ -1,12 +1,13 @@
 <div 
+  id="incubating-egg"
   x-ref="incubatingEgg"
   x-data="{
     startFadeEgg: false,
     isHatching: false, {# Control egg hatching effect showing #}
     glowStyleIndex: {{ is_special_egg|yesno:'true,false' }} ? Math.floor(Math.random() * 12) + 1 : 0,
     addGlowEffectToPost(postId) {
-        const hatchedPost = document.getElementById(postId);
-        hatchedPost.classList.add(`glow-scheme-${this.glowStyleIndex}`, 'post-pulsing-glow');
+      const hatchedPost = document.getElementById(postId);
+      hatchedPost.classList.add(`glow-scheme-${this.glowStyleIndex}`, 'post-pulsing-glow');
     },
     removeEgg() {
       isIncubating = false;
@@ -35,19 +36,14 @@
     }
   }" 
   x-init="waitForHatchingEvent()"
-  
-  hx-get="{% url 'hatched_post' post_id %}"
-  hx-trigger="post-hatched"
-  hx-target="#published-posts"
-  hx-swap="afterbegin"
-  @htmx:after-request="addGlowEffectToPost('{{post_id}}');  removeEgg();"
+
 >
    
     <div 
         class="relative"
         x-show="!startFadeEgg"
         x-transition:leave="transition delay-[5s] ease-in duration-5000 opacity-0"
-        @transitionend=" if(event.target === $el)  $dispatch('post-hatched');"
+        @transitionend=" if(event.target === $el)  $dispatch('post-hatched'); removeEgg();"
        >
        <!-- Glow effect placeholder -->
         <div 
@@ -65,4 +61,14 @@
         >
     </div>
 
+</div>
+
+
+<div
+  id="fetch-hached-post"
+  hx-get="{% url 'hatched_post' post_id %}"
+  hx-trigger="post-hatched from:window"
+  hx-target="#published-posts"
+  hx-swap="afterbegin"
+  @htmx:after-request="addGlowEffectToPost('{{post_id}}');">
 </div>

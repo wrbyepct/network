@@ -133,8 +133,12 @@ class NestView(ProfileTabsBaseMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         special_eggs = self.profile.user.special_eggs.all()
         regular_eggs = self.profile.user.regular_eggs.all()
-        context["special_eggs"] = special_eggs
-        context["regular_eggs"] = regular_eggs
+        eggs = [
+            {"name": "special", "eggs": special_eggs},
+            {"name": "regular", "eggs": regular_eggs},
+        ]
+        context["eggs"] = eggs
+
         return context
 
 
