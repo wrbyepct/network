@@ -43,7 +43,7 @@
         class="relative"
         x-show="!startFadeEgg"
         x-transition:leave="transition delay-[5s] ease-in duration-5000 opacity-0"
-        @transitionend=" if(event.target === $el)  $dispatch('post-hatched'); removeEgg();"
+        @transitionend=" if(event.target === $el)  $dispatch('post-hatched', { postId: '{{ post_id }}'} ); "
        >
        <!-- Glow effect placeholder -->
         <div 
@@ -61,14 +61,14 @@
         >
     </div>
 
-</div>
-
-
-<div
-  id="fetch-hached-post"
-  hx-get="{% url 'hatched_post' post_id %}"
-  hx-trigger="post-hatched from:window"
-  hx-target="#published-posts"
-  hx-swap="afterbegin"
-  @htmx:after-request="addGlowEffectToPost('{{post_id}}');">
+    <template x-if="onListPage">
+      <div
+        id="fetch-hached-post"
+        hx-get="{% url 'hatched_post' post_id %}"
+        hx-trigger="post-hatched from:window"
+        hx-target="#published-posts"
+        hx-swap="afterbegin"
+        @htmx:after-request="addGlowEffectToPost('{{post_id}}'); removeEgg();">
+      </div>
+    </template>
 </div>
