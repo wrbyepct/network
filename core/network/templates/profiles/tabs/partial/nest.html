@@ -1,84 +1,294 @@
+<!-- Turtle Nest Collection Page - Phase 1 Implementation -->
+<div class="min-h-screen bg-gradient-to-b from-blue-50 to-green-50 p-6">
+  <div class="max-w-6xl mx-auto">
+    
+    <!-- Page Header -->
+    <div class="text-center mb-8">
+      <h1 class="text-4xl font-bold text-green-800 mb-2 font-mono">🐢 Your Turtle Sanctuary 🐢</h1>
+      <p class="text-green-600">Explore your egg collection and check your nest</p>
+    </div>
 
-<div class="flex container">
-    <div class="grow">
-
+    <div class="flex flex-col lg:flex-row gap-8">
       
-    {% for egg_type in eggs %}
-     <div class="p-4">
-      <div class="text-lg font-bold mb-2 text-emerald-900 border-b-2 border-dotted border-emerald-300">
-        {{ egg_type.name|title }} Eggs
-      </div>
+      <!-- Left Side - Egg Collection Museum -->
+      <div class="flex-1 bg-amber-50 border-4 border-amber-600 rounded-xl p-6 shadow-[8px_8px_0px_#d97706]">
+        <div class="flex items-center mb-6">
+          <span class="text-2xl mr-3">🗿</span>
+          <h2 class="text-2xl font-bold text-amber-800 font-mono">Egg Collection</h2>
+        </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {% for egg in egg_type.eggs %}
-          <div class="bg-amber-100 border-4 border-emerald-600 rounded-xl p-3 flex items-center gap-3 shadow-[4px_4px_0_#25422a] hover:scale-105 transition-transform duration-200">
-            <img class="w-12 h-12 object-contain pixelated" src="{{ egg.url }}" alt="">
-            <div class="flex-1">
-              <div class="text-md font-bold text-emerald-800">{{ egg.name|title }}</div>
-              <div class="text-sm text-gray-600">× {{ egg.quantity }}</div>
+        <!-- Django Template Loop Implementation -->
+        {% if eggs %}
+          <div class="space-y-6">
+            {% for egg_type in eggs %}
+              <div class="egg-type-section">
+                <div class="flex items-center mb-4">
+                  {% if egg_type.name == 'special' %}
+                    <span class="text-lg mr-2">✨</span>
+                    <h class="text-xl font-semibold text-purple-700">Legendary Eggs:</h3>
+                  {% else %}
+                    <span class="text-lg mr-2">🥚</span>
+                    <h3 class="text-xl font-semibold text-amber-700">Cute Eggs:</h3>
+                  {% endif %}
+                </div>
+                
+                {% if egg_type.eggs %}
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {% for egg in egg_type.eggs %}
+                      <div class="{% if egg_type.name == 'special' %}bg-gradient-to-br from-purple-100 to-indigo-100 border-3 border-purple-500{% else %}bg-white border-3 border-amber-500{% endif %} rounded-lg p-4 hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer group relative overflow-hidden">
+                        
+                        {% if egg_type.name == 'special' %}
+                          <!-- Magical glow effect for special eggs -->
+                          <div class="absolute inset-0 bg-gradient-to-r from-purple-400/10 to-indigo-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        {% endif %}
+                        
+                        <div class="relative flex items-center justify-between">
+                          <span class="font-medium {% if egg_type.name == 'special' %}text-purple-800 group-hover:text-purple-900{% else %}text-amber-800 group-hover:text-amber-900{% endif %}">
+                            {{ egg.name|title }}
+                          </span>
+                          <div class="flex items-center space-x-2">
+                            <div class="relative">
+                              <img class="w-12 h-12 pixel-art-egg {% if egg_type.name == 'special' %}special-egg-glow{% endif %}" 
+                                   src="{{ egg.url }}" 
+                                   alt="{{ egg.name|title }}">
+                              <div class="absolute inset-0 rounded-full {% if egg_type.name == 'special' %}bg-purple-300{% else %}bg-green-200{% endif %} opacity-0 group-hover:opacity-30 transition-opacity duration-200"></div>
+                            </div>
+                            <span class="{% if egg_type.name == 'special' %}bg-gradient-to-r from-purple-200 to-indigo-200 text-purple-800 border-2 border-purple-400{% else %}bg-amber-200 text-amber-800 border-2 border-amber-400{% endif %} px-2 py-1 rounded-full text-sm font-bold">
+                              × {{ egg.quantity }}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    {% endfor %}
+                  </div>
+                {% else %}
+                  <!-- Empty state for this egg type -->
+                  <div class="text-center py-8 {% if egg_type.name == 'special' %}bg-purple-50 border-2 border-purple-200{% else %}bg-amber-50 border-2 border-amber-200{% endif %} rounded-lg border-dashed">
+                    <div class="mb-3">
+                      <span class="text-4xl">🐢</span>
+                    </div>
+                    <p class="{% if egg_type.name == 'special' %}text-purple-600{% else %}text-amber-600{% endif %} text-sm">
+                      No {{ egg_type.name }} eggs yet!
+                    </p>
+                  </div>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <!-- Global empty state when no eggs at all -->
+          <div class="text-center py-12">
+            <div class="mb-4">
+              <span class="text-6xl">🐢</span>
+            </div>
+            <h3 class="text-xl font-semibold text-amber-700 mb-2">No Eggs Yet!</h3>
+            <p class="text-amber-600 mb-4">Your collection is waiting for the first magical egg...</p>
+            <div class="text-sm text-amber-500">
+              💡 Create posts to discover eggs in your journey!
             </div>
           </div>
-        {% empty %}
-          <div class="col-span-full flex flex-col items-center justify-center bg-sky-50 rounded-lg p-6 text-center border-4 border-dashed border-sky-400">
-            <img src="" class="w-16 h-16 pixelated mb-2" alt="Empty Nest">
-            <div class="font-bold text-gray-700">No {{ egg_type.name }} eggs yet!</div>
-            <div class="text-xs text-gray-500 italic">Maybe try swimming in the community pond?</div>
-          </div>
-        {% endfor %}
+        {% endif %}
       </div>
-    </div>
 
-      {% endfor %}
+      <!-- Right Side - Sacred Nesting Grounds -->
+      <div class="flex-1">
+        <div 
+          class="bg-green-50 border-4 border-green-600 rounded-xl p-6 shadow-[8px_8px_0px_#16a34a] min-h-120"
+          x-data="{ 
+            isIncubating: {{ is_incubating|yesno:'true,false' }},
+            postHatched: false,
+            onListPage: false,
+          }">
+          
+          <!-- Nest Title -->
+          <div class="text-center mb-6">
+            <div class="flex items-center justify-center mb-2">
+              <h2 class="text-2xl font-bold text-green-800 font-mono">{{ profile.username }}'s Nest</h2>
+            </div>
+          </div>
 
-    </div>
+          <!-- Nest Container -->
+          <div class="flex flex-col items-center justify-center h-64 relative">
+            
 
+            <!-- Incubating State -->
+            <div 
+                 x-transition:enter="transition ease-out duration-500"
+                 x-transition:enter-start="opacity-0 scale-95"
+                 x-transition:enter-end="opacity-100 scale-100"
+                 class="text-center">
+              
+              <!-- Active Nest with Egg -->
+              <div class="flex justify-center mb-8 mt-18">
+                <div class="w-48 h-52 bg-gradient-to-b from-amber-200 to-amber-400 rounded-full border-4 border-amber-600 shadow-inner relative overflow-hidden nest-glow">
+                  <!-- Nest texture -->
+                  <div class="absolute inset-2 bg-amber-300 rounded-full"></div>
+                  <div class="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-16 h-8 bg-amber-500 rounded-full"></div>
+                  
+                  <!-- Incubating Egg in Nest -->
+                  <div
+                    id="egg-nest" 
+                    class="absolute w-full flex justify-center top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-3/5">
+                    <img class="w-40 h-40 animate-pulse" 
+                         src="data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cellipse cx='24' cy='26' rx='12' ry='16' fill='%23fef3c7'/%3E%3Cellipse cx='24' cy='26' rx='8' ry='12' fill='%23fde047'/%3E%3C/svg%3E" 
+                         alt="Incubating Egg">
+                  </div>
+                  
+                  <!-- Warm glow particles -->
+                  <div class="absolute top-2 left-8 w-1 h-1 bg-yellow-400 rounded-full animate-ping"></div>
+                  <div class="absolute top-4 right-8 w-1 h-1 bg-orange-400 rounded-full animate-ping" style="animation-delay: 0.5s;"></div>
+                </div>
+                
+              </div>
+              
+              <template x-if="isIncubating">
+                <div>
+                  <h3 class="text-lg font-semibold text-green-700 mb-2">Egg Incubating...</h3>
+                  <p class="text-green-600 text-sm mb-4">Your egg is warming up in the cozy nest</p>
+                  <p class="text-xs text-green-500 mt-2">Hatching in progress...</p>
+                </div>
+              </template>
+              <template x-if="!isIncubating">
+                <div>
+                  <h3 class="text-lg font-semibold text-green-700 mb-2">Nest is Empty</h3>
+                  <p class="text-green-600 text-sm">Your cozy nest awaits the next precious egg...</p>
+                </div>
+              </template>
+              
+              <!-- HTMX Integration Point -->
+              <div x-effect="if(isIncubating) $nextTick(() => $dispatch('egg-fetch-ready'))"
+                   hx-get="{% url 'egg' %}"
+                   hx-target="#egg-nest"
+                   hx-trigger="egg-fetch-ready"
+                   hx-swap="innerHTML"
+                   @post-hatched.window="postHatched = true; console.log($event.detail.postId)"
+                  >
+              </div>
+            </div>
 
-    <div 
-      class="grow border-4 border-amber-600 bg-yellow-50 rounded-2xl flex flex-col justify-center items-center p-6 gap-6 shadow-[6px_6px_0_#a16207]"
-      x-data="{ 
-        isIncubating: {{ is_incubating|yesno:'true,false' }},
-        postHatched: false 
-      }"
-    >
-  <div class="text-lg font-bold text-amber-900 uppercase tracking-wide">🐢 Nest Incubator</div>
+            <!-- Post Hatched State -->
+            <div x-show="postHatched"
+                 x-cloak
+                 x-transition:enter="transition ease-out duration-800 transform"
+                 x-transition:enter-start="opacity-0 scale-90 rotate-12"
+                 x-transition:enter-end="opacity-100 scale-100 rotate-0"
+                 class="text-center">
+              
+              <!-- Celebration Scene -->
+              <div class="relative mb-6">
+                <div class="w-32 h-20 bg-gradient-to-b from-amber-200 to-amber-400 rounded-full border-4 border-amber-600 shadow-inner relative overflow-hidden">
+                  <!-- Empty nest after hatching -->
+                  <div class="absolute inset-2 bg-amber-300 rounded-full"></div>
+                  
+                  <!-- Eggshell pieces -->
+                  <div class="absolute top-6 left-8 w-3 h-2 bg-white border border-gray-300 rounded transform rotate-12"></div>
+                  <div class="absolute top-8 right-10 w-2 h-3 bg-white border border-gray-300 rounded transform -rotate-12"></div>
+                </div>
+                
+                <!-- Excited turtle -->
+                <div class="absolute -right-16 top-1/2 transform -translate-y-1/2">
+                  <span class="text-3xl animate-bounce">🐢</span>
+                </div>
+                
+                <!-- Celebration particles -->
+                <div class="absolute top-0 left-1/2 transform -translate-x-1/2">
+                  <span class="text-2xl animate-ping">🎉</span>
+                </div>
+              </div>
+              
+              <h3 class="text-xl font-bold text-green-700 mb-3">🎊 Your Turtle Hatched! 🎊</h3>
+              <p class="text-green-600 mb-6">Congratulations! Your patience has been rewarded.</p>
+              
+              <button class="bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold py-3 px-6 rounded-lg hover:from-green-600 hover:to-emerald-700 transform hover:scale-105 transition-all duration-200 shadow-[4px_4px_0px_#16a34a]"
+                      @click="postHatched = false; isIncubating = false">
+                🐢 Meet My Baby Turtle! 🐢
+              </button>
+            </div>
 
-    <!-- Egg Slot -->
-    <div class="relative w-45 h-45 bg-amber-200 border-4 border-dashed border-amber-500 rounded-full flex items-center justify-center"
-        x-effect="if (isIncubating) $nextTick(() => $dispatch('egg-fetch-ready'))"
-        hx-get="{% url 'egg' %}"
-        hx-target="this"
-        hx-trigger="egg-fetch-ready"
-        hx-swap="innerHTML"
-    >
-   
-    </div>
+          </div>
+        </div>
 
-    <!-- Hatch Message -->
-    <div 
-      x-data="{
-        hatchedPostId: null,
-      }"
-      x-show="postHatched"
-      x-cloak
-      x-transition:enter="transition-opacity duration-700"
-      x-transition:enter-start="opacity-0"
-      x-transition:enter-end="opacity-100"
-      @post-hatched.window="postHatched = true; hatchedPostId = ($event.detail.postId)"
-      class="text-center flex flex-col items-center gap-3"
-    >
-      <span class="text-green-700 font-bold text-md bg-white px-4 py-2 rounded-xl border-4 border-green-500 shadow-[4px_4px_0_#166534]">
-        🎉 A cute turtle just hatched!
-      </span>
-      {% if request.user == profile.user %}
-      <a 
-        :href="`{% url 'index' %}#${hatchedPostId}`"
-        class="bg-emerald-300 border-4 border-emerald-800 text-white px-4 py-2 rounded-xl font-bold shadow-[2px_2px_0_#065f46] hover:scale-105 transition-transform"
-        style="text-decoration: none;"
-      >
-        🐢 Show me my baby!
-      </a>
-      {% endif %}
+        <!-- Quick Actions Panel -->
+        <div class="mt-6 bg-blue-50 border-4 border-blue-400 rounded-xl p-4 shadow-[4px_4px_0px_#3b82f6]">
+          <h3 class="text-lg font-semibold text-blue-700 mb-3 flex items-center">
+            <span class="mr-2">⚡</span>
+            Quick Actions
+          </h3>
+          <div class="grid grid-cols-2 gap-3">
+            <button class="bg-blue-200 hover:bg-blue-300 text-blue-800 font-medium py-2 px-4 rounded-lg transition-colors duration-200 text-sm border-2 border-blue-400">
+              🌊 Visit Pond
+            </button>
+            <button class="bg-blue-200 hover:bg-blue-300 text-blue-800 font-medium py-2 px-4 rounded-lg transition-colors duration-200 text-sm border-2 border-blue-400">
+              ✍️ Create Post
+            </button>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
-
 </div>
+
+<!-- Custom Styles -->
+<style>
+/* Pixel Art Egg Styling */
+.pixel-art-egg {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+/* Special Egg Glow Effect */
+.special-egg-glow {
+  animation: special-egg-pulse 2s ease-in-out infinite alternate;
+  filter: drop-shadow(0 0 8px rgba(147, 51, 234, 0.4));
+}
+
+@keyframes special-egg-pulse {
+  0% { 
+    filter: drop-shadow(0 0 8px rgba(147, 51, 234, 0.4)); 
+    transform: scale(1);
+  }
+  100% { 
+    filter: drop-shadow(0 0 12px rgba(99, 102, 241, 0.6)); 
+    transform: scale(1.05);
+  }
+}
+
+/* Nest Glow Effect */
+.nest-glow {
+  animation: nest-warmth 3s ease-in-out infinite alternate;
+}
+
+@keyframes nest-warmth {
+  0% { box-shadow: 0 0 15px rgba(251, 191, 36, 0.3); }
+  100% { box-shadow: 0 0 25px rgba(251, 191, 36, 0.5); }
+}
+
+/* Hover effect for egg cards */
+.egg-type-section .group:hover .pixel-art-egg {
+  animation: egg-bob 0.6s ease-in-out;
+}
+
+@keyframes egg-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .flex-col.lg\\:flex-row {
+    flex-direction: column;
+  }
+}
+
+/* Button press effect */
+button:active {
+  transform: scale(0.98);
+}
+
+/* Smooth transitions for all interactive elements */
+* {
+  transition: transform 0.2s ease;
+}
+</style>
