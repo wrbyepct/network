@@ -3,54 +3,75 @@
     <div class="grow">
 
       
-      {% for egg_type in eggs %}
-        <div class="p-4">
-          <div>{{ egg_type.name|title }} Egg:</div>
-            {% for egg in egg_type.eggs %}
-            <div class="flex items-center justify-between">
-                <span>{{ egg.name|title }}</span>
-                <div class="flex items-center">
-                  <img class="w-12" src="{{ egg.url }}" alt="">
-                  <span>X {{ egg.quantity }}</span>
-                </div>
-        
+    {% for egg_type in eggs %}
+     <div class="p-4">
+      <div class="text-lg font-bold mb-2 text-emerald-900 border-b-2 border-dotted border-emerald-300">
+        {{ egg_type.name|title }} Eggs
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {% for egg in egg_type.eggs %}
+          <div class="bg-amber-100 border-4 border-emerald-600 rounded-xl p-3 flex items-center gap-3 shadow-[4px_4px_0_#25422a] hover:scale-105 transition-transform duration-200">
+            <img class="w-12 h-12 object-contain pixelated" src="{{ egg.url }}" alt="">
+            <div class="flex-1">
+              <div class="text-md font-bold text-emerald-800">{{ egg.name|title }}</div>
+              <div class="text-sm text-gray-600">× {{ egg.quantity }}</div>
             </div>
-            {% empty %}
-              <!-- Place holder for interesting information for user haven't got any eggs yet  -->
-            <div>No special eggs yet!</div> 
-            {% endfor%}
-        </div>
+          </div>
+        {% empty %}
+          <div class="col-span-full flex flex-col items-center justify-center bg-sky-50 rounded-lg p-6 text-center border-4 border-dashed border-sky-400">
+            <img src="" class="w-16 h-16 pixelated mb-2" alt="Empty Nest">
+            <div class="font-bold text-gray-700">No {{ egg_type.name }} eggs yet!</div>
+            <div class="text-xs text-gray-500 italic">Maybe try swimming in the community pond?</div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
       {% endfor %}
 
     </div>
 
 
-    <div class="border-4 flex justify-center items-center p-4 grow"
+    <div 
+      class="grow border-4 border-amber-600 bg-yellow-50 rounded-2xl flex flex-col justify-center items-center p-6 gap-6 shadow-[6px_6px_0_#a16207]"
       x-data="{ 
         isIncubating: {{ is_incubating|yesno:'true,false' }},
-        postHatched: false
-      }">
-      <div class="flex-col items-center">
-        <span>Nest</span>
-        <div
-          x-effect="if(isIncubating) $nextTick(() => $dispatch('egg-fetch-ready'))"
-          hx-get="{% url 'egg' %}"
-          hx-target="this"
-          hx-trigger="egg-fetch-ready"
-          hx-swap="innerHTML"
-        ></div>
-      </div>
+        postHatched: false 
+      }"
+    >
+  <div class="text-lg font-bold text-amber-900 uppercase tracking-wide">🐢 Nest Incubator</div>
 
-        
-      <div 
-        x-show="postHatched"
-        x-cloak
-        @post-hatched.window="postHatched = true; console.log($event.detail.postId)"
-        class="flex-col items-center"
-        >
-        <span>Hey, your turtle is finally hatched !!</span>
-        <button>Shut up and let me see my baby</button>
-      </div>
-
+    <!-- Egg Slot -->
+    <div class="relative w-45 h-45 bg-amber-200 border-4 border-dashed border-amber-500 rounded-full flex items-center justify-center"
+        x-effect="if (isIncubating) $nextTick(() => $dispatch('egg-fetch-ready'))"
+        hx-get="{% url 'egg' %}"
+        hx-target="this"
+        hx-trigger="egg-fetch-ready"
+        hx-swap="innerHTML"
+    >
+   
     </div>
+
+    <!-- Hatch Message -->
+    <div 
+      x-show="postHatched"
+      x-cloak
+      x-transition:enter="transition-opacity duration-700"
+      x-transition:enter-start="opacity-0"
+      x-transition:enter-end="opacity-100"
+      @post-hatched.window="postHatched = true; console.log($event.detail.postId)"
+      class="text-center flex flex-col items-center gap-3"
+    >
+      <span class="text-green-700 font-bold text-md bg-white px-4 py-2 rounded-xl border-4 border-green-500 shadow-[4px_4px_0_#166534]">
+        🎉 Your turtle just hatched!
+      </span>
+      <button 
+        class="bg-emerald-300 border-4 border-emerald-800 text-white px-4 py-2 rounded-xl font-bold shadow-[2px_2px_0_#065f46] hover:scale-105 transition-transform"
+      >
+        🐢 Show me my baby!
+      </button>
+    </div>
+  </div>
+
 </div>
