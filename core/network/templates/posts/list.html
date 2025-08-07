@@ -4,6 +4,8 @@
   <div x-data="{ 
     isPostDetail: false, 
     showCreatePostModal: false,
+    isIncubating: {{ is_incubating|yesno:'true,false' }},
+    onListPage: true
   }" > 
  
     <div class="container mt-4 ">
@@ -13,12 +15,12 @@
           <!-- List page egg container -->
           <div 
             id="incubating-egg-container"
-            x-ref="eggDiv"
-            @post-created.window="isIncubating = true"
-            x-effect="if(isIncubating) $nextTick(() => $dispatch('egg-fetch-ready'))"
             hx-get="{% url 'egg' %}"
             hx-trigger="egg-fetch-ready"
             hx-swap="innerHTML"
+            x-ref="eggDiv"
+            x-effect="if(isIncubating) $nextTick(() => $dispatch('egg-fetch-ready'))"
+            @post-created.window="isIncubating = true"
             {# Error means the post has hatched, just refresh the page #}
             @htmx:response-error="window.location.href = '/'"
           ></div>

@@ -25,5 +25,32 @@
     </div>
 
 
-    <div class="border-4 flex justify-center items-center p-4 grow"><span>Nest</span></div>
+    <div class="border-4 flex justify-center items-center p-4 grow"
+      x-data="{ 
+        isIncubating: {{ is_incubating|yesno:'true,false' }},
+        postHatched: false
+      }">
+      <div class="flex-col items-center">
+        <span>Nest</span>
+        <div
+          x-effect="if(isIncubating) $nextTick(() => $dispatch('egg-fetch-ready'))"
+          hx-get="{% url 'egg' %}"
+          hx-target="this"
+          hx-trigger="egg-fetch-ready"
+          hx-swap="innerHTML"
+        ></div>
+      </div>
+
+        
+      <div 
+        x-show="postHatched"
+        x-cloak
+        @post-hatched.window="postHatched = true; console.log($event.detail.postId)"
+        class="flex-col items-center"
+        >
+        <span>Hey, your turtle is finally hatched !!</span>
+        <button>Shut up and let me see my baby</button>
+      </div>
+
+    </div>
 </div>
