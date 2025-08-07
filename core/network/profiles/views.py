@@ -12,6 +12,7 @@ from django.views.generic import (
 )
 
 from network.posts.models import Post, PostMedia
+from network.posts.services import IncubationService
 
 from .constants import PHOTO_TABS, PROFILE_TABS
 from .forms import ProfileForm
@@ -138,6 +139,10 @@ class NestView(ProfileTabsBaseMixin, TemplateView):
             {"name": "regular", "eggs": regular_eggs},
         ]
         context["eggs"] = eggs
+
+        context["is_incubating"] = bool(
+            IncubationService.get_incubating_post_id(self.profile.user.id)
+        )
 
         return context
 
