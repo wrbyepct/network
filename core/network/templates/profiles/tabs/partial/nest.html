@@ -153,11 +153,13 @@
                     <div 
                         id="egg-nest"
                         class="absolute w-full top-3/7 left-1/2 transform egg-levitation text-center"
-                        x-effect="if(isIncubating) $nextTick(() => $dispatch('egg-fetch-ready'))"
+                        x-effect="if(isIncubating) { console.log('Yes it is incubating'); $nextTick(() => $dispatch('egg-fetch-ready')) }"
+                        x-init="htmx.process($el)"
                         hx-get="{% url 'egg' %}"
                         hx-trigger="egg-fetch-ready"
                         hx-target="#egg-nest"
                         hx-swap="innerHTML"
+                        
                       >
                       <img class="w-40 h-40 filter drop-shadow-lg mx-auto" 
                            src="data:image/svg+xml,%3Csvg width='48' height='48' viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cellipse cx='24' cy='26' rx='12' ry='16' fill='%23fef3c7'/%3E%3Cellipse cx='24' cy='26' rx='8' ry='12' fill='%23fde047'/%3E%3C/svg%3E" 
