@@ -39,9 +39,10 @@
 >
    
     <div 
-        class="relative transition-opacity delay-5000 ease-in duration-5000"
-        :class="{ 'opacity-100': !startFadeEgg, 'opacity-0': startFadeEgg }" 
-        @transitionend=" if(event.target === $el)  { console.log('Post hatched!') ;$dispatch('post-hatched', { postId: '{{ post_id }}'} ); }"
+        class="relative"
+        x-show="!startFadeEgg"
+        x-transition:leave="transition delay-[5s] ease-in duration-5000 opacity-0"
+        @transitionend=" if(event.target === $el)  $dispatch('post-hatched', { postId: '{{ post_id }}'} ); "
        >
        <!-- Glow effect placeholder -->
         <div 
