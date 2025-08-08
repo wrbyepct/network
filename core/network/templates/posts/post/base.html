@@ -95,7 +95,7 @@
 
           <!-- Egg toolkit -->
           <div class="relative group">
-            {% include 'posts/partial/egg_toolkit.html' %}
+            {% include 'posts/partial/egg_toolkit.html' with is_from_special_egg=post.is_from_special_egg egg_name=egg.name %}
             <img class="w-15 cursor-pointer" src="{{ post.born_from_egg }}" alt="The Egg image the post is born from">
           </div>
         </div>
