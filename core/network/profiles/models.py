@@ -94,7 +94,7 @@ class SpecialEggChoices(models.TextChoices):
 class RegularEggChoices(models.TextChoices):
     """Regular egg choices."""
 
-    CEAL = "ceal", "Ceal"
+    TEAL = "teal", "Teal"
     ORANGE = "orange", "Orange"
     YELLOW = "yellow", "Yellow"
     RED = "red", "Red"
@@ -119,6 +119,11 @@ class Egg(TimestampedModel):
         self.name = EggManageService.get_egg_name(self.url)
 
         super().save(*args, **kwargs)
+
+    @cached_property
+    def is_special(self):
+        """Return True if it's special egg."""
+        return "special_eggs" in self.url
 
 
 class SpecialEgg(Egg):
