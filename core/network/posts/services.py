@@ -83,7 +83,7 @@ class IncubationService:
         "cyber",
         "universe",
     ]
-    REGULAR_EGGS = ["ceal", "orange", "yellow", "red", "green", "blue", "purple"]
+    REGULAR_EGGS = ["teal", "orange", "yellow", "red", "green", "blue", "purple"]
     WEIGHTS = [0.8, 0.2]
 
     @staticmethod
