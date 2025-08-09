@@ -1,24 +1,20 @@
+{% extends 'common/toolkit.html' %}
   <!-- Tooltip Bubble -->
-   {% load post_extra %}
-  <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 hidden group-hover:flex flex-col items-center z-10">
-    <!-- Pixel Shadow Border -->
-    <div class="bg-emerald-300 border-4 border-black rounded-md p-2 shadow-[4px_4px_0px_#000] text-xs font-mono text-black w-max text-center">
-      <p class="mb-1">Egg type: 
-        {% if is_special %}
-          <span class="text-amber-500 text-lg font-black">LEGENDARY</span>
-        {% else %}
-          <span class="text-emerald-700 text-lg font-black">CUTE</span>
-        {% endif %}</p>
-      <p class="mb-1">It's a {% if is_special %} <span class="text-fuchsia-500 font-black">rare</span> {% else %}cute {% endif%}<span class="font-black">{{ egg_name|title }} </span>Egg</p>
-      <!-- Bigger egg image -->
-      {% if egg_url %}
-        <img class="w-30 egg-levitation mx-auto" src="{{ egg_url }}" alt="Bigger Egg image">
-      {% endif %}
-      
-      {% if created_at %}
-        <div>First collected on {{ created_at|date:"Y/m/d" }}</div>
-      {% endif %}
-    </div>
-    <!-- Little Pixel Arrow -->
-    <div class="w-3 h-3 bg-emerald-300 border-l-4 border-b-4 border-black transform rotate-45 -mt-1"></div>
-  </div>
+{% block toolkit_content %}
+  <p class="mb-1">Egg type: 
+    {% if is_special %}
+      <span class="text-amber-500 text-lg font-black">LEGENDARY</span>
+    {% else %}
+      <span class="text-emerald-700 text-lg font-black">CUTE</span>
+    {% endif %}</p>
+  <p class="mb-1">It's a {% if is_special %} <span class="text-fuchsia-500 font-black">rare</span> {% else %}cute {% endif%}<span class="font-black">{{ egg_name|title }} </span>Egg</p>
+  <!-- Bigger egg image -->
+  {% if egg_url %}
+    <img class="w-30 egg-levitation mx-auto" src="{{ egg_url }}" alt="Bigger Egg image">
+  {% endif %}
+  
+  {% if created_at %}
+    <div>First collected on {{ created_at|date:"Y/m/d" }}</div>
+  {% endif %}
+
+{% endblock %}

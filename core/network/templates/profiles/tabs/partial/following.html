@@ -8,18 +8,18 @@
       style="font-family: 'Press Start 2P', monospace; font-size: 10px; image-rendering: pixelated;"
 
     >
-    {% if following %}
+    {% if profile.following.exists %}
       <div class="space-y-4"> {# Use space-y for vertical spacing between cards #}
-        {% for profile in following %}
+        {% for profile in profile.following.all %}
           <div 
-            class="current-marker-card bg-white rounded-md shadow-none p-3 flex items-center justify-between space-x-4 border-4 border-blue-700 transition-all duration-100 ease-linear hover:scale-102 hover:translate-x-2 hover:-translate-y-2"
+            class="current-marker-card bg-white rounded-md shadow-none p-4 flex items-center justify-between space-x-4 border-4 border-blue-700 transition-all duration-100 ease-linear hover:scale-102 hover:translate-x-2 hover:-translate-y-2"
             x-data="{ has_followed: true }"> {# Alpine.js data for toggle #}
             {# User Avatar and Username #}
             <a href="{% url 'profile_about' profile.username %}" class="flex items-center space-x-3">
                 <img 
                   src="{{ profile.profile_picture.url }}"
                   alt="{{ profile.username }} Avatar"
-                  class="w-10 h-10 rounded-full object-cover border-4 border-blue-500">
+                  class="w-12 h-12 rounded-full object-cover border-4 border-blue-500">
                 <span class="text-lg font-semibold text-blue-900 hover:underline">{{ profile.username }}</span>
             </a>
 
