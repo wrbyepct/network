@@ -85,12 +85,6 @@
 
                   {% if user.is_authenticated %}
                       <li>
-                        <a href="{% url 'following' user.profile.username %}"
-                          class="bg-[#FFD66F] text-black border-4 border-[#D2A679] px-2 py-1 shadow-[4px_4px_0px_#D2A679] hover:bg-[#A8D5A0] hover:text-white transition-none">
-                            Following
-                        </a>
-                      </li>
-                      <li>
                         <a href="{% url 'account_logout' %}"
                           class="bg-[#FFD66F] text-black border-4 border-[#D2A679] px-2 py-1 shadow-[4px_4px_0px_#D2A679] hover:bg-[#A8D5A0] hover:text-white transition-none">
                             Log Out
