@@ -147,7 +147,7 @@ class NestView(ProfileTabsBaseMixin, TemplateView):
         return context
 
 
-class AboutView(ProfileTabsBaseMixin, TemplateView):
+class AboutView(LoginRequiredMixin, ProfileTabsBaseMixin, TemplateView):
     """Profile about view that handles partial and full request."""
 
     current_tab = "about"
@@ -161,10 +161,10 @@ class AboutView(ProfileTabsBaseMixin, TemplateView):
         return context
 
 
-class FollowersView(ProfileTabsBaseMixin, TemplateView):
+class FollowTabView(LoginRequiredMixin, ProfileTabsBaseMixin, TemplateView):
     """Profile Followers view that handles partial and full request."""
 
-    current_tab = "followers"
+    current_tab = "follow"
 
 
 class ProfileEditView(LoginRequiredMixin, UpdateView):
@@ -181,19 +181,6 @@ class ProfileEditView(LoginRequiredMixin, UpdateView):
         """Get back to user profile about page ."""
         profile = self.request.user
         return reverse("profile_about", args=[profile.username])
-
-
-# Following list view
-class FollowingView(ListView):
-    """Return user's all following profiles."""
-
-    template_name = "profiles/following.html"
-    context_object_name = "following"
-
-    def get_queryset(self):
-        """Return user's all following profiles."""
-        profile = self.request.user.profile
-        return profile.following.all()
 
 
 # Follow/Unfollow

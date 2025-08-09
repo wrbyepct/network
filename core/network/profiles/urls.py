@@ -18,9 +18,9 @@ urlpatterns = [
         name="profile_nest",
     ),
     path(
-        "<str:username>/followers/",
-        views.FollowersView.as_view(),
-        name="profile_followers",
+        "<str:username>/tab/follow/",
+        views.FollowTabView.as_view(),
+        name="profile_follow",
     ),
     path(
         "<str:username>/posts/",
@@ -44,6 +44,4 @@ urlpatterns = [
     ),
     # Follow
     path("<str:username>/follow/", views.FollowView.as_view(), name="follow"),
-    # Following
-    path("<str:username>/following/", views.FollowingView.as_view(), name="following"),
 ]

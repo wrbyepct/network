@@ -1,0 +1,46 @@
+
+    <div id="follow_message" class="text-center">
+        {# HTMX messages will appear here #}
+    </div>
+
+    <div 
+      class="container-sm p-4 bg-gradient-to-b from-blue-100 to-blue-200 min-h-screen shadow-lg"
+      style="font-family: 'Press Start 2P', monospace; font-size: 10px; image-rendering: pixelated;"
+
+    >
+    {% if following %}
+      <div class="space-y-4"> {# Use space-y for vertical spacing between cards #}
+        {% for profile in following %}
+          <div 
+            class="current-marker-card bg-white rounded-md shadow-none p-3 flex items-center justify-between space-x-4 border-4 border-blue-700 transition-all duration-100 ease-linear hover:scale-102 hover:translate-x-2 hover:-translate-y-2"
+            x-data="{ has_followed: true }"> {# Alpine.js data for toggle #}
+            {# User Avatar and Username #}
+            <a href="{% url 'profile_about' profile.username %}" class="flex items-center space-x-3">
+                <img 
+                  src="{{ profile.profile_picture.url }}"
+                  alt="{{ profile.username }} Avatar"
+                  class="w-10 h-10 rounded-full object-cover border-4 border-blue-500">
+                <span class="text-lg font-semibold text-blue-900 hover:underline">{{ profile.username }}</span>
+            </a>
+
+            {# Follow/Unfollow Button #}
+            <button
+                class="px-3 py-1 rounded-md text-sm font-medium transition-all duration-75 ease-linear border-2 hover:scale-105 hover:shadow-sm"
+                @click="has_followed = !has_followed"
+                :class="has_followed ? 'bg-emerald-500 text-white border-emerald-700 hover:bg-emerald-600 hover:border-emerald-800' : 'bg-blue-500 text-white border-blue-700 hover:bg-blue-600 hover:border-blue-800'"
+                hx-post="{% url 'follow' profile.username %}"                            hx-target="#follow_message"
+                hx-swap="innerHTML"
+            >
+              <span x-text="has_followed ? 'Following' : 'Follow'"></span>
+            </button>
+        </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-path-message text-center text-blue-600 py-8 italic">
+                <p>You are not following anyone yet.</p>
+                <p>Start exploring to find new currents!</p>
+                {# Optional: Add a small pixel-art compass or empty path image here #}
+            </div>
+        {% endif %}
+    </div>
