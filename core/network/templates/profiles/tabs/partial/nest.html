@@ -6,11 +6,11 @@
     <div class="text-center mb-8">
       <div class="flex items-center justify-center">
         <img class="w-10 mx-4" src="/media/defaults/yeah.png" alt="Image displaying a turtle with Yeah gesture">
-        <h1 class="text-4xl font-bold text-green-800 mb-2 font-mono">Your Turtle Sanctuary</h1>
+        <h1 class="text-4xl font-bold text-green-800 mb-2 font-mono">The Turtle Sanctuary</h1>
         <img class="w-10 mx-4" src="/media/defaults/yeah.png" alt="Image displaying a turtle with Yeah gesture">
       </div>
         
-      <p class="text-green-600">Explore your collection and check your nest</p>
+      <p class="text-green-600">Explore the collection and check the nest</p>
     </div>
 
     <div class="flex flex-col lg:flex-row gap-8">
@@ -62,7 +62,7 @@
                           <div class="flex items-center">
                             <div class="relative">
                               <!-- Egg toolkit -->
-                              {% include 'posts/partial/egg_toolkit.html' %}
+                              {% include 'posts/partial/egg_toolkit.html' with egg_name=egg.name is_special=egg.is_special egg_url=egg.url created_at=egg.created_at %}
                               <img class="w-12 h-12 pixel-art-egg {% if egg_type.name == 'special' %}special-egg-glow{% endif %}" 
                                    src="{{ egg.url }}" 
                                    alt="{{ egg.name|title }}">
@@ -150,7 +150,7 @@
                     <!-- The Incubating Egg - Floating -->
                     <div 
                         id="egg-nest"
-                        class="absolute w-full top-10 transform egg-levitation text-center"
+                        class="absolute w-full transform egg-levitation text-center"
                         x-effect="if(isIncubating) { console.log('Yes it is incubating'); $nextTick(() => $dispatch('egg-fetch-ready')) }"
                         x-init="htmx.process($el)"
                         hx-get="{% url 'egg' %}"
@@ -159,7 +159,7 @@
                         hx-swap="innerHTML"
                         
                       >
-                      <img class="w-40 h-40 filter drop-shadow-lg mx-auto" 
+                      <img class="w-40 h-40 filter drop-shadow-lg mx-auto mt-5" 
                            src="data:image/svg+xml,%3Csvg width='48' height='48' viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cellipse cx='24' cy='26' rx='12' ry='16' fill='%23fef3c7'/%3E%3Cellipse cx='24' cy='26' rx='8' ry='12' fill='%23fde047'/%3E%3C/svg%3E" 
                            alt="Incubating Egg">
                       <!-- Egg Glow Aura -->
@@ -212,23 +212,28 @@
             <div class="flex justify-center items-center mb-6">
               <!-- Excited turtle -->
               <div class="mx-2">
-                <span class="text-3xl animate-bounce">🐢</span>
+                <img class="w-12" src="/media/defaults/turtle_hurray.png" alt="A Turtle Hurraying">
               </div>
               <!-- Celebration particles -->
               <div class="mx-2">
                 <span class="text-2xl animate-ping">🎉</span>
               </div>
+              <div class="mx-2">
+                <img class="w-12" src="/media/defaults/turtle_hurray.png" alt="A Turtle Hurraying">
+              </div>
             </div>
             
-            <h3 class="text-xl font-bold text-green-700 mb-3">🎊 Your Turtle Hatched! 🎊</h3>
+            <h3 class="text-xl font-bold text-green-700 mb-3">🎊 The Turtle Hatched! 🎊</h3>
             <p class="text-green-600 mb-6">Congratulations! Your patience has been rewarded.</p>
             
             <a 
               :href="`{% url 'index' %}#${hatchedPostId}`"
-              class="bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold py-3 px-6 rounded-lg hover:from-green-600 hover:to-emerald-700 transform hover:scale-105 transition-all duration-200 shadow-[4px_4px_0px_#16a34a]"
+              class="flex justify-center items-center bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold py-3 px-6 rounded-lg hover:from-green-600 hover:to-emerald-700 transform hover:scale-105 transition-all duration-200 shadow-[4px_4px_0px_#16a34a]"
               style="text-decoration: none;"
             >
-              🐢 Shut up and show me my turle 🐢
+              <img class="w-10 mx-2" src="/media/defaults/turtle_run.png" alt="A turtle running">
+              <span>Shut up and take me to my baby</span>
+              <img class="w-10 mx-2" src="/media/defaults/turtle_run.png" alt="A turtle running">
             </a>
           </div>
 
