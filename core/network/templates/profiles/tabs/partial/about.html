@@ -1,8 +1,10 @@
 
 
 
-<div x-data="{ activeTab: 'bio' }" class="max-w-3xl mx-auto my-8 p-4 bg-emerald-800 border-4 border-amber-600 shadow-lg shadow-amber-600/50 rounded-none font-mono"
-     style="font-family: 'Press Start 2P', monospace; font-size: 10px; image-rendering: pixelated;">
+<div 
+  x-data="{ activeTab: 'bio' }" 
+  class="max-w-3xl mx-auto my-8 p-4 bg-emerald-800 border-4 border-amber-600 shadow-lg shadow-amber-600/50 rounded-none font-mono"
+  style="font-family: 'Press Start 2P', monospace; font-size: 10px; image-rendering: pixelated;">
 
     <!-- "Shell Scutes" Tabs -->
     <div class="flex border-b-4 border-amber-600 mb-4">
@@ -15,6 +17,11 @@
                 :class="{ 'bg-emerald-700 text-stone-50': activeTab === 'stats', 'text-stone-300': activeTab !== 'stats' }"
                 class="px-4 py-2 focus:outline-none uppercase tracking-widest hover:bg-emerald-700/50">
             Stats
+        </button>
+        <button @click="activeTab = 'follow'" 
+                :class="{ 'bg-emerald-700 text-stone-50': activeTab === 'follow', 'text-stone-300': activeTab !== 'follow' }"
+                class="px-4 py-2 focus:outline-none uppercase tracking-widest hover:bg-emerald-700/50">
+            Follow
         </button>
         <button @click="activeTab = 'journey'" 
                 :class="{ 'bg-emerald-700 text-stone-50': activeTab === 'journey', 'text-stone-300': activeTab !== 'journey' }"
@@ -74,6 +81,23 @@
                 </div>
             </div>
         </div>
+        <!-- Follower tab -->
+
+        <div x-show="activeTab === 'follow'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform scale-90" x-transition:enter-end="opacity-100 transform scale-100">
+          <!-- Fetch followers/following tab -->
+          
+            <div 
+                hx-get="{% url 'profile_follow' profile.username %}"
+                hx-trigger="intersect once"
+                hx-swap="innerHTML"
+              >
+            </div>
+           
+
+
+        </div>
+
+
 
         <!-- Journey Tab -->
         <div x-show="activeTab === 'journey'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform scale-90" x-transition:enter-end="opacity-100 transform scale-100">
