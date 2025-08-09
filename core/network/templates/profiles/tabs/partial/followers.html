@@ -7,20 +7,41 @@
     {% if profile.followers.exists %}
      
       {% for follower in profile.followers.all %}
+       <!-- Turtle Card -->
         <div 
-          class="follower-lily-pad {% cycle 'bg-emerald-50' 'bg-rose-50' 'bg-purple-50' %}
-rounded-md shadow-none p-4 flex items-center space-x-4 border-4 border-emerald-700 transition-all duration-100 ease-linear hover:scale-105 hover:-translate-y-2 hover:translate-x-2">
-            {# User Avatar #}
-            <a class="" href="{% url 'profile_about' follower.username %}">
-                <img src="{{ follower.profile_picture.url }}" alt="{{ follower.username }} Avatar" class="min-w-12 min-h-12 w-12 h-12 rounded-full object-cover border-4 border-sky-500">
+          class="relative group cursor-pointer transform transition-all duration-300 hover:scale-110 hover:-translate-y-1 "
+     
+          >
+            <!-- Lily Pad Base -->
+            <div class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-24 h-16 bg-green-400 rounded-full border-3 border-green-600 opacity-80">
+                <div class="absolute top-1 left-1/2 transform -translate-x-1/2 w-1 h-8 bg-green-600"></div>
+            </div>
+            
+            <!-- Turtle Body -->
+            <a href="{% url 'profile_about' follower.username %}" class="block">
+              <div class="relative w-20 h-16 mx-auto my-4">
+                <!-- Turtle Shell with Avatar -->
+                    {% include 'profiles/partials/follower_toolkit.html' with display_direction="right" %}
+                    <div class="turtle-shell w-16 h-16 mx-auto relative overflow-hidden">
+                        <!-- User Avatar inside shell -->
+                        <img 
+                            src="{{ follower.profile_picture.url }}" 
+                            alt="{{ follower.username }} Avatar" 
+                            class="absolute inset-1 w-14 h-14 rounded-full object-cover border-2 border-emerald-700 pixelated z-10"
+                        />
+                    </div>
+                    
+                    <!-- Turtle Head -->
+                    <div class="turtle-head"></div>
+                    
+                    <!-- Turtle Legs -->
+                    <div class="turtle-leg front-left"></div>
+                    <div class="turtle-leg front-right"></div>
+                    <div class="turtle-leg back-left"></div>
+                    <div class="turtle-leg back-right"></div>
+                </div>
             </a>
-
-            {# Username #}
-            <a href="{% url 'profile_about' follower.username %}" class="text-lg font-semibold text-emerald-900 hover:underline">
-                {{ follower.username }}
-            </a>
-
-        </div>
+          </div>
       {% endfor %}
       
     {% else %}
@@ -56,76 +77,6 @@ rounded-md shadow-none p-4 flex items-center space-x-4 border-4 border-emerald-7
     {% endif %}
 </div>
 
-
-
-
-
-    <script>
-        function turtlePond() {
-            return {
-                // Django followers data
-                followers: [
-                    {% for follower in profile.followers.all %}
-                    {
-                        username: '{{ follower.username|escapejs }}',
-                        avatar: '{{ follower.profile_picture.url }}',
-                        profileUrl: '{% url "profile_about" follower.username %}'
-                    }{% if not forloop.last %},{% endif %}
-                    {% endfor %}
-                ],
-                
-                get hasFollowers() {
-                    return this.followers.length > 0;
-                },
-                
-                getTurtlePosition(index) {
-                    // Organic positioning based on index
-                    const positions = [
-                        'top-20 left-12',
-                        'top-32 right-20',
-                        'top-52 left-1/3',
-                        'top-40 right-12',
-                        'top-64 left-20',
-                        'top-28 left-1/2',
-                        'top-44 right-1/3',
-                        'top-60 left-2/3',
-                    ];
-                    return positions[index % positions.length];
-                },
-                
-                getTurtleDelay(index) {
-                    // Staggered animation delays for natural movement
-                    return `animation-delay: ${index * 0.5}s;`;
-                },
-                
-                createRipple(event) {
-                    const ripple = document.createElement('div');
-                    const size = 30;
-                    const pos = event.currentTarget.getBoundingClientRect();
-                    
-                    ripple.classList.add('ripple');
-                    ripple.style.width = ripple.style.height = size + 'px';
-                    ripple.style.left = (event.clientX - pos.left - size / 2) + 'px';
-                    ripple.style.top = (event.clientY - pos.top - size / 2) + 'px';
-                    
-                    this.$refs.rippleContainer.appendChild(ripple);
-                    
-                    setTimeout(() => {
-                        ripple.remove();
-                    }, 600);
-                },
-                
-                surfaceTurtle(event) {
-                    event.currentTarget.style.transform = 'translateY(-5px) scale(1.05)';
-                    event.currentTarget.style.transition = 'transform 0.3s ease';
-                },
-                
-                diveTurtle(event) {
-                    event.currentTarget.style.transform = '';
-                }
-            }
-        }
-    </script>
 
 <style>
         .pixelated {
