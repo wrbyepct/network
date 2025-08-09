@@ -95,7 +95,7 @@
 
           <!-- Egg toolkit -->
           <div class="relative group">
-            {% include 'posts/partial/egg_toolkit.html' with is_from_special_egg=post.is_from_special_egg egg_name=egg.name %}
+            {% include 'posts/partial/egg_toolkit.html' with egg_name=post.egg_name is_special=post.is_from_special_egg %}
             <img class="w-15 cursor-pointer" src="{{ post.born_from_egg }}" alt="The Egg image the post is born from">
           </div>
         </div>
@@ -114,7 +114,7 @@
             this.showMore = content.scrollHeight > content.clientHeight;
         },
       }"
-      class="card-body">
+      class="card-body mt-4 px-2">
         <p 
           class="mb-3"
           x-ref="content"
