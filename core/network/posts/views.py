@@ -113,9 +113,16 @@ class GetUserPostMixin:
 class PostEditView(LoginRequiredMixin, GetUserPostMixin, UpdateView):
     """Post update view."""
 
-    template_name = "posts/edit.html"
     form_class = PostForm
     success_url = reverse_lazy("index")
+
+    def get_template_names(self):
+        """Get tempalte name based from requesting post type."""
+        post_type = self.request.POST.get("post_type")
+
+        if post_type == "list_card":
+            return ["posts/post/list_card.html"]
+        return ["posts/post/detail_card.html"]
 
     def form_valid(self, form):
         """Handle deleting old files and add new files."""
@@ -123,9 +130,12 @@ class PostEditView(LoginRequiredMixin, GetUserPostMixin, UpdateView):
 
         with transaction.atomic():
             PostMedia.objects.filter(id__in=delete_ids).delete()
-            resp = super().form_valid(form)
+            super().form_valid(form)
             form.save_media(post=self.object)
-        return resp
+
+        template = self.get_template_names()
+        context = {"post": self.object}
+        return render(self.request, template, context)
 
 
 class PostDeleteView(RefererRedirectMixin, GetUserPostMixin, DeleteView):

@@ -1,10 +1,11 @@
 {% load post_extra %}
 <!-- Post -->
 <div
-  id="{{ post.id }}"
+  id="post-{{ post.id }}"
   class="flex flex-col bg-stone-100 rounded-md border-4 border-stone-600 shadow-[4px_4px_0px_#a8a29e] p-4 transition-transform duration-200 ease-in-out hover:-translate-y-1 h-full"
   {% with post_liked=post|liked_by_user:request.user %}
     x-data="{
+      postEditMode: false,
       justHatched: false,
       commentBody: '', 
       replying: false,
@@ -12,6 +13,11 @@
       postLiked: {{ post_liked|yesno:'true,false' }},
       postLikeCount: {{ post.like_count }},
       postLikeStat: '{{ post.like_count|like_stat_str:post_liked }}',
+      focusPostEditForm(el) {
+        el.focus();
+        const len = el.value.length;
+        el.setSelectionRange(len, len);
+      },
       addIndicatorLight() {
         if (window.location.hash === '#{{ post.id }}') {
           justHatched = true;
@@ -29,7 +35,6 @@
     {% if request.user == post.user %}
     class="relative cursor-grab"
     x-data="{
-      postEditMode: false,
       showEditAction: false,
       pressTimer: null,
       startPress() {
@@ -108,12 +113,29 @@
      <template x-if="!postEditMode">
        {% include 'posts/partial/content_collapsable.html' %}
      </template>
-     <template x-if="postEditMode">
-        <textarea 
-          class="border-none focus:border-none focus:ring-0 !resize-none py-4"
-      
-          autofocus="true">{{ post.content }}</textarea>
-     </template>
+     {% if request.user == post.user %}
+      <template x-if="postEditMode">
+        <form 
+          x-init="htmx.process($el)"
+          hx-post="{% url 'post_edit' post.id %}"
+          hx-vals='{"post_type": "list_card"}'
+          hx-target="#post-{{ post.id }}"
+          hx-swap="outerHTML"
+          htmx:after-request="if($event.detail.successful) console.log('Display edited message')"
+          htmx:response-error="console.log('post form submit error')" 
+        >
+          <textarea
+            name="content"
+            x-effect="if(postEditMode) {
+              focusPostEditForm($el);
+              resize($el);
+            }"
+            class="w-full border-none focus:border-none focus:ring-0 !resize-none py-4"
+          >{{ post.content }}</textarea>
+          <button type="submit">Submit</button>
+        </form>
+      </template>
+    {% endif %}
     <!-- Post medias -->
     {% block media_gallery %}
     {% endblock %}
