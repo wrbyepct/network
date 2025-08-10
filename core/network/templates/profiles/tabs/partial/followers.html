@@ -13,13 +13,13 @@
      
           >
             <!-- Lily Pad Base -->
-            <div class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-24 h-16 bg-green-400 rounded-full border-3 border-green-600 opacity-80">
+            <div class="absolute w-24 h-16 bg-green-400 rounded-full border-3 border-green-600 opacity-80">
                 <div class="absolute top-1 left-1/2 transform -translate-x-1/2 w-1 h-8 bg-green-600"></div>
             </div>
             
             <!-- Turtle Body -->
             <a href="{% url 'profile_about' follower.username %}" class="block">
-              <div class="relative w-20 h-16 mx-auto my-4">
+              <div class="relative w-20 h-16 ms-2 my-4">
                 <!-- Turtle Shell with Avatar -->
                     {% include 'profiles/partials/follower_toolkit.html' with display_direction="right" %}
                     <div class="turtle-shell w-16 h-16 mx-auto relative overflow-hidden">
