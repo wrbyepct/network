@@ -1,0 +1,22 @@
+<div 
+  x-data="{
+    collapse: true,
+    showMore: false,
+    init() {
+        $nextTick(() => this.checkClamp());
+    },
+    checkClamp() {
+        const content = this.$refs.content;
+        this.showMore = content.scrollHeight > content.clientHeight;
+    },
+  }"
+  class="card-body mt-4 px-2">
+    <p 
+      class="mb-3"
+      x-ref="content"
+      :class="collapse && 'line-clamp-3'"
+      > {{ post.content|linebreaksbr }}</p>
+    
+      {% include 'common/collapse.html' %}
+
+</div>

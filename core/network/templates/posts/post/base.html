@@ -12,21 +12,24 @@
       postLiked: {{ post_liked|yesno:'true,false' }},
       postLikeCount: {{ post.like_count }},
       postLikeStat: '{{ post.like_count|like_stat_str:post_liked }}',
-    }"
-  {% endwith %}
-    x-init="(() => {
+      addIndicatorLight() {
         if (window.location.hash === '#{{ post.id }}') {
           justHatched = true;
           $el.scrollIntoView({ behavior: 'smooth' });
           setTimeout(() => justHatched = false, 2000); // auto-remove animation flag
         }
-    })()"
+      }
+    }"
+  {% endwith %}
+  {# Add indicator light after directed from incubation nest  #}
+    x-init="addIndicatorLight()"
     :class="justHatched && 'hatched-post-glow'"
   >
   <div 
     {% if request.user == post.user %}
     class="relative cursor-grab"
     x-data="{
+      postEditMode: false,
       showEditAction: false,
       pressTimer: null,
       startPress() {
@@ -62,10 +65,10 @@
         >
           X
         </button>
-        <a 
-          href="{% url 'post_edit' post.id %}"
+        <button
+          @click="postEditMode = true; showEditAction = false;"
           class="px-4 py-2 bg-emerald-500 text-white font-bold border-2 border-black rounded-md shadow-[2px_2px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] transition-transform"
-          style="text-decoration: none;">Edit</a>
+          >Edit</button>
           <form 
             hx-post="{% url 'post_delete' post.id %}"
             hx-swap="none"
@@ -102,28 +105,15 @@
         {% endif %}
     </div>
     <!-- Content collapsable --> 
-    <div 
-      x-data="{
-        collapse: true,
-        showMore: false,
-        init() {
-            $nextTick(() => this.checkClamp());
-        },
-        checkClamp() {
-            const content = this.$refs.content;
-            this.showMore = content.scrollHeight > content.clientHeight;
-        },
-      }"
-      class="card-body mt-4 px-2">
-        <p 
-          class="mb-3"
-          x-ref="content"
-          :class="collapse && 'line-clamp-3'"
-          > {{ post.content|linebreaksbr }}</p>
-        
-          {% include 'common/collapse.html' %}
-
-    </div>
+     <template x-if="!postEditMode">
+       {% include 'posts/partial/content_collapsable.html' %}
+     </template>
+     <template x-if="postEditMode">
+        <textarea 
+          class="border-none focus:border-none focus:ring-0 !resize-none py-4"
+      
+          autofocus="true">{{ post.content }}</textarea>
+     </template>
     <!-- Post medias -->
     {% block media_gallery %}
     {% endblock %}
