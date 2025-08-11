@@ -24,10 +24,15 @@
     >
       {% for media in medias %}
         <div 
+        x-ref="oldMedia{{ forloop.counter }}"
+        class="relative"
         :class="{
           'col-span-2': mediasCount === 3 && {{ forloop.first|yesno:'true,false' }},
         }">
           {% include "posts/partial/media_item.html" with media=media %}
+        {% if editing %}
+          {% include 'posts/partial/media_cancel_btn.html' %}
+        {% endif %}
         </div>
       {% endfor %}
     </div>
