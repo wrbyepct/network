@@ -134,7 +134,7 @@ class PostEditView(LoginRequiredMixin, GetUserPostMixin, UpdateView):
             form.save_media(post=self.object)
 
         template = self.get_template_names()
-        context = {"post": self.object}
+        context = {"post": self.object, "insert_to_dom": True}
         return render(self.request, template, context)
 
 
