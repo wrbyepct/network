@@ -1,0 +1,1 @@
+<button @click="{% if media.id %}removeOldMedia('{{ media.id }}'){% else %}removeMedia(index, media.type){% endif %}" type="button" class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold opacity-80 hover:opacity-100 transition-opacity duration-150">X</button>
