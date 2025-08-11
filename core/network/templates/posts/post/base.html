@@ -30,11 +30,17 @@
         const len = el.value.length;
         el.setSelectionRange(len, len);
       },
+      addEditedGlow() {
+        if(this.edited) setTimeout(() => $el.classList.add('golden-shimmer'), 50);
+      },
+      removeEditedGlow(e) {
+        if(e.target === $el) $el.classList.remove('golden-shimmer');
+      }
     }"
   {% endwith %}
   {# Add indicator light after directed from incubation nest  #}
-    x-init="addIndicatorLight(); if(edited) setTimeout(() => $el.classList.add('golden-shimmer'), 50)"
-    @animationend="if($event.target === $el) $el.classList.remove('golden-shimmer')"
+    x-init="addIndicatorLight(); addEditedGlow();"
+    @animationend="removeEditedGlow($event)"
 
   >
   <div 
@@ -116,10 +122,11 @@
         {% endif %}
     </div>
     <!-- Content collapsable --> 
-     <template x-if="!postEditMode">
-       {% include 'posts/partial/content_collapsable.html' %}
-     </template>
+    <template x-if="!postEditMode">
+      {% include 'posts/partial/content_collapsable.html' %}
+    </template>
      {% if request.user == post.user %}
+     <!-- In place edit form -->
       <template x-if="postEditMode">
         <form 
           x-init="htmx.process($el)"
@@ -137,39 +144,48 @@
             }"
             class="w-full border-none focus:border-none focus:ring-0 !resize-none py-4"
           >{{ post.content }}</textarea>
-          <button type="submit">Submit</button>
+          <div class="flex space-x-4 justify-around">
+            {% include 'posts/partial/media_upload_btn.html' %}
+          </div>
+          {% include 'posts/partial/edit_media.html' with medias=post.medias.all %}
+          {% include 'posts/partial/post_edit_actions.html' %}
         </form>
       </template>
     {% endif %}
-    <!-- Post medias -->
-    {% block media_gallery %}
-    {% endblock %}
-    <!-- Like and comment stats -->
-    {% block post_stats %}
-    {% endblock %}
-    <!-- Like/Comment/Share -->
-    {% block actions_bar %}
-    {% endblock %}
+    <div x-show="!postEditMode">
+      <!-- Post medias -->
+      {% block media_gallery %}
+      {% endblock %}
+      <!-- Like and comment stats -->
+
+      {% block post_stats %}
+      {% endblock %}
+      <!-- Like/Comment/Share -->
+      {% block actions_bar %}
+      {% endblock %}
+    </div>
+
   </div>
   <!-- Comments - load first batch after load-->
-  {% block comment_section %}
-  {% endblock %}
+  <div x-show="!postEditMode">
+    {% block comment_section %}
+    {% endblock %}
 
-  <!-- Comment submit form -->
-  <div class="mt-4">
-    <form 
-      {% if request.user.is_authenticated %}
-        hx-post="{% url 'comment_create' post.id %}"
-        :hx-target="isPostDetail ? '#post-detail-comment-section-{{ post.id }}' : '#post-list-comment-section-{{ post.id }}'"
-        :hx-swap="isPostDetail ? 'afterbegin scroll:#comments:top' : 'beforeend'"
-        @htmx:before-request="preventEmptySubmit($event)"
-        @htmx:after-request="if($event.detail.successful) clearUpForm($event)"
-      {% else %}
-        @submit.prevent
-      {% endif %}
-    >
-      {% include 'comments/submit.html' %}
-    </form>
+    <!-- Comment submit form -->
+    <div class="mt-4">
+      <form 
+        {% if request.user.is_authenticated %}
+          hx-post="{% url 'comment_create' post.id %}"
+          :hx-target="isPostDetail ? '#post-detail-comment-section-{{ post.id }}' : '#post-list-comment-section-{{ post.id }}'"
+          :hx-swap="isPostDetail ? 'afterbegin scroll:#comments:top' : 'beforeend'"
+          @htmx:before-request="preventEmptySubmit($event)"
+          @htmx:after-request="if($event.detail.successful) clearUpForm($event)"
+        {% else %}
+          @submit.prevent
+        {% endif %}
+      >
+        {% include 'comments/submit.html' %}
+      </form>
+    </div>
   </div>
-
 </div>
