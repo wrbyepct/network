@@ -10,7 +10,6 @@
       edited: {{ insert_to_dom|yesno:'true,false' }},
       addIndicatorLight() {
         if (window.location.hash === '#{{ post.id }}') {
-          console.log('True')
           this.justShowedUp = true;
           $el.scrollIntoView({ behavior: 'smooth' });
         }
@@ -33,15 +32,11 @@
       addEditedGlow() {
         if(this.edited) setTimeout(() => $el.classList.add('golden-shimmer'), 50);
       },
-      removeEditedGlow(e) {
-        if(e.target === $el) $el.classList.remove('golden-shimmer');
-      }
     }"
   {% endwith %}
   {# Add indicator light after directed from incubation nest  #}
     x-init="addIndicatorLight(); addEditedGlow();"
-    @animationend="removeEditedGlow($event)"
-
+    :class="justShowedUp && 'post-showup-glow'"
   >
   <div 
     {% if request.user == post.user %}
@@ -128,28 +123,7 @@
      {% if request.user == post.user %}
      <!-- In place edit form -->
       <template x-if="postEditMode">
-        <form 
-          x-init="htmx.process($el)"
-          hx-post="{% url 'post_edit' post.id %}"
-          hx-vals='{"post_type": "list_card"}'
-          hx-target="#post-{{ post.id }}"
-          hx-swap="outerHTML"
-          htmx:response-error="console.log('post form submit error')" 
-        >
-          <textarea
-            name="content"
-            x-effect="if(postEditMode) {
-              focusPostEditForm($el);
-              resize($el);
-            }"
-            class="w-full border-none focus:border-none focus:ring-0 !resize-none py-4"
-          >{{ post.content }}</textarea>
-          <div class="flex space-x-4 justify-around">
-            {% include 'posts/partial/media_upload_btn.html' %}
-          </div>
-          {% include 'posts/partial/edit_media.html' with medias=post.medias.all %}
-          {% include 'posts/partial/post_edit_actions.html' %}
-        </form>
+        {% include 'posts/partial/post_edit.html' %}
       </template>
     {% endif %}
     <div x-show="!postEditMode">
