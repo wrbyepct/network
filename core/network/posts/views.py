@@ -126,7 +126,9 @@ class PostEditView(LoginRequiredMixin, GetUserPostMixin, UpdateView):
 
     def form_valid(self, form):
         """Handle deleting old files and add new files."""
-        delete_ids = self.request.POST.getlist("delete_media")
+        import json
+
+        delete_ids = json.loads(self.request.POST.get("delete_media", "[]"))
 
         with transaction.atomic():
             PostMedia.objects.filter(id__in=delete_ids).delete()

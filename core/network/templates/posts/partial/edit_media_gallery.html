@@ -1,0 +1,68 @@
+{% if medias.0.is_video %}
+<!-- For layout containing video -->
+<!-- First place the video then the image gallery -->
+  <div class="grid grid-cols-1 relative">
+    {% include "posts/partial/edit_media_item.html" with media=medias.0 %}
+    {% include 'posts/partial/media_cancel_btn.html' %}
+  </div>
+
+  {% include "posts/partial/edit_media_gallery.html" with medias=medias|slice:"1:" %}
+{% else %}
+<!-- For image only layout -->
+{% if medias %}
+    <div 
+      class="grid border-2 border-stone-300 rounded-md p-1 my-2"
+      x-data="{
+        mediasCount: {{ medias|length }}
+      }"
+      :class="{
+        'grid-cols-1': mediasCount === 1,
+        'grid-cols-2': mediasCount > 1
+      }"
+    >
+      {% for media in medias %}
+        <div 
+        x-ref="oldMedia{{ forloop.counter }}"
+        class="relative"
+        :class="{
+          {# if 3 items, the first should takes up 2 cols space #}
+          'col-span-2': mediasCount === 3 && {{ forloop.first|yesno:'true,false' }},
+        }">
+          {% include "posts/partial/media_item.html" with media=media %}
+        {% if editing %}
+          {% include 'posts/partial/media_cancel_btn.html' %}
+        {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+
+  {% endif %}
+{% endif %}
+<!-- New upload section -->
+<div x-show=" allMedia.length > 0" class="mt-6 p-4 bg-amber-100 border-4 border-emerald-700 rounded-lg shadow-[4px_4px_0px_#25422a]">
+          
+  {# Image Previews #}
+  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+    <template x-for="(media, index) in allMedia">
+      <div class="relative w-full aspect-square border-2 border-emerald-600 rounded-md overflow-hidden">
+        <template x-if="media.type === 'images'">
+          <img :src="media.url" class="w-full h-full object-cover" />
+        </template>
+
+        <template x-if="media.type === 'videos'">
+          <video 
+            class="w-full h-full object-cover"
+            controls 
+            preload="metadata" 
+            :src="media.url" 
+          ></video>
+        </template>
+
+        <button @click="removeMedia(index, media.type)" type="button" class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold opacity-80 hover:opacity-100 transition-opacity duration-150">
+            X
+        </button>
+      </div>
+    </template>
+  </div>
+
+</div>
