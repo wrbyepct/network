@@ -5,21 +5,20 @@
     videos: [],
   },
   addMedia(file, type) {
-    this.selectedMedia[type].push({ 
-        file: file, 
-        url: URL.createObjectURL(file),
-        type: type
+    this.toUploadMedia[type].push({ 
+      file: file, 
+      url: URL.createObjectURL(file),
+      type: type
     });
   },
   removeOldMedia(id, el) {
     this.toDeleteIds.push(id);
     el.remove();
-    console.log(this.toDeleteIds);
   },
   removeMedia(index, type) {
-      // This is to clean up memory
-      URL.revokeObjectURL(this.selectedMedia[type][index].url); 
-      this.selectedMedia[type].splice(index, 1);
+    // This is to clean up memory
+    URL.revokeObjectURL(this.toUploadMedia[type][index].url); 
+    this.toUploadMedia[type].splice(index, 1);
   },
   handleMediaUpload(event) {
     const files = Array.from(event.target.files);
@@ -28,15 +27,17 @@
         if (file.type.startsWith('video/')) this.addMedia(file, 'videos');
     });
   },
-  prepareMediaThenSubmit(form) {
+  prepareMediaThenSubmit() {
     // Put the newest list in media input before submit
     const imageTransfer = new DataTransfer();
-    this.selectedMedia.images.forEach( image => imageTransfer.items.add(image.file));
+    this.toUploadMedia.images.forEach( image => imageTransfer.items.add(image.file));
     this.$refs.imageInput.files = imageTransfer.files;
-
+   
     const videoTransfer = new DataTransfer();
-    this.selectedMedia.videos.forEach( video => videoTransfer.items.add(video.file));
+    this.toUploadMedia.videos.forEach( video => videoTransfer.items.add(video.file));
     this.$refs.videoInput.files = videoTransfer.files;
+
+    console.log('prepare media  function called');
   },
   toDeleteIds: [],
 }"
@@ -45,7 +46,10 @@
   hx-vals='{"post_type": "list_card"}'
   hx-target="#post-{{ post.id }}"
   hx-swap="outerHTML"
+  hx-encoding="multipart/form-data"
+  enctype="multipart/form-data"
   htmx:response-error="console.log('post form submit error')" 
+  @submit.prevent="prepareMediaThenSubmit()"
 >
   <!-- Post content edit field -->
   <textarea
@@ -56,16 +60,52 @@
     }"
     class="w-full border-none focus:border-none focus:ring-0 !resize-none py-4"
   >{{ post.content }}</textarea>
+
   <!-- Upload buttons -->
   <div class="flex space-x-4 justify-around mb-4">
     {% include 'posts/partial/media_upload_btn.html' %}
   </div>
 
+  <!-- Display of new uploaded media -->
+  <div class="border-2 border-stone-300 rounded-md p-1 my-2">
+    <!-- Video -->
+    <template x-if="toUploadMedia.videos.length > 0" > 
+      <div class="grid grid-cols-1" >
+        <video src="toUploadMedia.videos[0].url"  preload="metadata" ></video>
+      </div>
+    </template>
+    <!-- Images -->
+    <template x-if="toUploadMedia.images.length > 0">
+      <div 
+        class="grid" 
+        :class="{
+          'grid-cols-1': toUploadMedia.images.length === 1,
+          'grid-cols-2': toUploadMedia.images.length > 1
+        }"
+      >
+        <template x-for="(media, index) in toUploadMedia.images"> 
+          <div
+            class="relative"
+            :class="{
+            {# if 3 items, the first should takes up 2 cols space #}
+              'col-span-2': toUploadMedia.images.length === 3 && index === 0,
+            }">
+            <img class="w-full h-full object-cover" :src="media.url" alt="Image uploaded ">
+            {% include 'posts/partial/media_cancel_btn.html' %}
+          </div>
+        </template>
+      </div>
+    </template>
+   </div>
+
+
   <!-- Display current old media  -->
   {% include 'posts/partial/media_gallery.html' with editing=True medias=post.medias.all  %}
 
-  <!-- To delete media field -->
+  
+  <!-- To-delete media field -->
   <input hidden name="delete_media" :value="JSON.stringify(toDeleteIds)" >
 
+  <!-- Done & cancel button -->
   {% include 'posts/partial/post_edit_actions.html' %}
 </form>
