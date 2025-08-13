@@ -5,7 +5,8 @@ import json
 import redis
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
-from django.http import Http404, StreamingHttpResponse
+from django.forms import ValidationError
+from django.http import Http404, HttpResponse, StreamingHttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
 from django.views.generic import (
@@ -129,12 +130,19 @@ class PostEditView(LoginRequiredMixin, GetUserPostMixin, UpdateView):
         import json
 
         delete_ids = json.loads(self.request.POST.get("delete_media", "[]"))
-        # TODO Refactor this later
-        with transaction.atomic():
-            PostMedia.objects.filter(id__in=delete_ids).delete()
-            form.validate_allowed_media_num()
-            super().form_valid(form)
-            form.save_media(post=self.object)
+        try:
+            with transaction.atomic():
+                PostMedia.objects.filter(id__in=delete_ids).delete()
+                form.validate_allowed_media_num()  # This must wait for deletion completed first
+                super().form_valid(form)
+                form.save_media(post=self.object)
+        except ValidationError as e:
+            # Catch error from validating
+            resp = HttpResponse(status=400)
+            resp["HX-Trigger"] = json.dumps(
+                {"post-edit-error": {"message": " ".join(e.messages)}}
+            )
+            return resp
 
         template = self.get_template_names()
         context = {"post": self.object, "insert_to_dom": True}
