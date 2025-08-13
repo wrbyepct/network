@@ -129,9 +129,10 @@ class PostEditView(LoginRequiredMixin, GetUserPostMixin, UpdateView):
         import json
 
         delete_ids = json.loads(self.request.POST.get("delete_media", "[]"))
-
+        # TODO Refactor this later
         with transaction.atomic():
             PostMedia.objects.filter(id__in=delete_ids).delete()
+            form.validate_allowed_media_num()
             super().form_valid(form)
             form.save_media(post=self.object)
 

@@ -37,7 +37,7 @@ class PostForm(forms.ModelForm):
         video = self.cleaned_data.get("video")
         PostMediaService.save_media(post, images, video)
 
-    def clean(self):
+    def validate_allowed_media_num(self):
         """Validate allowed media amount."""
         cleaned_data = super().clean()
         self._validate_allowed_media_num(
