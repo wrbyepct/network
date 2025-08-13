@@ -71,7 +71,7 @@
         hx-trigger="submit" 
         hx-encoding="multipart/form-data"
         enctype="multipart/form-data"
-        @submit.prevent="prepareMediaThenSubmit()" {# htmx will wait for this to complete before issue a post#}
+        @submit.prevent="prepareMediaThenSubmit()" {# htmx will wait for this to complete before issue a post reqiest #}
     >
 
         {# Content Textarea #}
