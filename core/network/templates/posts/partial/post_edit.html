@@ -40,6 +40,12 @@
     console.log('prepare media  function called');
   },
   toDeleteIds: [],
+  alertVisible: false, 
+  alertMessage: '' ,
+  displaySubmitError(evt) {
+    this.alertVisible = true;
+    this.alertMessage = evt.detail.message;
+  }
 }"
   x-init="htmx.process($el)"
   hx-post="{% url 'post_edit' post.id %}"
@@ -48,9 +54,10 @@
   hx-swap="outerHTML"
   hx-encoding="multipart/form-data"
   enctype="multipart/form-data"
-  htmx:response-error="console.log('post form submit error')" 
+  @post-edit-error="displaySubmitError($event)" 
   @submit.prevent="prepareMediaThenSubmit()"
 >
+
   <!-- Post content edit field -->
   <textarea
     name="content"
@@ -70,9 +77,12 @@
   <div class="border-2 border-stone-300 rounded-md p-1 my-2">
     <!-- Video -->
     <template x-if="toUploadMedia.videos.length > 0" > 
-      <div class="grid grid-cols-1" >
-        <video src="toUploadMedia.videos[0].url"  preload="metadata" ></video>
-      </div>
+      <template x-for="(media, index) in toUploadMedia.videos"> 
+        <div class="grid grid-cols-1 relative" >
+          <video :src="toUploadMedia.videos[0].url"  preload="metadata" ></video>
+          {% include 'posts/partial/media_cancel_btn.html' %}
+        </div>
+      </template>
     </template>
     <!-- Images -->
     <template x-if="toUploadMedia.images.length > 0">
@@ -108,4 +118,6 @@
 
   <!-- Done & cancel button -->
   {% include 'posts/partial/post_edit_actions.html' %}
+
+  {% include 'common/alert.html' %}
 </form>
