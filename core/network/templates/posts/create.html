@@ -38,7 +38,7 @@
             this.selectedMedia[type].splice(index, 1);
         },
  
-        prepareMediaThenSubmit(form) {
+        prepareMediaThenSubmit() {
             // Put the newest list in media input before submit
             const imageTransfer = new DataTransfer();
             this.selectedMedia.images.forEach( image => imageTransfer.items.add(image.file));
@@ -70,7 +70,8 @@
         hx-swap="innerHTML"
         hx-trigger="submit" 
         hx-encoding="multipart/form-data"
-        @submit.prevent="prepareMediaThenSubmit($el)" {# htmx will wait for this to complete before issue a post#}
+        enctype="multipart/form-data"
+        @submit.prevent="prepareMediaThenSubmit()" {# htmx will wait for this to complete before issue a post#}
     >
 
         {# Content Textarea #}
