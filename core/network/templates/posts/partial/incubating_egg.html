@@ -6,7 +6,7 @@
     isHatching: false, {# Control egg hatching effect showing #}
     glowStyleIndex: {{ is_special_egg|yesno:'true,false' }} ? Math.floor(Math.random() * 12) + 1 : 0,
     addGlowEffectToPost(postId) {
-      const hatchedPost = document.getElementById(postId);
+      const hatchedPost = document.getElementById(`post-${postId}`);
       hatchedPost.classList.add(`glow-scheme-${this.glowStyleIndex}`, 'post-pulsing-glow');
     },
     removeEgg() {
