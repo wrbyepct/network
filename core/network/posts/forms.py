@@ -65,7 +65,7 @@ class PostForm(forms.ModelForm):
         total = existing_count + new_upload_count
 
         if total > limit_num:
-            msg = f"You can only upload up to {limit_num} {media_type} at a time."
+            msg = f"Oops, you can only upload up to {limit_num} {media_type} in a post."
             raise forms.ValidationError(msg)
 
     # TODO (extra) implement validate media size
