@@ -69,6 +69,27 @@ class Profile(TimestampedModel, FollowMixin):
         """Return profile's albums count."""
         return self.albums.count()
 
+    @cached_property
+    def special_eggs_count(self):
+        """Return total special eggs count."""
+        eggs = self.user.special_eggs.all()
+        if eggs:
+            return sum(egg.quantity for egg in eggs)
+        return 0
+
+    @cached_property
+    def regular_eggs_count(self):
+        """Return total regular eggs count."""
+        eggs = self.user.regular_eggs.all()
+        if eggs:
+            return sum(egg.quantity for egg in eggs)
+        return 0
+
+    @cached_property
+    def posts_count(self):
+        """Return user's posts count."""
+        return self.user.posts.count()
+
 
 class SpecialEggChoices(models.TextChoices):
     """Special egg choices."""

@@ -42,8 +42,16 @@
         clearUpForm(e) {
           e.target.reset();
           this.resize(this.$refs.textarea);
+        },
+        {# Alert #}
+        alertVisible: false, 
+        alertMessage: '' ,
+        displayAlertMessage(evt) {
+          this.alertVisible = true;
+          this.alertMessage = evt.detail.message;
         }
       }"
+      {# TODO: change this to custom alert later #}
       @form-error.window="() => { alert($event.detail.value); }"
     
     >
