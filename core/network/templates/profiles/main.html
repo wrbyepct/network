@@ -12,7 +12,7 @@
     <div class="d-flex justify-content-between">
         <h2>{{ profile.username }}'s Profile</h2>
         {% if profile.user == request.user %}
-          <a href="{% url 'profile_edit' %}">Edit</a>
+          {% include 'profiles/partials/edit_button.html' %}
         {% else %}
           <a 
             class="btn"

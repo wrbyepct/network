@@ -179,7 +179,7 @@ class ProfileEditView(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         """Get back to user profile about page ."""
-        profile = self.request.user
+        profile = self.request.user.profile
         return reverse("profile_about", args=[profile.username])
 
 
