@@ -1,12 +1,15 @@
 {% extends "network/layout.html" %}
-{% load static %}
+
 {% load form_filters %}
 
 {% block body %}
 <div class="min-h-screen bg-amber-50 p-4"
-     style="background-image: url('data:image/svg+xml,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20viewBox%3D%220%200%2020%2020%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Crect%20width%3D%2220%22%20height%3D%2220%22%20fill%3D%22%23F59E0B%22%20opacity%3D%220.05%22/%3E%3Crect%20width%3D%2210%22%20height%3D%2210%22%20fill%3D%22%23D97706%22%20opacity%3D%220.1%22/%3E%3C/svg%3E');">  
+     style="background-image: url('data:image/svg+xml,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20viewBox%3D%220%200%2020%2020%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Crect%20width%3D%2220%22%20height%3D%2220%22%20fill%3D%22%23F59E0B%22%20opacity%3D%220.05%22/%3E%3Crect%20width%3D%2210%22%20height%3D%2210%22%20fill%3D%22%23D97706%22%20opacity%3D%220.1%22/%3E%3C/svg%3E');
+     "
+     x-data="profileEditor()"
+     >  
   <!-- Turtle Header -->
-  <div class="max-w-2xl mx-auto mb-8" x-data="{ shellOpen: true }" x-init="setTimeout(() => shellOpen = true, 100)">
+  <div class="max-w-2xl mx-auto mb-8">
     <div class="bg-green-800 border-4 border-green-900 rounded-lg p-6 font-mono text-center relative overflow-hidden">
       <!-- Pixel decorations -->
       <div class="absolute top-2 left-2 w-3 h-3 bg-green-600 border border-green-900"></div>
@@ -20,7 +23,7 @@
   </div>
 
   <!-- Main Form Container -->
-  <div class="max-w-2xl mx-auto" x-data="profileEditor()">
+  <div class="max-w-2xl mx-auto" >
     <form method="post" 
           action="{% url 'profile_edit' %}" 
           enctype="multipart/form-data" 
@@ -219,7 +222,8 @@
   
   <!-- Success Message -->
   <div x-show="showSuccess" 
-       x-transition
+       x-cloak
+       x-init="hideSuccessMessage()"
        class="fixed top-8 right-8 bg-green-500 border-4 border-green-700 rounded-lg p-4 text-green-900 font-mono font-bold shadow-xl z-50">
     🎉 Turtle profile updated successfully! 🐢
   </div>
@@ -234,7 +238,11 @@
       bioLength: '{{ form.bio.value|default_if_none:""|length }}',
       errors: {},
       isSubmitting: false,
-      showSuccess: false,
+      showSuccess: {{ edited_success|yesno:'true, false' }},
+
+      hideSuccessMessage() {
+        if(this.showSuccess) setTimeout(() => { this.showSuccess = false; }, 3000)
+      },
 
       handleFileSelect(event) {
         const file = event.target.files[0];

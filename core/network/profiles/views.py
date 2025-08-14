@@ -3,7 +3,7 @@
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, render
-from django.urls import reverse
+from django.urls import reverse_lazy
 from django.views.generic import (
     ListView,
     TemplateView,
@@ -172,15 +172,17 @@ class ProfileEditView(LoginRequiredMixin, UpdateView):
 
     template_name = "profiles/edit.html"
     form_class = ProfileForm
+    success_url = reverse_lazy("profile_edit")
 
     def get_object(self, queryset=None):
         """Return the requesting user's Profile."""
         return self.request.user.profile
 
-    def get_success_url(self):
-        """Get back to user profile about page ."""
-        profile = self.request.user.profile
-        return reverse("profile_about", args=[profile.username])
+    def form_valid(self, form):
+        """Inject exited success to true when the edit is successful."""
+        super().form_valid(form)
+        context = {"edited_success": True, "form": form}
+        return render(self.request, self.template_name, context)
 
 
 # Follow/Unfollow
