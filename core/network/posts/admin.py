@@ -5,12 +5,21 @@ from django.contrib import admin
 from .models import Post, PostMedia
 
 
+class PostMediaInline(admin.TabularInline):  # or StackedInline
+    """Post Medias Inline."""
+
+    model = PostMedia
+    extra = 1  # how many empty forms to show
+    min_num = 0  # minimum number of related objects
+
+
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
     """Custome Post admin."""
 
     list_display = ["id", "username"]
     list_display_links = ["id"]
+    inlines = [PostMediaInline]
 
     def username(self, obj):
         """Get username."""

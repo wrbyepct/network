@@ -120,6 +120,7 @@ class PostMedia(MediaBaseModel):
     )
 
     class Meta(MediaBaseModel.Meta):
+        ordering = ["order"]
         constraints = [
             models.UniqueConstraint(
                 fields=["post", "order"], name="Unique order per post."
