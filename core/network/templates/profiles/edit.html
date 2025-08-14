@@ -26,8 +26,10 @@
   <div class="max-w-2xl mx-auto" >
     <form method="post" 
           action="{% url 'profile_edit' %}" 
-          enctype="multipart/form-data" 
-          class="bg-green-700 border-4 border-green-900 rounded-lg p-8 font-mono shadow-xl">
+          enctype="multipart/form-data"
+          @submit.prevent="prepareUploadFile($el)" 
+          class="bg-green-700 border-4 border-green-900 rounded-lg p-8 font-mono shadow-xl"
+        >
       {% csrf_token %}
 
       <!-- Profile Picture Section -->
@@ -60,18 +62,23 @@
                  @drop.prevent="handleFileDrop($event)"
                  :class="isDragging ? 'border-amber-400 bg-amber-200' : ''"
                  x-ref="dropZone">
-              
-              <div class="text-6xl mb-2" x-show="!previewImage">🐢</div>
-              <div class="text-green-900 font-bold mb-2" x-show="!previewImage">
-                DROP YOUR SHELL HERE!
+
+              <div x-show="!previewImage">
+                <div>
+                  <img src="/media/defaults/turtle_proud.png" class="w-15 mx-auto mb-2" >
+                </div>
+
+                <div class="text-green-900 font-bold mb-2">
+                  DROP YOUR SHELL HERE!
+                </div>
+                <div class="text-green-800 text-sm mb-4" >
+                  Or click to browse files
+                </div>
               </div>
-              <div class="text-green-800 text-sm mb-4" x-show="!previewImage">
-                Or click to browse files
-              </div>
-              
+                
               <!-- Preview Image -->
               <div x-show="previewImage" class="mb-4">
-                <img :src="previewImage" 
+                <img :src="previewImage.url" 
                      class="w-32 h-32 object-cover border-4 border-green-900 rounded mx-auto pixelated"
                      style="image-rendering: pixelated;">
                 <p class="text-green-900 text-sm mt-2 font-bold">New Shell Preview!</p>
@@ -240,44 +247,37 @@
       isSubmitting: false,
       showSuccess: {{ edited_success|yesno:'true, false' }},
 
-      hideSuccessMessage() {
-        if(this.showSuccess) setTimeout(() => { this.showSuccess = false; }, 3000)
-      },
 
       handleFileSelect(event) {
         const file = event.target.files[0];
-        if (file) {
-          this.previewFile(file);
-        }
+        this.previewFile(file);
       },
 
       handleFileDrop(event) {
         this.isDragging = false;
-        const files = event.dataTransfer.files;
-        if (files.length > 0) {
-          const file = files[0];
-          if (file.type.startsWith('image/')) {
-            // Update the file input
-            const fileInput = this.$refs.fileInput;
-            const dt = new DataTransfer();
-            dt.items.add(file);
-            fileInput.files = dt.files;
-            
-            this.previewFile(file);
-          }
-        }
+        const file = event.dataTransfer.files[0];
+        this.previewFile(file);
       },
 
       previewFile(file) {
-        if (file && file.type.startsWith('image/')) {
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            this.previewImage = e.target.result;
-          };
-          reader.readAsDataURL(file);
+        if (file.type.startsWith('image/')) {
+          this.previewImage = { 
+              file: file, 
+              url: URL.createObjectURL(file),
+          }
         }
       },
-
+      prepareUploadFile(form) {
+        if(this.previewImage) {
+          const dt = new DataTransfer();
+          dt.items.add(this.previewImage.file);
+          this.$refs.fileInput.files = dt.files;
+        } 
+        form.submit();
+      },
+      hideSuccessMessage() {
+        if(this.showSuccess) setTimeout(() => { this.showSuccess = false; }, 3000)
+      },
       init() {
         // Initialize bio length
         this.bioLength = parseInt('{{ form.bio.value|default_if_none:""|length }}') || 0;
