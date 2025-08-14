@@ -19,7 +19,7 @@
     // This is to clean up memory
     URL.revokeObjectURL(this.toUploadMedia[type][index].url); 
     this.toUploadMedia[type].splice(index, 1);
-    console.log(this.toUploadMedia.images)
+
   },
   handleMediaUpload(event) {
     const files = Array.from(event.target.files);
@@ -39,7 +39,7 @@
     this.$refs.videoInput.files = videoTransfer.files;
 
     $dispatch('mediaReadyToUpload');
-    console.log(this.$refs.imageInput.files);
+   
 
   },
   toDeleteIds: [],
