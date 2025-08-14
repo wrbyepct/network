@@ -1,0 +1,103 @@
+{% load profile_extra %}
+<a 
+    x-data="{ hasFollowed: {{ profile|has_followed:request.user|yesno:'true,false' }} }"
+    role="button"
+    class="relative inline-flex items-center gap-2 px-4 py-3 font-mono text-sm font-bold 
+          transition-all duration-200 rounded-lg border-4 
+          shadow-[6px_6px_0px_#25422a] active:shadow-[2px_2px_0px_#25422a] 
+          cursor-pointer select-none !no-underline"
+    :class="hasFollowed 
+      ? 'bg-cyan-600 border-green-800 !text-stone-200 hover:bg-red-400' 
+      : 'bg-amber-400 border-amber-700 !text-amber-900 hover:bg-pink-300 sparkle-hover'"
+    x-ref="followBtn"
+    {% if request.user.is_authenticated %}
+      @click="
+        if (!hasFollowed) {
+          $refs.followBtn.classList.add('pixel-glow');
+          setTimeout(() => $refs.followBtn.classList.remove('pixel-glow'), 600);
+        }
+        hasFollowed = !hasFollowed
+      "
+      hx-post="{% url 'follow' profile.username %}"
+      hx-swap="none"
+      @follow-success="displayAlertMessage($event)"
+    {% else %}
+      href="{% url 'account_login' %}"
+    {% endif %}
+    @mouseover="$refs.actionText.innerHTML = hasFollowed ? 'Unfollow' : 'Follow Shell!'"
+    @mouseleave="$refs.actionText.innerHTML = hasFollowed ? 'Following' : 'Follow'"
+>
+    <span x-ref="actionText" x-text="hasFollowed ? 'Following' : 'Follow'"></span>
+</a>
+
+
+
+<style>
+  /* --- Glow Animation --- */
+.pixel-glow {
+  animation: pixelGlow 0.6s ease-out;
+}
+
+@keyframes pixelGlow {
+  0% {
+    box-shadow:
+      0 0 0 0 #a3e635,
+      0 0 0 2px #65a30d,
+      0 0 0 4px #facc15;
+  }
+
+  50% {
+    box-shadow:
+      0 0 0 2px #bef264,
+      0 0 0 4px #a3e635,
+      0 0 0 6px #facc15;
+  }
+
+  100% {
+    box-shadow: 6px 6px 0px #25422a;
+    /* back to chunky shadow */
+  }
+}
+
+/* --- Sparkle Effect on Hover --- */
+.sparkle-hover::before,
+.sparkle-hover::after {
+  content: '';
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: #fff7c2;
+  opacity: 0;
+  transform: scale(0.5);
+  image-rendering: pixelated;
+}
+
+.sparkle-hover:hover::before {
+  left: 10%;
+  top: 10%;
+  animation: sparklePop 0.4s ease-out;
+}
+
+.sparkle-hover:hover::after {
+  right: 15%;
+  bottom: 15%;
+  animation: sparklePop 0.4s ease-out 0.15s;
+}
+
+@keyframes sparklePop {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+}
+</style>

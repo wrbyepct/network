@@ -2,10 +2,7 @@
 {% load profile_extra %}
 {% block body %}
 <!-- Follow toast -->
-
-<div id="follow_message">
-
-</div>
+{% include 'common/alert.html' %}
 
 <div class="container mt-5">
     <!-- Follow or edit buttons -->
@@ -14,19 +11,7 @@
         {% if profile.user == request.user %}
           {% include 'profiles/partials/edit_button.html' %}
         {% else %}
-          <a 
-            class="btn"
-            x-data="{ hasFollowed: {{ profile|has_followed:request.user|yesno:'true,false' }}}"
-            :class="hasFollowed ? 'btn-primary' : 'btn-outline-primary'"
-            x-text="hasFollowed ? 'Followed' : 'Follow'"
-          {% if request.user.is_authenticated %}
-            @click="hasFollowed = !hasFollowed"
-            hx-post="{% url 'follow' profile.username %}"
-            hx-target="#follow_message"
-          {% else %}
-            href="{% url 'account_login' %}"
-          {% endif %}
-            ></a>
+          {% include 'profiles/partials/follow_btn.html' %}
         {% endif %}
     </div>
 
