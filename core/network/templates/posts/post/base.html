@@ -30,7 +30,10 @@
         el.setSelectionRange(len, len);
       },
       addEditedGlow() {
-        if(this.edited) setTimeout(() => $el.classList.add('golden-shimmer'), 50);
+        if(this.edited) {
+          setTimeout(() => $el.classList.add('golden-shimmer'), 50);
+          setTimeout(() => $el.classList.remove('golden-shimmer'), 2100);
+        }
       },
     }"
   {% endwith %}
@@ -113,7 +116,7 @@
 
           <!-- Egg toolkit -->
           <div class="relative group">
-            {% include 'posts/partial/egg_toolkit.html' with egg_name=post.egg_name is_special=post.is_from_special_egg %}
+            {% include 'posts/partial/egg_toolkit.html' with egg_name=post.egg_name is_special=post.is_from_special_egg display_born_from=True %}
             <img class="w-15 cursor-pointer" src="{{ post.born_from_egg }}" alt="The Egg image the post is born from">
           </div>
         </div>
