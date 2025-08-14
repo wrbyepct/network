@@ -1,13 +1,15 @@
 {% extends 'common/toolkit.html' %}
   <!-- Tooltip Bubble -->
 {% block toolkit_content %}
-  <p class="mb-1">Egg type: 
-    {% if is_special %}
-      <span class="text-amber-500 text-lg font-black">LEGENDARY</span>
-    {% else %}
-      <span class="text-emerald-700 text-lg font-black">CUTE</span>
-    {% endif %}</p>
-  <p class="mb-1">It's a {% if is_special %} <span class="text-fuchsia-500 font-black">rare</span> {% else %}cute {% endif%}<span class="font-black">{{ egg_name|title }} </span>Egg</p>
+  {% if display_born_from %}
+    <p class="mb-1">
+      Born from: 
+    </p>
+    <p><span class="italic font-black">{{ egg_name|title }}</span> egg</p>
+  {% endif %}
+  <p class="mb-1">Egg type: </p>
+  <p>It's a {% if is_special %}<span class="text-fuchsia-500 font-black">rare </span><span class="text-amber-500 font-black">Lengendary </span>{% else %}li'l <span class="text-emerald-700 font-black">Cute</span>
+{% endif %}type</p>
   <!-- Bigger egg image -->
   {% if egg_url %}
     <img class="w-30 egg-levitation mx-auto" src="{{ egg_url }}" alt="Bigger Egg image">
