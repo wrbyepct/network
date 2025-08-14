@@ -19,6 +19,7 @@
     // This is to clean up memory
     URL.revokeObjectURL(this.toUploadMedia[type][index].url); 
     this.toUploadMedia[type].splice(index, 1);
+    console.log(this.toUploadMedia.images)
   },
   handleMediaUpload(event) {
     const files = Array.from(event.target.files);
@@ -37,7 +38,9 @@
     this.toUploadMedia.videos.forEach( video => videoTransfer.items.add(video.file));
     this.$refs.videoInput.files = videoTransfer.files;
 
-    console.log('prepare media  function called');
+    $dispatch('mediaReadyToUpload');
+    console.log(this.$refs.imageInput.files);
+
   },
   toDeleteIds: [],
   alertVisible: false, 
@@ -50,12 +53,12 @@
   x-init="htmx.process($el)"
   hx-post="{% url 'post_edit' post.id %}"
   hx-vals='{"post_type": "list_card"}'
+  hx-trigger="mediaReadyToUpload"
   hx-target="#post-{{ post.id }}"
   hx-swap="outerHTML"
   hx-encoding="multipart/form-data"
   enctype="multipart/form-data"
   @post-edit-error="displaySubmitError($event)" 
-  @submit.prevent="prepareMediaThenSubmit()"
 >
 
   <!-- Post content edit field -->
@@ -79,7 +82,7 @@
     <template x-if="toUploadMedia.videos.length > 0" > 
       <template x-for="(media, index) in toUploadMedia.videos"> 
         <div class="grid grid-cols-1 relative" >
-          <video :src="toUploadMedia.videos[0].url"  preload="metadata" ></video>
+          <video class="w-full h-full object-cover" :src="toUploadMedia.videos[0].url"  preload="metadata" ></video>
           {% include 'posts/partial/media_cancel_btn.html' %}
         </div>
       </template>
