@@ -1,7 +1,10 @@
 <!-- Pixel Turtle Alert -->
 <div 
     x-show="alertVisible"
+    x-effect="if(alertVisible) setTimeout(() => alertVisible = false, 3000)"
+    x-cloak
     x-transition.duration.300ms
+    x-transition.opacity
     class="fixed top-4 left-1/2 -translate-x-1/2 z-50 
            flex items-center space-x-3
            bg-emerald-200 border-4 border-emerald-800 
