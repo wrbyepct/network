@@ -1,7 +1,10 @@
 # Create your views here.
 """Profile views."""
 
+import json
+
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
 from django.views.generic import (
@@ -190,16 +193,14 @@ class FollowView(View):
     """View to follow/unfollow a user's profile."""
 
     def perform_follow(self, profile, to_follow_profile):
-        """Peform follow and return message context."""
+        """Peform follow and return message."""
         profile.follow(to_follow_profile)
-        msg = f"You followed {to_follow_profile.username}!"
-        return {"follow_message": msg}
+        return f"You followed {to_follow_profile.username}!"
 
     def perform_unfollow(self, profile, to_unfollow_profile):
-        """Peform unfollow and return message context."""
+        """Peform unfollow and return message."""
         profile.unfollow(to_unfollow_profile)
-        msg = f"Unfollowed {to_unfollow_profile.username}."
-        return {"follow_message": msg}
+        return f"Unfollowed {to_unfollow_profile.username}."
 
     def post(self, request, *args, **kwargs):
         """Follow a profile and return success message."""
@@ -209,9 +210,12 @@ class FollowView(View):
         has_followed = profile.has_followed(to_profile)
 
         if not has_followed:
-            context = self.perform_follow(profile, to_profile)
+            message = self.perform_follow(profile, to_profile)
 
         else:
-            context = self.perform_unfollow(profile, to_profile)
+            message = self.perform_unfollow(profile, to_profile)
 
-        return render(request, "profiles/partials/messages.html", context)
+        resp = HttpResponse()
+
+        resp["HX-Trigger"] = json.dumps({"follow-success": {"message": message}})
+        return resp

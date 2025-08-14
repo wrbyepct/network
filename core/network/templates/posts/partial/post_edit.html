@@ -43,12 +43,6 @@
 
   },
   toDeleteIds: [],
-  alertVisible: false, 
-  alertMessage: '' ,
-  displaySubmitError(evt) {
-    this.alertVisible = true;
-    this.alertMessage = evt.detail.message;
-  }
 }"
   x-init="htmx.process($el)"
   hx-post="{% url 'post_edit' post.id %}"
@@ -58,7 +52,7 @@
   hx-swap="outerHTML"
   hx-encoding="multipart/form-data"
   enctype="multipart/form-data"
-  @post-edit-error="displaySubmitError($event)" 
+  @post-edit-error="displayAlertMessage($event)" 
 >
 
   <!-- Post content edit field -->
