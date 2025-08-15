@@ -21,9 +21,8 @@
           <h2 class="text-2xl font-bold text-amber-800 font-mono">Collection</h2>
         </div>
 
-        <!-- Django Template Loop Implementation -->
+        <!-- Global empty state when no eggs at all -->
         {% if not eggs.0.eggs and not eggs.1.eggs and not eggs.2.eggs %}
-            <!-- Global empty state when no eggs at all -->
           <div class="text-center py-12">
             <div class="mb-4">
               <img class="w-15 mx-auto" src="/media/defaults/sorry.png" alt="A turtle with sorry face">
@@ -90,7 +89,7 @@
                           <div class="flex items-center">
                             <div class="relative">
                               <!-- Egg toolkit -->
-                              {% include 'posts/partial/egg_toolkit.html' with egg_name=egg.name egg_type=egg.is_special is_easter=egg.is_easter egg_url=egg.url created_at=egg.created_at %}
+                              {% include 'posts/partial/egg_toolkit.html' with egg=egg display_collected_date=True %}
                               <img class="w-12 h-12 pixel-art-egg {% if egg_type.name == 'special' %}special-egg-glow{% endif %}" 
                                    src="{{ egg.url }}" 
                                    alt="{{ egg.name|title }}">

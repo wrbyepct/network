@@ -135,9 +135,9 @@ class NestView(ProfileTabsBaseMixin, TemplateView):
     def get_context_data(self, **kwargs):
         """Inject user eggs into context."""
         context = super().get_context_data(**kwargs)
-        special_eggs = self.profile.user.special_eggs.all()
-        regular_eggs = self.profile.user.regular_eggs.all()
-        easter_eggs = self.profile.user.easter_eggs.all()
+        special_eggs = self.profile.special_eggs
+        regular_eggs = self.profile.regular_eggs
+        easter_eggs = self.profile.easter_eggs
         eggs = [
             {"name": "special", "eggs": special_eggs},
             {"name": "regular", "eggs": regular_eggs},
