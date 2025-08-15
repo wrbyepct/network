@@ -2,7 +2,7 @@
 
 from django.contrib import admin
 
-from .models import Profile, RegularEgg, SpecialEgg
+from .models import Egg, Profile
 
 
 @admin.register(Profile)
@@ -10,11 +10,6 @@ class ProfileAdmin(admin.ModelAdmin):
     """Custom Profile admin."""
 
 
-@admin.register(SpecialEgg)
-class SpecialEggAdmin(admin.ModelAdmin):
-    """Custom Special Egg admin."""
-
-
-@admin.register(RegularEgg)
-class RegularEggAdmin(admin.ModelAdmin):
-    """Custom Special Egg admin."""
+@admin.register(Egg)
+class EggAdmin(admin.ModelAdmin):
+    """Custom Profile admin."""

@@ -70,10 +70,8 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     form_class = PostForm
     success_url = reverse_lazy("index")
 
-    def get_response_template(self, egg_url):
+    def get_response_template(self, egg_type):
         """Return template based on if the egg is special or not."""
-        egg_type = IncubationService.check_egg_type(egg_url)
-
         return (
             "posts/partial/special_egg_modal.html"
             if egg_type == "special_eggs"
@@ -83,20 +81,22 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         """Save images and videos to PostMedia if they are valid."""
         user = self.request.user
-        egg_url = IncubationService.get_random_egg_url()
-        egg_static_path = EggManageService.get_static_egg_img_path(egg_url)
+        egg_gif_url = IncubationService.get_random_egg_url()
+        egg_static_url = EggManageService.get_static_egg_img_url(egg_gif_url)
+        egg = EggManageService.create_egg_or_update_qnt(
+            self.request.user, egg_static_url
+        )
         with transaction.atomic():
             form.instance.user = user
-            form.instance.born_from_egg = egg_static_path
+            form.instance.egg = egg
             # Set a random publish_at time between 20 minutes and 24 hours from now
             super().form_valid(form)
             form.save_media(self.object)
 
-        IncubationService.incubate_post(self.object, egg_url)
-        EggManageService.create_egg_or_update_qnt(self.request.user, egg_static_path)
+        IncubationService.incubate_post(self.object, egg_gif_url)
         # Render Resposne
-        egg_template = self.get_response_template(egg_url)
-        context = {"egg_url": egg_url}
+        egg_template = self.get_response_template(egg.egg_type)
+        context = {"egg_url": egg_gif_url}
         resp = render(self.request, egg_template, context)
         resp["HX-Trigger"] = "post-created"
         return resp
@@ -162,7 +162,7 @@ class IncubatingEggView(LoginRequiredMixin, View):
         """Return incubating egg template."""
         post_id = IncubationService.get_incubating_post_id(request.user.id)
         egg_url = IncubationService.get_incubating_egg_url(request.user.id)
-        egg_type = IncubationService.check_egg_type(egg_url)
+        egg_type = EggManageService.check_egg_type(egg_url)
         if post_id:
             return render(
                 request,
@@ -171,6 +171,7 @@ class IncubatingEggView(LoginRequiredMixin, View):
                     "post_id": post_id,
                     "egg_url": egg_url,
                     "is_special_egg": egg_type == "special_eggs",
+                    "is_easter_egg": egg_type == "easter_eggs",
                 },
             )
         msg = "The post has hatched. No egg to return."

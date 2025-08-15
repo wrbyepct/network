@@ -70,19 +70,42 @@ class Profile(TimestampedModel, FollowMixin):
         return self.albums.count()
 
     @cached_property
+    def special_eggs(self):
+        """Return user's speical eggs."""
+        return Egg.objects.filter(egg_type="special", user=self.user)
+
+    @cached_property
+    def regular_eggs(self):
+        """Return user's regular eggs."""
+        return Egg.objects.filter(egg_type="regular", user=self.user)
+
+    @cached_property
+    def easter_eggs(self):
+        """Return user's easter eggs."""
+        return Egg.objects.filter(egg_type="easter", user=self.user)
+
+    @cached_property
     def special_eggs_count(self):
         """Return total special eggs count."""
-        eggs = self.user.special_eggs.all()
+        eggs = self.user.eggs.all()
         if eggs:
-            return sum(egg.quantity for egg in eggs)
+            return sum(egg.quantity for egg in eggs if egg.egg_type == "special")
         return 0
 
     @cached_property
     def regular_eggs_count(self):
         """Return total regular eggs count."""
-        eggs = self.user.regular_eggs.all()
+        eggs = self.user.eggs.all()
         if eggs:
-            return sum(egg.quantity for egg in eggs)
+            return sum(egg.quantity for egg in eggs if egg.egg_type == "regular")
+        return 0
+
+    @cached_property
+    def easter_eggs_count(self):
+        """Return total regular eggs count."""
+        eggs = self.user.eggs.all()
+        if eggs:
+            return sum(egg.quantity for egg in eggs if egg.egg_type == "easter")
         return 0
 
     @cached_property
@@ -134,14 +157,24 @@ class EasterEggChoices(models.TextChoices):
     EASTER = "easter", "Easter"
 
 
+class EggTypeChoices(models.TextChoices):
+    """Egg type."""
+
+    SPECIAL = "special", "Special"
+    REGULAR = "regular", "Regular"
+    EASTER = "easter", "Easter"
+
+
 class Egg(TimestampedModel):
-    """Base egg model."""
+    """Egg model."""
 
     url = models.CharField(max_length=255)
     quantity = models.PositiveSmallIntegerField(default=1)
-
-    class Meta:
-        abstract = True
+    name = models.CharField(max_length=20)
+    egg_type = models.CharField(max_length=20, choices=EggTypeChoices)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="eggs"
+    )
 
     def save(self, *args, **kwargs):
         """Override to also save egg url."""
@@ -151,53 +184,6 @@ class Egg(TimestampedModel):
 
         super().save(*args, **kwargs)
 
-    @cached_property
-    def is_special(self):
-        """Return True if it's special egg."""
-        return "special_eggs" in self.url
-
-    @cached_property
-    def is_easter(self):
-        """Return True if it's easter egg."""
-        return "easter_eggs" in self.url
-
-
-class SpecialEgg(Egg):
-    """Special Egg model."""
-
-    name = models.CharField(max_length=20, choices=SpecialEggChoices)
-
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="special_eggs"
-    )
-
     def __str__(self) -> str:
-        """Return special egg name."""
-        return f"Special egg: {self.name}"
-
-
-class RegularEgg(Egg):
-    """Special Egg model."""
-
-    name = models.CharField(max_length=20, choices=RegularEggChoices)
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="regular_eggs"
-    )
-
-    def __str__(self) -> str:
-        """Return regular egg name."""
-        return f"regular egg: {self.name}"
-
-
-class EasterEgg(Egg):
-    """Easter Egg model."""
-
-    name = models.CharField(max_length=20, choices=EasterEggChoices)
-
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="easter_eggs"
-    )
-
-    def __str__(self) -> str:
-        """Return easter egg name."""
-        return f"Easter egg: {self.name}"
+        """Return egg info."""
+        return f"{self.egg_type} egg: {self.name}"

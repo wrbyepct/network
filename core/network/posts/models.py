@@ -6,7 +6,7 @@ from django.utils.functional import cached_property
 
 from network.common.mixins import LikeCountMixin, ProfileInfoMixin
 from network.common.models import MediaBaseModel, TimestampedModel
-from network.profiles.models import Profile
+from network.profiles.models import Egg, Profile
 
 from .managers import PostManager
 from .tasks import delete_task
@@ -26,12 +26,7 @@ class Post(LikeCountMixin, ProfileInfoMixin, TimestampedModel):
     # TODO this is ephemeral data, consider implement it other ways like cache or something.
     celery_task_id = models.CharField(max_length=255, blank=True)
 
-    # Egg images that the post is born from
-    born_from_egg = models.CharField(
-        max_length=255,
-        help_text="Static path like 'media/images/egg.png'",
-        blank=True,
-    )
+    egg = models.ForeignKey(Egg, on_delete=models.DO_NOTHING, related_name="posts")
 
     objects = PostManager()
 
@@ -66,23 +61,6 @@ class Post(LikeCountMixin, ProfileInfoMixin, TimestampedModel):
     def ordered_medias(self):
         """Get acending medias of this post."""
         return self.medias.all().order_by("order")
-
-    @cached_property
-    def is_from_special_egg(self):
-        """Return True if the post is born from a special egg."""
-        return "special_eggs" in self.born_from_egg
-
-    @cached_property
-    def is_from_easter_egg(self):
-        """Return True if the post is born from a special egg."""
-        return "easter_eggs" in self.born_from_egg
-
-    @cached_property
-    def egg_name(self):
-        """Get egg name."""
-        from network.posts.services import EggManageService
-
-        return EggManageService.get_egg_name(self.born_from_egg)
 
     def delete(self, *args, **kwargs):
         """Override delete method to revoke publish task."""
