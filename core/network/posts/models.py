@@ -73,6 +73,11 @@ class Post(LikeCountMixin, ProfileInfoMixin, TimestampedModel):
         return "special_eggs" in self.born_from_egg
 
     @cached_property
+    def is_from_easter_egg(self):
+        """Return True if the post is born from a special egg."""
+        return "easter_eggs" in self.born_from_egg
+
+    @cached_property
     def egg_name(self):
         """Get egg name."""
         from network.posts.services import EggManageService
