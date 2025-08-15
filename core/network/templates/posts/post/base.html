@@ -112,11 +112,17 @@
           class="flex items-center justify-center ms-auto" 
           style="font-family: 'Press Start 2P', monospace; font-size: 9px;">
           <span 
-            class="{% if post.is_from_special_egg %} text-orange-500 {% else%} text-stone-500 {% endif%}">hatched from</span>
+            class="
+            {% if post.is_from_special_egg %} 
+              text-orange-500 
+            {% elif post.is_from_easter_egg %}
+              text-pink-500
+            {% else%} 
+            text-stone-500 {% endif%}">hatched from</span>
 
           <!-- Egg toolkit -->
           <div class="relative group">
-            {% include 'posts/partial/egg_toolkit.html' with egg_name=post.egg_name is_special=post.is_from_special_egg display_born_from=True %}
+            {% include 'posts/partial/egg_toolkit.html' with egg_name=post.egg_name is_special=post.is_from_special_egg is_easter=post.is_from_easter_egg display_born_from=True %}
             <img class="w-15 cursor-pointer" src="{{ post.born_from_egg }}" alt="The Egg image the post is born from">
           </div>
         </div>
