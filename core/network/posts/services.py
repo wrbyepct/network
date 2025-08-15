@@ -7,7 +7,7 @@ from django.core.cache import cache
 from django.db import transaction
 from django.db.models import F, Max
 
-from network.profiles.models import RegularEgg, SpecialEgg
+from network.profiles.models import EasterEgg, RegularEgg, SpecialEgg
 
 from .models import PostMedia
 from .tasks import assign_publish_task
@@ -64,7 +64,7 @@ class IncubationService:
     """Service for incubate a post."""
 
     default_egg_url = "/media/defaults/regular_eggs/green.gif"
-    EGG_TYPES = ["regular_eggs", "special_eggs"]
+    EGG_TYPES = ["regular_eggs", "special_eggs", "easter_eggs"]
     SPECIAL_EGGS = [
         "volcano",
         "rainbow",
@@ -82,16 +82,29 @@ class IncubationService:
         "sakura",
         "cyber",
         "universe",
+        "rubik's cube",
     ]
-    REGULAR_EGGS = ["teal", "orange", "yellow", "red", "green", "blue", "purple"]
-    WEIGHTS = [0.8, 0.2]
+    REGULAR_EGGS = [
+        "teal",
+        "orange",
+        "yellow",
+        "red",
+        "green",
+        "blue",
+        "purple",
+        "chicken",
+    ]
+    EASTER_EGGS = ["glichy", "buggy", "easter"]
+    WEIGHTS = [0.1, 0.2, 0.7]
 
     @staticmethod
     def get_random_egg_name(egg_type):
         """Return random egg img url."""
         if egg_type == "special_eggs":
             return random.choice(IncubationService.SPECIAL_EGGS)
-        return random.choice(IncubationService.REGULAR_EGGS)
+        if egg_type == "regular_eggs":
+            return random.choice(IncubationService.REGULAR_EGGS)
+        return random.choice(IncubationService.EASTER_EGGS)
 
     @staticmethod
     def get_random_egg_type():
@@ -103,9 +116,13 @@ class IncubationService:
         )[0]
 
     @staticmethod
-    def check_special_egg(egg_url):
+    def check_egg_type(egg_url):
         """Return true if it's a special egg type."""
-        return "special_eggs" in egg_url
+        if "special_eggs" in egg_url:
+            return "special_eggs"
+        if "regular_eggs" in egg_url:
+            return "regular_eggs"
+        return "easter_eggs"
 
     @staticmethod
     def get_random_egg_url():
@@ -167,13 +184,15 @@ class EggManageService:
     @staticmethod
     def create_egg_or_update_qnt(user, egg_url):
         """Create egg associated with user or update the egg quantity."""
-        is_special_egg = IncubationService.check_special_egg(egg_url)
+        egg_type = IncubationService.check_egg_type(egg_url)
 
         # Associaed egg with user
-        if is_special_egg:
+        if egg_type == "special_eggs":
             egg, created = SpecialEgg.objects.get_or_create(user=user, url=egg_url)
-        else:
+        elif egg_type == "regular_eggs":
             egg, created = RegularEgg.objects.get_or_create(user=user, url=egg_url)
+        else:
+            egg, created = EasterEgg.objects.get_or_create(user=user, url=egg_url)
 
         if not created:
             egg.quantity = F("quantity") + 1

@@ -72,11 +72,11 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 
     def get_response_template(self, egg_url):
         """Return template based on if the egg is special or not."""
-        is_special_egg = IncubationService.check_special_egg(egg_url)
+        egg_type = IncubationService.check_egg_type(egg_url)
 
         return (
             "posts/partial/special_egg_modal.html"
-            if is_special_egg
+            if egg_type == "special_eggs"
             else "posts/partial/egg_modal.html"
         )
 
@@ -162,7 +162,7 @@ class IncubatingEggView(LoginRequiredMixin, View):
         """Return incubating egg template."""
         post_id = IncubationService.get_incubating_post_id(request.user.id)
         egg_url = IncubationService.get_incubating_egg_url(request.user.id)
-        is_special_egg = IncubationService.check_special_egg(egg_url)
+        egg_type = IncubationService.check_egg_type(egg_url)
         if post_id:
             return render(
                 request,
@@ -170,7 +170,7 @@ class IncubatingEggView(LoginRequiredMixin, View):
                 {
                     "post_id": post_id,
                     "egg_url": egg_url,
-                    "is_special_egg": is_special_egg,
+                    "is_special_egg": egg_type == "special_eggs",
                 },
             )
         msg = "The post has hatched. No egg to return."
