@@ -294,3 +294,9 @@
     opacity: 0.7;
   }
 }
+
+/* Special Egg Glow */
+.special-egg-glow {
+  animation: mystical-pulse 2s ease-in-out infinite alternate;
+  filter: drop-shadow(0 0 20px rgba(147, 51, 234, 0.7));
+}

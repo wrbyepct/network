@@ -110,6 +110,7 @@ class SpecialEggChoices(models.TextChoices):
     SAKURA = "sakura", "Sakura"
     CYBER = "cyber", "Cyber"
     UNIVERSE = "universe", "Universe"
+    RUBIKS_CUBE = "rubik's cube", "Rubik's Cube"
 
 
 class RegularEggChoices(models.TextChoices):
@@ -122,6 +123,15 @@ class RegularEggChoices(models.TextChoices):
     GREEN = "green", "Green"
     BLUE = "blue", "Blue"
     PURPLE = "purple", "Purple"
+    Chicken = "chiken", "Chicken"
+
+
+class EasterEggChoices(models.TextChoices):
+    """Regular egg choices."""
+
+    GLICHY = "glichy", "Glichy"
+    BUGGY = "buggy", "Buggy"
+    EASTER = "easter", "Easter"
 
 
 class Egg(TimestampedModel):
@@ -145,6 +155,11 @@ class Egg(TimestampedModel):
     def is_special(self):
         """Return True if it's special egg."""
         return "special_eggs" in self.url
+
+    @cached_property
+    def is_easter(self):
+        """Return True if it's easter egg."""
+        return "easter_eggs" in self.url
 
 
 class SpecialEgg(Egg):
@@ -172,3 +187,17 @@ class RegularEgg(Egg):
     def __str__(self) -> str:
         """Return regular egg name."""
         return f"regular egg: {self.name}"
+
+
+class EasterEgg(Egg):
+    """Easter Egg model."""
+
+    name = models.CharField(max_length=20, choices=EasterEggChoices)
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="easter_eggs"
+    )
+
+    def __str__(self) -> str:
+        """Return easter egg name."""
+        return f"Easter egg: {self.name}"

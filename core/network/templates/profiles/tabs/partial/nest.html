@@ -22,7 +22,7 @@
         </div>
 
         <!-- Django Template Loop Implementation -->
-        {% if not eggs.0.eggs and not eggs.1.eggs %}
+        {% if not eggs.0.eggs and not eggs.1.eggs and not eggs.2.eggs %}
             <!-- Global empty state when no eggs at all -->
           <div class="text-center py-12">
             <div class="mb-4">
@@ -42,33 +42,68 @@
                   <div class="flex items-center mb-4">
                     {% if egg_type.name == 'special' %}
                       <h class="text-xl font-extrabold shimmer-text-alt">Legendary Eggs</h3>
-                    {% else %}
+                    {% elif egg_type.name == 'regular' %}
                       <span class="text-2xl font-bold text-amber-500">Cute Eggs</span>
+                    {% else %}
+                      <span 
+                        class="text-2xl font-bold font-mono uppercase tracking-wider text-pink-400"
+                        style="
+                          text-shadow:
+                            2px 2px 0px #6b0048,
+                            0 0 6px #ffe6f0,
+                            0 0 12px #ffb3d9;
+                        "
+                        >Easter Eggs</span>
                     {% endif %}
                 </div>
                   <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {% for egg in egg_type.eggs %}
-                      <div class="{% if egg_type.name == 'special' %}bg-gradient-to-br from-purple-100 to-indigo-100 border-3 border-purple-500{% else %}bg-white border-3 border-amber-500{% endif %} rounded-lg p-4 hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer group relative">
+                      <div class="{% if egg_type.name == 'easter' %}
+                                    bg-gradient-to-br from-pink-100 via-yellow-100 to-green-100
+                                    border-3 border-pink-400
+                                  {% elif egg_type.name == 'special' %}
+                                    bg-gradient-to-br from-purple-100 to-indigo-100 border-3 border-purple-500
+                                  {% else %}bg-white border-3 border-amber-500
+                                  {% endif %} rounded-lg p-4 hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer group relative">
                         
+                        {% if egg_type.name == 'easter' %}
+                          <!-- Festive shimmer for Easter eggs -->
+                          <div class="absolute inset-0 bg-gradient-to-r from-pink-200/20 via-yellow-200/20 to-green-200/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        {% endif %}
+
                         {% if egg_type.name == 'special' %}
                           <!-- Magical glow effect for special eggs -->
                           <div class="absolute inset-0 bg-gradient-to-r from-purple-400/10 to-indigo-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         {% endif %}
                         
                         <div class="relative flex items-center justify-between">
-                          <span class="font-medium {% if egg_type.name == 'special' %}text-purple-800 group-hover:text-purple-900{% else %}text-amber-800 group-hover:text-amber-900{% endif %}">
+                          <span class="
+                            {% if egg_type.name == 'easter' %}
+                                text-pink-700 group-hover:text-pink-600
+                            {% elif egg_type.name == 'special' %}
+                                text-purple-800 group-hover:text-purple-900
+                            {% else %}
+                                text-amber-800 group-hover:text-amber-900
+                            {% endif %} font-medium">
                             {{ egg.name|title }}
                           </span>
                           <div class="flex items-center">
                             <div class="relative">
                               <!-- Egg toolkit -->
-                              {% include 'posts/partial/egg_toolkit.html' with egg_name=egg.name is_special=egg.is_special egg_url=egg.url created_at=egg.created_at %}
+                              {% include 'posts/partial/egg_toolkit.html' with egg_name=egg.name egg_type=egg.is_special is_easter=egg.is_easter egg_url=egg.url created_at=egg.created_at %}
                               <img class="w-12 h-12 pixel-art-egg {% if egg_type.name == 'special' %}special-egg-glow{% endif %}" 
                                    src="{{ egg.url }}" 
                                    alt="{{ egg.name|title }}">
                               <div class="absolute inset-0 rounded-full {% if egg_type.name == 'special' %}bg-purple-300{% else %}bg-green-200{% endif %} opacity-0 group-hover:opacity-30 transition-opacity duration-200"></div>
                             </div>
-                            <span class="{% if egg_type.name == 'special' %}bg-gradient-to-r from-purple-200 to-indigo-200 text-purple-800 border-2 border-purple-400{% else %}bg-amber-200 text-amber-800 border-2 border-amber-400{% endif %} px-2 py-1 rounded-full text-sm font-bold">
+                            <span class="
+                              {% if egg_type.name == 'special' %}
+                                bg-gradient-to-r from-purple-200 to-indigo-200 text-purple-800 border-2 border-purple-400
+                              {% elif egg_type.name == 'easter' %}
+                                bg-gradient-to-r from-pink-200 to-yellow-200 text-pink-800 
+                                border-2 border-pink-400
+                              {% else %}bg-amber-200 text-amber-800 border-2 border-amber-400
+                              {% endif %} px-2 py-1 rounded-full text-sm font-bold">
                               × {{ egg.quantity }}
                             </span>
                           </div>
