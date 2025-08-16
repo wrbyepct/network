@@ -189,3 +189,7 @@ SECURITY_ISSUES.md
 agent_doc
 .cursor
 .windsurfrules
+.bmad*
+.claude*
+.gemini*
+docs
