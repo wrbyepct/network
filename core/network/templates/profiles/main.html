@@ -2,39 +2,89 @@
 {% load profile_extra %}
 {% block body %}
 
-<div class="container mt-5">
-    <!-- Follow or edit buttons -->
-    <div class="d-flex justify-content-between">
-        <h2>{{ profile.username }}'s Profile</h2>
-        {% if profile.user == request.user %}
-          {% include 'profiles/partials/edit_button.html' %}
-        {% else %}
-          {% include 'profiles/partials/follow_btn.html' %}
-        {% endif %}
+<style>
+    .habitat-banner {
+        background-color: #FFD66F;
+        background-image: url('data:image/svg+xml,%3Csvg width="100" height="20" viewBox="0 0 100 20" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath d="M20 20v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zM0 16v-4h4v4H0zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zM0 12v-4h4v4H0zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zM0 8v-4h4v4H0zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zM0 4V0h4v4H0zm20 0V0h4v4h-4zm20 0V0h4v4h-4zm20 0V0h4v4h-4zm20 0V0h4v4h-4z" fill="%23D2B48C" fill-opacity="0.4" fill-rule="evenodd"/%3E%3C/svg%3E');
+    }
+    .turtle-shell-frame {
+        border: 8px solid #5D4037;
+        box-shadow: 0 0 0 4px #3B3B3B;
+    }
+    .wooden-sign {
+        background-color: #8B4513;
+        font-family: 'Press Start 2P', cursive;
+        color: #F5F5DC;
+        text-shadow: 2px 2px #3B3B3B;
+    }
+    .shell-tab {
+        background-color: #A8D5A0;
+        border: 4px solid #5D4037;
+        box-shadow: 4px 4px 0px #3B3B3B;
+    }
+    .shell-tab.active {
+        background-color: #FBBF24;
+        transform: translateY(-4px);
+    }
+    .turtle-head {
+        width: 24px;
+        height: 16px;
+        background-color: #4CAF50;
+        border: 2px solid #3B3B3B;
+        border-radius: 50% 50% 0 0;
+        position: absolute;
+        top: -14px;
+        left: 50%;
+        transform: translateX(-50%);
+        transition: all 0.3s ease;
+    }
+</style>
+
+<div class="bg-[#A8D5A0] min-h-screen p-4 font-mono">
+    <div class="max-w-5xl mx-auto">
+        <!-- Profile Header -->
+        <div class="habitat-banner border-8 border-[#5D4037] rounded-lg p-6 text-center mb-8 shadow-[12px_12px_0px_#3B3B3B] relative">
+            <div class="flex justify-center items-end space-x-8">
+                <div class="relative">
+                    <img src="{{ profile.profile_picture.url }}" class="w-32 h-32 rounded-full object-cover turtle-shell-frame">
+                </div>
+                <div class="wooden-sign p-4 rounded-lg border-4 border-[#5D4037] shadow-[4px_4px_0px_#3B3B3B]">
+                    <h1 class="text-3xl">{{ profile.username }}</h1>
+                </div>
+                <div class="absolute bottom-4 right-4">
+                    {% if profile.user == request.user %}
+                      <div class="relative group">
+                        {% include 'profiles/partials/edit_button.html' %}
+                      </div>
+                    {% else %}
+                      {% include 'profiles/partials/follow_btn.html' %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="flex justify-center mb-8" x-data="{'activeTab': '{{ current_tab }}'}">
+            {% for tab in tabs %}
+            <a class="shell-tab rounded-t-full px-8 py-4 text-[#5D4037] font-bold text-xl mx-2 transform transition-transform duration-200 hover:scale-105 relative"
+               :class="{ 'active': activeTab === '{{ tab }}' }"
+               @click="activeTab = '{{ tab }}'"
+               hx-get="{% url 'profile_'|add:tab profile.username %}"
+               hx-target="#tab-content"
+               hx-push-url="{% url 'profile_'|add:tab profile.username %}"
+               hx-swap="innerHTML transition:true">
+                <div x-show="activeTab === '{{ tab }}'" class="turtle-head"></div>
+                {{ tab|title }}
+            </a>
+            {% endfor %}
+        </div>
+
+        <!-- Tab Content -->
+        <div id="tab-content" class="bg-[#FFD66F] border-8 border-[#5D4037] rounded-lg p-6 min-h-[400px] shadow-[8px_8px_0px_#3B3B3B]">
+            {% block tab_content %}
+            {% endblock %}
+        </div>
     </div>
-
-  <ul class="nav nav-tabs mb-3"
-    x-data="{'activeTab': '{{ current_tab }}'}"
-  >
-    {% for tab in tabs %}
-        <li class="nav-item">
-          <a class="nav-link"
-            :class="{ 'active': activeTab === '{{ tab }}' }"
-            @click="activeTab = '{{ tab }}'"
-            hx-get="{% url 'profile_'|add:tab profile.username %}"
-            hx-target="#tab-content"
-            hx-push-url="{% url 'profile_'|add:tab profile.username %}"
-            hx-swap="innerHTML">
-            {{ tab|title }}
-          </a>
-        </li>
-    {% endfor %}
-  </ul>
-
-  <div id="tab-content" class="row" >
-    {% block tab_content %}
-    {% endblock %}
-  </div>
 </div>
 
 {% endblock %}
