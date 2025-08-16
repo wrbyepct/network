@@ -24,7 +24,7 @@
     {% else %}
       href="{% url 'account_login' %}"
     {% endif %}
-    @mouseover="$refs.actionText.innerHTML = hasFollowed ? 'Unfollow' : 'Follow Shell!'"
+    @mouseover="$refs.actionText.innerHTML = hasFollowed ? 'Unfollow' : 'Follow'"
     @mouseleave="$refs.actionText.innerHTML = hasFollowed ? 'Following' : 'Follow'"
 >
     <span x-ref="actionText" x-text="hasFollowed ? 'Following' : 'Follow'"></span>
