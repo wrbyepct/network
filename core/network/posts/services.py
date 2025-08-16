@@ -65,7 +65,7 @@ class IncubationService:
 
     default_egg_url = "/media/defaults/regular_eggs/green.gif"
     EGG_TYPES = ["regular_eggs", "special_eggs", "easter_eggs"]
-    WEIGHTS = [0.3, 0.4, 0.3]
+    WEIGHTS = [0.2, 0.3, 0.5]
     SPECIAL_EGGS = [
         "volcano",
         "rainbow",
@@ -173,7 +173,7 @@ class EggManageService:
     """Egg Create or update service."""
 
     @staticmethod
-    def check_egg_type(egg_url):
+    def get_egg_type(egg_url):
         """Return the egg type string."""
         if "special" in egg_url:
             return "special"
@@ -184,7 +184,7 @@ class EggManageService:
     @staticmethod
     def create_egg_or_update_qnt(user, egg_url):
         """Create egg associated with user or update the egg quantity."""
-        egg_type = EggManageService.check_egg_type(egg_url)
+        egg_type = EggManageService.get_egg_type(egg_url)
         egg, created = Egg.objects.get_or_create(
             user=user,
             url=egg_url,
