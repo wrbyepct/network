@@ -74,7 +74,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
         """Return template based on if the egg is special or not."""
         return (
             "posts/partial/special_egg_modal.html"
-            if egg_type == "special_eggs"
+            if egg_type == "special"
             else "posts/partial/egg_modal.html"
         )
 
