@@ -53,12 +53,20 @@
             {% endif %}
             <div class="text-amber-300 space-y-2 bg-emerald-700 border-4 border-amber-600 p-3 shadow-lg shadow-amber-600/50">
                <p class="text-lg">Stats: </p>
+
+                {% if profile.easter_eggs_count %}
+                  <div class="flex justify-between">
+                    <span class="text-pink-400">Easter Eggs:</span>
+                    <span class="text-stone-50">{{ profile.easter_eggs_count }}</span>
+                  </div>
+               {% endif %}
                {% if profile.special_eggs_count %}
                 <div class="flex justify-between">
                   <span>Special Eggs:</span>
                   <span class="text-stone-50">{{ profile.special_eggs_count }}</span>
                 </div>
                {% endif %}
+ 
 
                {% if profile.regular_eggs_count %}
                 <div class="flex justify-between">
