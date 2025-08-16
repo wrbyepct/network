@@ -65,6 +65,7 @@ class IncubationService:
 
     default_egg_url = "/media/defaults/regular_eggs/green.gif"
     EGG_TYPES = ["regular_eggs", "special_eggs", "easter_eggs"]
+    WEIGHTS = [0.3, 0.4, 0.3]
     SPECIAL_EGGS = [
         "volcano",
         "rainbow",
@@ -95,7 +96,6 @@ class IncubationService:
         "chicken",
     ]
     EASTER_EGGS = ["glichy", "buggy", "easter"]
-    WEIGHTS = [0.1, 0.2, 0.7]
 
     @staticmethod
     def _get_random_egg_name(egg_type):
@@ -190,11 +190,10 @@ class EggManageService:
             url=egg_url,
             egg_type=egg_type,
         )
-        if created:
-            return egg
+        if not created:
+            egg.quantity = F("quantity") + 1
+            egg.save()
 
-        egg.quantity = F("quantity") + 1
-        egg.save()
         return egg
 
     @staticmethod
