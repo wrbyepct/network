@@ -1,32 +1,72 @@
 
 {% for album in albums %}
-<div class="col-span-1">
-  <a 
-    class="card h-100 shadow-sm btn" 
-    href="{% url 'album_detail' album.pk profile.username %}">
-  {% if album.medias.first %}
-  <!-- First media as cover -->
-   <!-- TODO fix if first one is not image but a video -->
-    <img 
-      src="{{ album.medias.first.file.url }}" 
-      class="card-img-top object-fit-cover" 
-      style="height: 180px;" 
-      alt="Album cover"
-    >
-  {% else %}
-  <!-- Or default cover -->
+<div class="col-span-1" x-data="{ isHovered: false }">
   <div 
-    class="card-img-top d-flex align-items-center justify-content-center bg-secondary bg-opacity-25" 
-    style="height: 180px;"
-  >
-      <span class="text-muted">No cover</span>
+    @click="window.location.href = '{% url 'album_detail' album.pk profile.username %}'"
+    class="block group cursor-pointer transform transition-all duration-300 hover:scale-105"
+    @mouseenter="isHovered = true" 
+    @mouseleave="isHovered = false">
+    
+    <!-- Turtle Shell Album Card -->
+    <div class="bg-[#8B4513] border-4 border-[#5D4037] rounded-lg p-2 shadow-[6px_6px_0px_#3B3B3B] transition-all duration-300 group-hover:shadow-[8px_8px_0px_#3B3B3B]">
+      
+      <!-- Album Cover Container -->
+      <div class="relative bg-[#FFD66F] border-2 border-[#5D4037] rounded overflow-hidden" style="height: 160px;">
+        {% if album.medias.first %}
+          <!-- Album Cover Image -->
+          <img 
+            src="{{ album.medias.first.file.url }}" 
+            class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" 
+            alt="Album cover"
+            style="image-rendering: pixelated;"
+          >
+          <!-- Pixel Art Overlay Effect -->
+          <div class="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black opacity-10 group-hover:opacity-20 transition-opacity duration-300"></div>
+        {% else %}
+          <!-- Default Turtle Shell Pattern -->
+          <div class="w-full h-full flex items-center justify-center bg-[#A8D5A0] relative">
+            <!-- Shell Pattern -->
+            <div class="absolute inset-2 border-2 border-[#5D4037] rounded-full bg-[#8FBC8F]">
+              <div class="absolute top-2 left-2 w-4 h-4 bg-[#5D4037] rounded-full"></div>
+              <div class="absolute top-2 right-2 w-4 h-4 bg-[#5D4037] rounded-full"></div>
+              <div class="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-[#5D4037] rounded-full"></div>
+              <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-6 h-6 bg-[#5D4037] rounded-full"></div>
+            </div>
+            <!-- Turtle Head -->
+            <div class="absolute -top-1 left-1/2 transform -translate-x-1/2 w-6 h-4 bg-[#4CAF50] border-2 border-[#3B3B3B] rounded-t-full"></div>
+            <!-- Eyes -->
+            <div class="absolute -top-1 left-1/2 transform -translate-x-1/2 translate-x-1 w-1 h-1 bg-black rounded-full"></div>
+            <div class="absolute -top-1 left-1/2 transform -translate-x-1/2 -translate-x-1 w-1 h-1 bg-black rounded-full"></div>
+          </div>
+        {% endif %}
+        
+        <!-- Photo Count Badge -->
+        <div class="absolute top-2 right-2 bg-[#5D4037] border-2 border-[#3B3B3B] text-[#FFD66F] text-xs font-bold px-2 py-1 rounded font-mono">
+          {{ album.medias_count }}📸
+        </div>
+        
+        <!-- Hover Glow Effect -->
+        <div 
+          class="absolute inset-0 bg-[#FBBF24] opacity-0 group-hover:opacity-20 transition-all duration-300 rounded" 
+          :class="isHovered ? 'animate-pulse' : ''">
+        </div>
+      </div>
+      
+      <!-- Album Info -->
+      <div class="mt-3 text-center">
+        <div class="bg-[#F5F5DC] border-2 border-[#5D4037] rounded px-3 py-2 shadow-[2px_2px_0px_#3B3B3B]">
+          <h5 class="text-[#5D4037] font-bold text-sm font-mono ">{{ album.name }}</h5>
+          <p class="text-[#8B4513] text-xs font-mono mt-1">
+            {{ album.medias_count }} photo{{ album.medias_count|pluralize }}
+          </p>
+        </div>
+      </div>
+      
+      <!-- Turtle Legs (Decorative) -->
+      <div class="absolute -bottom-1 -left-1 w-3 h-2 bg-[#4CAF50] border border-[#3B3B3B] rounded-b"></div>
+      <div class="absolute -bottom-1 -right-1 w-3 h-2 bg-[#4CAF50] border border-[#3B3B3B] rounded-b"></div>
+    </div>
   </div>
-  {% endif %}
-  <div class="card-body text-center">
-      <h5 class="card-title mb-1">{{ album.name }}</h5>
-      <p class="text-muted small mb-0">{{ album.medias_count }} photo{{ album.medias_count|pluralize }}</p>
-  </div>
-  </a>
 </div>
 {% endfor %}
 
