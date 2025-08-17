@@ -1,13 +1,27 @@
 {% if page_obj.has_next %}
-<div
-  class="col-span-1"
-  hx-get="{{ fetch_url }}"
-  hx-vals='{"page": {{ page_obj.next_page_number }}}'
-  hx-target="#media-container"
-  hx-swap="beforeend"
-  hx-trigger="revealed once"
-  @htmx:after-request="if($event.detail.successful) $el.remove();"
-  >
-  {% include 'profiles/partials/loading.html' %}
+<!-- Load More Albums Card -->
+<div class="col-span-1 md:col-span-2 lg:col-span-4"
+     hx-get="{{ fetch_url }}"
+     hx-vals='{"page": {{ page_obj.next_page_number }}}'
+     hx-target="#media-container"
+     hx-swap="beforeend"
+     hx-trigger="revealed once"
+     @htmx:after-request="if($event.detail.successful) $el.remove();">
+  
+  <!-- Turtle Loading Card -->
+  <div class="bg-[#8B4513] border-4 border-[#5D4037] rounded-lg p-4 shadow-[6px_6px_0px_#3B3B3B]">
+    <div class="bg-[#FFD66F] border-2 border-[#5D4037] rounded p-6">
+      {% include 'profiles/partials/loading.html' %}
+    </div>
+  </div>
+</div>
+{% else %}
+<!-- End of Albums Message -->
+<div class="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4">
+  <div class="bg-[#8B4513] border-4 border-[#5D4037] rounded-lg p-4 shadow-[6px_6px_0px_#3B3B3B]">
+    <div class="bg-[#F5F5DC] border-2 border-[#5D4037] rounded p-6 text-center">
+      <div class="text-[#5D4037] font-mono text-lg font-bold mb-2">🐢 All shells explored! 🐢</div>
+    </div>
+  </div>
 </div>
 {% endif %}
