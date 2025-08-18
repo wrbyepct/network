@@ -1,6 +1,6 @@
 {% if page_obj.has_next %}
 <!-- Load More Albums Card -->
-<div class="col-span-1 md:col-span-2 lg:col-span-4"
+<div class="col-span-1"
      hx-get="{{ fetch_url }}"
      hx-vals='{"page": {{ page_obj.next_page_number }}}'
      hx-target="#media-container"
