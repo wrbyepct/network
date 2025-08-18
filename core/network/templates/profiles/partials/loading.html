@@ -1,29 +1,10 @@
 <!-- Turtle Walking Loading Animation -->
-<div class="flex items-center justify-center h-32">
-  <div class="relative">
-    <!-- Animated Turtle Shell -->
-    <div class="w-16 h-12 bg-[#8FBC8F] border-4 border-[#5D4037] rounded-full relative animate-bounce">
-      <!-- Shell Pattern -->
-      <div class="absolute top-1 left-2 w-2 h-2 bg-[#5D4037] rounded-full"></div>
-      <div class="absolute top-1 right-2 w-2 h-2 bg-[#5D4037] rounded-full"></div>
-      <div class="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-[#5D4037] rounded-full"></div>
-      <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-[#5D4037] rounded-full"></div>
-      
-      <!-- Turtle Head -->
-      <div class="absolute -left-2 top-1/2 transform -translate-y-1/2 w-4 h-3 bg-[#4CAF50] border-2 border-[#3B3B3B] rounded-l-full animate-pulse">
-        <!-- Eyes -->
-        <div class="absolute top-0.5 left-1 w-0.5 h-0.5 bg-black rounded-full"></div>
-      </div>
-      
-      <!-- Turtle Legs -->
-      <div class="absolute -bottom-1 left-1 w-2 h-1 bg-[#4CAF50] border border-[#3B3B3B] rounded-b animate-ping"></div>
-      <div class="absolute -bottom-1 right-1 w-2 h-1 bg-[#4CAF50] border border-[#3B3B3B] rounded-b animate-ping" style="animation-delay: 0.5s;"></div>
-    </div>
-    
+<div class="flex flex-col items-center justify-center h-32">
+    <img class="w-25" src="/media/defaults/turtle_walking.gif" alt="Turtle walking image">
     <!-- Loading Text -->
     <div class="mt-2 text-center">
-      <div class="text-[#5D4037] font-mono text-xs font-bold animate-pulse">
-        Loading turtle albums...
+      <div class="text-amber-500 font-mono text-lg font-bold animate-pulse">
+        Walking...
       </div>
     </div>
   </div>
