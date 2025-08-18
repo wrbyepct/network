@@ -16,14 +16,6 @@
     </a>
   </div>
 
-  <!-- Media Grid Load Trigger (htmx) -->
-  <div
-    hx-get="{% url 'album_media_paginate' album.id %}"
-    hx-target="#media-container"
-    hx-trigger="load"
-    hx-swap="beforeend"
-    @htmx:after-request="if($event.detail.successful) $el.remove();">
-  </div>
 
   <!-- Media Container -->
   {% include 'profiles/partials/media_container.html' with in_album_detail=True %}
