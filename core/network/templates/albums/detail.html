@@ -2,27 +2,289 @@
 
 
 {% block body %}
-<div class="max-w-5xl mx-auto py-6 px-4">
+  <div class="min-h-screen bg-[#A8D5A0] lg:p-16 font-mono" style="font-family: 'Press Start 2P';"
+    <div class="container-fluid bg-[#FFD66F] border-8 border-[#5D4037] p-6 mx-auto max-w-6xl relative overflow-hidden shadow-[12px_12px_0px_#3B3B3B]"
+    style="background-image: url('data:image/svg+xml,%3Csvg width=&quot;100&quot; height=&quot;20&quot; viewBox=&quot;0 0 100 20&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E%3Cpath d=&quot;M20 20v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zM0 16v-4h4v4H0zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zM0 12v-4h4v4H0zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zM0 8v-4h4v4H0zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zM0 4V0h4v4H0zm20 0V0h4v4h-4zm20 0V0h4v4h-4zm20 0V0h4v4h-4zm20 0V0h4v4h-4z&quot; fill=&quot;%23D2B48C&quot; fill-opacity=&quot;0.4&quot; fill-rule=&quot;evenodd&quot;/%3E%3C/svg%3E');">
 
-  <!-- Album Header -->
-  <div class="flex justify-between items-center mb-6">
-    <div>
-      <h2 class="text-xl font-semibold">{{ album.name }}</h2>
-      <p class="text-sm text-gray-500">{{ album.medias_count }} media item{{ album.medias_count|pluralize }}</p>
+
+    <!-- Album Header Section -->
+    <div class="bg-[#8B4513] border-4 border-[#5D4037] p-6 mb-6 relative shadow-[8px_8px_0px_#3B3B3B]">
+
+      <!-- Wooden grain pattern -->
+      <div class="absolute inset-0 opacity-20" style="background: repeating-linear-gradient(90deg, #6F4E37 0px, transparent
+  1px, transparent 4px, #6F4E37 5px);"></div>
+
+      <div class="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-6 relative z-10">
+
+        <!-- Album Info with Turtle Shell -->
+        <div class="flex items-center gap-6">
+          <!-- Pixel Turtle Shell Avatar -->
+          <div class="w-24 h-24 bg-[#4CAF50] border-4 border-[#3B3B3B] relative
+  turtle-shell hover:scale-105 transition-transform duration-200">
+            <!-- Shell pattern -->
+            <div class="absolute inset-2 bg-[#2E7D32] border-2 border-[#1B5E20]">
+              <!-- Turtle head -->
+              <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 w-8 h-6 bg-[#4CAF50] border-2 border-[#3B3B3B] rounded-t-full turtle-head">
+                <!-- Eyes -->
+                <div class="absolute top-1 left-1 w-2 h-2 bg-[#3B3B3B] rounded-full"></div>
+                <div class="absolute top-1 right-1 w-2 h-2 bg-[#3B3B3B] rounded-full"></div>
+              </div>
+              <!-- Shell hexagon segments -->
+              <div class="absolute top-1 left-1 w-3 h-3 bg-[#A5D6A7] border border-[#2E7D32] shell-segment"></div>
+              <div class="absolute top-1 right-1 w-3 h-3 bg-[#A5D6A7] border border-[#2E7D32] shell-segment"></div>
+              <div class="absolute bottom-1 left-1 w-3 h-3 bg-[#A5D6A7] border border-[#2E7D32] shell-segment"></div>
+              <div class="absolute bottom-1 right-1 w-3 h-3 bg-[#A5D6A7] border border-[#2E7D32] shell-segment"></div>
+              <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-[#A5D6A7] border border-[#2E7D32] shell-segment"></div>
+            </div>
+          </div>
+
+          <div class="flex flex-col">
+            <!-- Album Name with Pixel Effect -->
+            <h2 class="text-3xl lg:text-4xlfont-bold text-[#5D4037] pixel-title mb-3" style="text-shadow: 2px 2px #3B3B3B;">
+              {{ album.name|upper }}
+            </h2>
+
+            <!-- Media Count with Wooden Badge -->
+            <div class="flex items-center gap-3">
+              <div class="bg-[#D2B48C] border-4 border-[#5D4037] px-4 py-2 text-sm
+  font-bold text-[#3B3B3B] relative shadow-[4px_4px_0px_#3B3B3B]">
+                <span class="relative z-10">{{ album.medias_count }} PHOTOS</span>
+                <!-- Wood grain effect -->
+                <div class="absolute inset-0 bg-[#8B4513] opacity-20"></div>
+              </div>
+              <!-- Turtle indicators -->
+              <div class="flex gap-2">
+                <div class="w-4 h-4 bg-[#4CAF50] border-2 border-[#3B3B3B] shell-dot pixel-blink"></div>
+                <div class="w-4 h-4 bg-[#8BC34A] border-2 border-[#3B3B3B] shell-dot pixel-blink" style="animation-delay: 0.5s;"></div>
+                <div class="w-4 h-4 bg-[#FBBF24] border-2 border-[#3B3B3B] shell-dot pixel-blink" style="animation-delay: 1s;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Back Button - Turtle Game Style -->
+        <div x-data="{ isPressed: false, isHovered: false }">
+          <a href="{% url 'profile_photos_albums' album.profile.username %}"
+             class="inline-flex items-center gap-4 bg-[#A5D6A7] border-4 border-[#5D4037]
+  text-[#3B3B3B] font-bold py-4 px-6 text-sm relative game-button transition-all duration-200 !no-underline shadow-[6px_6px_0px_#3B3B3B]"
+             :class="isPressed ? 'pressed' : ''"
+             @mousedown="isPressed = true"
+             @mouseup="isPressed = false"
+             @mouseleave="isPressed = false; isHovered = false"
+             @mouseenter="isHovered = true">
+
+            <!-- Pixel Arrow Icon -->
+            <div class="flex-shrink-0">
+              <div class="w-8 h-8 relative">
+                <!-- Pixel arrow made of blocks -->
+                <!-- Row 1 -->
+                <div class="absolute top-0 left-2 w-2 h-2 bg-[#5D4037] border border-[#3B3B3B]"></div>
+                <!-- Row 2 -->
+                <div class="absolute top-2 left-0 w-2 h-2 bg-[#5D4037] border border-[#3B3B3B]"></div>
+                <div class="absolute top-2 left-2 w-2 h-2 bg-[#5D4037] border border-[#3B3B3B]"></div>
+                <div class="absolute top-2 left-4 w-2 h-2 bg-[#5D4037] border border-[#3B3B3B]"></div>
+                <div class="absolute top-2 left-6 w-2 h-2 bg-[#5D4037] border border-[#3B3B3B]"></div>
+                <!-- Row 3 (middle) -->
+                <div class="absolute top-4 left-0 w-2 h-2 bg-[#5D4037] border border-[#3B3B3B]"></div>
+                <div class="absolute top-4 left-2 w-2 h-2 bg-[#5D4037] border border-[#3B3B3B]"></div>
+                <div class="absolute top-4 left-4 w-2 h-2 bg-[#5D4037] border border-[#3B3B3B]"></div>
+                <div class="absolute top-4 left-6 w-2 h-2 bg-[#5D4037] border border-[#3B3B3B]"></div>
+                <!-- Row 4 -->
+                <div class="absolute top-6 left-2 w-2 h-2 bg-[#5D4037] border border-[#3B3B3B]"></div>
+                
+              </div>
+            </div>
+
+            <span class="tracking-wider select-none font-bold relative z-10">BACK TO GALLERY</span>
+
+            <!-- Hover highlight effect -->
+            <div class="absolute inset-0 bg-[#FBBF24] opacity-0 transition-opacity duration-200"
+                 :class="isHovered ? 'opacity-30' : ''"></div>
+
+            <!-- Press effect -->
+            <div class="absolute inset-0 bg-[#5D4037] opacity-0 transition-opacity duration-100"
+                 :class="isPressed ? 'opacity-20' : ''"></div>
+          </a>
+        </div>
+      </div>
     </div>
-    <a href="{% url 'profile_photos_albums' album.profile.username %}" 
-       class="inline-flex items-center text-sm text-gray-700 border border-gray-300 rounded px-3 py-1.5 hover:bg-gray-100 transition">
-      ← Back to albums
-    </a>
+
+    <!-- Turtle Console Panel -->
+    <div class="bg-[#2E7D32] border-4 border-[#1B5E20] p-4 mb-6 text-sm relative shadow-[4px_4px_0px_#3B3B3B]">
+      <div class="flex items-center gap-4">
+        <!-- Console prompt -->
+        <div class="flex items-center gap-2">
+          <div class="w-4 h-4 bg-[#4CAF50] border-2 border-[#3B3B3B] animate-pulse shell-dot"></div>
+          <span class="text-[#A5D6A7] font-bold">TURTLE@SHELL-OS:~$</span>
+        </div>
+
+        <!-- Status message -->
+        <div class="flex-1">
+          <span class="text-[#FBBF24]">Loading turtle photo collection...</span>
+        </div>
+
+        <!-- System metrics -->
+        <div class="flex gap-4 text-xs">
+          <span class="text-[#FBBF24]">SHELLS: {{ album.medias_count }}</span>
+          <span class="text-[#A5D6A7]">HABITAT: OK</span>
+          <span class="text-[#4CAF50]">STATUS: HAPPY</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Media Container -->
+    <div class="bg-[#F0D997] border-4 border-[#5D4037] p-4 relative shadow-[8px_8px_0px_#3B3B3B]">
+      <!-- Grass pattern -->
+      <div class="absolute inset-0 opacity-30" style="background: repeating-linear-gradient(0deg, transparent 0px, transparent
+  2px, #4CAF50 2px, #4CAF50 3px);"></div>
+
+      <div class="relative z-10">
+        {% include 'profiles/partials/media_container.html' with in_album_detail=True %}
+      </div>
+    </div>
+
+    <!-- Media Modal -->
+    {% include 'albums/media_modal.html' with medias=album.medias.all %}
+
+    </div>
   </div>
 
 
-  <!-- Media Container -->
-  {% include 'profiles/partials/media_container.html' with in_album_detail=True %}
-
-  <!-- Media Modal -->
-  {% include 'albums/media_modal.html' with medias=album.medias.all %}
-
-</div>
-
 {% endblock %}
+
+
+ <style>
+
+  /* Pixel blink animation */
+  .pixel-blink {
+    animation: turtle-blink 2s infinite;
+  }
+
+  @keyframes turtle-blink {
+    0%, 85%, 100% { opacity: 1; }
+    90%, 95% { opacity: 0.3; }
+  }
+
+
+  /* Game button effects - Turtle theme */
+  .game-button:hover:not(.pressed) {
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 0px #5D4037 !important;
+  }
+
+  .game-button.pressed {
+    transform: translate(4px, 4px);
+    box-shadow: 2px 2px 0px #5D4037 !important;
+  }
+
+
+  /* Shell segment animation */
+  .shell-segment {
+    animation: segment-glow 3s ease-in-out infinite;
+  }
+
+  @keyframes segment-glow {
+    0%, 100% { background-color: #A5D6A7; }
+    50% { background-color: #C8E6C9; }
+  }
+
+  /* Turtle hover animation */
+  .pixel-turtle:hover {
+    animation: turtle-bounce 0.6s ease-in-out;
+  }
+
+  @keyframes turtle-bounce {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+  }
+
+  /* Shell dot pulse */
+  .shell-dot {
+    animation: shell-pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes shell-pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+  }
+
+  /* Turtle head peek animation */
+  .turtle-head {
+    animation: peek 4s ease-in-out infinite;
+  }
+
+  @keyframes peek {
+    0%, 90%, 100% { transform: translateY(0px); }
+    45% { transform: translateY(-2px); }
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 1024px) {
+    .game-button {
+      font-size: 0.75rem;
+      padding: 0.75rem 1rem;
+    }
+
+    .pixel-title {
+      font-size: 1.5rem;
+    }
+
+    .turtle-shell {
+      width: 5rem;
+      height: 5rem;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .container-fluid {
+      padding: 1rem;
+    }
+
+    .pixel-title {
+      font-size: 1.25rem;
+    }
+
+    .game-button {
+      font-size: 0.625rem;
+      padding: 0.5rem 0.75rem;
+    }
+
+    .turtle-shell {
+      width: 4rem;
+      height: 4rem;
+    }
+
+    .pixel-turtle {
+      width: 3rem;
+      height: 3rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .flex-col {
+      align-items: center !important;
+      text-align: center;
+    }
+
+    .lg\:flex-row {
+      flex-direction: column !important;
+      align-items: center !important;
+    }
+
+    .justify-between {
+      flex-direction: column !important;
+      gap: 1rem;
+    }
+
+    .turtle-shell {
+      width: 3.5rem;
+      height: 3.5rem;
+    }
+  }
+
+  /* Habitat background pattern */
+  .habitat-banner {
+    background-color: #FFD66F;
+    background-image: url('data:image/svg+xml,%3Csvg width="100" height="20" viewBox="0 0 100 20" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath d="M20 20v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zM0 16v-4h4v4H0zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zM0 12v-4h4v4H0zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zM0 8v-4h4v4H0zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zM0 4V0h4v4H0zm20 0V0h4v4h-4zm20 0V0h4v4h-4zm20 0V0h4v4h-4zm20 0V0h4v4h-4z" fill="%23D2B48C" fill-opacity="0.4" fill-rule="evenodd"/%3E%3C/svg%3E');
+  }
+  </style>
