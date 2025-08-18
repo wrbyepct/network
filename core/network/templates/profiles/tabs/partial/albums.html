@@ -3,46 +3,9 @@
 {% if request.user == profile.user %}
   <!-- Create New Album Card -->
   <div class="col-span-1" x-data="{ isHovered: false }">
-    <a href="{% url 'album_create' %}" 
-       class="block group cursor-pointer transform transition-all duration-300 !no-underline hover:scale-105"
-       @mouseenter="isHovered = true" 
-       @mouseleave="isHovered = false">
-      
-      <!-- Turtle Shell Create Card -->
-      <div class="bg-[#8B4513] border-4 border-dashed border-[#5D4037] rounded-lg p-2 shadow-[6px_6px_0px_#3B3B3B] transition-all duration-300 group-hover:shadow-[8px_8px_0px_#3B3B3B]">
-        
-        <!-- Create Album Container -->
-        <div class="relative bg-[#FFD66F] border-2 border-dashed border-[#5D4037] rounded overflow-hidden flex items-center justify-center" style="height: 160px;">
-          
-          <!-- Animated Plus Icon -->
-          <div class="text-center">
-            <div class="text-6xl text-[#5D4037] font-bold transition-transform duration-300 group-hover:scale-110" 
-                 :class="isHovered ? 'animate-bounce' : ''">
-              ＋
-            </div>
-            <div class="mt-2 text-[#5D4037] font-mono text-xs font-bold">
-              NEW SHELL
-            </div>
-          </div>
-          
-          <!-- Sparkle Effect -->
-          <div class="absolute top-4 left-4 w-2 h-2 bg-[#FBBF24] rounded-full transition-all duration-500" 
-               :class="isHovered ? 'animate-ping' : ''"></div>
-          <div class="absolute bottom-4 right-4 w-2 h-2 bg-[#FBBF24] rounded-full transition-all duration-700" 
-               :class="isHovered ? 'animate-ping' : ''"></div>
-          
-          <!-- Hover Glow Effect -->
-          <div class="absolute inset-0 bg-[#FBBF24] opacity-0 group-hover:opacity-20 transition-all duration-300 rounded"></div>
-        </div>
-        
-        <!-- Create Album Info -->
-        <div class="mt-3 text-center">
-          <div class="bg-[#F5F5DC] border-2 border-dashed border-[#5D4037] rounded grow-y px-3 py-2 shadow-[2px_2px_0px_#3B3B3B]">
-            <div class="text-[#8B4513] text-xs font-mono mt-1">Start collecting! 🐢</div>
-          </div>
-        </div>
-      </div>
-    </a>
+    {% url 'album_create' as create_media_url %}
+    {% include 'albums/add_more_btn.html' %}
+  
   </div>
   {% endif %}
   <!-- Fetch first album batch on load -->
