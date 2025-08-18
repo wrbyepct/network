@@ -19,4 +19,16 @@
 	{% endif %}
 	
 	
+  <!-- Media Grid Load Trigger (htmx) -->
+   {% if in_album_detail %}
+	<div
+		hx-get="{% url 'album_media_paginate' album.id %}"
+		hx-target="#media-container"
+		hx-trigger="load"
+		hx-swap="beforeend"
+		@htmx:after-request="if($event.detail.successful) $el.remove();">
+
+		{% include 'profiles/partials/loading.html' %}
+	</div>
+  {% endif %}
 </div>
