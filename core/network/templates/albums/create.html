@@ -46,7 +46,7 @@
           </div>
         </div>
       
-        <h1 class="text-2xl font-bold text-[#FFD66F] mb-2 pixel-title relative z-10" style="text-shadow: 2px 2px #3B3B3B;">CREATE TURTLE ALBUM</h1>
+        <h1 class="text-lg sm:text-xl lg:text-2xl font-bold text-[#FFD66F] mb-2 pixel-title relative z-10" style="text-shadow: 2px 2px #3B3B3B;">CREATE TURTLE ALBUM</h1>
         <p class="text-[#D2B48C] text-sm relative z-10">Build your shell collection!</p>
         </div>
 
@@ -63,7 +63,7 @@
             <div class="mb-8">
               <div class="flex items-center gap-3 mb-4">
                 <div class="w-4 h-4 bg-[#4CAF50] border-2 border-[#3B3B3B] shell-dot"></div>
-                <label for="{{ form.name.id_for_label }}" class="text-lg font-bold text-[#5D4037] font-mono pixel-title">ALBUM NAME</label>
+                <label for="{{ form.name.id_for_label }}" class="text-sm sm:text-base lg:text-lg font-bold text-[#5D4037] font-mono pixel-title">ALBUM NAME</label>
               </div>
           
           <div class="bg-[#A5D6A7] border-4 border-[#5D4037] rounded p-2 shadow-[4px_4px_0px_#3B3B3B]">
@@ -96,14 +96,14 @@
         <div class="mb-8">
           <div class="flex items-center gap-3 mb-4">
             <div class="w-4 h-4 bg-[#FBBF24] border-2 border-[#3B3B3B] shell-dot pixel-blink"></div>
-            <label for="{{ form.medias.id_for_label }}" class="text-lg font-bold text-[#5D4037] font-mono pixel-title">TURTLE PHOTOS</label>
+            <label for="{{ form.medias.id_for_label }}" class="text-sm sm:text-base lg:text-lg font-bold text-[#5D4037] font-mono pixel-title">TURTLE PHOTOS</label>
           </div>
           
             <!-- File Input Styled Button -->
               <div class="mt-4 text-center">
                 <button type="button"
                         @click="$refs.fileInput.click()"
-                        class="bg-[#8BC34A] hover:bg-[#AED581] border-4 border-[#5D4037] text-[#2E7D32] font-mono font-bold py-3 px-6 rounded text-sm transition-colors shadow-[4px_4px_0px_#3B3B3B] game-button">
+                        class="bg-[#8BC34A] hover:bg-[#AED581] border-4 border-[#5D4037] text-[#2E7D32] font-mono font-bold py-2 px-4 sm:py-3 sm:px-6 rounded text-xs sm:text-sm transition-colors shadow-[4px_4px_0px_#3B3B3B] game-button">
                   🐢 BROWSE TURTLE PHOTOS
                 </button>
               </div>
@@ -120,7 +120,7 @@
         <!-- Submit Button -->
         <div class="text-center">
           <button type="submit" 
-                  class="bg-[#FBBF24] hover:bg-[#FFE082] active:bg-[#F57C00] border-4 border-[#5D4037] hover:border-[#3B3B3B] text-[#2E7D32] font-mono font-bold py-4 px-12 rounded-lg text-lg transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-[8px_8px_0px_#3B3B3B] game-button"
+                  class="bg-[#FBBF24] hover:bg-[#FFE082] active:bg-[#F57C00] border-4 border-[#5D4037] hover:border-[#3B3B3B] text-[#2E7D32] font-mono font-bold py-3 px-8 sm:py-4 sm:px-12 rounded-lg text-base sm:text-lg transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-[8px_8px_0px_#3B3B3B] game-button"
                   :disabled="isSubmitting"
                   x-text="isSubmitting ? '🐢 BUILDING SHELL ALBUM...' : '💾 CREATE TURTLE ALBUM'">
           </button>
@@ -139,7 +139,7 @@
       <!-- LEFT COLUMN: Media Preview Section -->
       <div class="space-y-6 col-span-1 lg:col-span-4" >
           <template x-if="previewMedias.length === 0">
-            <div class="flex items-center justify-center h-[80vh] border-4 border-dashed border-[#4CAF50] rounded-lg p-8 text-center bg-[#C8E6C9] hover:bg-[#E8F5E8] transition-colors cursor-pointer"
+            <div class="flex items-center justify-center h-full border-4 border-dashed border-[#4CAF50] rounded-lg p-8 text-center bg-[#C8E6C9] hover:bg-[#E8F5E8] transition-colors cursor-pointer"
                     x-show="previewMedias.length === 0"
                     @click="$refs.fileInput.click()"
                     @dragover.prevent="isDragging = true"
@@ -162,32 +162,13 @@
                       </div>
                     </div>
 
-                    <div class="text-[#2E7D32] font-mono font-bold mb-2 text-lg">
+                    <div class="text-[#2E7D32] font-mono font-bold mb-2 text-sm sm:text-base lg:text-lg">
                       DROP YOUR TURTLE PHOTOS HERE!
                     </div>
                     <div class="text-[#4CAF50] text-sm mb-4 font-mono">
                       Or click to browse shell collection files
                     </div>
                   </div>
-                    
-                  <!-- Preview Selected Files -->
-                  <div x-show="previewMedias.length > 0" class="space-y-2">
-                    <div class="text-[#2E7D32] font-mono font-bold text-lg mb-4">
-                      🐢 <span x-text="previewMedias.length"></span> TURTLE PHOTOS SELECTED!
-                    </div>
-                    <div class="grid grid-cols-4 gap-2" x-show="previewMedias.length <= 8">
-                      <template x-for="(file, index) in previewMedias.slice(0, 8)" :key="index">
-                        <div class="bg-[#4CAF50] border-2 border-[#2E7D32] p-2 rounded text-center">
-                          <div class="text-xs text-[#1B5E20] font-mono font-bold truncate" x-text="file.name"></div>
-                        </div>
-                      </template>
-                    </div>
-                    <div x-show="previewMedias.length > 8" class="text-[#4CAF50] text-sm font-mono">
-                      And <span x-text="previewMedias.length - 8"></span> more turtle photos...
-                    </div>
-                  </div>
-                  
-  
                 </div>
           </template>
           
@@ -200,25 +181,27 @@
               
               <div class="relative z-10">
                 <!-- Preview Grid -->
-                <div class="grid grid-cols-2 lg:grid-cols-3 gap-4" x-show="previewMedias.length > 0">
+                <div class="grid grid-cols-2 lg:grid-cols-3 gap-2 lg:gap-4" x-show="previewMedias.length > 0">
                   <template x-for="(file, index) in previewMedias" :key="index">
                     <div class="relative group">
                       <!-- Image Preview -->
                       <div class="aspect-square bg-[#C8E6C9] border-4 border-[#2E7D32] rounded overflow-hidden shadow-[4px_4px_0px_#3B3B3B] hover:shadow-[6px_6px_0px_#3B3B3B] transition-all duration-200">
+                        <!-- Remove Button -->
+                        <button type="button"
+                          @click="removeFile(index)"
+                          class="absolute top-0 right-0 w-8 h-8 bg-red-500 border-2 border-[#3B3B3B] pacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-[#F44336] pixel-button z-100">
+                          <span class="text-yellow-300 font-bold text-lg">X</span>
+                        </button>
                         <img :src="file.url" 
                         :alt="file.name"
                         class="w-full h-full object-cover hover:scale-105 transition-transform duration-200">
+                
                       </div>
                       
-                      <!-- Remove Button -->
-                      <button type="button"
-                      @click="removeFile(index)"
-                      class="absolute -top-2 -right-2 w-6 h-6 bg-[#FF5722] border-2 border-[#3B3B3B] rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-[#F44336] pixel-button">
-                      <div class="w-3 h-0.5 bg-white"></div>
-                    </button>
+            
                     
                     <!-- Image Info -->
-                    <div class="absolute bottom-0 left-0 right-0 bg-[#2E7D32] bg-opacity-90 text-[#A5D6A7] text-xs p-2 font-mono">
+                    <div class="absolute bottom-0 left-0 right-0 bg-[#2E7D32] bg-opacity-90 text-[#A5D6A7] text-xs p-1 sm:p-2 font-mono">
                       <div class="truncate" x-text="file.name"></div>
                       <div class="text-[#8BC34A]" x-text="`${(file.size / 1024).toFixed(1)}KB`"></div>
                     </div>
@@ -389,35 +372,15 @@
     box-shadow: 0 0 8px rgba(255, 87, 34, 0.6);
   }
 
-  /* Responsive adjustments */
+  /* Responsive turtle shell sizes using Tailwind-like approach */
   @media (max-width: 1024px) {
-    .game-button {
-      font-size: 0.875rem;
-      padding: 0.75rem 1.5rem;
-    }
-
-    .pixel-title {
-      font-size: 1.25rem;
-    }
-
     .turtle-shell {
-      width: 4rem;
-      height: 4rem;
+      width: 3.5rem;
+      height: 3.5rem;
     }
-
-  
   }
 
   @media (max-width: 640px) {
-    .pixel-title {
-      font-size: 1.125rem;
-    }
-
-    .game-button {
-      font-size: 0.75rem;
-      padding: 0.5rem 1rem;
-    }
-
     .turtle-shell {
       width: 3rem;
       height: 3rem;
