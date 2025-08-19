@@ -1,48 +1,429 @@
 {% extends 'network/layout.html' %}
 {% load widget_tweaks %}
 {% block body %}
-<div class="container mt-5">
-    <div class="card shadow-sm border-0">
-      <div class="card-header bg-primary text-white">
-        <h5 class="mb-0">Create New Album</h5>
-      </div>
-      <div class="card-body">
-        <form method="post" action="{% url 'album_create' %}" enctype="multipart/form-data">
-          {% csrf_token %}
-          
-          <!-- Album Name Field -->
-          <div class="mb-3">
-            <label for="{{ form.name.id_for_label }}" class="form-label">Album Name</label>
-            {{ form.name|add_class:"form-control" }}
-            {% if form.name.errors %}
-              <div class="text-danger small">{{ form.name.errors }}</div>
-            {% endif %}
-          </div>
 
-          <!-- Album Medias field  -->
-          <div class="mb-3">
-            <label for="{{ form.medias.id_for_label }}" class="form-label">Upload Media</label>
+<div class="min-h-screen bg-[#A8D5A0] p-4 font-mono" 
+     x-data="albumCreator()"
+     style="background-image: url('data:image/svg+xml,%3Csvg width=&quot;100&quot; height=&quot;20&quot; viewBox=&quot;0 0 100 20&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E%3Cpath d=&quot;M20 20v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zM0 16v-4h4v4H0zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zM0 12v-4h4v4H0zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zM0 8v-4h4v4H0zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zM0 4V0h4v4H0zm20 0V0h4v4h-4zm20 0V0h4v4h-4zm20 0V0h4v4h-4zm20 0V0h4v4h-4z&quot; fill=&quot;%23D2B48C&quot; fill-opacity=&quot;0.4&quot; fill-rule=&quot;evenodd&quot;/%3E%3C/svg%3E');">
+  
+
+  <!-- Main Container -->
+  <div class="p-4">
+    
+    <!-- Two Column Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-6 gap-8">
+      
+      <!-- RIGHT COLUMN: Form Section -->
+      <div class="space-y-6 col-span-1 lg:col-span-2 order-2 lg:order-1">
+        
+        <!-- Header Section -->
+        <div class="bg-[#8B4513] border-4 border-[#5D4037] rounded-lg p-6 text-center shadow-[12px_12px_0px_#3B3B3B] relative overflow-hidden">
+        <!-- Wooden grain pattern -->
+        <div class="absolute inset-0 opacity-20" style="background: repeating-linear-gradient(90deg, #6F4E37 0px, transparent 1px, transparent 4px, #6F4E37 5px);"></div>
+        
+        <!-- Pixel decorations -->
+        <div class="absolute top-2 left-2 w-4 h-4 bg-[#4CAF50] border-2 border-[#3B3B3B] shell-dot pixel-blink"></div>
+        <div class="absolute top-2 right-2 w-4 h-4 bg-[#FBBF24] border-2 border-[#3B3B3B] shell-dot pixel-blink" style="animation-delay: 0.5s;"></div>
+        <div class="absolute bottom-2 left-2 w-4 h-4 bg-[#8BC34A] border-2 border-[#3B3B3B] shell-dot pixel-blink" style="animation-delay: 1s;"></div>
+        <div class="absolute bottom-2 right-2 w-4 h-4 bg-[#4CAF50] border-2 border-[#3B3B3B] shell-dot pixel-blink" style="animation-delay: 1.5s;"></div>
+        
+        <!-- Turtle Shell Icon -->
+        <div class="mb-4 relative z-10">
+          <div class="w-16 h-16 bg-[#4CAF50] border-4 border-[#3B3B3B] relative turtle-shell mx-auto hover:scale-105 transition-transform duration-200">
+            <div class="absolute inset-2 bg-[#2E7D32] border-2 border-[#1B5E20]">
+              <!-- Shell hexagon segments -->
+              <div class="absolute top-0 left-1 w-2 h-2 bg-[#A5D6A7] border border-[#2E7D32] shell-segment"></div>
+              <div class="absolute top-0 right-1 w-2 h-2 bg-[#A5D6A7] border border-[#2E7D32] shell-segment"></div>
+              <div class="absolute bottom-0 left-1 w-2 h-2 bg-[#A5D6A7] border border-[#2E7D32] shell-segment"></div>
+              <div class="absolute bottom-0 right-1 w-2 h-2 bg-[#A5D6A7] border border-[#2E7D32] shell-segment"></div>
+              <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-[#A5D6A7] border border-[#2E7D32] shell-segment"></div>
+            </div>
+            <!-- Plus sign for creating -->
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div class="w-6 h-2 bg-[#FFD66F] border border-[#3B3B3B]"></div>
+              <div class="absolute w-2 h-6 bg-[#FFD66F] border border-[#3B3B3B]"></div>
+            </div>
+          </div>
+        </div>
+      
+        <h1 class="text-2xl font-bold text-[#FFD66F] mb-2 pixel-title relative z-10" style="text-shadow: 2px 2px #3B3B3B;">CREATE TURTLE ALBUM</h1>
+        <p class="text-[#D2B48C] text-sm relative z-10">Build your shell collection!</p>
+        </div>
+
+        <!-- Form Container -->
+        <div class="bg-[#FFD66F] border-4 border-[#5D4037] rounded-lg p-8 shadow-[8px_8px_0px_#3B3B3B] relative">
+          <!-- Grass pattern background -->
+          <div class="absolute inset-0 opacity-30" style="background: repeating-linear-gradient(0deg, transparent 0px, transparent 2px, #4CAF50 2px, #4CAF50 3px);"></div>
+          
+          <form method="post" action="{% url 'album_create' %}" enctype="multipart/form-data" class="relative z-10"
+                @submit.prevent="handleSubmit($el)">
+            {% csrf_token %}
+          
+            <!-- Album Name Field -->
+            <div class="mb-8">
+              <div class="flex items-center gap-3 mb-4">
+                <div class="w-4 h-4 bg-[#4CAF50] border-2 border-[#3B3B3B] shell-dot"></div>
+                <label for="{{ form.name.id_for_label }}" class="text-lg font-bold text-[#5D4037] font-mono pixel-title">ALBUM NAME</label>
+              </div>
+          
+          <div class="bg-[#A5D6A7] border-4 border-[#5D4037] rounded p-2 shadow-[4px_4px_0px_#3B3B3B]">
+            <input type="text" 
+                   name="name" 
+                   id="{{ form.name.id_for_label }}"
+                   class="w-full bg-[#C8E6C9] border-2 border-[#2E7D32] rounded px-4 py-3 text-[#1B5E20] font-mono font-bold placeholder-[#4CAF50] focus:border-[#FBBF24] focus:outline-none transition-colors"
+                   placeholder="Enter your turtle album name..."
+                   value="{{ form.name.value|default_if_none:'' }}"
+                   x-model="albumName">
             <input 
                 type="file" 
+                accept="image/*" 
                 name="medias" 
-                id="{{ form.medias.id_for_label }}" 
+                id="{{ form.medias.id_for_label }}"
                 multiple 
-                class="form-control{% if form.medias.errors %} is-invalid{% endif %}"
-            >
-            {% if form.medias.errors %}
-                <div class="invalid-feedback">
-                    {{ form.medias.errors }}
-                </div>
+                class="hidden"
+                @change="handleFileSelect($event)"
+                x-ref="fileInput"
+              >
+            </div>
+            {% if form.name.errors %}
+              <div class="mt-2 text-[#8B4513] text-sm font-bold bg-[#D2B48C] border-2 border-[#5D4037] p-2 rounded">
+                🐢 {{ form.name.errors }}
+              </div>
             {% endif %}
           </div>
-    
 
-          <!-- Submit Button -->
-          <button type="submit" class="btn btn-success">
-            <i class="bi bi-plus-circle me-1"></i> Create Album
+        <!-- File Upload Section -->
+        <div class="mb-8">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-4 h-4 bg-[#FBBF24] border-2 border-[#3B3B3B] shell-dot pixel-blink"></div>
+            <label for="{{ form.medias.id_for_label }}" class="text-lg font-bold text-[#5D4037] font-mono pixel-title">TURTLE PHOTOS</label>
+          </div>
+          
+            <!-- File Input Styled Button -->
+              <div class="mt-4 text-center">
+                <button type="button"
+                        @click="$refs.fileInput.click()"
+                        class="bg-[#8BC34A] hover:bg-[#AED581] border-4 border-[#5D4037] text-[#2E7D32] font-mono font-bold py-3 px-6 rounded text-sm transition-colors shadow-[4px_4px_0px_#3B3B3B] game-button">
+                  🐢 BROWSE TURTLE PHOTOS
+                </button>
+              </div>
+            
+            <!-- Error Display -->
+            {% if form.medias.errors %}
+              <div class="mt-4 text-[#8B4513] text-sm font-bold bg-[#D2B48C] border-2 border-[#5D4037] p-3 rounded">
+                🚫 {{ form.medias.errors }}
+              </div>
+            {% endif %}
+          
+        </div>
+
+        <!-- Submit Button -->
+        <div class="text-center">
+          <button type="submit" 
+                  class="bg-[#FBBF24] hover:bg-[#FFE082] active:bg-[#F57C00] border-4 border-[#5D4037] hover:border-[#3B3B3B] text-[#2E7D32] font-mono font-bold py-4 px-12 rounded-lg text-lg transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-[8px_8px_0px_#3B3B3B] game-button"
+                  :disabled="isSubmitting"
+                  x-text="isSubmitting ? '🐢 BUILDING SHELL ALBUM...' : '💾 CREATE TURTLE ALBUM'">
           </button>
-        </form>
+          
+              <p class="text-[#5D4037] text-xs mt-4 font-mono">
+                🌿 Your turtle album will be created in the habitat
+              </p>
+            </div>
+          </form>
+        </div>
+          
       </div>
+      <!-- END RIGHT COLUMN -->
+
+      
+      <!-- LEFT COLUMN: Media Preview Section -->
+      <div class="space-y-6 col-span-1 lg:col-span-4" >
+          <template x-if="previewMedias.length === 0">
+            <div class="flex items-center justify-center h-[80vh] border-4 border-dashed border-[#4CAF50] rounded-lg p-8 text-center bg-[#C8E6C9] hover:bg-[#E8F5E8] transition-colors cursor-pointer"
+                    x-show="previewMedias.length === 0"
+                    @click="$refs.fileInput.click()"
+                    @dragover.prevent="isDragging = true"
+                    @dragleave="isDragging = false"
+                    @drop.prevent="handleFileDrop($event)"
+                    :class="isDragging ? 'border-[#FBBF24] bg-[#FFF8E1]' : ''"
+                    x-ref="dropZone">
+
+                  <div x-show="previewMedias.length === 0">
+                    <!-- Turtle Upload Icon -->
+                    <div class="mb-4 flex justify-center">
+                      <div class="w-16 h-16 bg-[#4CAF50] border-4 border-[#2E7D32] relative turtle-shell">
+                        <div class="absolute inset-2 bg-[#2E7D32] border-2 border-[#1B5E20] flex items-center justify-center">
+                          <!-- Upload Arrow -->
+                          <div class="relative">
+                            <div class="w-4 h-6 bg-[#A5D6A7] border border-[#4CAF50]"></div>
+                            <div class="absolute -top-1 left-1 w-2 h-2 bg-[#A5D6A7] border border-[#4CAF50] transform rotate-45"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="text-[#2E7D32] font-mono font-bold mb-2 text-lg">
+                      DROP YOUR TURTLE PHOTOS HERE!
+                    </div>
+                    <div class="text-[#4CAF50] text-sm mb-4 font-mono">
+                      Or click to browse shell collection files
+                    </div>
+                  </div>
+                    
+                  <!-- Preview Selected Files -->
+                  <div x-show="previewMedias.length > 0" class="space-y-2">
+                    <div class="text-[#2E7D32] font-mono font-bold text-lg mb-4">
+                      🐢 <span x-text="previewMedias.length"></span> TURTLE PHOTOS SELECTED!
+                    </div>
+                    <div class="grid grid-cols-4 gap-2" x-show="previewMedias.length <= 8">
+                      <template x-for="(file, index) in previewMedias.slice(0, 8)" :key="index">
+                        <div class="bg-[#4CAF50] border-2 border-[#2E7D32] p-2 rounded text-center">
+                          <div class="text-xs text-[#1B5E20] font-mono font-bold truncate" x-text="file.name"></div>
+                        </div>
+                      </template>
+                    </div>
+                    <div x-show="previewMedias.length > 8" class="text-[#4CAF50] text-sm font-mono">
+                      And <span x-text="previewMedias.length - 8"></span> more turtle photos...
+                    </div>
+                  </div>
+                  
+  
+                </div>
+          </template>
+          
+          <template x-if="previewMedias.length > 0">
+
+            <!-- Media Grid Preview -->
+            <div class="bg-[#A5D6A7] border-4 border-[#5D4037] rounded-lg p-4 shadow-[8px_8px_0px_#3B3B3B] relative">
+              <!-- Grass pattern background -->
+              <div class="absolute inset-0 opacity-20 rounded" style="background: repeating-linear-gradient(0deg, transparent 0px, transparent 2px, #4CAF50 2px, #4CAF50 3px);"></div>
+              
+              <div class="relative z-10">
+                <!-- Preview Grid -->
+                <div class="grid grid-cols-2 lg:grid-cols-3 gap-4" x-show="previewMedias.length > 0">
+                  <template x-for="(file, index) in previewMedias" :key="index">
+                    <div class="relative group">
+                      <!-- Image Preview -->
+                      <div class="aspect-square bg-[#C8E6C9] border-4 border-[#2E7D32] rounded overflow-hidden shadow-[4px_4px_0px_#3B3B3B] hover:shadow-[6px_6px_0px_#3B3B3B] transition-all duration-200">
+                        <img :src="file.url" 
+                        :alt="file.name"
+                        class="w-full h-full object-cover hover:scale-105 transition-transform duration-200">
+                      </div>
+                      
+                      <!-- Remove Button -->
+                      <button type="button"
+                      @click="removeFile(index)"
+                      class="absolute -top-2 -right-2 w-6 h-6 bg-[#FF5722] border-2 border-[#3B3B3B] rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-[#F44336] pixel-button">
+                      <div class="w-3 h-0.5 bg-white"></div>
+                    </button>
+                    
+                    <!-- Image Info -->
+                    <div class="absolute bottom-0 left-0 right-0 bg-[#2E7D32] bg-opacity-90 text-[#A5D6A7] text-xs p-2 font-mono">
+                      <div class="truncate" x-text="file.name"></div>
+                      <div class="text-[#8BC34A]" x-text="`${(file.size / 1024).toFixed(1)}KB`"></div>
+                    </div>
+                  </div>
+                </template>
+              </div>
+              
+              <!-- Empty State -->
+              <div x-show="previewMedias.length === 0" class="text-center py-12">
+                <div class="w-16 h-16 bg-[#C8E6C9] border-4 border-[#4CAF50] rounded mx-auto mb-4 flex items-center justify-center">
+                  <div class="text-[#4CAF50] text-2xl">📸</div>
+                </div>
+                <p class="text-[#4CAF50] font-mono text-sm">No turtle photos selected yet</p>
+              </div>
+
+              <!-- Quick Actions -->
+              <div x-show="previewMedias.length > 0" class="mt-4 flex justify-between items-center">
+                <div class="text-[#2E7D32] font-mono text-sm">
+                  <span x-text="previewMedias.length"></span> of 10 max photos
+                </div>
+                <button type="button"
+                @click="clearAllFiles()"
+                class="bg-[#FF9800] hover:bg-[#FFB74D] border-2 border-[#5D4037] text-[#2E7D32] font-mono text-xs py-1 px-3 rounded transition-colors">
+                🗑️ Clear All
+              </button>
+            </div>
+          </div>
+        </div>
+          </template>
+      
+      </div>
+    <!-- END LEFT COLUMN -->
     </div>
+    <!-- END TWO COLUMN LAYOUT -->
   </div>
+  <!-- END MAIN CONTAINER -->
+
+
+</div>
+
+<script>
+  function albumCreator() {
+    return {
+      isDragging: false,
+      previewMedias: [],
+      albumName: '',
+      isSubmitting: false,
+      showSuccess: false,
+
+      handleFileSelect(event) {
+        const files = Array.from(event.target.files).slice(0, 10);
+        this.createPreviews(files);
+      },
+
+      handleFileDrop(event) {
+        this.isDragging = false;
+        const files = Array.from(event.dataTransfer.files).slice(0, 10);
+        this.createPreviews(files);
+      },
+
+      createPreviews(files) {
+        this.previewMedias = [];
+        files.forEach((file, index) => {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            this.previewMedias.push({
+              url: e.target.result,
+              name: file.name,
+              size: file.size,
+              file: file,
+              id: Date.now() + index
+            });
+          };
+          reader.readAsDataURL(file); // will emit onload hook when read file done
+        });
+      },
+
+      removeFile(index) {
+        // Remove from preview
+        this.previewMedias.splice(index, 1);
+        
+      },
+
+      clearAllFiles() {
+        this.previewMedias = [];
+      },
+
+      handleSubmit(form) {
+        if (this.previewMedias.length > 0) {
+          const dt = new DataTransfer();
+          this.previewMedias.forEach(file => dt.items.add(file.file));
+          this.$refs.fileInput.files = dt.files;
+        }
+        
+        this.isSubmitting = true;
+        form.submit();
+      },
+
+    }
+  }
+</script>
+
+<style>
+  /* Turtle shell rotate animation */
+
+  /* Pixel blink animation */
+  .pixel-blink {
+    animation: turtle-blink 2s infinite;
+  }
+
+  @keyframes turtle-blink {
+    0%, 85%, 100% { opacity: 1; }
+    90%, 95% { opacity: 0.3; }
+  }
+
+
+  /* Game button effects - Turtle theme */
+  .game-button:hover:not(.pressed) {
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 0px #5D4037 !important;
+  }
+
+  .game-button.pressed {
+    transform: translate(4px, 4px);
+    box-shadow: 2px 2px 0px #5D4037 !important;
+  }
+
+  /* Pixel title styling */
+  .pixel-title {
+    letter-spacing: 0.1em;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-crisp-edges;
+    image-rendering: crisp-edges;
+  }
+
+
+  /* Turtle hover animation */
+  .turtle-shell:hover {
+    animation: turtle-bounce 0.6s ease-in-out;
+  }
+
+  @keyframes turtle-bounce {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+  }
+
+  /* Shell dot pulse */
+  .shell-dot {
+    animation: shell-pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes shell-pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+  }
+
+  .aspect-square {
+    aspect-ratio: 1 / 1;
+  }
+
+  .pixel-button {
+    transition: all 0.2s ease;
+  }
+
+  .pixel-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 8px rgba(255, 87, 34, 0.6);
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 1024px) {
+    .game-button {
+      font-size: 0.875rem;
+      padding: 0.75rem 1.5rem;
+    }
+
+    .pixel-title {
+      font-size: 1.25rem;
+    }
+
+    .turtle-shell {
+      width: 4rem;
+      height: 4rem;
+    }
+
+  
+  }
+
+  @media (max-width: 640px) {
+    .pixel-title {
+      font-size: 1.125rem;
+    }
+
+    .game-button {
+      font-size: 0.75rem;
+      padding: 0.5rem 1rem;
+    }
+
+    .turtle-shell {
+      width: 3rem;
+      height: 3rem;
+    }
+  }
+
+</style>
+
 {% endblock %}
