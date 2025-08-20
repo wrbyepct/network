@@ -187,11 +187,7 @@
                       <!-- Image Preview -->
                       <div class="aspect-square bg-[#C8E6C9] border-4 border-[#2E7D32] rounded overflow-hidden shadow-[4px_4px_0px_#3B3B3B] hover:shadow-[6px_6px_0px_#3B3B3B] transition-all duration-200">
                         <!-- Remove Button -->
-                        <button type="button"
-                          @click="removeFile(index)"
-                          class="absolute top-0 right-0 w-8 h-8 bg-red-500 border-2 border-[#3B3B3B] pacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-[#F44336] pixel-button z-100">
-                          <span class="text-yellow-300 font-bold text-lg">X</span>
-                        </button>
+                        {% include 'albums/remove_btn.html' %}
                         <img :src="file.url" 
                         :alt="file.name"
                         class="w-full h-full object-cover hover:scale-105 transition-transform duration-200">
