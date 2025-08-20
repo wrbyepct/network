@@ -11,9 +11,11 @@
   <!-- Main Container -->
   <div class="max-w-7xl mx-auto">
     <form 
+      class="relative"
       method="post" 
       action="{% url 'album_edit' album.pk %}" 
       enctype="multipart/form-data" class="relative z-10"
+      x-ref="albumEditForm"
       @submit.prevent="handleSubmit($el)">
       {% csrf_token %}
       <!-- Two Column Layout -->
@@ -55,7 +57,7 @@
             
             <div class="relative z-10">
               <!-- Photos Grid -->
-              <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 sm:gap-3 lg:gap-4">
+              <div class="grid grid-cols-2 lg:grid-cols-3 gap-2 lg:gap-4">
                 {% for media in medias %}
                   <div class="relative group">
                     <!-- Checkbox -->
@@ -182,7 +184,9 @@
                        id="{{ form.medias.id_for_label }}"
                        multiple 
                        class="hidden"
-                       x-ref="fileInput">
+                       x-ref="fileInput"
+                       @change="handleFileUpload($event)"
+                      >
               </div>
               
               {% if form.medias.errors %}
@@ -212,6 +216,41 @@
         </div>
         <!-- END RIGHT COLUMN -->
       </div>
+
+      <!-- NEW UPLOAD MEDIA MODAL -->
+       <template x-if="newUploadMedias.length > 0">
+          <div class="absolute inset-0 backdrop-blur-sm flex items-center justify-center">
+
+            <template x-for="(media, index) in newUploadMedias" :key="index">
+              <!-- Individual media container -->
+              <div>
+                <template x-if="media.file_type === 'image'">
+                  <img class="object-cover" :src="media.url" alt="New user uploaded image">
+                </template>
+                <template x-if="media.file_type === 'video'">
+                  <video class="object-cover" :src="media.url" preload="metadata">
+
+                  </video>
+                </template>
+              </div>
+            </template>
+
+            <!-- New Upload Display container -->
+            <div class="grid grid-cols-2 lg:grid-cols-3">
+              <!-- Add more button -->
+              <button 
+                type="button" 
+                class="col-span-1 flex items-center justify-center"
+                @click="$refs.fileInput.click()"
+              >
+                <span class="text-xlg">+</span>
+                
+              </button>
+            </div>
+          </div>
+       </template>
+
+
     </form>
     <!-- END TWO COLUMN LAYOUT -->
   </div>
@@ -226,11 +265,33 @@
 <script>
   function albumEditor() {
     return {
+      newUploadMedias: [],
       selectedMedias: [],
       selectAll: false,
       isSubmitting: false,
       totalPhotos: {{ medias|length }},
 
+      handleFileUpload(evt) {
+        const files = Array.from(evt.target.files)
+        const mediaFiles = files.filter(file => { return file.startsWith('image/') || file.startsWith('video/') }).slice(0, 10);
+        this.createPreviewMedias(mediaFiles);
+      },
+      createPreviewMedias(files) {
+        this.newUploadMedias = [];
+        files.forEach(file => {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            this.newUploadMedias.push(
+              {
+                url: e.target.result,
+                file: file,
+                file_type: file.type.startsWith('image/') ? 'image' : 'video',
+              }
+            )
+          }
+          reader.readAsDataURL(file);
+        });
+      },
       toggleSelectAll() {
         if (this.selectAll) {
           // Select all media IDs
@@ -240,47 +301,22 @@
           this.selectedMedias = [];
         }
       },
-
-      deleteSelectedMedias() {
-        if (this.selectedMedias.length === 0) return;
-        
-        if (confirm(`🐢 Are you sure you want to delete ${this.selectedMedias.length} selected turtle photo(s)?`)) {
-          // Create a form to submit the deletion
-          const form = document.createElement('form');
-          form.method = 'POST';
-          form.action = '{% url "album_edit" album.pk %}';
-          
-          // Add CSRF token
-          const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-          const csrfInput = document.createElement('input');
-          csrfInput.type = 'hidden';
-          csrfInput.name = 'csrfmiddlewaretoken';
-          csrfInput.value = csrfToken;
-          form.appendChild(csrfInput);
-          
-          // Add selected media IDs
-          this.selectedMedias.forEach(mediaId => {
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'delete_media';
-            input.value = mediaId;
-            form.appendChild(input);
-          });
-          
-          // Submit the form
-          document.body.appendChild(form);
-          form.submit();
-        }
-      },
-
       confirmDeleteAlbum() {
         if (confirm('🚨 Are you absolutely sure you want to delete this entire turtle album? This action cannot be undone!')) {
-          document.getElementById('album-delete-form').submit();
+          this.$refs.albumEditForm.submit();
         }
       },
 
       handleSubmit(form) {
         this.isSubmitting = true;
+        if (this.newUploadMedias.length > 0) {
+
+          const dt = new DataTransfer();
+
+          this.newUploadMedias.forEach(file => dt.items.add(file))
+          this.refs.fileInput.files = dt.files
+        }
+      
         form.submit();
       },
 
