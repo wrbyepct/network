@@ -11,10 +11,9 @@
   <!-- Main Container -->
   <div class="max-w-7xl mx-auto">
     <form 
-      class="relative"
       method="post" 
       action="{% url 'album_edit' album.pk %}" 
-      enctype="multipart/form-data" class="relative z-10"
+      enctype="multipart/form-data" class="relative z-1"
       x-ref="albumEditForm"
       @submit.prevent="handleSubmit($el)">
       {% csrf_token %}
@@ -178,15 +177,16 @@
                   🐢 ADD TURTLE PHOTOS
                 </button>
                 
-                <input type="file" 
-                       accept="image/*" 
-                       name="medias" 
-                       id="{{ form.medias.id_for_label }}"
-                       multiple 
-                       class="hidden"
-                       x-ref="fileInput"
-                       @change="handleFileUpload($event)"
-                      >
+                <input 
+                  type="file" 
+                  accept="image/*" 
+                  name="medias" 
+                  id="{{ form.medias.id_for_label }}"
+                  multiple 
+                  class="hidden"
+                  x-ref="fileInput"
+                  @change="handleFileUpload($event)"
+                >
               </div>
               
               {% if form.medias.errors %}
@@ -218,39 +218,173 @@
       </div>
 
       <!-- NEW UPLOAD MEDIA MODAL -->
-       <template x-if="newUploadMedias.length > 0">
-          <div class="absolute inset-0 backdrop-blur-sm flex items-center justify-center">
 
-            <template x-for="(media, index) in newUploadMedias" :key="index">
-              <!-- Individual media container -->
-              <div>
-                <template x-if="media.file_type === 'image'">
-                  <img class="object-cover" :src="media.url" alt="New user uploaded image">
-                </template>
-                <template x-if="media.file_type === 'video'">
-                  <video class="object-cover" :src="media.url" preload="metadata">
+        <div 
+          class="fixed inset-0 bg-transparent bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          x-show="newUploadMedias.length > 0"
+          x-cloak
+          x-transition:enter="transition ease-out duration-300"
+          x-transition:enter-start="opacity-0"
+          x-transition:enter-end="opacity-100"
+          x-transition:leave="transition ease-in duration-200"
+          x-transition:leave-start="opacity-100"
+          x-transition:leave-end="opacity-0">
 
-                  </video>
-                </template>
+          <!-- Modal Container -->
+          <div 
+            class="bg-[#A8D5A0] border-8 border-[#5D4037] rounded-lg p-6 max-w-4xl w-full max-h-[90vh]
+      overflow-y-auto shadow-[16px_16px_0px_#3B3B3B] relative"
+            style="background-image: url('data:image/svg+xml,%3Csvg width=&quot;100&quot; height=&quot;20&quot;
+      viewBox=&quot;0 0 100 20&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E%3Cpath d=&quot;M20
+      20v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zM0 16v-4h4v4H0zm20 0v-4h4v4h-4zm20
+      0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zM0 12v-4h4v4H0zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20
+      0v-4h4v4h-4zM0 8v-4h4v4H0zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zM0 4V0h4v4H0zm20
+      0V0h4v4h-4zm20 0V0h4v4h-4zm20 0V0h4v4h-4zm20 0V0h4v4h-4z&quot; fill=&quot;%23D2B48C&quot;
+      fill-opacity=&quot;0.4&quot; fill-rule=&quot;evenodd&quot;/%3E%3C/svg%3E');"
+            x-transition:enter="transition ease-out duration-300 delay-150"
+            x-transition:enter-start="opacity-0 scale-95 translate-y-4"
+            x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+            x-transition:leave="transition ease-in duration-200"
+            x-transition:leave-start="opacity-100 scale-100"
+            x-transition:leave-end="opacity-0 scale-95">
+
+            <!-- Modal Header -->
+            <div class="bg-[#8B4513] border-4 border-[#5D4037] rounded-lg p-4 mb-6 text-center
+      shadow-[8px_8px_0px_#3B3B3B] relative overflow-hidden">
+              <!-- Wooden grain pattern -->
+              <div class="absolute inset-0 opacity-20" style="background: repeating-linear-gradient(90deg, #6F4E37 0px,
+      transparent 1px, transparent 4px, #6F4E37 5px);"></div>
+
+              <!-- Close button -->
+              <button type="button"
+                      @click="clearNewUploads()"
+                      class="absolute top-2 right-2 w-8 h-8 bg-[#FF5722] border-2 border-[#3B3B3B] rounded text-white
+      font-bold hover:bg-[#F44336] transition-colors z-10">
+                ✕
+              </button>
+
+              <!-- Header Icon -->
+              <div class="mb-3 relative z-10">
+                <div class="w-12 h-12 bg-[#4CAF50] border-4 border-[#3B3B3B] relative turtle-shell mx-auto">
+                  <div class="absolute inset-2 bg-[#2E7D32] border-2 border-[#1B5E20] flex items-center
+      justify-center">
+                    <!-- Preview icon -->
+                    <div class="w-6 h-4 bg-[#A5D6A7] border border-[#4CAF50] rounded relative">
+                      <div class="absolute top-0.5 left-1 w-1 h-1 bg-[#2E7D32] rounded-full"></div>
+                      <div class="absolute top-0.5 right-1 w-1 h-1 bg-[#2E7D32] rounded-full"></div>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </template>
 
-            <!-- New Upload Display container -->
-            <div class="grid grid-cols-2 lg:grid-cols-3">
-              <!-- Add more button -->
+              <h3 class="text-lg sm:text-xl font-bold text-[#FFD66F] mb-1 pixel-title relative z-10"
+      style="text-shadow: 2px 2px #3B3B3B;">NEW TURTLE PHOTOS</h3>
+              <p class="text-[#D2B48C] text-sm relative z-10" x-text="`${newUploadMedias.length} new photos ready to
+      add`"></p>
+            </div>
+
+            <!-- Media Grid -->
+            <div class="bg-[#FFD66F] border-4 border-[#5D4037] rounded-lg p-4 shadow-[8px_8px_0px_#3B3B3B] relative
+      mb-6">
+              <!-- Grass pattern background -->
+              <div class="absolute inset-0 opacity-30" style="background: repeating-linear-gradient(0deg, transparent
+      0px, transparent 2px, #4CAF50 2px, #4CAF50 3px);"></div>
+
+              <div class="relative z-10">
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+
+                  <template x-for="(media, index) in newUploadMedias" :key="index">
+                    <!-- Individual media container -->
+                    <div class="relative group">
+                      <div class="aspect-square bg-[#C8E6C9] border-4 border-[#2E7D32] rounded overflow-hidden
+      shadow-[4px_4px_0px_#3B3B3B] hover:shadow-[6px_6px_0px_#3B3B3B] transition-all duration-200">
+
+                        <template x-if="media.file_type === 'image'">
+                          <img class="w-full h-full object-cover hover:scale-105 transition-transform duration-200"
+                              :src="media.url"
+                              alt="New turtle photo">
+                        </template>
+
+                        <template x-if="media.file_type === 'video'">
+                          <div class="relative w-full h-full">
+                            <video class="w-full h-full object-cover"
+                                  :src="media.url"
+                                  preload="metadata">
+                            </video>
+                            <!-- Video Play Overlay -->
+                            <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                              <div class="w-8 h-8 bg-[#FFD66F] border-2 border-[#5D4037] rounded-full flex items-center
+      justify-center">
+                                <div class="w-0 h-0 border-l-4 border-l-[#5D4037] border-y-2 border-y-transparent
+      ml-1"></div>
+                              </div>
+                            </div>
+                          </div>
+                        </template>
+
+                        <!-- Remove Button -->
+                        <div class="absolute top-2 right-2">
+                          <button type="button"
+                                  @click="removeNewUpload(index)"
+                                  class="w-6 h-6 bg-[#FF5722] border-2 border-[#3B3B3B] rounded-full flex items-center
+      justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-[#F44336]">
+                            <div class="w-3 h-0.5 bg-white"></div>
+                          </button>
+                        </div>
+
+  
+                      </div>
+                    </div>
+                  </template>
+
+                  <!-- Add More Button -->
+                  <div class="aspect-square border-4 border-dashed border-[#4CAF50] rounded bg-[#E8F5E8]
+      hover:bg-[#C8E6C9] transition-colors cursor-pointer flex items-center justify-center group"
+                      @click="$refs.fileInput.click()">
+
+                    <!-- Turtle Shell Add Icon -->
+                    <div class="text-center">
+                      <div class="w-16 h-16 bg-[#4CAF50] border-4 border-[#2E7D32] relative turtle-shell mx-auto mb-2
+      group-hover:scale-110 transition-transform duration-200">
+                        <div class="absolute inset-2 bg-[#2E7D32] border-2 border-[#1B5E20] flex items-center
+      justify-center">
+                          <!-- Plus Sign -->
+                          <div class="relative">
+                            <div class="w-6 h-2 bg-[#A5D6A7] border border-[#4CAF50]"></div>
+                            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-2 h-6
+      bg-[#A5D6A7] border border-[#4CAF50]"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="text-[#4CAF50] font-mono font-bold text-sm">ADD MORE</div>
+                      <div class="text-[#4CAF50] font-mono text-xs">🐢 PHOTOS</div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-col sm:flex-row gap-4">
               <button 
-                type="button" 
-                class="col-span-1 flex items-center justify-center"
-                @click="$refs.fileInput.click()"
-              >
-                <span class="text-xlg">+</span>
-                
+                type="submit"
+                class="flex-1 bg-[#FBBF24] hover:bg-[#FFE082] border-4 border-[#5D4037] text-[#2E7D32] font-mono
+      font-bold py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-[6px_6px_0px_#3B3B3B]
+      game-button">
+                💾 ADD TO ALBUM
+              </button>
+
+              <button type="button"
+                      @click="clearNewUploads()"
+                      class="flex-1 bg-[#FF9800] hover:bg-[#FFB74D] border-4 border-[#5D4037] text-[#2E7D32] font-mono
+      font-bold py-3 px-6 rounded-lg transition-all duration-200 shadow-[4px_4px_0px_#3B3B3B] game-button">
+                🗑️ CANCEL
               </button>
             </div>
+
           </div>
-       </template>
-
-
+        </div>
     </form>
     <!-- END TWO COLUMN LAYOUT -->
   </div>
@@ -273,7 +407,7 @@
 
       handleFileUpload(evt) {
         const files = Array.from(evt.target.files)
-        const mediaFiles = files.filter(file => { return file.startsWith('image/') || file.startsWith('video/') }).slice(0, 10);
+        const mediaFiles = files.filter(file => { return file.type.startsWith('image/') || file.type.startsWith('video/') }).slice(0, 10);
         this.createPreviewMedias(mediaFiles);
       },
       createPreviewMedias(files) {
@@ -291,6 +425,14 @@
           }
           reader.readAsDataURL(file);
         });
+      },
+      removeFile(index) {
+        // Remove from preview
+        this.newUploadMedias.splice(index, 1);
+      },
+      clearNewUploads() {
+
+        this.newUploadMedias = [];
       },
       toggleSelectAll() {
         if (this.selectAll) {
@@ -313,8 +455,8 @@
 
           const dt = new DataTransfer();
 
-          this.newUploadMedias.forEach(file => dt.items.add(file))
-          this.refs.fileInput.files = dt.files
+          this.newUploadMedias.forEach(file => dt.items.add(file.file))
+          this.$refs.fileInput.files = dt.files
         }
       
         form.submit();

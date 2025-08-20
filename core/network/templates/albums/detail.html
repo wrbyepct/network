@@ -63,15 +63,14 @@
         </div>
 
         <!-- Back Button - Turtle Game Style -->
-        <div x-data="{ isPressed: false, isHovered: false }">
+        <div x-data="{ isPressed: false }">
           <a href="{% url 'profile_photos_albums' album.profile.username %}"
-             class="inline-flex items-center gap-4 bg-[#A5D6A7] border-4 border-[#5D4037]
+             class="inline-flex items-center gap-4 bg-green-400 hover:bg-amber-400 border-4 border-[#5D4037]
   text-[#3B3B3B] font-bold py-4 px-6 text-sm relative game-button transition-all duration-200 !no-underline shadow-[6px_6px_0px_#3B3B3B]"
              :class="isPressed ? 'pressed' : ''"
              @mousedown="isPressed = true"
              @mouseup="isPressed = false"
-             @mouseleave="isPressed = false; isHovered = false"
-             @mouseenter="isHovered = true">
+             @mouseleave="isPressed = false">
 
             <!-- Pixel Arrow Icon -->
             <div class="flex-shrink-0">
@@ -96,10 +95,6 @@
             </div>
 
             <span class="tracking-wider select-none font-bold relative z-10">BACK TO GALLERY</span>
-
-            <!-- Hover highlight effect -->
-            <div class="absolute inset-0 bg-[#FBBF24] opacity-0 transition-opacity duration-200"
-                 :class="isHovered ? 'opacity-30' : ''"></div>
 
             <!-- Press effect -->
             <div class="absolute inset-0 bg-[#5D4037] opacity-0 transition-opacity duration-100"
