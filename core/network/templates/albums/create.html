@@ -138,9 +138,9 @@
       
       <!-- LEFT COLUMN: Media Preview Section -->
       <div class="space-y-6 col-span-1 lg:col-span-4" >
-          <template x-if="previewMedias.length === 0">
+          <template x-if="newUploadMedias.length === 0">
             <div class="flex items-center justify-center h-full border-4 border-dashed border-[#4CAF50] rounded-lg p-8 text-center bg-[#C8E6C9] hover:bg-[#E8F5E8] transition-colors cursor-pointer"
-                    x-show="previewMedias.length === 0"
+                    x-show="newUploadMedias.length === 0"
                     @click="$refs.fileInput.click()"
                     @dragover.prevent="isDragging = true"
                     @dragleave="isDragging = false"
@@ -148,7 +148,7 @@
                     :class="isDragging ? 'border-[#FBBF24] bg-[#FFF8E1]' : ''"
                     x-ref="dropZone">
 
-                  <div x-show="previewMedias.length === 0">
+                  <div x-show="newUploadMedias.length === 0">
                     <!-- Turtle Upload Icon -->
                     <div class="mb-4 flex justify-center">
                       <div class="w-16 h-16 bg-[#4CAF50] border-4 border-[#2E7D32] relative turtle-shell">
@@ -172,7 +172,7 @@
                 </div>
           </template>
           
-          <template x-if="previewMedias.length > 0">
+          <template x-if="newUploadMedias.length > 0">
 
             <!-- Media Grid Preview -->
             <div class="bg-[#A5D6A7] border-4 border-[#5D4037] rounded-lg p-4 shadow-[8px_8px_0px_#3B3B3B] relative">
@@ -181,8 +181,8 @@
               
               <div class="relative z-10">
                 <!-- Preview Grid -->
-                <div class="grid grid-cols-2 lg:grid-cols-3 gap-2 lg:gap-4" x-show="previewMedias.length > 0">
-                  <template x-for="(file, index) in previewMedias" :key="index">
+                <div class="grid grid-cols-2 lg:grid-cols-3 gap-2 lg:gap-4" x-show="newUploadMedias.length > 0">
+                  <template x-for="(file, index) in newUploadMedias" :key="index">
                     <div class="relative group">
                       <!-- Image Preview -->
                       <div class="aspect-square bg-[#C8E6C9] border-4 border-[#2E7D32] rounded overflow-hidden shadow-[4px_4px_0px_#3B3B3B] hover:shadow-[6px_6px_0px_#3B3B3B] transition-all duration-200">
@@ -206,7 +206,7 @@
               </div>
               
               <!-- Empty State -->
-              <div x-show="previewMedias.length === 0" class="text-center py-12">
+              <div x-show="newUploadMedias.length === 0" class="text-center py-12">
                 <div class="w-16 h-16 bg-[#C8E6C9] border-4 border-[#4CAF50] rounded mx-auto mb-4 flex items-center justify-center">
                   <div class="text-[#4CAF50] text-2xl">📸</div>
                 </div>
@@ -214,15 +214,7 @@
               </div>
 
               <!-- Quick Actions -->
-              <div x-show="previewMedias.length > 0" class="mt-4 flex justify-between items-center">
-                <div class="text-[#2E7D32] font-mono text-sm">
-                  <span x-text="previewMedias.length"></span> of 10 max photos
-                </div>
-                <button type="button"
-                @click="clearAllFiles()"
-                class="bg-[#FF9800] hover:bg-[#FFB74D] border-2 border-[#5D4037] text-[#2E7D32] font-mono text-xs py-1 px-3 rounded transition-colors">
-                🗑️ Clear All
-              </button>
+              {% include 'albums/clear_all_media.html' %}
             </div>
           </div>
         </div>
@@ -242,7 +234,7 @@
   function albumCreator() {
     return {
       isDragging: false,
-      previewMedias: [],
+      newUploadMedias: [],
       albumName: '',
       isSubmitting: false,
       showSuccess: false,
@@ -259,11 +251,11 @@
       },
 
       createPreviews(files) {
-        this.previewMedias = [];
+        this.newUploadMedias = [];
         files.forEach((file, index) => {
           const reader = new FileReader();
           reader.onload = (e) => {
-            this.previewMedias.push({
+            this.newUploadMedias.push({
               url: e.target.result,
               name: file.name,
               size: file.size,
@@ -277,18 +269,18 @@
 
       removeFile(index) {
         // Remove from preview
-        this.previewMedias.splice(index, 1);
+        this.newUploadMedias.splice(index, 1);
         
       },
 
       clearAllFiles() {
-        this.previewMedias = [];
+        this.newUploadMedias = [];
       },
 
       handleSubmit(form) {
-        if (this.previewMedias.length > 0) {
+        if (this.newUploadMedias.length > 0) {
           const dt = new DataTransfer();
-          this.previewMedias.forEach(file => dt.items.add(file.file));
+          this.newUploadMedias.forEach(file => dt.items.add(file.file));
           this.$refs.fileInput.files = dt.files;
         }
         
