@@ -13,7 +13,7 @@
 	{% endif %}
 	
 	
-  <!-- Media Grid Load Trigger (htmx) -->
+  <!-- Load More Media Trigger -->
    {% if in_album_detail %}
 	<div
 		hx-get="{% url 'album_media_paginate' album.id %}"

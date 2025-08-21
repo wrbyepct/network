@@ -1,0 +1,39 @@
+<template x-for="(media, index) in $store.fileUploadManager.newUploadMedias" :key="index">
+  <!-- Individual media container -->
+
+  <div class="relative aspect-square bg-[#C8E6C9] border-4 border-[#2E7D32] rounded overflow-hidden
+shadow-[4px_4px_0px_#3B3B3B] group-hover:shadow-[6px_6px_0px_#3B3B3B] transition-all duration-200 group">
+
+    <template x-if="media.file_type === 'image'">
+      <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200 "
+          :src="media.url"
+          alt="New turtle photo">
+    </template>
+
+    <template x-if="media.file_type === 'video'">
+      <div class="relative w-full h-full  group-hover:scale-105">
+        <video class="w-full h-full object-cover"
+              :src="media.url"
+              preload="metadata">
+        </video>
+        <!-- Video Play Overlay -->
+        <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div class="w-8 h-8 bg-[#FFD66F] border-2 border-[#5D4037] rounded-full flex items-center justify-center">
+            <div class="w-0 h-0 border-l-4 border-l-[#5D4037] border-y-2 border-y-transparent ml-1"></div>
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <!-- Remove Button -->
+    {% include 'albums/remove_btn.html' %}
+
+   
+    <!-- Image Info -->
+    <div class="absolute bottom-0 left-0 right-0 bg-[#2E7D32] bg-opacity-90 text-[#A5D6A7] text-xs p-1 sm:p-2 font-mono">
+      <div class="truncate" x-text="media.name"></div>
+      <div class="text-[#8BC34A]" x-text="`${(media.size / 1024).toFixed(1)}KB`"></div>
+    </div>
+
+  </div>
+</template>
