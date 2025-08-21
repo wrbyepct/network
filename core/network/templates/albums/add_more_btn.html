@@ -1,15 +1,16 @@
+
 <a 
   href="{{ create_media_url }}" 
-  class="block group cursor-pointer transform transition-all duration-300 !no-underline hover:scale-105"
+  class="h-full block group cursor-pointer transform transition-all duration-300 !no-underline hover:scale-105"
   x-data="{ isHovered: false }"
   @mouseenter="isHovered = true" 
   @mouseleave="isHovered = false">
 
       <!-- Turtle Shell Create Card -->
-      <div class="bg-[#8B4513] border-4 border-dashed border-[#5D4037] rounded-lg p-2 shadow-[6px_6px_0px_#3B3B3B] transition-all duration-300 group-hover:shadow-[8px_8px_0px_#3B3B3B]">
+      <div class="h-full flex flex-col bg-[#8B4513] border-4 border-dashed border-[#5D4037] rounded-lg p-2 shadow-[6px_6px_0px_#3B3B3B] transition-all duration-300 group-hover:shadow-[8px_8px_0px_#3B3B3B]">
         
         <!-- Create Album Container -->
-        <div class="relative bg-[#FFD66F] border-2 border-dashed border-[#5D4037] rounded overflow-hidden flex items-center justify-center" style="height: 160px;">
+        <div class="relative flex-grow bg-[#FFD66F] border-2 border-dashed border-[#5D4037] rounded overflow-hidden flex items-center justify-center" style="height: 160px;">
           
           <!-- Animated Plus Icon -->
           <div class="text-center">
