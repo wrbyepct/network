@@ -90,7 +90,7 @@
                      name="profile_picture" 
                      class="hidden"
                      id="id_profile_picture"
-                     @change="handleFileSelect($event)"
+                     @change="$store.fileUploadManager.handleFileSelect($event)"
                      x-ref="fileInput">
             </div>
             

@@ -153,3 +153,54 @@
         <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
     </body>
 </html>
+
+<script>
+document.addEventListener('alpine:init', () => {
+  Alpine.store('fileUploadManager', {
+    newUploadMedias: [],
+    isSubmitting: false,
+
+    handleFileSelect(event) {
+      const files = Array.from(event.target.files).slice(0, 10);
+      this.createPreviews(files);
+    },
+
+    createPreviews(files) {
+      files = files.filter(file =>
+        file.type.startsWith('image/') || file.type.startsWith('video/')
+      );
+      files.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = e => {
+          this.newUploadMedias.push({
+            url: e.target.result,
+            name: file.name,
+            size: file.size,
+            file: file,
+            file_type: file.type.startsWith('image/') ? 'image' : 'video'
+          });
+        };
+        reader.readAsDataURL(file);
+      });
+    },
+
+    removeFile(index) {
+      this.newUploadMedias.splice(index, 1);
+    },
+
+    clearAllFiles() {
+      this.newUploadMedias = [];
+    },
+
+    handleSubmit(form, fileInput) {
+      this.isSubmitting = true;
+      if (this.newUploadMedias.length > 0) {
+        const dt = new DataTransfer();
+        this.newUploadMedias.forEach(file => dt.items.add(file.file));
+        fileInput.files = dt.files;
+      }
+      form.submit();
+    },
+  })
+})
+</script>
