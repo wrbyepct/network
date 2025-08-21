@@ -161,7 +161,8 @@ document.addEventListener('alpine:init', () => {
     isSubmitting: false,
 
     handleFileSelect(event) {
-      const files = Array.from(event.target.files).slice(0, 10);
+      const currentFilesNum = this.newUploadMedias.length
+      const files = Array.from(event.target.files).slice(0, 12 - currentFilesNum);
       this.createPreviews(files);
     },
 
