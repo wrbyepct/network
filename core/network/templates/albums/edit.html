@@ -33,7 +33,7 @@
                         @change="toggleSelectAll()"
                         class="w-5 h-5 bg-[#A5D6A7] border-2 border-[#4CAF50] rounded focus:ring-2 focus:ring-[#FBBF24]">
                 </div>
-                <label for="select-all" class="text-[#A5D6A7] font-bold font-mono text-sm sm:text-base">SELECT ALL PHOTOS</label>
+                <label for="select-all" class="text-[#A5D6A7] font-bold font-mono text-sm sm:text-base">SELECT ALL SHELLS</label>
               </div>
 
               <!-- Selection Counter and Actions -->
@@ -169,7 +169,7 @@
                 <button type="button"
                         @click="$refs.fileInput.click()"
                         class="bg-[#8BC34A] hover:bg-[#AED581] border-4 border-[#5D4037] text-[#2E7D32] font-mono font-bold py-2 px-4 sm:py-3 sm:px-6 rounded text-xs sm:text-sm transition-colors shadow-[4px_4px_0px_#3B3B3B] game-button">
-                  🐢 ADD TURTLE PHOTOS
+                  🐢 ADD TURTLE SHELLS
                 </button>
                 
                 <input 
@@ -180,7 +180,7 @@
                   multiple 
                   class="hidden"
                   x-ref="fileInput"
-                  @change="$store.fileUploadManager.handleFileSelect($event)"
+                  @change="$store.fileUploadManager.handleFileSelect($event); showUploadModal = true;"
                 >
               </div>
               
@@ -218,7 +218,7 @@
 
         <div 
           class="fixed inset-0 bg-transparent bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
-          x-show="$store.fileUploadManager.newUploadMedias.length > 0"
+          x-show="showUploadModal"
           x-cloak
           x-transition:enter="transition ease-out duration-300"
           x-transition:enter-start="opacity-0"
@@ -252,14 +252,6 @@
               <div class="absolute inset-0 opacity-20" style="background: repeating-linear-gradient(90deg, #6F4E37 0px,
       transparent 1px, transparent 4px, #6F4E37 5px);"></div>
 
-              <!-- Close button -->
-              <button type="button"
-                      @click="$store.fileUploadManager.clearAllFiles()"
-                      class="absolute top-2 right-2 w-8 h-8 bg-[#FF5722] border-2 border-[#3B3B3B] rounded text-white
-      font-bold hover:bg-[#F44336] transition-colors z-10">
-                ✕
-              </button>
-
               <!-- Header Icon -->
               <div class="mb-3 relative z-10">
                 <div class="w-12 h-12 bg-[#4CAF50] border-4 border-[#3B3B3B] relative turtle-shell mx-auto">
@@ -290,40 +282,8 @@
               <div class="relative z-10">
                 <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
 
-                  <template x-for="(media, index) in $store.fileUploadManager.newUploadMedias" :key="index">
-                    <!-- Individual media container -->
-                    <div class="relative group">
-                      <div class="aspect-square bg-[#C8E6C9] border-4 border-[#2E7D32] rounded overflow-hidden
-      shadow-[4px_4px_0px_#3B3B3B] hover:shadow-[6px_6px_0px_#3B3B3B] transition-all duration-200">
-
-                        <template x-if="media.file_type === 'image'">
-                          <img class="w-full h-full object-cover hover:scale-105 transition-transform duration-200"
-                              :src="media.url"
-                              alt="New turtle photo">
-                        </template>
-
-                        <template x-if="media.file_type === 'video'">
-                          <div class="relative w-full h-full">
-                            <video class="w-full h-full object-cover"
-                                  :src="media.url"
-                                  preload="metadata">
-                            </video>
-                            <!-- Video Play Overlay -->
-                            <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                              <div class="w-8 h-8 bg-[#FFD66F] border-2 border-[#5D4037] rounded-full flex items-center
-      justify-center">
-                                <div class="w-0 h-0 border-l-4 border-l-[#5D4037] border-y-2 border-y-transparent
-      ml-1"></div>
-                              </div>
-                            </div>
-                          </div>
-                        </template>
-
-                        <!-- Remove Button -->
-                       {% include 'albums/remove_btn.html' %}
-                      </div>
-                    </div>
-                  </template>
+                  <!-- Media Previews layout -->
+                  {% include 'albums/media_previews.html' %}
 
                   <!-- Add More Button -->
                   <div class="aspect-square border-4 border-dashed border-[#4CAF50] rounded bg-[#E8F5E8]
@@ -366,7 +326,7 @@
               </button>
 
               <button type="button"
-                      @click="$store.fileUploadManager.clearAllFiles()"
+                      @click="$store.fileUploadManager.clearAllFiles(); showUploadModal = false;"
                       class="flex-1 bg-[#FF9800] hover:bg-[#FFB74D] border-4 border-[#5D4037] text-[#2E7D32] font-mono
       font-bold py-3 px-6 rounded-lg transition-all duration-200 shadow-[4px_4px_0px_#3B3B3B] game-button">
                 🗑️ CANCEL
@@ -389,10 +349,9 @@
 <script>
   function albumEditor() {
     return {
- 
+      showUploadModal: false,
       selectedMedias: [],
       selectAll: false,
-  
       totalPhotos: {{ medias|length }},
 
       toggleSelectAll() {
