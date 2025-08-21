@@ -46,7 +46,7 @@
           </div>
         </div>
       
-        <h1 class="text-lg sm:text-xl lg:text-2xl font-bold text-[#FFD66F] mb-2 pixel-title relative z-10" style="text-shadow: 2px 2px #3B3B3B;">CREATE TURTLE ALBUM</h1>
+        <h1 class="text-lg sm:text-xl lg:text-2xl font-bold text-[#FFD66F] mb-2 pixel-title relative z-10" style="text-shadow: 2px 2px #3B3B3B;">CREATE SHELL ALBUM</h1>
         <p class="text-[#D2B48C] text-sm relative z-10">Build your shell collection!</p>
         </div>
 
@@ -71,7 +71,7 @@
                    name="name" 
                    id="{{ form.name.id_for_label }}"
                    class="w-full bg-[#C8E6C9] border-2 border-[#2E7D32] rounded px-4 py-3 text-[#1B5E20] font-mono font-bold placeholder-[#4CAF50] focus:border-[#FBBF24] focus:outline-none transition-colors"
-                   placeholder="Enter your turtle album name..."
+                   placeholder="Enter your shell album name..."
                    value="{{ form.name.value|default_if_none:'' }}"
                    x-model="albumName">
             <input 
@@ -104,7 +104,7 @@
                 <button type="button"
                         @click="$refs.fileInput.click()"
                         class="bg-[#8BC34A] hover:bg-[#AED581] border-4 border-[#5D4037] text-[#2E7D32] font-mono font-bold py-2 px-4 sm:py-3 sm:px-6 rounded text-xs sm:text-sm transition-colors shadow-[4px_4px_0px_#3B3B3B] game-button">
-                  🐢 BROWSE TURTLE PHOTOS
+                  🐢 BROWSE LOCAL SHELLS
                 </button>
               </div>
             
@@ -122,7 +122,7 @@
           <button type="submit" 
                   class="bg-[#FBBF24] hover:bg-[#FFE082] active:bg-[#F57C00] border-4 border-[#5D4037] hover:border-[#3B3B3B] text-[#2E7D32] font-mono font-bold py-3 px-8 sm:py-4 sm:px-12 rounded-lg text-base sm:text-lg transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-[8px_8px_0px_#3B3B3B] game-button"
                   :disabled="isSubmitting"
-                  x-text="isSubmitting ? '🐢 BUILDING SHELL ALBUM...' : '💾 CREATE TURTLE ALBUM'">
+                  x-text="isSubmitting ? '🐢 BUILDING SHELL ALBUM...' : '💾 CREATE SHELL ALBUM'">
           </button>
           
               <p class="text-[#5D4037] text-xs mt-4 font-mono">
@@ -170,56 +170,30 @@
                     </div>
                   </div>
                 </div>
-          </template>
+            </template>
           
-          <template x-if="$store.fileUploadManager.newUploadMedias.length > 0">
-
+          
             <!-- Media Grid Preview -->
-            <div class="bg-[#A5D6A7] border-4 border-[#5D4037] rounded-lg p-4 shadow-[8px_8px_0px_#3B3B3B] relative">
+            <div 
+              x-show="$store.fileUploadManager.newUploadMedias.length > 0"
+              class="bg-[#A5D6A7] border-4 border-[#5D4037] rounded-lg p-4 shadow-[8px_8px_0px_#3B3B3B] relative">
               <!-- Grass pattern background -->
-              <div class="absolute inset-0 opacity-20 rounded" style="background: repeating-linear-gradient(0deg, transparent 0px, transparent 2px, #4CAF50 2px, #4CAF50 3px);"></div>
-              
+              <div 
+                class="absolute inset-0 opacity-20 rounded"  
+                style="background: repeating-linear-gradient(0deg, transparent 0px, transparent 2px, #4CAF50 2px, #4CAF50 3px);"></div>
+            
               <div class="relative z-10">
                 <!-- Preview Grid -->
-                <div class="grid grid-cols-2 lg:grid-cols-3 gap-2 lg:gap-4" x-show="$store.fileUploadManager.newUploadMedias.length > 0">
-                  <template x-for="(file, index) in $store.fileUploadManager.newUploadMedias" :key="index">
-                    <div class="relative group">
-                      <!-- Image Preview -->
-                      <div class="aspect-square bg-[#C8E6C9] border-4 border-[#2E7D32] rounded overflow-hidden shadow-[4px_4px_0px_#3B3B3B] hover:shadow-[6px_6px_0px_#3B3B3B] transition-all duration-200">
-                        <!-- Remove Button -->
-                        {% include 'albums/remove_btn.html' %}
-                        <img :src="file.url" 
-                        :alt="file.name"
-                        class="w-full h-full object-cover hover:scale-105 transition-transform duration-200">
-                
-                      </div>
-                      
-            
-                    
-                    <!-- Image Info -->
-                    <div class="absolute bottom-0 left-0 right-0 bg-[#2E7D32] bg-opacity-90 text-[#A5D6A7] text-xs p-1 sm:p-2 font-mono">
-                      <div class="truncate" x-text="file.name"></div>
-                      <div class="text-[#8BC34A]" x-text="`${(file.size / 1024).toFixed(1)}KB`"></div>
-                    </div>
-                  </div>
-                </template>
-              </div>
-              
-              <!-- Empty State -->
-              <div x-show="$store.fileUploadManager.newUploadMedias.length === 0" class="text-center py-12">
-                <div class="w-16 h-16 bg-[#C8E6C9] border-4 border-[#4CAF50] rounded mx-auto mb-4 flex items-center justify-center">
-                  <div class="text-[#4CAF50] text-2xl">📸</div>
+                <div class="grid grid-cols-2 lg:grid-cols-3 gap-2 lg:gap-4">
+                  {% include 'albums/media_previews.html' %}
                 </div>
-                <p class="text-[#4CAF50] font-mono text-sm">No turtle photos selected yet</p>
-              </div>
 
-              <!-- Quick Actions -->
-              {% include 'albums/clear_all_media.html' %}
+                <!-- Quick Actions -->
+                {% include 'albums/clear_all_media.html' %}
+              </div>
             </div>
           </div>
-        </div>
-          </template>
-      
+       
       </div>
     <!-- END LEFT COLUMN -->
     </div>
