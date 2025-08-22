@@ -39,10 +39,6 @@
             setTimeout(() => this.showConfetti = false, 3000);
         },
         
-        closeModal() {
-            if (this.autoAdvanceTimer) clearInterval(this.autoAdvanceTimer);
-            $parent.showModal = false;
-        }
     }"
     class="relative">
 
@@ -167,7 +163,7 @@
         <button
             class="w-full font-bold py-4 px-6 mb-5 rounded-lg focus:outline-none focus:ring-4 transition duration-150 ease-in-out shadow-[4px_4px_0px_{%if egg_type == 'special' %}#4c1d95{% else %}#be185d{% endif %}] transform hover:scale-105"
             :class="celebrationPhase === 5 ? '{%if egg_type == 'special' %}bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:from-purple-700 hover:to-indigo-700 focus:ring-purple-300{% else %}bg-gradient-to-r from-pink-500 to-green-500 text-white hover:from-pink-600 hover:to-green-600 focus:ring-pink-300{% endif %}' : '{%if egg_type == 'special' %}bg-purple-200 text-purple-800 hover:bg-purple-300 focus:ring-purple-300{% else %}bg-pink-200 text-pink-800 hover:bg-pink-300 focus:ring-pink-300{% endif %}'"
-            @click="showModal = false"
+            @click="closeModal()"
             x-show="celebrationPhase === 5"
             x-cloak
         >{%if egg_type == 'special' %}Magnificent!{% else %}Interesting...!{% endif %}
