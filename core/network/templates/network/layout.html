@@ -27,6 +27,12 @@
       x-data="{ 
         showModal: false,
         selectedMedia: null, 
+        closeModal() {
+          this.showModal = false;
+          {% if profile %}
+            window.location.href = '{% url 'profile_nest' profile.username %}';
+          {% endif %}
+        },
         clickedMedia: null,
         resize(textarea) { 
           textarea.style.height = 'auto'; 
