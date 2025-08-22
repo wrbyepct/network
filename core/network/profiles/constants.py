@@ -3,7 +3,7 @@
 PROFILE_TABS = [
     "about",
     "nest",
-    "posts",
-    "photos",
+    "turties",
+    "shells",
 ]
 PHOTO_TABS = ["uploads", "albums"]

@@ -25,12 +25,12 @@ urlpatterns = [
     path(
         "<str:username>/posts/",
         views.PostsView.as_view(),
-        name="profile_posts",
+        name="profile_turties",
     ),
     path(
         "<str:username>/photos/",
         views.PhotosView.as_view(),
-        name="profile_photos",
+        name="profile_shells",
     ),
     path(
         "<str:username>/photos/uploads/",
