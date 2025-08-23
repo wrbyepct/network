@@ -12,8 +12,9 @@
 
 <div 
   id="post-list-comment-section-{{ post.id }}"
-  {% if post.comment_count  %} class="p-3 border-t-2 border-b-2 border-stone-300" {% endif %}
->
+  x-ref="commentSection"
+  :class="commentCount && 'border-y-2' "
+  class="p-3 border-stone-300">
 {% include 'posts/partial/post_list_comment_section.html' %}  
 </div>
 

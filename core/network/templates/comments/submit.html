@@ -11,7 +11,9 @@
       {% if request.user.is_authenticated %}
         x-ref="textarea"
         x-model="commentBody"
-        @transitionend="resize($el);"
+        {% if for_comment_submit %}
+          x-effect="if(editing) $nextTick(() => resize($el))"
+        {% endif %}
         @input="resize($el)"
       {% else %}
         tabindex="-1"
@@ -19,7 +21,7 @@
         hx-trigger="click"
         hx-target="#modal-container"
         hx-select="#auth-modal-content"
-        @htmx:after-request="if($event.detail.successful) showModal = true;"
+        @htmx:after-request="if($event.detail.successful) showModal = true; commentCountTracker();"
       {% endif %}
       ></textarea>
     <button 
