@@ -11,9 +11,19 @@
         setReplyTo() { return this.isOwner ? '' : '@{{ comment.username }} ' },
         liked: {{ comment|liked_by_user:request.user|yesno:'true,false' }},
         likeCount: {{ comment.like_count }},
+
+        collapse: true,
+        showMore: false,
+        checkClamp() {
+            const content = this.$refs.content;
+            this.showMore = content.scrollHeight > content.clientHeight;
+        },
+        init() {
+            $nextTick(() => this.checkClamp());
+        },
     }">
     <div 
-        class="d-flex"
+        class="flex w-full"
         @mouseover="isHovering = true"
         @mouseleave="isHovering = false"
         >
@@ -26,20 +36,9 @@
         </a>
         
         <!-- Comment  -->
-        <div x-show="!editing">   
+        <div x-show="!editing" class="grow min-w-0 wrap-break-word">   
             <!-- Username and collapsable content -->
             <div
-                x-data="{
-                    collapse: true,
-                    showMore: false,
-                    init() {
-                        $nextTick(() => this.checkClamp());
-                    },
-                    checkClamp() {
-                        const content = this.$refs.content;
-                        this.showMore = content.scrollHeight > content.clientHeight;
-                    },
-                }"
                 x-effect="if(newComment) $nextTick(() => newComment = false)"
                 :class="newComment ? 'bg-sky-100' : 'bg-gray-50'"
                 class="rounded px-3 py-2  transition-colors duration-1000 delay-1000">
@@ -121,7 +120,7 @@
             x-transition
             @htmx:before-request="preventEmptySubmit($event)"
             >
-                {% include 'comments/submit.html' %}
+                {% include 'comments/submit.html' with for_comment_submit=True %}
             <a 
                 class="btn link-primary link-opacity-50-hover text-decoration-none" 
                 @click="editing = false">Cancel</a>
