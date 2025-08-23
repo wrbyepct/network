@@ -2,7 +2,7 @@
 <!-- Post -->
 <div
   id="post-{{ post.id }}"
-  class="flex flex-col bg-stone-100 rounded-md border-4 border-stone-600 shadow-[4px_4px_0px_#a8a29e] p-4 transition-transform ease-in-out h-full max-w-3xl mx-auto"
+  class="flex flex-col bg-stone-100 rounded-md border-4 border-stone-600 shadow-[4px_4px_0px_#a8a29e] p-4 transition-transform ease-in-out w-full h-full xl:max-w-4xl mx-auto"
   {% with post_liked=post|liked_by_user:request.user %}
     x-data="{
       {# Created #}
@@ -17,7 +17,11 @@
       {# Comment #}
       commentBody: '', 
       replying: false,
-      commentCount: {{ post.comment_count }},
+      commentCount: {{ post.comment_count  }},
+      commentCountTracker() {
+        const commentSection = this.refs.commentSection;
+        this.commentCount = commentSection.childElementCount;
+      },
       {# Like #}
       postLiked: {{ post_liked|yesno:'true,false' }},
       postLikeCount: {{ post.like_count }},

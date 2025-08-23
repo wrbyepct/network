@@ -2,16 +2,18 @@
 
   <!-- Post Modal content -->
   <div 
-    class="h-[100vh] lg:w-4/5 lg:h-9/10" 
+    class="w-full h-[100vh] xl:w-5/7 xl:h-9/10" 
     x-data="{ close() { showModal = false; $el.remove(); } }"
     x-init="isPostDetail = true"
     @keydown.escape.window="close()"
     @click.outside="close()"
   >
-    {% if post.medias_count %}
-      {% include 'posts/post/with_media_slider.html' %}
-    {% else %}
-      {% include 'posts/post/detail_card.html' with toolkit_display_direction="right" %}
-    {% endif %}
+    {% with toolkit_display_direction="right" %}
+      {% if post.medias_count %}
+        {% include 'posts/post/with_media_slider.html' %}
+      {% else %}
+        {% include 'posts/post/detail_card.html' %}
+      {% endif %}
+    {% endwith %}
   </div>
   
