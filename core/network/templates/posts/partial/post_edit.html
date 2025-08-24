@@ -4,6 +4,19 @@
     images: [],
     videos: [],
   },
+  existingMedia: { 
+    images: [],
+    videos: [],
+  },
+  get allMedias () {
+    return [this.toUploadMedia, this.existingMedia]
+  },
+  popualateExistingMedia(medias) {
+    medias.forEach(media => {
+      if(media.type === 'image') this.existingMedia.images.push(media)
+      if(media.type === 'video') this.existingMedia.videos.push(media)
+    })
+  },
   addMedia(file, type) {
     this.toUploadMedia[type].push({ 
       file: file, 
@@ -11,15 +24,14 @@
       type: type
     });
   },
-  removeOldMedia(id, el) {
-    this.toDeleteIds.push(id);
-    el.remove();
+  removeOldMedia(index, media) {
+    this.toDeleteIds.push(media.id);
+    this.existingMedia[`${media.type}s`].splice(index, 1);
   },
   removeMedia(index, type) {
     // This is to clean up memory
     URL.revokeObjectURL(this.toUploadMedia[type][index].url); 
     this.toUploadMedia[type].splice(index, 1);
-
   },
   handleMediaUpload(event) {
     const files = Array.from(event.target.files);
@@ -39,22 +51,28 @@
     this.$refs.videoInput.files = videoTransfer.files;
 
     $dispatch('mediaReadyToUpload');
-   
-
   },
   toDeleteIds: [],
+  initEditForm() {
+    htmx.process($el);
+
+    const mediaObjects = document.getElementById('post-medias-data').textContent;
+    const medias = JSON.parse(mediaObjects);
+    this.popualateExistingMedia(medias)
+
+  }
 }"
-  x-init="htmx.process($el)"
+  x-init="initEditForm()"
   hx-post="{% url 'post_edit' post.id %}"
   hx-vals='{"post_type": "list_card"}'
   hx-trigger="mediaReadyToUpload"
-  hx-target="#post-{{ post.id }}"
+  hx-target="#post-{{ post.pk }}"
   hx-swap="outerHTML"
   hx-encoding="multipart/form-data"
   enctype="multipart/form-data"
   @post-edit-error="displayAlertMessage($event)" 
 >
-
+  {{ post.media_objects|json_script:"post-medias-data" }},
   <!-- Post content edit field -->
   <textarea
     name="content"
@@ -70,46 +88,50 @@
     {% include 'posts/partial/media_upload_btn.html' %}
   </div>
 
-  <!-- Display of new uploaded media -->
-  <div class="border-2 border-stone-300 rounded-md p-1 my-2">
-    <!-- Video -->
-    <template x-if="toUploadMedia.videos.length > 0" > 
-      <template x-for="(media, index) in toUploadMedia.videos"> 
-        <div class="grid grid-cols-1 relative" >
-          <video class="w-full h-full object-cover" :src="toUploadMedia.videos[0].url"  preload="metadata" ></video>
-          {% include 'posts/partial/media_cancel_btn.html' %}
-        </div>
-      </template>
-    </template>
-    <!-- Images -->
-    <template x-if="toUploadMedia.images.length > 0">
-      <div 
-        class="grid" 
-        :class="{
-          'grid-cols-1': toUploadMedia.images.length === 1,
-          'grid-cols-2': toUploadMedia.images.length > 1
-        }"
-      >
-        <template x-for="(media, index) in toUploadMedia.images"> 
-          <div
-            class="relative"
-            :class="{
-            {# if 3 items, the first should takes up 2 cols space #}
-              'col-span-2': toUploadMedia.images.length === 3 && index === 0,
-            }">
-            <img class="w-full h-full object-cover" :src="media.url" alt="Image uploaded ">
+  <template x-for="m in allMedias">
+      <!-- Display of new uploaded media -->
+    <div 
+      x-show="m.videos.length + m.images.length > 0" 
+      x-cloak
+      class="border-2 border-stone-300 rounded-md p-1 my-2">
+      <!-- Video -->
+      <template x-if="m.videos.length > 0" > 
+        <template x-for="(media, index) in m.videos"> 
+          <div class="grid grid-cols-1 relative" >
+            <video class="w-full h-full object-cover" :src="m.videos[0].url"  preload="metadata" ></video>
             {% include 'posts/partial/media_cancel_btn.html' %}
           </div>
         </template>
-      </div>
-    </template>
-   </div>
+      </template>
+      <!-- Images -->
+      <template x-if="m.images.length > 0">
+        <div 
+          class="grid" 
+          :class="{
+            'grid-cols-1': m.images.length === 1,
+            'grid-cols-2': m.images.length > 1
+          }"
+        >
+          <template x-for="(media, index) in m.images"> 
+            <div
+              class="relative"
+              :class="{
+              {# if 3 items, the first should takes up 2 cols space #}
+                'col-span-2': m.images.length === 3 && index === 0,
+              }">
+              <img class="w-full h-full object-cover" :src="media.url" alt="Image uploaded ">
+              {% include 'posts/partial/media_cancel_btn.html' %}
+            </div>
+          </template>
+        </div>
+      </template>
+    </div>
+  </template>
 
 
-  <!-- Display current old media  -->
-  {% include 'posts/partial/media_gallery.html' with editing=True medias=post.medias.all  %}
 
-  
+
+
   <!-- To-delete media field -->
   <input hidden name="delete_media" :value="JSON.stringify(toDeleteIds)" >
 

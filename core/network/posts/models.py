@@ -62,6 +62,18 @@ class Post(LikeCountMixin, ProfileInfoMixin, TimestampedModel):
         """Get acending medias of this post."""
         return self.medias.all().order_by("order")
 
+    @cached_property
+    def media_objects(self):
+        """Return media objects."""
+        return [
+            {
+                "id": m.id,
+                "url": m.file.url,  # access property or field
+                "type": m.type,
+            }
+            for m in self.ordered_medias
+        ]
+
     def delete(self, *args, **kwargs):
         """Override delete method to revoke publish task."""
         if self.celery_task_id:
