@@ -11,10 +11,11 @@
 {% block comment_section %}
 
 <div 
-  id="post-list-comment-section-{{ post.id }}"
+  id="post-list-comment-section-{{ post.pk }}"
   x-ref="commentSection"
-  :class="commentCount && 'border-y-2' "
-  class="p-3 border-stone-300">
+  class="border-stone-300"
+  :class="commentCount && 'border-y-2 p-3' "
+>
 {% include 'posts/partial/post_list_comment_section.html' %}  
 </div>
 

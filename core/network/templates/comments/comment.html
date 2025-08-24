@@ -18,6 +18,9 @@
             const content = this.$refs.content;
             this.showMore = content.scrollHeight > content.clientHeight;
         },
+        deleteComment() {
+          $el.remove();
+        },
         init() {
             $nextTick(() => this.checkClamp());
         },
@@ -36,7 +39,7 @@
         </a>
         
         <!-- Comment  -->
-        <div x-show="!editing" class="grow min-w-0 wrap-break-word">   
+        <div x-show="!editing" class="min-w-0 wrap-break-word">   
             <!-- Username and collapsable content -->
             <div
                 x-effect="if(newComment) $nextTick(() => newComment = false)"
@@ -135,7 +138,7 @@
         :id=" isPostDetail ? 'post-detail-replies-{{ comment.id }}' : 'post-list-replies-{{ comment.id }}'"
         ></div>
     </div>
-    
+    <!-- TODO Make show more display dynamically using alpine js -->
     <!-- Show more reply button  -->
     {% if comment.children_count %}
     <div 
@@ -170,7 +173,3 @@
             @click="replying = false">Cancel</a>
     </form>
 </div>
-<!-- For piggy-pack data -->
-{% if is_new_comment %}
-    {% include 'posts/partial/comment_count.html' %}
-{% endif %}
