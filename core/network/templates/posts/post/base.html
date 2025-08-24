@@ -1,7 +1,7 @@
 {% load post_extra %}
 <!-- Post -->
 <div
-  id="post-{{ post.id }}"
+  id="post-{{ post.pk }}"
   class="flex flex-col bg-stone-100 rounded-md border-4 border-stone-600 shadow-[4px_4px_0px_#a8a29e] p-4 transition-transform ease-in-out w-full h-full xl:max-w-4xl mx-auto"
   {% with post_liked=post|liked_by_user:request.user %}
     x-data="{
@@ -19,7 +19,8 @@
       replying: false,
       commentCount: {{ post.comment_count  }},
       commentCountTracker() {
-        const commentSection = this.refs.commentSection;
+        console.log('Comment count tracker triggered');
+        const commentSection = $refs.commentSection;
         this.commentCount = commentSection.childElementCount;
       },
       {# Like #}
@@ -166,8 +167,7 @@
       <form 
         {% if request.user.is_authenticated %}
           hx-post="{% url 'comment_create' post.id %}"
-          :hx-target="isPostDetail ? '#post-detail-comment-section-{{ post.id }}' : '#post-list-comment-section-{{ post.id }}'"
-          :hx-swap="isPostDetail ? 'afterbegin scroll:#comments:top' : 'beforeend'"
+          hx-swap="none"
           @htmx:before-request="preventEmptySubmit($event)"
           @htmx:after-request="if($event.detail.successful) clearUpForm($event)"
         {% else %}
