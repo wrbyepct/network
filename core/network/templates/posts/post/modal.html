@@ -5,6 +5,7 @@
     class="w-full h-[100vh] xl:w-5/7 xl:h-9/10" 
     x-data="{ close() { showModal = false; $el.remove(); } }"
     x-init="isPostDetail = true"
+    x-ref="commentSection"
     @keydown.escape.window="close()"
     @click.outside="close()"
   >

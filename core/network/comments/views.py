@@ -65,7 +65,7 @@ class CommentCreateView(
             "is_new_comment": True,
             "post": post,
         }
-        return render(self.request, "comments/comment.html", context)
+        return render(self.request, "comments/comment_for_multi_swap.html", context)
 
     def form_valid(self, form):
         """
