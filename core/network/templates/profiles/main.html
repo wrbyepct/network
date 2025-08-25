@@ -40,18 +40,12 @@
     }
 </style>
 
-<div class="bg-[#A8D5A0] min-h-screen p-4 font-mono">
+<div class="bg-[#A8D5A0] min-h-screen py-4 md:px-8 font-mono">
     <div class="max-w-5xl mx-auto">
         <!-- Profile Header -->
         <div class="habitat-banner border-8 border-[#5D4037] rounded-lg p-6 text-center mb-8 shadow-[12px_12px_0px_#3B3B3B] relative">
             <div class="flex justify-center items-end space-x-8">
-                <div class="relative">
-                    <img src="{{ profile.profile_picture.url }}" class="w-32 h-32 rounded-full object-cover turtle-shell-frame">
-                </div>
-                <div class="wooden-sign p-4 rounded-lg border-4 border-[#5D4037] shadow-[4px_4px_0px_#3B3B3B]">
-                    <h1 class="text-3xl">{{ profile.username }}</h1>
-                </div>
-                <div class="absolute bottom-4 right-4">
+                <div class="absolute top-0 left-0 m-3">
                     {% if profile.user == request.user %}
                       <div class="relative group">
                         {% include 'profiles/partials/edit_button.html' %}
@@ -60,13 +54,24 @@
                       {% include 'profiles/partials/follow_btn.html' %}
                     {% endif %}
                 </div>
+
+                <div class="flex flex-col lg:flex-row items-center justify-around">
+                  <div class="relative">
+                    <img src="{{ profile.profile_picture.url }}" class="w-24 h-24 lg:w-32 lg:h-32 rounded-full object-cover turtle-shell-frame">
+                  </div>
+
+                  <div class="lg:order-2 mx-4 wooden-sign p-4 rounded-lg border-4 border-[#5D4037] shadow-[4px_4px_0px_#3B3B3B]">
+                      <span class="text-xl lg:text-3xl">{{ profile.username }}</span>
+                  </div>
+                </div>
+
             </div>
         </div>
 
         <!-- Tabs -->
         <div class="flex justify-center mb-8" x-data="{'activeTab': '{{ current_tab }}'}">
             {% for tab in tabs %}
-            <div class="shell-tab rounded-t-full px-8 py-4 text-[#5D4037] font-bold text-xl mx-2 cursor-pointer transform transition-transform duration-200 hover:scale-105 relative"
+            <div class="shell-tab rounded-t-full px-4 py-3 text-md lg:px-8 lg:py-4 lg:text-xl text-[#5D4037] font-bold mx-2 cursor-pointer transform transition-transform duration-200 hover:scale-105 relative"
                :class="{ 'active': activeTab === '{{ tab }}' }"
                @click="activeTab = '{{ tab }}'"
                hx-get="{% url 'profile_'|add:tab profile.username %}"
