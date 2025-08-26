@@ -1,11 +1,11 @@
 
 <div 
-  id="post-detail-comment-section-{{ post.pk }}"
+  id="post-detail-comment-section-{{ post.id }}"
   class="mt-4 overflow-y-auto grow"
   hx-get="{% url 'comment_list' post.id %}"
   hx-trigger="load"
   hx-swap="beforeend"
-  hx-target="#post-detail-comment-section-{{ post.pk }}"
+  hx-target="#post-detail-comment-section-{{ post.id }}"
   >
   <!-- Default empty dsiplay -->
   {% include 'posts/partial/no_comment_yet.html' %}

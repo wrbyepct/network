@@ -40,14 +40,28 @@
   <!-- Tab Content -->
   <div class="tab-content">
     <!-- Followers Tab -->
-    <div x-show="activeTab === 'followers'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform translate-y-4" x-transition:enter-end="opacity-100 transform translate-y-0">
-      {% include 'profiles/tabs/partial/followers.html' %}
-    </div>
-    
-    <!-- Following Tab -->
-    <div x-show="activeTab === 'following'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform translate-y-4" x-transition:enter-end="opacity-100 transform translate-y-0">
-      {% include 'profiles/tabs/partial/following.html' %}
-    </div>
+    <template x-if="activeTab === 'followers'">
+      <div 
+        x-init="htmx.process($el)"
+        x-show="activeTab === 'followers'" 
+        x-transition:enter="transition ease-out duration-300" 
+        x-transition:enter-start="opacity-0 transform translate-y-4" 
+        x-transition:enter-end="opacity-100 transform translate-y-0">
+        {% include 'profiles/tabs/partial/followers.html' %}
+      </div>
+    </template>
+      
+    <template x-if="activeTab === 'following'">
+      <!-- Following Tab -->
+      <div 
+        x-init="htmx.process($el)"
+        x-show="activeTab === 'following'" 
+        x-transition:enter="transition ease-out duration-300" 
+        x-transition:enter-start="opacity-0 transform translate-y-4" 
+        x-transition:enter-end="opacity-100 transform translate-y-0">
+        {% include 'profiles/tabs/partial/following.html' %}
+      </div>
+    </template>
   </div>
 </div>
 

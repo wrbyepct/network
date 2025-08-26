@@ -59,7 +59,7 @@ class ProfileTabsBaseMixin:
 class PhotoTabsBaseMixin:
     """Mixin to provide context needed for photo tab view."""
 
-    current_tab = "photos"
+    current_tab = "shells"
     photo_tabs = PHOTO_TABS
 
     def get_context_data(self, **kwargs):
@@ -118,7 +118,7 @@ class PhotosAlbumsView(
 class PostsView(ProfileTabsBaseMixin, ListView):
     """Profile Posts view that handles partial and full request."""
 
-    current_tab = "posts"
+    current_tab = "turties"
     context_object_name = "posts"
     paginate_by = 10
 
@@ -135,13 +135,11 @@ class NestView(ProfileTabsBaseMixin, TemplateView):
     def get_context_data(self, **kwargs):
         """Inject user eggs into context."""
         context = super().get_context_data(**kwargs)
-        special_eggs = self.profile.special_eggs
-        regular_eggs = self.profile.regular_eggs
-        easter_eggs = self.profile.easter_eggs
+
         eggs = [
-            {"name": "special", "eggs": special_eggs},
-            {"name": "regular", "eggs": regular_eggs},
-            {"name": "easter", "eggs": easter_eggs},
+            {"name": "special", "eggs": self.profile.special_eggs},
+            {"name": "regular", "eggs": self.profile.regular_eggs},
+            {"name": "easter", "eggs": self.profile.easter_eggs},
         ]
         context["eggs"] = eggs
 
@@ -172,22 +170,42 @@ class FollowTabView(LoginRequiredMixin, ProfileTabsBaseMixin, TemplateView):
     current_tab = "follow"
 
 
-class ProfileEditView(LoginRequiredMixin, UpdateView):
-    """Profile creation view."""
+class FollowPaginatorBaseView(ListView):
+    """Follow Paginator Base View."""
 
-    template_name = "profiles/edit.html"
-    form_class = ProfileForm
-    success_url = reverse_lazy("profile_edit")
+    paginate_by = 3
 
-    def get_object(self, queryset=None):
-        """Return the requesting user's Profile."""
-        return self.request.user.profile
+    def get_template_names(self):
+        """Get dynamic follow type tempalte name."""
+        return [f"profiles/tabs/partial/{self.follow_type}_paginator.html"]
 
-    def form_valid(self, form):
-        """Inject exited success to true when the edit is successful."""
-        super().form_valid(form)
-        context = {"edited_success": True, "form": form}
-        return render(self.request, self.template_name, context)
+    def get_context_object_name(self, object_list):
+        """Get dynamic follow type context object name."""
+        return self.follow_type
+
+    def get_queryset(self):
+        """Get dynamic follow type related objects from a profile."""
+        profile = get_object_or_404(Profile, username=self.kwargs.get("username"))
+
+        return getattr(profile, f"{self.follow_type}").all()
+
+    def get_context_data(self, **kwargs):
+        """Inject requesting username to context."""
+        context = super().get_context_data(**kwargs)
+        context["username"] = self.kwargs.get("username")
+        return context
+
+
+class FollowersPaginatorView(FollowPaginatorBaseView):
+    """Following Paginator View."""
+
+    follow_type = "followers"
+
+
+class FollowingPaginatorView(FollowPaginatorBaseView):
+    """Following Paginator View."""
+
+    follow_type = "following"
 
 
 # Follow/Unfollow
@@ -221,3 +239,21 @@ class FollowView(View):
 
         resp["HX-Trigger"] = json.dumps({"follow-success": {"message": message}})
         return resp
+
+
+class ProfileEditView(LoginRequiredMixin, UpdateView):
+    """Profile creation view."""
+
+    template_name = "profiles/edit.html"
+    form_class = ProfileForm
+    success_url = reverse_lazy("profile_edit")
+
+    def get_object(self, queryset=None):
+        """Return the requesting user's Profile."""
+        return self.request.user.profile
+
+    def form_valid(self, form):
+        """Inject exited success to true when the edit is successful."""
+        super().form_valid(form)
+        context = {"edited_success": True, "form": form}
+        return render(self.request, self.template_name, context)

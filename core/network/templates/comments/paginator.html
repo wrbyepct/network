@@ -7,7 +7,7 @@
           hx-get="{% url 'comment_list' post.id %}?page={{ page_obj.next_page_number }}"
           hx-trigger="intersect once"
           hx-swap="beforeend"
-          hx-target="#post-detail-comment-section-{{ post.pk }}"
+          hx-target="#post-detail-comment-section-{{ post.id }}"
         ></div>
     {% endif %}
 </div>
