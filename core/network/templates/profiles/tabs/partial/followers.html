@@ -1,215 +1,108 @@
 
 
 <div 
-  class="community-pond-container grow p-4 bg-gradient-to-b from-emerald-100 to-emerald-200 min-h-screen space-y-4"
-  style="font-family: 'Press Start 2P', monospace; font-size: 5px; image-rendering: pixelated;"
+  class="community-pond-container p-4 bg-gradient-to-b from-emerald-100 to-emerald-200 min-h-screen"
+  style="font-family: 'Press Start 2P', monospace; font-size: 8px; image-rendering: pixelated;"
 >
     {% if profile.followers.exists %}
-     
-      {% for follower in profile.followers.all %}
-       <!-- Turtle Card -->
-        <div 
-          class="relative group cursor-pointer transform transition-all duration-300 hover:scale-110 hover:-translate-y-1 "
-     
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+        {% for follower in profile.followers.all %}
+          <!-- Unified Turtle Social Card -->
+          <div 
+            class="turtle-social-card relative group cursor-pointer transform transition-all duration-300 hover:scale-105 hover:-translate-y-2"
           >
             <!-- Lily Pad Base -->
-            <div class="absolute w-24 h-16 bg-green-400 rounded-full border-3 border-green-600 opacity-80">
-                <div class="absolute top-1 left-1/2 transform -translate-x-1/2 w-1 h-8 bg-green-600"></div>
+            <div class="absolute w-full h-20 bg-gradient-to-r from-emerald-300 to-emerald-400 rounded-full border-3 border-emerald-600 opacity-90">
+              <div class="absolute top-1 left-1/2 transform -translate-x-1/2 w-1 h-6 bg-emerald-700"></div>
             </div>
             
-            <!-- Turtle Body -->
-            <a href="{% url 'profile_about' follower.username %}" class="block">
-              <div class="relative w-20 h-16 ms-2 my-4">
-                <!-- Turtle Shell with Avatar -->
-                    {% include 'profiles/partials/follower_toolkit.html' with toolkit_display_direction="right" %}
-                    <div class="turtle-shell w-16 h-16 mx-auto relative overflow-hidden">
-                        <!-- User Avatar inside shell -->
-                        <img 
-                            src="{{ follower.profile_picture.url }}" 
-                            alt="{{ follower.username }} Avatar" 
-                            class="absolute inset-1 w-14 h-14 rounded-full object-cover border-2 border-emerald-700 pixelated z-10"
-                        />
-                    </div>
-                    
-                    <!-- Turtle Head -->
-                    <div class="turtle-head"></div>
-                    
-                    <!-- Turtle Legs -->
-                    <div class="turtle-leg front-left"></div>
-                    <div class="turtle-leg front-right"></div>
-                    <div class="turtle-leg back-left"></div>
-                    <div class="turtle-leg back-right"></div>
+            <!-- Card Content -->
+            <div class="relative bg-white bg-opacity-95 rounded-lg border-3 border-emerald-700 p-4 mt-4 hover:shadow-lg transition-all duration-300">
+              <!-- User Avatar with Turtle Shell -->
+              <a href="{% url 'profile_about' follower.username %}" class="text-decoration-none block text-center mb-3">
+                <div class="turtle-shell-container relative w-16 h-16 mx-auto mb-2">
+                  <div class="turtle-shell emerald w-16 h-16 mx-auto relative overflow-hidden">
+                    <img 
+                      src="{{ follower.profile_picture.url }}" 
+                      alt="{{ follower.username }} Avatar" 
+                      class="absolute inset-1 w-14 h-14 rounded-full object-cover border-2 border-emerald-700 pixelated z-10"
+                    />
+                  </div>
+                  <!-- Turtle elements -->
+                  <div class="turtle-head emerald"></div>
+                  <div class="turtle-leg emerald front-left"></div>
+                  <div class="turtle-leg emerald front-right"></div>
+                  <div class="turtle-leg emerald back-left"></div>
+                  <div class="turtle-leg emerald back-right"></div>
                 </div>
-            </a>
+                
+                <span class="text-sm font-bold text-emerald-900 hover:underline">{{ follower.username }}</span>
+              </a>
+              
+              <!-- Connection Context -->
+              <div class="text-center mb-3">
+                <p class="text-xs text-emerald-600">Follower since {{ follower.date_joined|date:"M Y" }}</p>
+                <div class="flex justify-center items-center space-x-2 mt-1">
+                  <span class="inline-block w-2 h-2 bg-emerald-400 rounded-full"></span>
+                  <span class="text-xs text-emerald-500">Active Turtler</span>
+                </div>
+              </div>
+              
+              <!-- Follow Back Button (if not already following) -->
+              <div class="text-center">
+                {% load profile_extra %}
+                {% if not follower|has_followed:request.user %}
+                  <button
+                    class="px-4 py-2 rounded-lg text-xs font-bold transition-all duration-200 border-2 hover:scale-105 hover:shadow-sm w-full bg-emerald-500 text-white border-emerald-700 hover:bg-emerald-600 hover:border-emerald-800"
+                    hx-post="{% url 'follow' follower.username %}"                            
+                    hx-swap="none"
+                    @follow-success="displayAlertMessage($event)"
+                  >
+                    Follow Back
+                  </button>
+                {% else %}
+                  <button
+                    class="px-4 py-2 rounded-lg text-xs font-bold transition-all duration-200 border-2 hover:scale-105 hover:shadow-sm w-full bg-gray-400 text-white border-gray-600 cursor-not-allowed"
+                    disabled
+                  >
+                    Following
+                  </button>
+                {% endif %}
+              </div>
+            </div>
           </div>
-      {% endfor %}
+        {% endfor %}
+      </div>
       
     {% else %}
-      <!-- Empty State - Lonely Turtle -->
+      <!-- Empty State - Lonely Turtle in Pond -->
       <div class="flex items-center justify-center h-96">
           <div class="text-center">
               <!-- Lonely Swimming Turtle -->
               <div class="relative w-32 h-32 mx-auto mb-8">
                   <div class="lonely-turtle relative w-20 h-16 mx-auto">
                       <!-- Turtle Shell -->
-                      <div class="turtle-shell w-16 h-16 mx-auto relative">
-                          <div class="absolute inset-2 bg-gradient-to-br from-gray-300 to-gray-400 rounded-full border border-gray-500"></div>
+                      <div class="turtle-shell emerald w-16 h-16 mx-auto relative">
+                          <div class="absolute inset-2 bg-gradient-to-br from-emerald-300 to-emerald-400 rounded-full border border-emerald-500"></div>
                       </div>
                       
                       <!-- Sad Turtle Head -->
-                      <div class="turtle-head bg-gradient-to-br from-gray-400 to-gray-500"></div>
+                      <div class="turtle-head emerald"></div>
                       
                       <!-- Turtle Legs -->
-                      <div class="turtle-leg front-left bg-gradient-to-br from-gray-400 to-gray-500"></div>
-                      <div class="turtle-leg front-right bg-gradient-to-br from-gray-400 to-gray-500"></div>
-                      <div class="turtle-leg back-left bg-gradient-to-br from-gray-400 to-gray-500"></div>
-                      <div class="turtle-leg back-right bg-gradient-to-br from-gray-400 to-gray-500"></div>
+                      <div class="turtle-leg emerald front-left"></div>
+                      <div class="turtle-leg emerald front-right"></div>
+                      <div class="turtle-leg emerald back-left"></div>
+                      <div class="turtle-leg emerald back-right"></div>
                   </div>
               </div>
               
               <!-- Empty State Message -->
-              <div class="bg-white bg-opacity-90 rounded-lg border-4 border-blue-600 p-4 text-blue-800 text-xs max-w-xs mx-auto">
-                  <p class="mb-2">🐢 This turtle is swimming alone...</p>
-                  <p>Looking for friends to join the pond!</p>
+              <div class="bg-white bg-opacity-90 rounded-lg border-4 border-emerald-600 p-4 text-emerald-800 text-xs max-w-xs mx-auto">
+                  <p class="mb-2">🐢 This pond is waiting for turtlers...</p>
+                  <p>Share your profile to attract fellow turtles!</p>
               </div>
           </div>
       </div>
     {% endif %}
 </div>
-
-
-<style>
-        .pixelated {
-            image-rendering: pixelated;
-            image-rendering: -moz-crisp-edges;
-            image-rendering: crisp-edges;
-        }
-        
-        /* Pond Ripple Effect */
-        @keyframes ripple {
-            0% { 
-                transform: scale(0); 
-                opacity: 1; 
-            }
-            100% { 
-                transform: scale(4); 
-                opacity: 0; 
-            }
-        }
-        
-        .ripple {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.6);
-            transform: scale(0);
-            animation: ripple 0.6s linear;
-            pointer-events: none;
-        }
-        
-        /* Turtle Swimming Animation */
-        @keyframes swim {
-            0%, 100% { transform: translateY(0px) rotate(-1deg); }
-            50% { transform: translateY(-8px) rotate(1deg); }
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-4px); }
-        }
-        
-        .turtle-swim {
-            animation: swim 4s ease-in-out infinite;
-        }
-        
-        .turtle-float {
-            animation: float 3s ease-in-out infinite;
-        }
-        
-        /* Turtle Shell Sprite */
-        .turtle-shell {
-            position: relative;
-            background: linear-gradient(135deg, #10b981, #059669);
-            border-radius: 50%;
-            border: 3px solid #064e3b;
-        }
-        
-        .turtle-shell::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 70%;
-            height: 70%;
-            background: linear-gradient(135deg, #34d399, #10b981);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            border: 2px solid #065f46;
-        }
-        
-        .turtle-shell::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 40%;
-            height: 40%;
-            background: #d1fae5;
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            border: 1px solid #059669;
-        }
-        
-        /* Turtle Head */
-        .turtle-head {
-            position: absolute;
-            width: 20px;
-            height: 16px;
-            background: linear-gradient(135deg, #10b981, #059669);
-            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-            border: 2px solid #064e3b;
-            top: -8px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1;
-        }
-        
-        /* Turtle Legs */
-        .turtle-leg {
-            position: absolute;
-            width: 12px;
-            height: 8px;
-            background: linear-gradient(135deg, #10b981, #059669);
-            border-radius: 50%;
-            border: 1px solid #064e3b;
-        }
-        
-        .turtle-leg.front-left { top: 20%; left: -6px; }
-        .turtle-leg.front-right { top: 20%; right: -6px; }
-        .turtle-leg.back-left { bottom: 20%; left: -6px; }
-        .turtle-leg.back-right { bottom: 20%; right: -6px; }
-        
-        /* Lonely Turtle Animation */
-        @keyframes lonely-swim {
-            0% { transform: translateX(0) rotate(0deg); }
-            25% { transform: translateX(100px) rotate(90deg); }
-            50% { transform: translateX(100px) translateY(50px) rotate(180deg); }
-            75% { transform: translateX(0) translateY(50px) rotate(270deg); }
-            100% { transform: translateX(0) rotate(360deg); }
-        }
-        
-        .lonely-turtle {
-            animation: lonely-swim 8s ease-in-out infinite;
-        }
-        
-
-        
-        /* Pond Surface Effect */
-        @keyframes water-shimmer {
-            0%, 100% { opacity: 0.1; }
-            50% { opacity: 0.3; }
-        }
-        
-        .water-shimmer {
-            animation: water-shimmer 3s ease-in-out infinite;
-        }
-    </style>
