@@ -63,7 +63,7 @@ class ActivityManagerService:
         },
         "hiding_in_shell": {
             "emoji": "🐢",
-            "color": "text-slate-600",
+            "color": "text-stone-300",
             "status": "Hiding in shell",
         },
     }
