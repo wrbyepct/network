@@ -66,7 +66,7 @@
   hx-post="{% url 'post_edit' post.id %}"
   hx-vals='{"post_type": "list_card"}'
   hx-trigger="mediaReadyToUpload"
-  hx-target="#post-{{ post.pk }}"
+  hx-target="#post-{{ post.id }}"
   hx-swap="outerHTML"
   hx-encoding="multipart/form-data"
   enctype="multipart/form-data"

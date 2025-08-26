@@ -1,8 +1,8 @@
-<div hx-swap-oob="afterbegin:#post-detail-comment-section-{{ post.pk }}">
+<div hx-swap-oob="afterbegin:#post-detail-comment-section-{{ post.id }}">
   {% include 'comments/comment.html' %}
 </div>
 
-<div hx-swap-oob="beforeend:#post-list-comment-section-{{ post.pk }}">
+<div hx-swap-oob="beforeend:#post-list-comment-section-{{ post.id }}">
   {% include 'comments/comment.html' %}
 </div>
 

@@ -43,5 +43,19 @@ urlpatterns = [
         name="profile_photos_albums",
     ),
     # Follow
-    path("<str:username>/follow/", views.FollowView.as_view(), name="follow"),
+    path(
+        "<str:username>/follow/",
+        views.FollowView.as_view(),
+        name="follow",
+    ),
+    path(
+        "<str:username>/followers/",
+        views.FollowersPaginatorView.as_view(),
+        name="followers_paginator",
+    ),
+    path(
+        "<str:username>/following/",
+        views.FollowingPaginatorView.as_view(),
+        name="following_paginator",
+    ),
 ]
