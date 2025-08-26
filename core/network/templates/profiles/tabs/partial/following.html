@@ -1,99 +1,46 @@
 
-    <div id="follow_message" class="text-center">
-        {# HTMX messages will appear here #}
-    </div>
-
-    <div 
+ 
+  <div 
       class="container-sm p-4 bg-gradient-to-b from-blue-100 to-blue-200 min-h-screen"
       style="font-family: 'Press Start 2P', monospace; font-size: 8px; image-rendering: pixelated;"
-    >
+  >
     {% if profile.following.exists %}
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
-        {% for profile in profile.following.all %}
-          <!-- Unified Turtle Social Card -->
-          <div 
-            class="turtle-social-card relative group cursor-pointer transform transition-all duration-300 hover:scale-105 hover:-translate-y-2"
-            x-data="{ has_followed: true }"
-          >
-            <!-- Lily Pad Base -->
-            <div class="absolute w-full h-20 bg-gradient-to-r from-blue-300 to-blue-400 rounded-full border-3 border-blue-600 opacity-90">
-              <div class="absolute top-1 left-1/2 transform -translate-x-1/2 w-1 h-6 bg-blue-700"></div>
-            </div>
-            
-            <!-- Card Content -->
-            <div class="relative bg-white bg-opacity-95 rounded-lg border-3 border-blue-700 p-4 mt-4 hover:shadow-lg transition-all duration-300">
-              <!-- User Avatar with Turtle Shell -->
-              <a href="{% url 'profile_about' profile.username %}" class="text-decoration-none block text-center mb-3">
-                <div class="turtle-shell-container relative w-16 h-16 mx-auto mb-2">
-                  <div class="turtle-shell blue w-16 h-16 mx-auto relative overflow-hidden">
-                    <img 
-                      src="{{ profile.profile_picture.url }}" 
-                      alt="{{ profile.username }} Avatar" 
-                      class="absolute inset-1 w-14 h-14 rounded-full object-cover border-2 border-blue-700 pixelated z-10"
-                    />
+      <div 
+        id="follow-container" 
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4"
+        hx-get="{% url 'following_paginator' profile.username %}"
+        hx-trigger="load"
+        hx-swap="beforeend"
+      ></div>
+    {% else %}
+      <!-- Empty State - Lonely Turtle in Ocean -->
+      <div class="flex items-center justify-center h-96 col-span-full">
+          <div class="text-center">
+              <!-- Lonely Swimming Turtle -->
+              <div class="relative w-32 h-32 mx-auto mb-8">
+                  <div class="lonely-turtle relative w-20 h-16 mx-auto">
+                      <!-- Turtle Shell -->
+                      <div class="turtle-shell blue w-16 h-16 mx-auto relative">
+                          <div class="absolute inset-2 bg-gradient-to-br from-blue-300 to-blue-400 rounded-full border border-blue-500"></div>
+                      </div>
+                      
+                      <!-- Sad Turtle Head -->
+                      <div class="turtle-head blue"></div>
+                      
+                      <!-- Turtle Legs -->
+                      <div class="turtle-leg blue front-left"></div>
+                      <div class="turtle-leg blue front-right"></div>
+                      <div class="turtle-leg blue back-left"></div>
+                      <div class="turtle-leg blue back-right"></div>
                   </div>
-                  <!-- Mini turtle elements -->
-                  <div class="turtle-head blue"></div>
-                  <div class="turtle-leg blue front-left"></div>
-                  <div class="turtle-leg blue front-right"></div>
-                  <div class="turtle-leg blue back-left"></div>
-                  <div class="turtle-leg blue back-right"></div>
-                </div>
-                
-                <span class="text-sm font-bold text-blue-900 hover:underline">{{ profile.username }}</span>
-              </a>
-              
-              <!-- Connection Context -->
-              <div class="text-center mb-3">
-                <p class="text-xs text-blue-600">Following since {{ profile.created_at|date:"M Y" }}</p>
               </div>
               
-              <!-- Follow Button -->
-              <div class="text-center">
-                <button
-                  class="px-4 py-2 rounded-lg text-xs font-bold transition-all duration-200 border-2 hover:scale-105 hover:shadow-sm w-full"
-                  :class="has_followed ? 'bg-emerald-500 text-white border-emerald-700 hover:bg-emerald-600 hover:border-emerald-800' : 'bg-blue-500 text-white border-blue-700 hover:bg-blue-600 hover:border-blue-800'"
-                  hx-post="{% url 'follow' profile.username %}"                            
-                  hx-swap="none"
-                  @follow-success="displayAlertMessage($event)"
-                  @click="has_followed = !has_followed"
-                >
-                  <span x-text="has_followed ? 'Following' : 'Follow'"></span>
-                </button>
+              <!-- Empty State Message -->
+              <div class="bg-white bg-opacity-90 rounded-lg border-4 border-blue-600 p-4 text-blue-800 text-xs max-w-xs mx-auto">
+                  <p class="mb-2">🌊 Swimming solo in the vast ocean...</p>
+                  <p>Discover new turtle friends to follow!</p>
               </div>
-            </div>
           </div>
-                {% endfor %}
-            </div>
-        {% else %}
-            <!-- Empty State - Lonely Turtle in Ocean -->
-            <div class="flex items-center justify-center h-96 col-span-full">
-                <div class="text-center">
-                    <!-- Lonely Swimming Turtle -->
-                    <div class="relative w-32 h-32 mx-auto mb-8">
-                        <div class="lonely-turtle relative w-20 h-16 mx-auto">
-                            <!-- Turtle Shell -->
-                            <div class="turtle-shell blue w-16 h-16 mx-auto relative">
-                                <div class="absolute inset-2 bg-gradient-to-br from-blue-300 to-blue-400 rounded-full border border-blue-500"></div>
-                            </div>
-                            
-                            <!-- Sad Turtle Head -->
-                            <div class="turtle-head blue"></div>
-                            
-                            <!-- Turtle Legs -->
-                            <div class="turtle-leg blue front-left"></div>
-                            <div class="turtle-leg blue front-right"></div>
-                            <div class="turtle-leg blue back-left"></div>
-                            <div class="turtle-leg blue back-right"></div>
-                        </div>
-                    </div>
-                    
-                    <!-- Empty State Message -->
-                    <div class="bg-white bg-opacity-90 rounded-lg border-4 border-blue-600 p-4 text-blue-800 text-xs max-w-xs mx-auto">
-                        <p class="mb-2">🌊 Swimming solo in the vast ocean...</p>
-                        <p>Discover new turtle friends to follow!</p>
-                    </div>
-                </div>
-            </div>
-        {% endif %}
-    </div>
+      </div>
+    {% endif %}
+  </div>

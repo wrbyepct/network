@@ -1,0 +1,71 @@
+{% load profile_extra %}
+{% for follower in followers %}
+    <!-- Unified Turtle Social Card -->
+    <div 
+    class="turtle-social-card relative group cursor-pointer transform transition-all duration-300 hover:scale-105 hover:-translate-y-2"
+    x-data="{ hasFollowed: {{ follower|has_followed:request.user|yesno:'true,false' }}}"
+    >
+    <!-- Lily Pad Base -->
+    <div class="absolute w-full h-20 bg-gradient-to-r from-emerald-300 to-emerald-400 rounded-full border-3 border-emerald-600 opacity-90">
+        <div class="absolute top-1 left-1/2 transform -translate-x-1/2 w-1 h-6 bg-emerald-700"></div>
+    </div>
+    
+    <!-- Card Content -->
+    <div class="relative bg-white bg-opacity-95 rounded-lg border-3 border-emerald-700 p-4 mt-4 hover:shadow-lg transition-all duration-300">
+        <!-- User Avatar with Turtle Shell -->
+        <a href="{% url 'profile_about' follower.username %}" class="text-decoration-none block text-center mb-3">
+        <div class="turtle-shell-container relative w-16 h-16 mx-auto mb-2">
+            <div class="turtle-shell emerald w-16 h-16 mx-auto relative overflow-hidden">
+            <img 
+                src="{{ follower.profile_picture.url }}" 
+                alt="{{ follower.username }} Avatar" 
+                class="absolute inset-1 w-14 h-14 rounded-full object-cover border-2 border-emerald-700 pixelated z-10"
+            />
+            </div>
+            <!-- Turtle elements -->
+            <div class="turtle-head emerald"></div>
+            <div class="turtle-leg emerald front-left"></div>
+            <div class="turtle-leg emerald front-right"></div>
+            <div class="turtle-leg emerald back-left"></div>
+            <div class="turtle-leg emerald back-right"></div>
+        </div>
+        
+        <span class="text-sm font-bold break-words text-emerald-900 hover:underline">{{ follower.username }}</span>
+        </a>
+        
+        <!-- Connection Context -->
+        <div class="text-center mb-3">
+        <p class="text-xs text-emerald-600">Turtler since {{ follower.created_at|date:"M Y" }}</p>
+        <div class="flex justify-center items-center space-x-2 mt-1">
+            <span class="inline-block w-2 h-2 bg-emerald-400 rounded-full"></span>
+            <span class="text-xs text-emerald-500">Active Turtler</span>
+        </div>
+        </div>
+        
+        <!-- Follow Back Button (if not already following) -->
+        <div class="text-center">
+          <button
+            class="px-4 py-2 rounded-lg text-xs font-bold transition-all duration-200 border-2 hover:scale-105 hover:shadow-sm w-full text-white bg-emerald-500  border-emerald-700 hover:bg-emerald-600 hover:border-emerald-800"
+            x-show="!hasFollowed"
+            x-cloak
+            hx-post="{% url 'follow' follower.username %}"                            
+            hx-swap="none"
+            @follow-success="displayAlertMessage($event); hasFollowed = true;"
+          >
+          Follow Back
+          </button>
+          <button
+            class="px-4 py-2 rounded-lg text-xs font-bold transition-all duration-200 border-2 hover:scale-105 hover:shadow-sm w-full text-white bg-gray-400  border-gray-600 cursor-not-allowed"
+            x-show="hasFollowed"
+            x-cloak
+            disabled
+          >
+            Following
+          </button>
+        </div>
+    </div>
+    </div>
+{% endfor %}
+
+{% url 'followers_paginator' username as fetch_url %}
+{% include 'profiles/tabs/partial/next_follow_batch.html' with fetch_url=fetch_url %}
