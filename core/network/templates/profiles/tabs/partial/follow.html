@@ -1,7 +1,265 @@
 
-<div class="flex">
+<div 
+  class="turtle-social-container bg-gradient-to-b from-emerald-50 to-blue-50 min-h-screen"
+  style="font-family: 'Press Start 2P', monospace;"
+  x-data="{ activeTab: 'followers' }"
+>
+  <!-- Tab Navigation -->
+  <div class="sticky top-0 bg-white bg-opacity-95 backdrop-blur-sm border-b-4 border-emerald-600 z-10">
+    <div class="container-sm px-2 sm:px-4 py-3">
+      <!-- Tab Stats Summary -->
+      <div class="flex flex-col sm:flex-row justify-center items-center space-y-2 sm:space-y-0 sm:space-x-4 mb-4">
+        <div class="stat-pill bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full border-2 border-emerald-600 text-xs sm:text-sm">
+        {{ profile.followers.count }} Followers
+        </div>
+        <div class="stat-pill bg-blue-100 text-blue-800 px-3 py-1 rounded-full border-2 border-blue-600 text-xs sm:text-sm">
+        {{ profile.following.count }} Following
+        </div>
+      </div>
+      
+      <!-- Tab Navigation Buttons -->
+      <div class="flex justify-center space-x-1 sm:space-x-2">
+        <button
+          @click="activeTab = 'followers'"
+          :class="activeTab === 'followers' ? 'bg-emerald-500 text-white border-emerald-700' : 'bg-white text-emerald-700 border-emerald-500 hover:bg-emerald-50'"
+          class="flex-1 sm:flex-none px-3 sm:px-4 py-2 rounded-lg font-bold text-xs sm:text-sm border-3 transition-all duration-200 hover:scale-105 min-h-[44px] flex items-center justify-center"
+        >
+          <img class="w-15" src="/media/defaults/turtle_followers.png" alt="Turtle Follower image">
+        </button>
+        <button
+          @click="activeTab = 'following'"
+          :class="activeTab === 'following' ? 'bg-blue-500 text-white border-blue-700' : 'bg-white text-blue-700 border-blue-500 hover:bg-blue-50'"
+          class="flex-1 sm:flex-none px-3 sm:px-4 py-2 rounded-lg font-bold text-xs sm:text-sm border-3 transition-all duration-200 hover:scale-105 min-h-[44px] flex items-center justify-center"
+        >
+          <img class="w-15" src="/media/defaults/turtle_following.png" alt="Turtle Following image">
+        </button>
+      </div>
+    </div>
+  </div>
 
-    <div class="flex-1">{% include 'profiles/tabs/partial/followers.html' %}</div>
-    <div class="flex-1">{% include 'profiles/tabs/partial/following.html' %}</div>
-
+  <!-- Tab Content -->
+  <div class="tab-content">
+    <!-- Followers Tab -->
+    <div x-show="activeTab === 'followers'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform translate-y-4" x-transition:enter-end="opacity-100 transform translate-y-0">
+      {% include 'profiles/tabs/partial/followers.html' %}
+    </div>
+    
+    <!-- Following Tab -->
+    <div x-show="activeTab === 'following'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform translate-y-4" x-transition:enter-end="opacity-100 transform translate-y-0">
+      {% include 'profiles/tabs/partial/following.html' %}
+    </div>
+  </div>
 </div>
+
+<style>
+  /* Shared Turtle Social Styles - DRY Implementation */
+  .pixelated {
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+  }
+  
+  /* Base Turtle Shell Structure */
+  .turtle-shell {
+    position: relative;
+    border-radius: 50%;
+    border: 3px solid;
+  }
+  
+  .turtle-shell::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 70%;
+    height: 70%;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    border: 2px solid;
+  }
+  
+  .turtle-shell::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 40%;
+    height: 40%;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    border: 1px solid;
+  }
+  
+  /* Emerald Theme (Followers) */
+  .turtle-shell.emerald {
+    background: linear-gradient(135deg, #10b981, #059669);
+    border-color: #064e3b;
+  }
+  
+  .turtle-shell.emerald::before {
+    background: linear-gradient(135deg, #34d399, #10b981);
+    border-color: #065f46;
+  }
+  
+  .turtle-shell.emerald::after {
+    background: #d1fae5;
+    border-color: #059669;
+  }
+  
+  /* Blue Theme (Following) */
+  .turtle-shell.blue {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    border-color: #1e40af;
+  }
+  
+  .turtle-shell.blue::before {
+    background: linear-gradient(135deg, #60a5fa, #3b82f6);
+    border-color: #1e40af;
+  }
+  
+  .turtle-shell.blue::after {
+    background: #dbeafe;
+    border-color: #3b82f6;
+  }
+  
+  /* Base Turtle Head Structure */
+  .turtle-head {
+    position: absolute;
+    width: 20px;
+    height: 16px;
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    border: 2px solid;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+  }
+  
+  /* Emerald Turtle Head */
+  .turtle-head.emerald {
+    background: linear-gradient(135deg, #10b981, #059669);
+    border-color: #064e3b;
+  }
+  
+  /* Blue Turtle Head */
+  .turtle-head.blue {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    border-color: #1e40af;
+  }
+  
+  /* Base Turtle Leg Structure */
+  .turtle-leg {
+    position: absolute;
+    width: 12px;
+    height: 8px;
+    border-radius: 50%;
+    border: 1px solid;
+  }
+  
+  /* Emerald Turtle Legs */
+  .turtle-leg.emerald {
+    background: linear-gradient(135deg, #10b981, #059669);
+    border-color: #064e3b;
+  }
+  
+  /* Blue Turtle Legs */
+  .turtle-leg.blue {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    border-color: #1e40af;
+  }
+  
+  /* Leg Positioning */
+  .turtle-leg.front-left { top: 12px; left: -6px; }
+  .turtle-leg.front-right { top: 12px; right: -6px; }
+  .turtle-leg.back-left { bottom: 12px; left: -6px; }
+  .turtle-leg.back-right { bottom: 12px; right: -6px; }
+  
+  /* Card Hover Animations */
+  @keyframes gentle-float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-2px); }
+  }
+  
+  .turtle-social-card:hover .turtle-shell-container {
+    animation: gentle-float 2s ease-in-out infinite;
+  }
+  
+  /* Lonely Turtle Animation */
+  @keyframes lonely-swim {
+    0% { transform: translateX(0) rotate(0deg); }
+    25% { transform: translateX(50px) rotate(90deg); }
+    50% { transform: translateX(50px) translateY(25px) rotate(180deg); }
+    75% { transform: translateX(0) translateY(25px) rotate(270deg); }
+    100% { transform: translateX(0) rotate(360deg); }
+  }
+  
+  .lonely-turtle {
+    animation: lonely-swim 6s ease-in-out infinite;
+  }
+
+  /* Mobile-first responsive design improvements */
+  @media (max-width: 640px) {
+    .turtle-social-container {
+      font-size: 6px;
+    }
+    
+    /* Ensure better touch targets on mobile */
+    .stat-pill {
+      font-size: 10px !important;
+    }
+    
+    /* Improve card spacing on mobile */
+    .turtle-social-card {
+      margin-bottom: 1rem;
+    }
+    
+    /* Better button text wrapping */
+    button span {
+      white-space: nowrap;
+    }
+  }
+  
+  /* Tablet optimizations */
+  @media (min-width: 641px) and (max-width: 1024px) {
+    .turtle-social-container {
+      font-size: 7px;
+    }
+  }
+  
+  /* Desktop and larger */
+  @media (min-width: 1025px) {
+    .turtle-social-container {
+      font-size: 8px;
+    }
+  }
+  
+  /* Custom breakpoint for very small screens */
+  @media (min-width: 480px) {
+    .xs\:inline {
+      display: inline !important;
+    }
+  }
+  
+  /* Enhance tab transitions for better UX */
+  .tab-content > div {
+    will-change: transform, opacity;
+  }
+  
+  /* Improved focus states for accessibility */
+  button:focus {
+    outline: 2px solid #1d4ed8;
+    outline-offset: 2px;
+  }
+  
+  /* Better hover states that respect reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .turtle-social-card:hover {
+      transform: none;
+      transition: none;
+    }
+    
+    button:hover {
+      transform: none;
+    }
+  }
+</style>
