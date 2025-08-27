@@ -43,20 +43,134 @@
           </div>
         </div>
       </div>
+
       <!-- Pagination -->
-        <div class="d-flex justify-content-around">
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">Next</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
-        {% elif page_obj.has_previous %}
-            <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
-            <a href="?page={{ page_obj.paginator.start_index }}"> &laquo; First</a>
+      <div class="pixel-pagination flex justify-center items-center space-x-2 py-6"
+          style="font-family: 'Press Start 2P', monospace; font-size: 10px;">
+
+        {% if page_obj.has_previous %}
+          <!-- Previous Button - Chunky Pixel Style -->
+          <a href="?page={{ page_obj.previous_page_number }}"
+            class="pixel-btn prev-btn bg-emerald-500 hover:bg-emerald-400 text-white border-4 border-emerald-800 px-4
+      py-3 transition-all duration-100 hover:translate-x-1 hover:-translate-y-1 active:translate-x-0
+      active:translate-y-0">
+            ◀ PREV
+          </a>
         {% endif %}
+
+        <!-- Page Counter - Classic Game UI -->
+        <div class="page-display bg-gray-900 text-green-400 border-4 border-gray-700 px-6 py-3 flex items-center
+      space-x-2">
+          <span class="text-green-300">PAGE</span>
+          <div 
+            x-data="{ 
+              page:  {{ page_obj.number|stringformat:'02d' }},
+              get pageUrl() {
+                return `{% url 'index' %}?page=${this.page}`
+              }
+            }"
+            class="relative digit-display bg-black border-2 border-green-600 px-3 text-center h-7 min-w-[60px]"
+          >
+            <input 
+              class="absolute inset-0 bg-transparent border-none text-center"
+              type="text" 
+              :value="page"
+              x-model="page" 
+              @keydown.enter="window.location.href=pageUrl"
+            >
+          </div>
+          <span class="text-green-600">/</span>
+          <div class="digit-display bg-black border-2 border-green-600 px-3 py-1 text-center min-w-[60px]">
+            {{ page_obj.paginator.num_pages }}
+          </div>
         </div>
-    
+
+        {% if page_obj.has_next %}
+          <!-- Next Button - Chunky Pixel Style -->
+          <a href="?page={{ page_obj.next_page_number }}"
+            class="pixel-btn next-btn bg-blue-500 hover:bg-blue-400 text-white border-4 border-blue-800 px-4 py-3
+      transition-all duration-100 hover:-translate-x-1 hover:-translate-y-1 active:translate-x-0 active:translate-y-0">
+            NEXT ▶
+          </a>
+        {% endif %}
+      </div>        
     </div>
 
   </div>
 
 
 {% endblock %} 
+
+ 
+<style>
+    .pixel-pagination {
+      image-rendering: pixelated;
+      image-rendering: -moz-crisp-edges;
+      image-rendering: crisp-edges;
+    }
+
+    .pixel-btn {
+      box-shadow:
+        6px 6px 0px rgba(0, 0, 0, 0.3),
+        inset 2px 2px 0px rgba(255, 255, 255, 0.2);
+      text-decoration: none;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    .pixel-btn:hover {
+      box-shadow:
+        4px 4px 0px rgba(0, 0, 0, 0.3),
+        inset 2px 2px 0px rgba(255, 255, 255, 0.3);
+    }
+
+    .pixel-btn:active {
+      box-shadow:
+        2px 2px 0px rgba(0, 0, 0, 0.3),
+        inset 1px 1px 0px rgba(0, 0, 0, 0.2);
+    }
+
+    .page-display {
+      box-shadow:
+        inset 4px 4px 0px rgba(0, 0, 0, 0.5),
+        2px 2px 0px rgba(255, 255, 255, 0.1);
+    }
+
+    .digit-display {
+      font-family: 'Courier New', monospace;
+      text-shadow: 0 0 4px currentColor;
+    }
+
+    .jump-btn {
+      box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
+      text-decoration: none;
+      transition: all 0.1s;
+    }
+
+    .jump-btn:hover {
+      box-shadow: 1px 1px 0px rgba(0, 0, 0, 0.3);
+      transform: translate(1px, 1px);
+    }
+
+    /* Disabled state for when no prev/next */
+    .pixel-btn:not([href]) {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 640px) {
+      .pixel-pagination {
+        font-size: 8px;
+      }
+
+      .pixel-btn {
+        px-3 py-2;
+      }
+
+      .page-display {
+        px-4 py-2;
+      }
+    }
+  </style>
