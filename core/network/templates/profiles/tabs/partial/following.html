@@ -4,43 +4,50 @@
       class="container-sm p-4 bg-gradient-to-b from-blue-100 to-blue-200 min-h-screen"
       style="font-family: 'Press Start 2P', monospace; font-size: 8px; image-rendering: pixelated;"
   >
-    {% if profile.following.exists %}
+    <template x-if="followingCount">
       <div 
         id="follow-container" 
         class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4"
         hx-get="{% url 'following_paginator' profile.username %}"
         hx-trigger="load"
         hx-swap="beforeend"
+        x-init="htmx.process($el)"
       ></div>
-    {% else %}
+    </template>
+
+
+    <template x-if="!followingCount">
       <!-- Empty State - Lonely Turtle in Ocean -->
       <div class="flex items-center justify-center h-96 col-span-full">
-          <div class="text-center">
-              <!-- Lonely Swimming Turtle -->
-              <div class="relative w-32 h-32 mx-auto mb-8">
-                  <div class="lonely-turtle relative w-20 h-16 mx-auto">
-                      <!-- Turtle Shell -->
-                      <div class="turtle-shell blue w-16 h-16 mx-auto relative">
-                          <div class="absolute inset-2 bg-gradient-to-br from-blue-300 to-blue-400 rounded-full border border-blue-500"></div>
-                      </div>
-                      
-                      <!-- Sad Turtle Head -->
-                      <div class="turtle-head blue"></div>
-                      
-                      <!-- Turtle Legs -->
-                      <div class="turtle-leg blue front-left"></div>
-                      <div class="turtle-leg blue front-right"></div>
-                      <div class="turtle-leg blue back-left"></div>
-                      <div class="turtle-leg blue back-right"></div>
-                  </div>
-              </div>
-              
-              <!-- Empty State Message -->
-              <div class="bg-white bg-opacity-90 rounded-lg border-4 border-blue-600 p-4 text-blue-800 text-xs max-w-xs mx-auto">
-                  <p class="mb-2">🌊 Swimming solo in the vast ocean...</p>
-                  <p>Discover new turtle friends to follow!</p>
-              </div>
-          </div>
+        <div class="text-center">
+            <!-- Lonely Swimming Turtle -->
+            <div class="relative w-32 h-32 mx-auto mb-8">
+              <div class="lonely-turtle relative w-20 h-16 mx-auto">
+                <!-- Turtle Shell -->
+                <div class="turtle-shell blue w-16 h-16 mx-auto relative">
+                    <div class="absolute inset-2 bg-gradient-to-br from-blue-300 to-blue-400 rounded-full border border-blue-500"></div>
+                </div>
+                
+                <!-- Sad Turtle Head -->
+                <div class="turtle-head blue"></div>
+                
+                <!-- Turtle Legs -->
+                <div class="turtle-leg blue front-left"></div>
+                <div class="turtle-leg blue front-right"></div>
+                <div class="turtle-leg blue back-left"></div>
+                <div class="turtle-leg blue back-right"></div>
+            </div>
+            </div>
+            
+            <!-- Empty State Message -->
+            <div class="bg-white bg-opacity-90 rounded-lg border-4 border-blue-600 p-4 text-blue-800 text-xs max-w-xs mx-auto">
+              <p class="mb-2">🌊 Swimming solo in the vast ocean...</p>
+              <p>Discover new turtle friends to follow!</p>
+            </div>
+        </div>
       </div>
-    {% endif %}
+    </template>
+
+
+ 
   </div>
