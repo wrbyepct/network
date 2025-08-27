@@ -4,15 +4,18 @@
   class="community-pond-container p-4 bg-gradient-to-b from-emerald-100 to-emerald-200 min-h-screen"
   style="font-family: 'Press Start 2P', monospace; font-size: 8px; image-rendering: pixelated;"
 >
-    {% if profile.followers.exists %}
+    <template x-if="followersCount">
       <div 
         id="follow-container" 
         class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4"
         hx-get="{% url 'followers_paginator' profile.username %}"
         hx-trigger="load"
         hx-swap="beforeend"
+        x-init="htmx.process($el)"
       ></div>
-    {% else %}
+    </template>
+
+    <template x-if="!followersCount">
       <!-- Empty State - Lonely Turtle in Pond -->
       <div class="flex items-center justify-center h-96">
           <div class="text-center">
@@ -42,5 +45,5 @@
               </div>
           </div>
       </div>
-    {% endif %}
+    </template>
 </div>
