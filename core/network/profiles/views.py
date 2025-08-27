@@ -219,7 +219,7 @@ class FollowView(View):
     def perform_unfollow(self, profile, to_unfollow_profile):
         """Peform unfollow and return message."""
         profile.unfollow(to_unfollow_profile)
-        return f"Unfollowed {to_unfollow_profile.username}."
+        return f"Unfollowed {to_unfollow_profile.username}"
 
     def post(self, request, *args, **kwargs):
         """Follow a profile and return success message."""
