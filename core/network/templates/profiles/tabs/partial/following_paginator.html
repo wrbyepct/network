@@ -1,7 +1,7 @@
 
 
 
-{% for profile in following %}
+{% for following_profile in following %}
     <!-- Unified Turtle Social Card -->
     <div 
       class="turtle-social-card relative group cursor-pointer transform transition-all duration-300 hover:scale-105 hover:-translate-y-2"
@@ -15,12 +15,12 @@
     <!-- Card Content -->
     <div class="relative bg-white bg-opacity-95 rounded-lg border-3 border-blue-700 p-4 mt-4 hover:shadow-lg transition-all duration-300">
         <!-- User Avatar with Turtle Shell -->
-        <a href="{% url 'profile_about' profile.username %}" class="text-decoration-none block text-center mb-3">
+        <a href="{% url 'profile_about' following_profile.username %}" class="text-decoration-none block text-center mb-3">
         <div class="turtle-shell-container relative w-16 h-16 mx-auto mb-2">
             <div class="turtle-shell blue w-16 h-16 mx-auto relative overflow-hidden">
             <img 
-              src="{{ profile.profile_picture.url }}" 
-              alt="{{ profile.username }} Avatar" 
+              src="{{ following_profile.profile_picture.url }}" 
+              alt="{{ following_profile.username }} Avatar" 
               class="absolute inset-1 w-14 h-14 rounded-full object-cover border-2 border-blue-700 pixelated z-10"
             />
             </div>
@@ -32,27 +32,32 @@
             <div class="turtle-leg blue back-right"></div>
         </div>
         
-        <span class="text-sm font-bold break-words text-blue-900 hover:underline">{{ profile.username }}</span>
+        <span class="text-sm font-bold break-words text-blue-900 hover:underline">{{ following_profile.username }}</span>
         </a>
         
         <!-- Connection Context -->
         <div class="text-center mb-3">
-        <p class="text-xs text-blue-600">Turtler since {{ profile.created_at|date:"M Y" }}</p>
+        <p class="text-xs text-blue-600">Turtler since {{ following_profile.created_at|date:"M Y" }}</p>
         </div>
         
         <!-- Follow Button -->
+        
+        {% if request.user.profile.username == username %}
         <div class="text-center">
-        <button
-            class="px-4 py-2 rounded-lg text-xs font-bold transition-all duration-200 border-2 hover:scale-105 hover:shadow-sm w-full"
-            :class="has_followed ? 'bg-emerald-500 text-white border-emerald-700 hover:bg-emerald-600 hover:border-emerald-800' : 'bg-blue-500 text-white border-blue-700 hover:bg-blue-600 hover:border-blue-800'"
-            hx-post="{% url 'follow' profile.username %}"                            
-            hx-swap="none"
-            @follow-success="displayAlertMessage($event)"
-            @click="has_followed = !has_followed"
-        >
-            <span x-text="has_followed ? 'Following' : 'Follow'"></span>
-        </button>
+            <button
+                class="px-4 py-2 rounded-lg text-xs font-bold transition-all duration-200 border-2 hover:scale-105 hover:shadow-sm w-full"
+                :class="has_followed ? 'bg-emerald-500 text-white border-emerald-700 hover:bg-emerald-600 hover:border-emerald-800' : 'bg-blue-500 text-white border-blue-700 hover:bg-blue-600 hover:border-blue-800'"
+                hx-post="{% url 'follow' following_profile.username %}"                            
+                hx-swap="none"
+                hx-select="#following-count"
+                hx-select-oob="#following-count"
+                @follow-success="displayAlertMessage($event)"
+                @click="has_followed = !has_followed"
+            >
+                <span x-text="has_followed ? 'Following' : 'Follow'"></span>
+            </button>
         </div>
+        {% endif %}
     </div>
     </div>
     {% endfor %}

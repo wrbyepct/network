@@ -4,7 +4,6 @@
 import json
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
 from django.views.generic import (
@@ -235,7 +234,9 @@ class FollowView(View):
         else:
             message = self.perform_unfollow(profile, to_profile)
 
-        resp = HttpResponse()
+        resp = render(
+            self.request, "profiles/tabs/partial/follow.html", {"profile": profile}
+        )
 
         resp["HX-Trigger"] = json.dumps({"follow-success": {"message": message}})
         return resp
