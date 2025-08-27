@@ -7,23 +7,27 @@
     x-transition.opacity
     class="fixed top-4 left-1/2 -translate-x-1/2 z-50 
            flex items-center space-x-3
-           bg-emerald-200 border-4 border-emerald-800 
+           bg-emerald-500 border-4 border-emerald-800 
            shadow-[4px_4px_0px_#14532d] 
            rounded-lg px-4 py-3
-           font-mono text-sm text-emerald-900"
+           "
     style="image-rendering: pixelated;"
 >
-    <!-- Message -->
-    <div x-text="alertMessage"></div>
+  <!-- Message -->
+  <div 
+    class="font-mono text-sm text-amber-300"
+    x-text="alertMessage"
+    style="font-family: 'Press Start 2p';"
+  ></div>
 
-    <!-- Close Button -->
-    <button 
-        @click="alertVisible = false"
-        type="button"
-        class="ml-2 bg-emerald-700 text-white px-2 py-1 
-               border-2 border-emerald-900 
-               hover:bg-emerald-800 transition-colors"
-    >
-        ✕
-    </button>
+  <!-- Close Button -->
+  <button 
+    @click="alertVisible = false"
+    type="button"
+    class="ml-2 bg-emerald-700 text-white px-2 py-1 
+            border-2 border-emerald-900 
+            hover:bg-emerald-800 transition-colors"
+  >
+    ✕
+  </button>
 </div>
