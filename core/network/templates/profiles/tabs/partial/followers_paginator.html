@@ -43,6 +43,8 @@
         </div>
         
         <!-- Follow Back Button (if not already following) -->
+        {% if request.user.profile.username == username %}
+
         <div class="text-center">
           <button
             class="px-4 py-2 rounded-lg text-xs font-bold transition-all duration-200 border-2 hover:scale-105 hover:shadow-sm w-full text-white bg-emerald-500  border-emerald-700 hover:bg-emerald-600 hover:border-emerald-800"
@@ -50,6 +52,8 @@
             x-cloak
             hx-post="{% url 'follow' follower.username %}"                            
             hx-swap="none"
+            hx-select="#following-count"
+            hx-select-oob="#following-count"
             @follow-success="displayAlertMessage($event); hasFollowed = true;"
           >
           Follow Back
@@ -63,6 +67,7 @@
             Following
           </button>
         </div>
+        {% endif %}
     </div>
     </div>
 {% endfor %}
