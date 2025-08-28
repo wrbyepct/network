@@ -38,64 +38,66 @@
             {% for post in posts %}
                 {% include 'posts/post/list_card.html' %}
             {% empty %}
-              <p class="text-center text-muted">No posts yet. Let's hatch One!</p>
+              <p class="text-center text-muted">No turties yet... Let's hatch One!</p>
             {% endfor %}
           </div>
         </div>
       </div>
 
       <!-- Pagination -->
-      <div class="pixel-pagination flex justify-center items-center space-x-2 py-6"
+      <div class="flex justify-center items-center space-x-3 py-6"
           style="font-family: 'Press Start 2P', monospace; font-size: 10px;">
 
         {% if page_obj.has_previous %}
-          <!-- Previous Button - Chunky Pixel Style -->
           <a href="?page={{ page_obj.previous_page_number }}"
-            class="pixel-btn prev-btn bg-emerald-500 hover:bg-emerald-400 text-white border-4 border-emerald-800 px-4
-      py-3 transition-all duration-100 hover:translate-x-1 hover:-translate-y-1 active:translate-x-0
-      active:translate-y-0">
+            class="text-decoration-none pixel-btn bg-green-400 border-4 border-green-800 !text-stone-900 px-4 py-2
+                    rounded-md shadow-[4px_4px_0px_#3B3B3B]
+                    hover:bg-green-300 hover:-translate-y-1 hover:shadow-[6px_6px_0px_#3B3B3B]
+                    active:translate-y-0 transition-all duration-150">
             ◀ PREV
           </a>
         {% endif %}
 
-        <!-- Page Counter - Classic Game UI -->
-        <div class="page-display bg-gray-900 text-green-400 border-4 border-gray-700 px-6 py-3 flex items-center
-      space-x-2">
-          <span class="text-green-300">PAGE</span>
-          <div 
-            x-data="{ 
-              page:  {{ page_obj.number|stringformat:'02d' }},
-              get pageUrl() {
-                return `{% url 'index' %}?page=${this.page}`
-              }
-            }"
-            class="relative digit-display bg-black border-2 border-green-600 px-3 text-center h-7 min-w-[60px]"
-          >
-            <input 
-              class="absolute inset-0 bg-transparent border-none text-center"
-              type="text" 
-              :value="page"
-              x-model="page" 
-              @keydown.enter="window.location.href=pageUrl"
-            >
+        <!-- Page Counter -->
+        <div class="page-display bg-yellow-200 border-4 border-stone-700 flex items-center gap-2 px-4 py-2">
+
+          <span class="text-stone-700 text-bold">PAGE</span>
+
+          <!-- Current Page (editable egg) -->
+          <div x-data="{ 
+                  page: {{ page_obj.number|stringformat:'02d' }},
+                  get pageUrl() { return `?page=${this.page}` }
+              }"
+              class="digit-display bg-green-200 border-4 border-green-700 
+                      w-16 h-8 flex items-center justify-center text-green-900 rounded-sm font-bold relative">
+
+            <input class="absolute inset-0 bg-transparent text-center border-none font-bold rounded-sm"
+                  type="text"
+                  :value="page"
+                  x-model="page"
+                  @keydown.enter="window.location.href = pageUrl">
           </div>
-          <span class="text-green-600">/</span>
-          <div class="digit-display bg-black border-2 border-green-600 px-3 py-1 text-center min-w-[60px]">
+
+          <span class="text-stone-700">/</span>
+
+          <!-- Total Pages (stone egg) -->
+          <div class="digit-display bg-amber-200 border-4 border-amber-500 rounded-sm
+                      w-16 h-8 flex items-center justify-center text-stone-800 font-semibold">
             {{ page_obj.paginator.num_pages }}
           </div>
         </div>
 
         {% if page_obj.has_next %}
-          <!-- Next Button - Chunky Pixel Style -->
           <a href="?page={{ page_obj.next_page_number }}"
-            class="pixel-btn next-btn bg-blue-500 hover:bg-blue-400 text-white border-4 border-blue-800 px-4 py-3
-      transition-all duration-100 hover:-translate-x-1 hover:-translate-y-1 active:translate-x-0 active:translate-y-0">
+            class="text-decoration-none pixel-btn bg-green-400 border-4 border-green-800 !text-stone-900 px-4 py-2
+                    rounded-md shadow-[4px_4px_0px_#3B3B3B]
+                    hover:bg-green-300 hover:-translate-y-1 hover:shadow-[6px_6px_0px_#3B3B3B]
+                    active:translate-y-0 transition-all duration-150">
             NEXT ▶
           </a>
         {% endif %}
-      </div>        
+      </div>
     </div>
-
   </div>
 
 
