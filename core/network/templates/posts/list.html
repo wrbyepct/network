@@ -9,51 +9,102 @@
   }" > 
     <div class="container-fluid mt-4">
       <div class="row">
-        <!-- Pond Panel (Left Sidebar) -->
+        <!-- Retro Pond Console (Left Sidebar) -->
         <div class="col-lg-3 d-none d-lg-block">
-          <div class="pond-status-screen sticky top-5">
-            <!-- Header (Game UI Style) -->
-            <div class="pond-screen-header">
-              <span class="pond-screen-title">🌊 THE POND</span>
+          <div class="turtle-console sticky top-5">
+            <!-- Console Header -->
+            <div class="console-header">
+              <div class="console-brand">🎮 TURTLE CONSOLE</div>
+              <div class="console-version">v1.0</div>
             </div>
             
-            <!-- Content -->
-            <div class="pond-screen-content">
-              <!-- Following Stats -->
-              <div class="pond-stat-block">
-                <div class="pond-stat-label">
-                  <img src="/static/network/media/defaults/turtle_following.png" alt="Following" class="w-4 h-4 mr-1">
-                  FOLLOWING
+            <!-- Main Habitat Screen -->
+            <div class="habitat-screen">
+              <div class="screen-bezel">
+                <div class="habitat-environment">
+                  <!-- Animated Turtle Avatar -->
+                  <div class="turtle-avatar {% if is_incubating %}nesting{% else %}swimming{% endif %}">
+                    🐢
+                  </div>
+                  
+                  <!-- Pond Elements -->
+                  <div class="pond-element lily-pad lily-pad-1">🪷</div>
+                  <div class="pond-element lily-pad lily-pad-2">🪷</div>
+                  <div class="pond-element reed reed-1">🌾</div>
+                  <div class="pond-element reed reed-2">🌾</div>
+                  
+                  <!-- Water Ripples -->
+                  <div class="water-ripple ripple-1"></div>
+                  <div class="water-ripple ripple-2"></div>
                 </div>
-                <div class="pond-counter">{{ user.profile.following.count|stringformat:"03d" }}</div>
-                <a href="{% url 'profile_about' user.profile.username %}" class="pond-btn">VIEW</a>
               </div>
+            </div>
 
-              <!-- Followers Stats -->
-              <div class="pond-stat-block">
-                <div class="pond-stat-label">
-                  <img src="/static/network/media/defaults/turtle_followers.png" alt="Followers" class="w-4 h-4 mr-1">
-                  FOLLOWERS
-                </div>
-                <div class="pond-counter">{{ user.profile.followers.count|stringformat:"03d" }}</div>
-                <a href="{% url 'profile_about' user.profile.username %}" class="pond-btn">VIEW</a>
-              </div>
-
-              <!-- Recent Followers -->
-              {% if user.profile.followers.exists %}
-                <div class="pond-stat-block">
-                  <div class="pond-stat-label">RECENT FRIENDS</div>
-                  <div class="pond-avatars">
-                    {% for follower in user.profile.followers.all|slice:":4" %}
-                      <a href="{% url 'profile_about' follower.username %}" 
-                         class="pond-avatar-pixel" 
-                         title="{{ follower.username }}">
+            <!-- Mini Console Screens -->
+            <div class="mini-screens">
+              <div class="mini-screen friends-screen">
+                <div class="screen-label">FRIENDS</div>
+                <div class="screen-display">
+                  <div class="counter-display">{{ user.profile.followers.count|stringformat:"03d" }}</div>
+                  <div class="mini-avatars">
+                    {% for follower in user.profile.followers.all|slice:":3" %}
+                      <div class="mini-avatar" title="{{ follower.username }}">
                         <img src="{{ follower.profile_picture.url }}" alt="{{ follower.username }}">
-                      </a>
+                      </div>
                     {% endfor %}
                   </div>
                 </div>
-              {% endif %}
+              </div>
+
+              <div class="mini-screen nest-screen">
+                <div class="screen-label">NEST</div>
+                <div class="screen-display">
+                  {% if is_incubating %}
+                    <div class="nest-status incubating">
+                      <span class="status-icon pulse">🥚</span>
+                      <span class="status-text">INC</span>
+                    </div>
+                  {% else %}
+                    <div class="nest-status ready">
+                      <span class="status-icon">🪺</span>
+                      <span class="status-text">RDY</span>
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+
+              <div class="mini-screen following-screen">
+                <div class="screen-label">FOLLOW</div>
+                <div class="screen-display">
+                  <div class="counter-display">{{ user.profile.following.count|stringformat:"03d" }}</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Console Action Buttons -->
+            <div class="console-buttons">
+              <a href="{% url 'profile_about' user.profile.username %}" class="console-btn btn-pond">
+                <span class="btn-icon">🌊</span>
+                <span class="btn-text">POND</span>
+              </a>
+              <a href="{% url 'profile_nest' user.profile.username %}" class="console-btn btn-nest">
+                <span class="btn-icon">🥚</span>
+                <span class="btn-text">NEST</span>
+              </a>
+              <a href="#" class="console-btn btn-create" x-show="!isIncubating" @click="showCreatePostModal = true">
+                <span class="btn-icon">✏️</span>
+                <span class="btn-text">POST</span>
+              </a>
+            </div>
+
+            <!-- Habitat Status Bar -->
+            <div class="status-bar">
+              <div class="status-item">
+                <span class="status-label">HEALTH</span>
+                <div class="status-meter">
+                  <div class="meter-fill" style="width: 85%"></div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -155,25 +206,29 @@
   </div>
 
 <style>
-    /* Turtle Pond Habitat Panel - Matching Site Theme */
-    .pond-status-screen {
+    /* Retro Turtle Console - Natural Gaming Aesthetic */
+    .turtle-console {
       background: 
-        radial-gradient(ellipse at top, rgba(168, 213, 160, 0.4) 0%, transparent 40%),
-        radial-gradient(ellipse at bottom right, rgba(255, 214, 111, 0.3) 0%, transparent 50%),
-        linear-gradient(180deg, #A8D5A0 0%, rgba(168, 213, 160, 0.8) 50%, rgba(210, 166, 121, 0.6) 100%);
-      border: 4px solid #5D4037;
-      border-radius: 8px;
+        linear-gradient(180deg, 
+          #8b7355 0%, 
+          #a0956b 15%, 
+          #8b7355 85%, 
+          #6b5d4a 100%);
+      border: 6px solid #5D4037;
+      border-radius: 12px;
       font-family: 'Press Start 2P', monospace;
       font-size: 8px;
-      box-shadow: 4px 4px 0px #3B3B3B;
-      overflow: hidden;
+      box-shadow: 
+        6px 6px 0px #3B3B3B,
+        inset 2px 2px 0px rgba(255, 255, 255, 0.1);
       position: sticky;
       top: 20px;
       image-rendering: pixelated;
+      overflow: hidden;
     }
 
-    /* Subtle habitat texture */
-    .pond-status-screen::before {
+    /* Console wood texture */
+    .turtle-console::before {
       content: '';
       position: absolute;
       top: 0;
@@ -181,186 +236,402 @@
       right: 0;
       bottom: 0;
       background: 
-        radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.3) 1px, transparent 2px),
-        radial-gradient(circle at 70% 60%, rgba(255, 255, 255, 0.2) 1px, transparent 2px),
-        radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.15) 1px, transparent 2px);
+        repeating-linear-gradient(
+          90deg,
+          transparent,
+          transparent 2px,
+          rgba(139, 115, 85, 0.1) 2px,
+          rgba(139, 115, 85, 0.1) 4px
+        );
       pointer-events: none;
+      opacity: 0.3;
     }
 
-    .pond-screen-header {
-      background: #A8D5A0;
-      padding: 10px 14px;
-      border-bottom: 3px solid #5D4037;
-      position: relative;
-      box-shadow: inset 0 2px 0px rgba(255, 255, 255, 0.3);
-    }
-
-    /* Turtle friend on header */
-    .pond-screen-header::after {
-      content: '🐢';
-      position: absolute;
-      right: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 12px;
-      opacity: 0.8;
-      image-rendering: pixelated;
-    }
-
-    .pond-screen-title {
-      color: #3B3B3B;
-      font-weight: bold;
-      font-size: 9px;
-      letter-spacing: 1px;
-      text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.5);
-    }
-
-    .pond-screen-content {
-      padding: 14px;
+    /* Console Header */
+    .console-header {
       background: 
-        radial-gradient(ellipse at 25% 25%, rgba(255, 214, 111, 0.2) 0%, transparent 40%),
-        radial-gradient(ellipse at 75% 75%, rgba(168, 213, 160, 0.3) 0%, transparent 35%);
+        linear-gradient(135deg, #2d5016 0%, #3d6b1f 50%, #2d5016 100%);
+      padding: 8px 12px;
+      border-bottom: 4px solid #1a2e0a;
       position: relative;
-    }
-
-    /* Turtle habitat lily pad stat blocks */
-    .pond-stat-block {
-      background: #A8D5A0;
-      border: 3px solid #5D4037;
-      border-radius: 50px 50px 12px 50px; /* lily pad shape */
-      margin-bottom: 12px;
-      padding: 10px 12px;
-      box-shadow: 3px 3px 0px #3B3B3B;
-      position: relative;
-    }
-
-    /* Small water droplet on lily pads */
-    .pond-stat-block::before {
-      content: '💧';
-      position: absolute;
-      top: 6px;
-      right: 10px;
-      font-size: 8px;
-      opacity: 0.6;
-    }
-
-    .pond-stat-label {
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      color: #3B3B3B;
-      font-size: 7px;
+      box-shadow: 
+        inset 0 1px 0px rgba(125, 211, 252, 0.2),
+        0 2px 0px rgba(0, 0, 0, 0.1);
+    }
+
+    .console-brand {
+      color: #84cc16;
       font-weight: bold;
-      margin-bottom: 6px;
-      text-transform: uppercase;
+      font-size: 8px;
+      text-shadow: 
+        0 0 4px rgba(132, 204, 22, 0.3),
+        1px 1px 0px rgba(0, 0, 0, 0.8);
       letter-spacing: 0.5px;
-      text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.5);
     }
 
-    /* Turtle shell counter displays */
-    .pond-counter {
-      background: #FFD66F;
-      color: #3B3B3B;
-      font-family: 'Press Start 2P', monospace;
-      font-size: 16px;
-      font-weight: bold;
-      text-align: center;
-      padding: 6px 10px;
-      border: 3px solid #D2A679;
-      border-radius: 4px;
-      margin: 6px 0;
-      letter-spacing: 1px;
-      text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.5);
-      box-shadow: 2px 2px 0px #3B3B3B;
+    .console-version {
+      color: #a3a3a3;
+      font-size: 6px;
+      opacity: 0.8;
+      text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.5);
     }
 
-    /* Habitat navigation buttons */
-    .pond-btn {
-      background: #FFD66F;
-      color: #3B3B3B;
-      border: 2px solid #D2A679;
-      border-radius: 4px;
-      padding: 3px 8px;
-      font-size: 7px;
-      font-weight: bold;
-      text-decoration: none;
-      display: inline-block;
-      cursor: pointer;
-      transition: all 0.15s ease;
-      text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.5);
-      box-shadow: 2px 2px 0px #3B3B3B;
-    }
-
-    .pond-btn:hover {
-      background: #A8D5A0;
-      color: #3B3B3B;
-      text-decoration: none;
-      transform: translateY(-1px);
-      box-shadow: 3px 3px 0px #3B3B3B;
-    }
-
-    .pond-btn:active {
-      transform: translateY(0px);
-      box-shadow: 1px 1px 0px #3B3B3B;
-    }
-
-    .pond-avatars {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      margin-top: 8px;
-    }
-
-    /* Turtle friends in habitat */
-    .pond-avatar-pixel {
-      display: block;
-      width: 28px;
-      height: 28px;
-      border: 3px solid #5D4037;
-      border-radius: 50%;
-      box-shadow: 2px 2px 0px #3B3B3B;
-      overflow: hidden;
-      transition: all 0.15s ease;
+    /* Main Habitat Screen */
+    .habitat-screen {
+      margin: 16px 12px;
+      border: 4px solid #2d5016;
+      border-radius: 8px;
+      background: 
+        radial-gradient(ellipse at center, 
+          rgba(134, 239, 172, 0.3) 0%, 
+          rgba(74, 222, 128, 0.2) 30%, 
+          rgba(34, 197, 94, 0.1) 60%, 
+          rgba(21, 128, 61, 0.05) 100%);
+      box-shadow: 
+        inset 0 0 20px rgba(21, 128, 61, 0.1),
+        2px 2px 0px rgba(0, 0, 0, 0.3);
       position: relative;
-      image-rendering: pixelated;
+      overflow: hidden;
     }
 
-    /* Turtle shell texture effect */
-    .pond-avatar-pixel::before {
-      content: '';
+    .screen-bezel {
+      padding: 16px;
+      border: 2px solid rgba(74, 222, 128, 0.3);
+      border-radius: 4px;
+      background: 
+        linear-gradient(45deg, 
+          rgba(16, 185, 129, 0.1) 0%, 
+          rgba(34, 197, 94, 0.1) 50%, 
+          rgba(21, 128, 61, 0.1) 100%);
+    }
+
+    .habitat-environment {
+      height: 120px;
+      position: relative;
+      border-radius: 4px;
+      background: 
+        radial-gradient(circle at 30% 20%, rgba(74, 222, 128, 0.2) 0%, transparent 40%),
+        radial-gradient(circle at 70% 80%, rgba(34, 197, 94, 0.15) 0%, transparent 50%);
+    }
+
+    /* Turtle Avatar */
+    .turtle-avatar {
       position: absolute;
-      top: -1px;
-      left: -1px;
-      right: -1px;
-      bottom: -1px;
-      border: 1px solid rgba(168, 213, 160, 0.6);
+      font-size: 20px;
+      z-index: 10;
+      transition: all 0.8s ease-in-out;
+      filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+    }
+
+    .turtle-avatar.swimming {
+      top: 40%;
+      left: 30%;
+      animation: turtle-swim 6s ease-in-out infinite;
+    }
+
+    .turtle-avatar.nesting {
+      top: 60%;
+      left: 50%;
+      transform: translateX(-50%);
+      animation: turtle-nest 3s ease-in-out infinite;
+    }
+
+    @keyframes turtle-swim {
+      0%, 100% { 
+        transform: translateX(0px) rotate(0deg); 
+      }
+      25% { 
+        transform: translateX(20px) rotate(-5deg); 
+      }
+      50% { 
+        transform: translateX(10px) translateY(-10px) rotate(0deg); 
+      }
+      75% { 
+        transform: translateX(-10px) rotate(5deg); 
+      }
+    }
+
+    @keyframes turtle-nest {
+      0%, 100% { 
+        transform: translateX(-50%) scale(1); 
+      }
+      50% { 
+        transform: translateX(-50%) scale(1.1); 
+      }
+    }
+
+    /* Pond Elements */
+    .pond-element {
+      position: absolute;
+      font-size: 16px;
+      opacity: 0.7;
+    }
+
+    .lily-pad-1 {
+      top: 20%;
+      left: 60%;
+      animation: float-gentle 4s ease-in-out infinite;
+    }
+
+    .lily-pad-2 {
+      bottom: 30%;
+      left: 20%;
+      animation: float-gentle 4s ease-in-out infinite 2s;
+    }
+
+    .reed-1 {
+      top: 10%;
+      right: 20%;
+      animation: sway 3s ease-in-out infinite;
+    }
+
+    .reed-2 {
+      bottom: 10%;
+      right: 10%;
+      animation: sway 3s ease-in-out infinite 1s;
+    }
+
+    @keyframes float-gentle {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-3px) rotate(1deg); }
+    }
+
+    @keyframes sway {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(2deg); }
+    }
+
+    /* Water Ripples */
+    .water-ripple {
+      position: absolute;
       border-radius: 50%;
-      opacity: 0;
-      transform: scale(1);
-      transition: all 0.2s ease;
+      border: 1px solid rgba(74, 222, 128, 0.3);
+      animation: ripple 4s ease-out infinite;
     }
 
-    .pond-avatar-pixel:hover {
-      border-color: #D2A679;
-      transform: translateY(-1px) scale(1.05);
-      box-shadow: 3px 3px 0px #3B3B3B;
+    .ripple-1 {
+      top: 30%;
+      left: 40%;
+      width: 20px;
+      height: 20px;
     }
 
-    .pond-avatar-pixel:hover::before {
-      opacity: 1;
-      transform: scale(1.1);
+    .ripple-2 {
+      top: 70%;
+      left: 70%;
+      width: 15px;
+      height: 15px;
+      animation-delay: 2s;
     }
 
-    .pond-avatar-pixel img {
+    @keyframes ripple {
+      0% {
+        transform: scale(0.5);
+        opacity: 0.8;
+      }
+      100% {
+        transform: scale(3);
+        opacity: 0;
+      }
+    }
+
+    /* Mini Console Screens */
+    .mini-screens {
+      display: flex;
+      gap: 8px;
+      margin: 12px;
+      flex-wrap: wrap;
+    }
+
+    .mini-screen {
+      flex: 1;
+      min-width: 70px;
+      background: 
+        linear-gradient(135deg, #1a2e0a 0%, #2d5016 100%);
+      border: 3px solid #0f1a05;
+      border-radius: 6px;
+      padding: 6px;
+      box-shadow: 
+        inset 0 1px 0px rgba(74, 222, 128, 0.2),
+        2px 2px 0px rgba(0, 0, 0, 0.3);
+    }
+
+    .screen-label {
+      color: #84cc16;
+      font-size: 5px;
+      text-align: center;
+      margin-bottom: 4px;
+      text-shadow: 0 0 2px rgba(132, 204, 22, 0.5);
+      letter-spacing: 0.5px;
+    }
+
+    .screen-display {
+      text-align: center;
+    }
+
+    .counter-display {
+      background: #000000;
+      color: #00ff00;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      font-weight: bold;
+      padding: 2px 4px;
+      border-radius: 2px;
+      margin-bottom: 4px;
+      text-shadow: 0 0 4px currentColor;
+      border: 1px solid #003300;
+    }
+
+    .mini-avatars {
+      display: flex;
+      gap: 2px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .mini-avatar {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 1px solid #84cc16;
+      box-shadow: 0 0 2px rgba(132, 204, 22, 0.3);
+    }
+
+    .mini-avatar img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       image-rendering: pixelated;
-      filter: contrast(1.1) saturate(1.1) brightness(1.05);
+    }
+
+    .nest-status {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .status-icon {
+      font-size: 12px;
+    }
+
+    .status-icon.pulse {
+      animation: status-pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes status-pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.1); }
+    }
+
+    .status-text {
+      color: #84cc16;
+      font-size: 6px;
+      font-weight: bold;
+      text-shadow: 0 0 2px rgba(132, 204, 22, 0.5);
+    }
+
+    /* Console Action Buttons */
+    .console-buttons {
+      display: flex;
+      gap: 6px;
+      padding: 12px;
+      flex-wrap: wrap;
+    }
+
+    .console-btn {
+      flex: 1;
+      min-width: 60px;
+      background: 
+        linear-gradient(135deg, #8b4513 0%, #a0522d 100%);
+      border: 3px solid #654321;
+      border-radius: 8px;
+      padding: 8px 6px;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      transition: all 0.15s ease;
+      box-shadow: 
+        2px 2px 0px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0px rgba(255, 255, 255, 0.1);
+    }
+
+    .console-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 
+        3px 3px 0px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0px rgba(255, 255, 255, 0.2);
+      text-decoration: none;
+    }
+
+    .console-btn:active {
+      transform: translateY(0px);
+      box-shadow: 
+        1px 1px 0px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0px rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-icon {
+      font-size: 12px;
+      filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.5));
+    }
+
+    .btn-text {
+      color: #f5f5dc;
+      font-size: 6px;
+      font-weight: bold;
+      text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.8);
+      letter-spacing: 0.5px;
+    }
+
+    /* Status Bar */
+    .status-bar {
+      background: 
+        linear-gradient(135deg, #1a2e0a 0%, #0f1a05 100%);
+      border-top: 2px solid #2d5016;
+      padding: 8px 12px;
+      margin-top: auto;
+    }
+
+    .status-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .status-label {
+      color: #84cc16;
+      font-size: 6px;
+      font-weight: bold;
+      text-shadow: 0 0 2px rgba(132, 204, 22, 0.5);
+    }
+
+    .status-meter {
+      flex: 1;
+      height: 6px;
+      background: #000000;
+      border: 1px solid #2d5016;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .meter-fill {
+      height: 100%;
+      background: 
+        linear-gradient(90deg, #00ff00 0%, #84cc16 100%);
+      transition: width 0.3s ease;
+      box-shadow: 0 0 4px rgba(0, 255, 0, 0.3);
     }
 
     /* Responsive - hide on smaller screens */
     @media (max-width: 1199px) {
-      .pond-status-screen {
+      .turtle-console {
         display: none;
       }
     }
