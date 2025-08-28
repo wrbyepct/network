@@ -7,10 +7,59 @@
     isIncubating: {{ is_incubating|yesno:'true,false' }},
     onListPage: true
   }" > 
- 
-    <div class="container mt-4 ">
-      <div class="row ">
-        <div class="col-lg-8 mx-auto ">
+    <div class="container-fluid mt-4">
+      <div class="row">
+        <!-- Pond Panel (Left Sidebar) -->
+        <div class="col-lg-3 d-none d-lg-block">
+          <div class="pond-status-screen sticky top-5">
+            <!-- Header (Game UI Style) -->
+            <div class="pond-screen-header">
+              <span class="pond-screen-title">🌊 THE POND</span>
+            </div>
+            
+            <!-- Content -->
+            <div class="pond-screen-content">
+              <!-- Following Stats -->
+              <div class="pond-stat-block">
+                <div class="pond-stat-label">
+                  <img src="/static/network/media/defaults/turtle_following.png" alt="Following" class="w-4 h-4 mr-1">
+                  FOLLOWING
+                </div>
+                <div class="pond-counter">{{ user.profile.following.count|stringformat:"03d" }}</div>
+                <a href="{% url 'profile_about' user.profile.username %}" class="pond-btn">VIEW</a>
+              </div>
+
+              <!-- Followers Stats -->
+              <div class="pond-stat-block">
+                <div class="pond-stat-label">
+                  <img src="/static/network/media/defaults/turtle_followers.png" alt="Followers" class="w-4 h-4 mr-1">
+                  FOLLOWERS
+                </div>
+                <div class="pond-counter">{{ user.profile.followers.count|stringformat:"03d" }}</div>
+                <a href="{% url 'profile_about' user.profile.username %}" class="pond-btn">VIEW</a>
+              </div>
+
+              <!-- Recent Followers -->
+              {% if user.profile.followers.exists %}
+                <div class="pond-stat-block">
+                  <div class="pond-stat-label">RECENT FRIENDS</div>
+                  <div class="pond-avatars">
+                    {% for follower in user.profile.followers.all|slice:":4" %}
+                      <a href="{% url 'profile_about' follower.username %}" 
+                         class="pond-avatar-pixel" 
+                         title="{{ follower.username }}">
+                        <img src="{{ follower.profile_picture.url }}" alt="{{ follower.username }}">
+                      </a>
+                    {% endfor %}
+                  </div>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="col-lg-6">
 
           <!-- List page egg container -->
           <div 
@@ -41,6 +90,11 @@
               <p class="text-center text-muted">No turties yet... Let's hatch One!</p>
             {% endfor %}
           </div>
+        </div>
+
+        <!-- Right Sidebar (Future expansion) -->
+        <div class="col-lg-3 d-none d-lg-block">
+          <!-- Space for future widgets -->
         </div>
       </div>
 
@@ -100,15 +154,215 @@
     </div>
   </div>
 
-
-{% endblock %} 
-
- 
 <style>
-    .pixel-pagination {
+    /* Turtle Pond Habitat Panel - Matching Site Theme */
+    .pond-status-screen {
+      background: 
+        radial-gradient(ellipse at top, rgba(168, 213, 160, 0.4) 0%, transparent 40%),
+        radial-gradient(ellipse at bottom right, rgba(255, 214, 111, 0.3) 0%, transparent 50%),
+        linear-gradient(180deg, #A8D5A0 0%, rgba(168, 213, 160, 0.8) 50%, rgba(210, 166, 121, 0.6) 100%);
+      border: 4px solid #5D4037;
+      border-radius: 8px;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px;
+      box-shadow: 4px 4px 0px #3B3B3B;
+      overflow: hidden;
+      position: sticky;
+      top: 20px;
       image-rendering: pixelated;
-      image-rendering: -moz-crisp-edges;
-      image-rendering: crisp-edges;
+    }
+
+    /* Subtle habitat texture */
+    .pond-status-screen::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.3) 1px, transparent 2px),
+        radial-gradient(circle at 70% 60%, rgba(255, 255, 255, 0.2) 1px, transparent 2px),
+        radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.15) 1px, transparent 2px);
+      pointer-events: none;
+    }
+
+    .pond-screen-header {
+      background: #A8D5A0;
+      padding: 10px 14px;
+      border-bottom: 3px solid #5D4037;
+      position: relative;
+      box-shadow: inset 0 2px 0px rgba(255, 255, 255, 0.3);
+    }
+
+    /* Turtle friend on header */
+    .pond-screen-header::after {
+      content: '🐢';
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 12px;
+      opacity: 0.8;
+      image-rendering: pixelated;
+    }
+
+    .pond-screen-title {
+      color: #3B3B3B;
+      font-weight: bold;
+      font-size: 9px;
+      letter-spacing: 1px;
+      text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.5);
+    }
+
+    .pond-screen-content {
+      padding: 14px;
+      background: 
+        radial-gradient(ellipse at 25% 25%, rgba(255, 214, 111, 0.2) 0%, transparent 40%),
+        radial-gradient(ellipse at 75% 75%, rgba(168, 213, 160, 0.3) 0%, transparent 35%);
+      position: relative;
+    }
+
+    /* Turtle habitat lily pad stat blocks */
+    .pond-stat-block {
+      background: #A8D5A0;
+      border: 3px solid #5D4037;
+      border-radius: 50px 50px 12px 50px; /* lily pad shape */
+      margin-bottom: 12px;
+      padding: 10px 12px;
+      box-shadow: 3px 3px 0px #3B3B3B;
+      position: relative;
+    }
+
+    /* Small water droplet on lily pads */
+    .pond-stat-block::before {
+      content: '💧';
+      position: absolute;
+      top: 6px;
+      right: 10px;
+      font-size: 8px;
+      opacity: 0.6;
+    }
+
+    .pond-stat-label {
+      display: flex;
+      align-items: center;
+      color: #3B3B3B;
+      font-size: 7px;
+      font-weight: bold;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.5);
+    }
+
+    /* Turtle shell counter displays */
+    .pond-counter {
+      background: #FFD66F;
+      color: #3B3B3B;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 16px;
+      font-weight: bold;
+      text-align: center;
+      padding: 6px 10px;
+      border: 3px solid #D2A679;
+      border-radius: 4px;
+      margin: 6px 0;
+      letter-spacing: 1px;
+      text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.5);
+      box-shadow: 2px 2px 0px #3B3B3B;
+    }
+
+    /* Habitat navigation buttons */
+    .pond-btn {
+      background: #FFD66F;
+      color: #3B3B3B;
+      border: 2px solid #D2A679;
+      border-radius: 4px;
+      padding: 3px 8px;
+      font-size: 7px;
+      font-weight: bold;
+      text-decoration: none;
+      display: inline-block;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.5);
+      box-shadow: 2px 2px 0px #3B3B3B;
+    }
+
+    .pond-btn:hover {
+      background: #A8D5A0;
+      color: #3B3B3B;
+      text-decoration: none;
+      transform: translateY(-1px);
+      box-shadow: 3px 3px 0px #3B3B3B;
+    }
+
+    .pond-btn:active {
+      transform: translateY(0px);
+      box-shadow: 1px 1px 0px #3B3B3B;
+    }
+
+    .pond-avatars {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    /* Turtle friends in habitat */
+    .pond-avatar-pixel {
+      display: block;
+      width: 28px;
+      height: 28px;
+      border: 3px solid #5D4037;
+      border-radius: 50%;
+      box-shadow: 2px 2px 0px #3B3B3B;
+      overflow: hidden;
+      transition: all 0.15s ease;
+      position: relative;
+      image-rendering: pixelated;
+    }
+
+    /* Turtle shell texture effect */
+    .pond-avatar-pixel::before {
+      content: '';
+      position: absolute;
+      top: -1px;
+      left: -1px;
+      right: -1px;
+      bottom: -1px;
+      border: 1px solid rgba(168, 213, 160, 0.6);
+      border-radius: 50%;
+      opacity: 0;
+      transform: scale(1);
+      transition: all 0.2s ease;
+    }
+
+    .pond-avatar-pixel:hover {
+      border-color: #D2A679;
+      transform: translateY(-1px) scale(1.05);
+      box-shadow: 3px 3px 0px #3B3B3B;
+    }
+
+    .pond-avatar-pixel:hover::before {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+
+    .pond-avatar-pixel img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      image-rendering: pixelated;
+      filter: contrast(1.1) saturate(1.1) brightness(1.05);
+    }
+
+    /* Responsive - hide on smaller screens */
+    @media (max-width: 1199px) {
+      .pond-status-screen {
+        display: none;
+      }
     }
 
     .pixel-btn {
@@ -143,29 +397,9 @@
       text-shadow: 0 0 4px currentColor;
     }
 
-    .jump-btn {
-      box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
-      text-decoration: none;
-      transition: all 0.1s;
-    }
-
-    .jump-btn:hover {
-      box-shadow: 1px 1px 0px rgba(0, 0, 0, 0.3);
-      transform: translate(1px, 1px);
-    }
-
-    /* Disabled state for when no prev/next */
-    .pixel-btn:not([href]) {
-      opacity: 0.5;
-      cursor: not-allowed;
-      pointer-events: none;
-    }
 
     /* Mobile responsiveness */
     @media (max-width: 640px) {
-      .pixel-pagination {
-        font-size: 8px;
-      }
 
       .pixel-btn {
         px-3 py-2;
@@ -176,3 +410,5 @@
       }
     }
   </style>
+
+{% endblock %}
