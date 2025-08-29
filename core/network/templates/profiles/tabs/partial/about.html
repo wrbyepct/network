@@ -2,7 +2,7 @@
 
 
 <div 
-  x-data="{ activeTab: 'story' }" 
+  x-data="{ activeTab: '{{ sub_tab }}' }" 
   class="p-4 bg-emerald-800 border-4 border-amber-600 shadow-lg shadow-amber-600/50 rounded-none font-mono"
   style="font-family: 'Press Start 2P'; font-size: 10px; image-rendering: pixelated;">
 
@@ -37,9 +37,10 @@
                 <div> 
                   <div class="flex items-center">
                     <h2 class="uppercase tracking-widest text-stone-50 drop-shadow-[2px_2px_0_rgba(0,0,0,0.4)]">{{ profile.first_name }} {{ profile.last_name }}</h2>
-                    <span class="ml-4 text-md {{ activity.color }}">
-                      is {{ activity.status }} {{ activity.emoji }} 
+                    <span class="block ms-4 me-2 text-md {{ activity.color }}">
+                      is {{ activity.status }}
                     </span>
+                    <img class="w-10" src="{{ activity.image }}" alt="User activity turtle image">
                   </div>
             
                   <p class="text-stone-300">@{{ profile.username }}</p>
