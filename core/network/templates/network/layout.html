@@ -82,7 +82,7 @@
               <div class="nav-menu-desktop">
                 {% if request.user.is_authenticated %}
                   <a href="{% url 'profile_nest' request.user.profile.username %}" class="nav-btn nav-btn-primary">
-                    🏠 My Nest
+                    🏠 My Shell
                   </a>
                   <a href="{% url 'profile_about' request.user.profile.username %}" class="nav-btn nav-btn-secondary">
                     🌊 Pond

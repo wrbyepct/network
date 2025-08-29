@@ -19,6 +19,7 @@ from django.views.generic import (
 )
 
 from network.common.mixins import RefererRedirectMixin
+from network.profiles.services import ActivityManagerService
 
 from .forms import PostForm
 from .models import Post, PostLike, PostMedia
@@ -47,6 +48,10 @@ class PostListView(ListView):
         context["is_incubating"] = bool(
             IncubationService.get_incubating_post_id(self.request.user.id)
         )
+        if self.request.user.is_authenticated:
+            context["activity"] = ActivityManagerService.get_activity_obj(
+                user=self.request.user
+            )
         return context
 
 
