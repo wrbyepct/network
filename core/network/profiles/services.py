@@ -42,27 +42,27 @@ class ActivityManagerService:
 
     ACTIVITY_OBJECT = {
         "swimming": {
-            "emoji": "🏊‍♂️",
+            "image": "/media/defaults/turtle_proud.png",
             "color": "text-blue-500",
             "status": "Swimming",
         },
         "resting": {
-            "emoji": "😴",
+            "image": "/media/defaults/turtle_follow.png",
             "color": "text-gray-500",
             "status": "Resting",
         },
         "exploring": {
-            "emoji": "🧭",
+            "image": "/media/defaults/turtle_walking.gif",
             "color": "text-green-500",
             "status": "Exploring",
         },
         "sunbathing": {
-            "emoji": "🌞",
+            "image": "/media/defaults/turtle_hurray.png",
             "color": "text-yellow-500",
             "status": "Sunbathing",
         },
         "hiding_in_shell": {
-            "emoji": "🐢",
+            "image": "/media/defaults/turtle_hiding.png",
             "color": "text-stone-300",
             "status": "Hiding in shell",
         },
