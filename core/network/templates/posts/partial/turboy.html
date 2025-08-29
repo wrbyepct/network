@@ -8,8 +8,7 @@
             </div>
             
             <!-- Main Habitat Screen -->
-            <div
-            
+            <div        
                 class="habitat-screen h-70">
               <div class="screen-bezel h-full">
                 <div class="habitat-environment h-full">
@@ -51,7 +50,7 @@
             <!-- Mini Console Screens -->
             <div class="mini-screens">
               <div class="mini-screen friends-screen">
-                <div class="screen-label">FRIENDS</div>
+                <div class="screen-label break-all">FOLLOWERS</div>
                 <div class="screen-display">
                   <div class="counter-display">{{ user.profile.followers.count|stringformat:"03d" }}</div>
                   <div class="mini-avatars">
@@ -80,9 +79,12 @@
               </div>
 
               <div class="mini-screen following-screen">
-                <div class="screen-label">FOLLOW</div>
-                <div class="screen-display">
-                  <div class="counter-display">{{ user.profile.following.count|stringformat:"03d" }}</div>
+                <div class="screen-label">STATUS</div>
+                <div class="text-center">
+                  <img class="w-8 mx-auto" src="{{ activity.image }}" alt="User activity turtle image">
+                </div>
+                <div class="screen-display mt-3 ">
+                  <span class="status-text {{ activity.color }} break-all" >{{ activity.status }}</span>
                 </div>
               </div>
             </div>
@@ -90,7 +92,7 @@
         {% if request.user.is_authenticated %}
           <!-- Console Action Buttons (Authenticated User) -->
           <div class="console-buttons">
-            <a href="{% url 'profile_about' user.profile.username %}" class="console-btn btn-pond">
+            <a href="{% url 'profile_about' user.profile.username %}?sub_tab=follow" class="console-btn btn-pond">
               <span class="btn-icon">🌊</span>
               <span class="btn-text">POND</span>
             </a>
@@ -155,3 +157,436 @@
             </div>
           </div>
         </div>
+
+<style>
+
+     /* Retro Turtle Console - Natural Gaming Aesthetic */
+    .turtle-console {
+      background: 
+        linear-gradient(180deg, 
+          #8b7355 0%, 
+          #a0956b 15%, 
+          #8b7355 85%, 
+          #6b5d4a 100%);
+      border: 6px solid #5D4037;
+      border-radius: 12px;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px;
+      box-shadow: 
+        6px 6px 0px #3B3B3B,
+        inset 2px 2px 0px rgba(255, 255, 255, 0.1);
+      position: sticky;
+      top: 20px;
+      image-rendering: pixelated;
+      overflow: hidden;
+    }
+
+    /* Console wood texture */
+    .turtle-console::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        repeating-linear-gradient(
+          90deg,
+          transparent,
+          transparent 2px,
+          rgba(139, 115, 85, 0.1) 2px,
+          rgba(139, 115, 85, 0.1) 4px
+        );
+      pointer-events: none;
+      opacity: 0.3;
+    }
+
+    /* Console Header */
+    .console-header {
+      background: 
+        linear-gradient(135deg, #2d5016 0%, #3d6b1f 50%, #2d5016 100%);
+      padding: 8px 12px;
+      border-bottom: 4px solid #1a2e0a;
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 
+        inset 0 1px 0px rgba(125, 211, 252, 0.2),
+        0 2px 0px rgba(0, 0, 0, 0.1);
+    }
+
+    .console-brand {
+      color: #84cc16;
+      font-weight: bold;
+      font-size: 8px;
+      text-shadow: 
+        0 0 4px rgba(132, 204, 22, 0.3),
+        1px 1px 0px rgba(0, 0, 0, 0.8);
+      letter-spacing: 0.5px;
+    }
+
+    .console-version {
+      color: #a3a3a3;
+      font-size: 6px;
+      opacity: 0.8;
+      text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Main Habitat Screen */
+    .habitat-screen {
+      margin: 16px 12px;
+      border: 4px solid #2d5016;
+      border-radius: 8px;
+      background: 
+        radial-gradient(ellipse at center, 
+          rgba(134, 239, 172, 0.3) 0%, 
+          rgba(74, 222, 128, 0.2) 30%, 
+          rgba(34, 197, 94, 0.1) 60%, 
+          rgba(21, 128, 61, 0.05) 100%);
+      box-shadow: 
+        inset 0 0 20px rgba(21, 128, 61, 0.1),
+        2px 2px 0px rgba(0, 0, 0, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .screen-bezel {
+      padding: 16px;
+      border: 2px solid rgba(74, 222, 128, 0.3);
+      border-radius: 4px;
+      background: 
+        linear-gradient(45deg, 
+          rgba(16, 185, 129, 0.1) 0%, 
+          rgba(34, 197, 94, 0.1) 50%, 
+          rgba(21, 128, 61, 0.1) 100%);
+    }
+
+    .habitat-environment {
+
+      position: relative;
+      border-radius: 4px;
+      background: 
+        radial-gradient(circle at 30% 20%, rgba(74, 222, 128, 0.2) 0%, transparent 40%),
+        radial-gradient(circle at 70% 80%, rgba(34, 197, 94, 0.15) 0%, transparent 50%);
+    }
+
+    /* Turtle Avatar */
+    .turtle-avatar {
+      position: absolute;
+      font-size: 20px;
+      z-index: 10;
+      transition: all 0.8s ease-in-out;
+      filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+    }
+
+    .turtle-avatar.swimming {
+      top: 40%;
+      left: 30%;
+      animation: turtle-swim 6s ease-in-out infinite;
+    }
+
+    .turtle-avatar.nesting {
+      top: 60%;
+      left: 50%;
+      transform: translateX(-50%);
+      animation: turtle-nest 3s ease-in-out infinite;
+    }
+
+    @keyframes turtle-swim {
+      0%, 100% { 
+        transform: translateX(0px) rotate(0deg); 
+      }
+      25% { 
+        transform: translateX(20px) rotate(-5deg); 
+      }
+      50% { 
+        transform: translateX(10px) translateY(-10px) rotate(0deg); 
+      }
+      75% { 
+        transform: translateX(-10px) rotate(5deg); 
+      }
+    }
+
+    @keyframes turtle-nest {
+      0%, 100% { 
+        transform: translateX(-50%) scale(1); 
+      }
+      50% { 
+        transform: translateX(-50%) scale(1.1); 
+      }
+    }
+
+    /* Pond Elements */
+    .pond-element {
+      position: absolute;
+      font-size: 16px;
+      opacity: 0.7;
+    }
+
+    .lily-pad-1 {
+      top: 20%;
+      left: 60%;
+      animation: float-gentle 4s ease-in-out infinite;
+    }
+
+    .lily-pad-2 {
+      bottom: 30%;
+      left: 20%;
+      animation: float-gentle 4s ease-in-out infinite 2s;
+    }
+
+    .reed-1 {
+      top: 10%;
+      right: 20%;
+      animation: sway 3s ease-in-out infinite;
+    }
+
+    .reed-2 {
+      bottom: 10%;
+      right: 10%;
+      animation: sway 3s ease-in-out infinite 1s;
+    }
+
+    @keyframes float-gentle {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-3px) rotate(1deg); }
+    }
+
+    @keyframes sway {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(2deg); }
+    }
+
+    /* Water Ripples */
+    .water-ripple {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(74, 222, 128, 0.3);
+      animation: ripple 4s ease-out infinite;
+    }
+
+    .ripple-1 {
+      top: 30%;
+      left: 40%;
+      width: 20px;
+      height: 20px;
+    }
+
+    .ripple-2 {
+      top: 70%;
+      left: 70%;
+      width: 15px;
+      height: 15px;
+      animation-delay: 2s;
+    }
+
+    @keyframes ripple {
+      0% {
+        transform: scale(0.5);
+        opacity: 0.8;
+      }
+      100% {
+        transform: scale(3);
+        opacity: 0;
+      }
+    }
+
+    /* Mini Console Screens */
+    .mini-screens {
+      display: flex;
+      gap: 8px;
+      margin: 12px;
+      flex-wrap: wrap;
+    }
+
+    .mini-screen {
+      flex: 1;
+      min-width: 70px;
+      background: 
+        linear-gradient(135deg, #1a2e0a 0%, #2d5016 100%);
+      border: 3px solid #0f1a05;
+      border-radius: 6px;
+      padding: 6px;
+      box-shadow: 
+        inset 0 1px 0px rgba(74, 222, 128, 0.2),
+        2px 2px 0px rgba(0, 0, 0, 0.3);
+    }
+
+    .screen-label {
+      color: #84cc16;
+      font-size: 9px;
+      text-align: center;
+      margin-bottom: 4px;
+      text-shadow: 0 0 2px rgba(132, 204, 22, 0.5);
+      letter-spacing: 0.5px;
+    }
+
+    .screen-display {
+      text-align: center;
+    }
+
+    .counter-display {
+      background: #000000;
+      color: #00ff00;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      font-weight: bold;
+      padding: 2px 4px;
+      border-radius: 2px;
+      margin-bottom: 4px;
+      text-shadow: 0 0 4px currentColor;
+      border: 1px solid #003300;
+    }
+
+    .mini-avatars {
+      display: flex;
+      gap: 2px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .mini-avatar {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 1px solid #84cc16;
+      box-shadow: 0 0 2px rgba(132, 204, 22, 0.3);
+    }
+
+    .mini-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      image-rendering: pixelated;
+    }
+
+    .nest-status {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .status-icon {
+      font-size: 12px;
+    }
+
+    .status-icon.pulse {
+      animation: status-pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes status-pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.1); }
+    }
+
+    .status-text {
+
+      font-size: 10px;
+      font-weight: bold;
+      text-shadow: 0 0 2px rgba(132, 204, 22, 0.5);
+    }
+
+    /* Console Action Buttons */
+    .console-buttons {
+      display: flex;
+      gap: 6px;
+      padding: 12px;
+      flex-wrap: wrap;
+    }
+
+    .console-btn {
+      flex: 1;
+      min-width: 60px;
+      background: 
+        linear-gradient(135deg, #8b4513 0%, #a0522d 100%);
+      border: 3px solid #654321;
+      border-radius: 8px;
+      padding: 8px 6px;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      transition: all 0.15s ease;
+      box-shadow: 
+        2px 2px 0px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0px rgba(255, 255, 255, 0.1);
+    }
+
+    .console-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 
+        3px 3px 0px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0px rgba(255, 255, 255, 0.2);
+      text-decoration: none;
+    }
+
+    .console-btn:active {
+      transform: translateY(0px);
+      box-shadow: 
+        1px 1px 0px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0px rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-icon {
+      font-size: 12px;
+      filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.5));
+    }
+
+    .btn-text {
+      color: #f5f5dc;
+      font-size: 12px;
+      font-weight: bold;
+      text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.8);
+      letter-spacing: 0.5px;
+    }
+
+    /* Status Bar */
+    .status-bar {
+      background: 
+        linear-gradient(135deg, #1a2e0a 0%, #0f1a05 100%);
+      border-top: 2px solid #2d5016;
+      padding: 8px 12px;
+      margin-top: auto;
+    }
+
+    .status-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .status-label {
+      color: #84cc16;
+      font-size: 6px;
+      font-weight: bold;
+      text-shadow: 0 0 2px rgba(132, 204, 22, 0.5);
+    }
+
+    .status-meter {
+      flex: 1;
+      height: 6px;
+      background: #000000;
+      border: 1px solid #2d5016;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .meter-fill {
+      height: 100%;
+      background: 
+        linear-gradient(90deg, #00ff00 0%, #84cc16 100%);
+      transition: width 0.3s ease;
+      box-shadow: 0 0 4px rgba(0, 255, 0, 0.3);
+    }
+
+    /* Responsive - hide on smaller screens */
+    @media (max-width: 1199px) {
+      .turtle-console {
+        display: none;
+      }
+    }
+</style>

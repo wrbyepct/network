@@ -160,6 +160,9 @@ class AboutView(LoginRequiredMixin, ProfileTabsBaseMixin, TemplateView):
         context["activity"] = ActivityManagerService.get_activity_obj(
             user=self.profile.user
         )
+
+        context["sub_tab"] = self.request.GET.get("sub_tab", "story")
+
         return context
 
 
