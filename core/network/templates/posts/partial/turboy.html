@@ -1,0 +1,157 @@
+ <!-- Retro Pond Console (Left Sidebar) -->
+        <div class="col-lg-3 d-none d-lg-block">
+          <div class="turtle-console sticky top-5">
+            <!-- Console Header -->
+            <div class="console-header">
+              <div class="text-xl italic">TUR-BOY</div>
+              <div class="console-version">v1.0</div>
+            </div>
+            
+            <!-- Main Habitat Screen -->
+            <div
+            
+                class="habitat-screen h-70">
+              <div class="screen-bezel h-full">
+                <div class="habitat-environment h-full">
+                  <!-- List page egg container -->
+                  <div 
+                    id="incubating-egg-container"
+                    hx-get="{% url 'egg' %}"
+                    hx-trigger="egg-fetch-ready"
+                    hx-swap="innerHTML"
+                    x-ref="eggDiv"
+                    x-effect="if(isIncubating) $nextTick(() => $dispatch('egg-fetch-ready'))"
+                    @post-created.window="isIncubating = true"
+                    {# Error means the post has hatched, just refresh the page #}
+                    @htmx:response-error="window.location.href = '/'"
+                  ></div>
+                  <div
+                    x-show="!isIncubating"
+                    >
+                    <!-- Animated Turtle Avatar -->
+                    <div class="turtle-avatar {% if is_incubating %}nesting{% else %}swimming{% endif %}">
+                      🐢
+                    </div>
+                    
+                    <!-- Pond Elements -->
+                    <div class="pond-element lily-pad lily-pad-1">🪷</div>
+                    <div class="pond-element lily-pad lily-pad-2">🪷</div>
+                    <div class="pond-element reed reed-1">🌾</div>
+                    <div class="pond-element reed reed-2">🌾</div>
+                    
+                    <!-- Water Ripples -->
+                    <div class="water-ripple ripple-1"></div>
+                    <div class="water-ripple ripple-2"></div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Mini Console Screens -->
+            <div class="mini-screens">
+              <div class="mini-screen friends-screen">
+                <div class="screen-label">FRIENDS</div>
+                <div class="screen-display">
+                  <div class="counter-display">{{ user.profile.followers.count|stringformat:"03d" }}</div>
+                  <div class="mini-avatars">
+                    {% for follower in user.profile.followers.all|slice:":3" %}
+                      <div class="mini-avatar" title="{{ follower.username }}">
+                        <img src="{{ follower.profile_picture.url }}" alt="{{ follower.username }}">
+                      </div>
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+
+              <div class="mini-screen nest-screen">
+                <div class="screen-label">NEST</div>
+                <div class="screen-display mt-3">
+                
+                  <div x-show="isIncubating" class="nest-status incubating">
+                    <span class="status-text text-orange-500 break-all">HATCHING...</span>
+                  </div>
+                
+                  <div x-show="!isIncubating"  class="nest-status ready">
+                    <span class="status-text text-amber-400 break-all">READY</span>
+                  </div>
+                
+                </div>
+              </div>
+
+              <div class="mini-screen following-screen">
+                <div class="screen-label">FOLLOW</div>
+                <div class="screen-display">
+                  <div class="counter-display">{{ user.profile.following.count|stringformat:"03d" }}</div>
+                </div>
+              </div>
+            </div>
+          
+        {% if request.user.is_authenticated %}
+          <!-- Console Action Buttons (Authenticated User) -->
+          <div class="console-buttons">
+            <a href="{% url 'profile_about' user.profile.username %}" class="console-btn btn-pond">
+              <span class="btn-icon">🌊</span>
+              <span class="btn-text">POND</span>
+            </a>
+            <a href="{% url 'profile_nest' user.profile.username %}" class="console-btn btn-nest">
+              <span class="btn-icon">🥚</span>
+              <span class="btn-text">NEST</span>
+            </a>
+            <a 
+              hx-get="{% url 'post_create' %}"
+              hx-target="#modal-container"
+              hx-select="#post-create-container"
+              @htmx:after-request="if($event.detail.successful) showModal = true;"
+              class="console-btn btn-create cursor-pointer" 
+              x-show="!isIncubating" 
+            >
+              <span class="btn-icon">✏️</span>
+              <span class="btn-text">POST</span>
+            </a>
+          </div>
+        {% else %}
+            <!-- Console Action Buttons (Not Authenticated User) -->
+            <div class="console-buttons">
+              <a href="{% url 'account_login' %}" 
+                hx-get="{% url 'account_login' %}"
+                hx-target="#modal-container"
+                hx-select="#auth-modal-content"
+                @htmx:after-request="if($event.detail.successful) showModal = true;"
+                class="console-btn btn-pond">
+                <span class="btn-icon">🌊</span>
+                <span class="btn-text">POND</span>
+              </a>
+              <a href="{% url 'account_login' %}" 
+                hx-get="{% url 'account_login' %}"
+                hx-target="#modal-container"
+                hx-select="#auth-modal-content"
+                @htmx:after-request="if($event.detail.successful) showModal = true;"
+                class="console-btn btn-nest">
+                <span class="btn-icon">🥚</span>
+                <span class="btn-text">NEST</span>
+              </a>
+              <a 
+                hx-get="{% url 'account_login' %}"
+                hx-target="#modal-container"
+                hx-select="#auth-modal-content"
+                @htmx:after-request="if($event.detail.successful) showModal = true;"
+                class="console-btn btn-create cursor-pointer" 
+                x-show="!isIncubating"
+              >
+                <span class="btn-icon">✏️</span>
+                <span class="btn-text">POST</span>
+              </a>
+            </div>
+        {% endif %}
+            <!-- Habitat Status Bar -->
+            <div class="status-bar">
+              <div class="status-item">
+                <span class="status-label">HEALTH</span>
+                <div class="status-meter">
+                  <div class="meter-fill" style="width: 85%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
