@@ -81,10 +81,10 @@
               <!-- Desktop Menu -->
               <div class="nav-menu-desktop">
                 {% if request.user.is_authenticated %}
-                  <a href="{% url 'profile_nest' request.user.profile.username %}" class="nav-btn nav-btn-primary">
+                  <a href="{% url 'profile_about' request.user.profile.username %}" class="nav-btn nav-btn-primary">
                     🏠 My Shell
                   </a>
-                  <a href="{% url 'profile_about' request.user.profile.username %}" class="nav-btn nav-btn-secondary">
+                  <a href="{% url 'profile_about' request.user.profile.username %}?sub_tab=follow" class="nav-btn nav-btn-secondary">
                     🌊 Pond
                   </a>
                   <a href="{% url 'account_logout' %}" class="nav-btn nav-btn-logout">
@@ -128,7 +128,7 @@
                   🏠 My Nest
                 </a>
       
-                <a href="{% url 'profile_about' request.user.profile.username %}" 
+                <a href="{% url 'profile_about' request.user.profile.username %}?sub_tab=follow" 
                   class="nav-btn-mobile nav-btn-secondary" 
                   @click="mobileMenuOpen = false">
                   🌊 Pond

@@ -1,5 +1,5 @@
  <!-- Retro Pond Console (Left Sidebar) -->
-        <div class="col-lg-3 d-none d-lg-block">
+        <div class="col-lg-4 d-none d-lg-block">
           <div class="turtle-console sticky top-5 rounded-xl border-[6px] border-stone-700 overflow-hidden" style="font-family: 'Press Start 2P', monospace; font-size: 8px; image-rendering: pixelated;">
             <!-- Console Header -->
             <div class="console-header flex justify-between items-center relative px-3 py-2 border-b-4 border-green-900">
@@ -52,11 +52,15 @@
                 <div class="text-lime-400 text-center mb-1 break-all tracking-wider" style="font-size: 9px; text-shadow: 0 0 2px rgba(132, 204, 22, 0.5);">FOLLOWERS</div>
                 <div class="text-center">
                   <div class="counter-display bg-black text-green-500 font-mono text-xs font-bold px-1 py-0.5 rounded-sm mb-1 border border-green-900" style="text-shadow: 0 0 4px currentColor;">{{ user.profile.followers.count|stringformat:"03d" }}</div>
-                  <div class="flex gap-0.5 justify-center flex-wrap">
+                  <div class="flex gap-0.5 justify-center flex-wrap ">
                     {% for follower in user.profile.followers.all|slice:":3" %}
-                      <div class="w-3.5 h-3.5 rounded-full overflow-hidden border border-lime-400" style="box-shadow: 0 0 2px rgba(132, 204, 22, 0.3);" title="{{ follower.username }}">
-                        <img src="{{ follower.profile_picture.url }}" alt="{{ follower.username }}" class="w-full h-full object-cover" style="image-rendering: pixelated;">
-                      </div>
+                     
+
+                      <a href="{% url 'profile_about' follower.username %}" class="rounded-full border border-lime-400 cursor-pointer relative group" style="box-shadow: 0 0 2px rgba(132, 204, 22, 0.3);">
+                         <!-- Toolkit -->
+                        {% include 'profiles/partials/avatar_toolkit.html' with profile=follower  %}
+                        <img class="w-7 h-7 rounded-full object-cover" src="{{ follower.profile_picture.url }}" alt="{{ follower.username }}" class="w-full h-full object-cover" style="image-rendering: pixelated;">
+                      </a>
                     {% endfor %}
                   </div>
                 </div>
@@ -64,7 +68,7 @@
 
               <div class="mini-screen flex-1 min-w-[70px] border-3 border-green-950 rounded-md p-1.5">
                 <div class="text-lime-400 text-center mb-1 tracking-wider" style="font-size: 9px; text-shadow: 0 0 2px rgba(132, 204, 22, 0.5);">NEST</div>
-                <div class="text-center mt-3">
+                <div class="text-center mt-4">
                   <div x-show="isIncubating" class="flex items-center justify-center gap-1">
                     <span class="text-orange-500 break-all font-bold" style="font-size: 10px; text-shadow: 0 0 2px rgba(132, 204, 22, 0.5);">HATCHING...</span>
                   </div>
@@ -290,8 +294,5 @@
   100% { transform: scale(3); opacity: 0; }
 }
 
-/* Responsive */
-@media (max-width: 1199px) {
-  .turtle-console { display: none; }
-}
+
 </style>
