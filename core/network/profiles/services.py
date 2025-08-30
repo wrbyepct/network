@@ -43,11 +43,11 @@ class ActivityManagerService:
     ACTIVITY_OBJECT = {
         "swimming": {
             "image": "/media/defaults/turtle_proud.png",
-            "color": "text-blue-500",
+            "color": "text-blue-400",
             "status": "Swimming",
         },
         "resting": {
-            "image": "/media/defaults/turtle_follow.png",
+            "image": "/media/defaults/turtle_following.png",
             "color": "text-gray-500",
             "status": "Resting",
         },
