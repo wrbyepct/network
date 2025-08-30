@@ -9,7 +9,7 @@
         hx-select="#auth-modal-content"
         {% endif %}
         @htmx:after-request="if($event.detail.successful) showModal = true;"
-        class="turtle-shell-container flex items-center p-3 rounded-lg shadow-md bg-emerald-50 hover:shadow-lg transition transform hover:-translate-y-0.5 cursor-pointer"
+        class="mx-auto xl:max-w-5xl turtle-shell-container flex items-center p-3 rounded-lg shadow-md bg-emerald-50 hover:shadow-lg transition transform hover:-translate-y-0.5 cursor-pointer"
         style="font-family: 'Press Start 2P', monospace; font-size: 10px; image-rendering: pixelated;"
     >
 
