@@ -1,6 +1,8 @@
+ {% load profile_extra %}
  <!-- Retro Pond Console (Left Sidebar) -->
-        <div class="col-lg-4 d-none d-lg-block">
-          <div class="turtle-console sticky top-5 rounded-xl border-[6px] border-stone-700 overflow-hidden" style="font-family: 'Press Start 2P', monospace; font-size: 8px; image-rendering: pixelated;">
+      <div class="col-lg-4 d-none d-lg-block">
+        <div 
+            class="turtle-console sticky top-5 rounded-xl border-[6px] border-stone-700" style="font-family: 'Press Start 2P', monospace; font-size: 8px; image-rendering: pixelated;">
             <!-- Console Header -->
             <div class="console-header flex justify-between items-center relative px-3 py-2 border-b-4 border-green-900">
               <div class="text-xl italic text-stone-800 font-bold tracking-wide" style="text-shadow: 0 0 4px rgba(132, 204, 22, 0.3), 1px 1px 0px rgba(0, 0, 0, 0.8);">TUR-BOY</div>
@@ -146,17 +148,119 @@
               </a>
             </div>
         {% endif %}
-            <!-- Habitat Status Bar -->
-            <div class="status-bar border-t-2 border-green-800 px-3 py-2 mt-auto">
-              <div class="flex items-center gap-2">
-                <span class="text-lime-400 font-bold tracking-wide" style="font-size: 6px; text-shadow: 0 0 2px rgba(132, 204, 22, 0.5);">HEALTH</span>
-                <div class="flex-1 h-1.5 bg-black border border-green-800 rounded-sm overflow-hidden">
-                  <div class="meter-fill h-full transition-all duration-300" style="width: 85%; background: linear-gradient(90deg, #00ff00 0%, #84cc16 100%); box-shadow: 0 0 4px rgba(0, 255, 0, 0.3);"></div>
+            <!-- Console Slider Control -->
+          <div class="slider-control-section border-t-2 border-green-800 pt-3 mt-auto"
+                x-data="{ panelOpen: false }">
+            <div class="max-w-[10rem] mx-auto flex items-center justify-between gap-2">
+              <span class="text-lime-400 font-bold tracking-wide" style="font-size: 6px; text-shadow: 0 0 2px rgba(132, 204, 22, 0.5);">CONSOLE</span>
+              
+              <!-- Retro Slider Button -->
+              <button 
+                @click="panelOpen = !panelOpen"
+                class="slider-button flex-1 h-4 relative cursor-pointer transition-all duration-200"
+                :class="{ 'slider-active': panelOpen }">
+                
+                <!-- Slider Track -->
+                <div class="slider-track h-full bg-black border border-green-800 rounded-sm relative">
+                  <div class="slider-track-fill h-full transition-all duration-300" 
+                        :style="{ width: panelOpen ? '100%' : '20%' }"
+                        style="background: linear-gradient(90deg, #00ff00 0%, #84cc16 100%); box-shadow: 0 0 4px rgba(0, 255, 0, 0.3);"></div>
                 </div>
+                
+                <!-- Slider Knob -->
+                <div class="slider-knob absolute top-0 h-full w-6 transition-all duration-300 ease-out"
+                      :style="{ left: panelOpen ? 'calc(100% - 24px)' : '0px' }">
+                  <div class="knob-visual h-full w-full bg-gradient-to-b from-amber-200 via-amber-300 to-amber-500 
+                              border-2 border-stone-700 rounded-sm
+                              shadow-[2px_2px_0px_rgba(0,0,0,0.4)] hover:shadow-[3px_3px_0px_rgba(0,0,0,0.4)]"
+                        style="text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.3);">
+                    <div class="w-full h-full flex items-center justify-center text-stone-800 font-bold" style="font-size: 8px;">
+                      <span x-text="panelOpen ? '▲' : '▼'"></span>
+                    </div>
+                  </div>
+                </div>
+              </button>
+              
+              <span class="text-lime-400 font-bold tracking-wide" style="font-size: 6px; text-shadow: 0 0 2px rgba(132, 204, 22, 0.5);">PANEL</span>
+            </div>
+            
+            <!-- EGG Expandable Panel -->
+            <div class="expanded-panel transition-all duration-500 ease-in-out"
+                  :class="panelOpen ? 'max-h-96 opacity-100 mt-3' : 'max-h-0 opacity-0 mt-0 pb-3'"
+                  style="transform-origin: top;">
+              
+              <div class="panel-content"
+                    style="font-family: 'Press Start 2P', monospace; font-size: 8px; image-rendering: pixelated;">
+                
+                <!-- Panel Header -->
+                <div class="panel-header flex justify-between items-center relative px-3 py-2 border-b-4 border-green-900">
+                  <div class="text-lg italic text-stone-100 font-bold tracking-wide" style="text-shadow: 0 0 4px rgba(132, 204, 22, 0.3), 1px 1px 0px rgba(0, 0, 0, 0.8);">EGGS COLLECTED</div>
+                </div>
+                
+                <!-- Panel Content Grid -->
+                <div class="p-3 flex gap-1.5">
+
+                  <!-- EASTER EGGS -->
+                  {% if user.profile.easter_eggs_count %}
+                    <div class="flex-1 mini-screen border-3 border-green-950 rounded-md p-2">
+                      <div class="text-pink-400 text-center mb-2 tracking-wider" style="font-size: 9px; text-shadow: 0 0 2px rgba(132, 204, 22, 0.5);">EASTER EGGS</div>
+                        <div class="text-center">
+                        <div class="counter-display bg-black text-green-500 font-mono text-xs font-bold px-1 py-0.5 rounded-sm mb-1 border border-green-900" style="text-shadow: 0 0 4px currentColor;">{{ user.profile.easter_eggs_count|stringformat:"03d" }}</div>
+                        <div class="flex gap-0.5 justify-center flex-wrap ">
+                          {% with egg=user.profile.easter_eggs|random_egg %}
+                            <div class="relative group">
+                              {% include 'posts/partial/egg_toolkit.html' with display_collected_date=True display_egg_image=True %}
+                              <img class="w-15 egg-levitation" src="{{ egg.url }}" alt="User's Easter {{ egg.name }} egg">
+                            </div>
+                          {% endwith %}
+                        </div>
+                      </div>
+                    </div>
+                  {% endif %}
+                  
+                  
+                  <!-- LEGENDARY EGGS -->
+                  {% if user.profile.special_eggs_count %}
+                    <div class="flex-1 mini-screen border-3 border-green-950 rounded-md p-2">
+                      <div class="text-orange-400 text-center mb-2 tracking-wider" style="font-size: 9px; text-shadow: 0 0 2px rgba(132, 204, 22, 0.5);">LEGENDARY</div>
+                        <div class="text-center">
+                        <div class="counter-display bg-black text-green-500 font-mono text-xs font-bold px-1 py-0.5 rounded-sm mb-1 border border-green-900" style="text-shadow: 0 0 4px currentColor;">{{ user.profile.special_eggs_count|stringformat:"03d" }}</div>
+                        <div class="flex gap-0.5 justify-center flex-wrap ">
+                          {% with egg=user.profile.special_eggs|random_egg %}
+                            <div class="relative group">
+                              {% include 'posts/partial/egg_toolkit.html' with display_collected_date=True display_egg_image=True %}
+                              <img class="w-15 egg-levitation" src="{{ egg.url }}" alt="User's Legendary {{ egg.name }} egg">
+                            </div>
+                          {% endwith %}
+                        </div>
+                      </div>
+                    </div>
+                  {% endif %}
+                  
+                  <!-- CUTE EGGS -->
+                  <div class="flex-1 mini-screen border-3 border-green-950 rounded-md p-2">
+                    <div class="text-lime-400 text-center mb-2 tracking-wider" style="font-size: 9px; text-shadow: 0 0 2px rgba(132, 204, 22, 0.5);">CUTE</div>
+                      <div class="text-center">
+                      <div class="counter-display bg-black text-green-500 font-mono text-xs font-bold px-1 py-0.5 rounded-sm mb-1 border border-green-900" style="text-shadow: 0 0 4px currentColor;">{{ user.profile.regular_eggs_count|stringformat:"03d" }}</div>
+                      <div class="flex justify-center">
+                          {% with egg=user.profile.regular_eggs|random_egg %}
+                            <div class="relative group">
+                              {% include 'posts/partial/egg_toolkit.html' with display_collected_date=True display_egg_image=True %}
+                              <img class="w-15 egg-levitation" src="{{ egg.url }}" alt="User's Regular {{ egg.name }} egg">
+                            </div>
+                          {% endwith %}
+                      </div>
+                    </div>
+                  </div>
+                  
+                </div>
+                
               </div>
             </div>
+              
           </div>
         </div>
+      </div>
 
 <style>
 /* Essential Retro Gaming Console Styles - Minimal Custom CSS */
@@ -219,8 +323,81 @@
 }
 
 /* Status Bar Dark Green */
-.status-bar {
+.slider-control-section {
   background: linear-gradient(135deg, #1a2e0a 0%, #0f1a05 100%);
+}
+
+/* Slider Button Styles */
+.slider-button {
+  position: relative;
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
+.slider-button:focus {
+  outline: 2px solid rgba(132, 204, 22, 0.5);
+}
+
+.slider-track {
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.7) 100%);
+  box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.slider-knob {
+  z-index: 10;
+}
+
+.knob-visual {
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%);
+  cursor: grab;
+}
+
+.knob-visual:active {
+  cursor: grabbing;
+  transform: scale(0.95);
+}
+
+.slider-button.slider-active .knob-visual {
+  background: linear-gradient(135deg, #84cc16 0%, #65a30d 50%, #4d7c0f 100%);
+}
+
+/* Expandable Panel Styles */
+.expanded-panel {
+  transform-origin: top;
+}
+
+.panel-content {
+  background: linear-gradient(180deg, #8b7355 0%, #a0956b 15%, #8b7355 85%, #6b5d4a 100%);
+  box-shadow: 6px 6px 0px #3B3B3B, inset 2px 2px 0px rgba(255, 255, 255, 0.1);
+}
+
+.panel-content::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(139, 115, 85, 0.1) 2px, rgba(139, 115, 85, 0.1) 4px);
+  pointer-events: none;
+  opacity: 0.3;
+}
+
+.panel-header {
+  background: linear-gradient(135deg, #2d5016 0%, #3d6b1f 50%, #2d5016 100%);
+  box-shadow: inset 0 1px 0px rgba(125, 211, 252, 0.2), 0 2px 0px rgba(0, 0, 0, 0.1);
+}
+
+.panel-actions {
+  background: linear-gradient(135deg, #1a2e0a 0%, #0f1a05 100%);
+}
+
+.quick-action-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.4);
+}
+
+.quick-action-btn:active {
+  transform: translateY(0px);
+  box-shadow: 1px 1px 0px rgba(0, 0, 0, 0.4);
 }
 
 /* Turtle Animations */
