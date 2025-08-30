@@ -16,7 +16,8 @@
   {% endif %}
   
   {% if display_collected_date %}
-    <div>First collected on {{ egg.created_at|date:"Y/m/d" }}</div>
+    <p>First collected on:</p>
+    <p>{{ egg.created_at|date:"Y/m/d" }}</p>
   {% endif %}
 
 {% endblock %}
