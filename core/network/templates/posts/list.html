@@ -6,12 +6,12 @@
     isIncubating: {{ is_incubating|yesno:'true,false' }},
     onListPage: true
   }" > 
-    <div class="container-fluid mt-4">
+    <div class="w-full xl:w-[90vw] lg:container-2xl mt-4 mx-auto px-2 lg:px-0">
       <div class="row">
         <!-- Left sidebar -->
        {% include 'posts/partial/turboy.html' %}
         <!-- Main Content Area -->
-        <div class="col-lg-6">
+        <div class="col-md-12 col-lg-8">
           <div x-show="!isIncubating" class="mb-4">
              {% include 'posts/partial/post_composer.html' %}
           </div>
