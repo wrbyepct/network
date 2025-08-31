@@ -75,6 +75,12 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     form_class = PostForm
     success_url = reverse_lazy("index")
 
+    def get_form_kwargs(self):
+        """Insert in PostCreateView info for dynamic form validation."""
+        kwargs = super().get_form_kwargs()
+        kwargs["in_post_create_view"] = True
+        return kwargs
+
     def get_response_template(self, egg_type):
         """Return template based on if the egg is special or not."""
         return (
@@ -86,9 +92,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     def form_invalid(self, form):
         """Return form errro message through HTMX trigger."""
         error_messages = [
-            f"{field.title()}: {error}"
-            for field, errors in form.errors.items()
-            for error in errors
+            f"{error}" for field, errors in form.errors.items() for error in errors
         ]
 
         resp = HttpResponse(status=400)
@@ -101,15 +105,6 @@ class PostCreateView(LoginRequiredMixin, CreateView):
         """Save images and videos to PostMedia if they are valid."""
         user = self.request.user
 
-        try:
-            form.validate_allowed_media_num()
-        except ValidationError as e:
-            # Catch error from validating
-            resp = HttpResponse(status=400)
-            resp["HX-Trigger"] = json.dumps(
-                {"post-submit-error": {"message": " ".join(e.messages)}}
-            )
-            return resp
         with transaction.atomic():
             egg_gif_url = IncubationService.get_random_egg_url()
             egg_static_url = EggManageService.get_static_egg_img_url(egg_gif_url)
