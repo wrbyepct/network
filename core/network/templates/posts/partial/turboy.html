@@ -50,44 +50,59 @@
 
             <!-- Mini Console Screens -->
             <div class="flex gap-2 mx-3 flex-wrap">
-              <div class="mini-screen flex-1 min-w-[70px] border-3 border-green-950 rounded-md p-1.5">
-                <div class="text-lime-400 text-center mb-1 break-all tracking-wider" style="font-size: 9px; text-shadow: 0 0 2px rgba(132, 204, 22, 0.5);">FOLLOWERS</div>
-                <div class="text-center">
-                  <div class="counter-display bg-black text-green-500 font-mono text-xs font-bold px-1 py-0.5 rounded-sm mb-1 border border-green-900" style="text-shadow: 0 0 4px currentColor;">{{ user.profile.followers.count|stringformat:"03d" }}</div>
-                  <div class="flex gap-0.5 justify-center flex-wrap ">
-                    {% for follower in user.profile.followers.all|slice:":3" %}
-                     
+              {% if user.is_authenticated %}
+                <div class="mini-screen flex-1 min-w-[70px] border-3 border-green-950 rounded-md p-1.5">
+                  <div class="text-lime-400 text-center mb-1 break-all tracking-wider" style="font-size: 9px; text-shadow: 0 0 2px rgba(132, 204, 22, 0.5);">FOLLOWERS</div>
+                  <div class="text-center">
+                    <div class="counter-display bg-black text-green-500 font-mono text-xs font-bold px-1 py-0.5 rounded-sm mb-1 border border-green-900" style="text-shadow: 0 0 4px currentColor;">{{ user.profile.followers.count|stringformat:"03d" }}</div>
+                    <div class="flex gap-0.5 justify-center flex-wrap ">
+                      {% for follower in user.profile.followers.all|slice:":3" %}
+                      
 
-                      <a href="{% url 'profile_about' follower.username %}" class="rounded-full border border-lime-400 cursor-pointer relative group" style="box-shadow: 0 0 2px rgba(132, 204, 22, 0.3);">
-                         <!-- Toolkit -->
-                        {% include 'profiles/partials/avatar_toolkit.html' with profile=follower  %}
-                        <img class="w-7 h-7 rounded-full object-cover" src="{{ follower.profile_picture.url }}" alt="{{ follower.username }}" class="w-full h-full object-cover" style="image-rendering: pixelated;">
-                      </a>
-                    {% endfor %}
+                        <a href="{% url 'profile_about' follower.username %}" class="rounded-full border border-lime-400 cursor-pointer relative group" style="box-shadow: 0 0 2px rgba(132, 204, 22, 0.3);">
+                          <!-- Toolkit -->
+                          {% include 'profiles/partials/avatar_toolkit.html' with profile=follower  %}
+                          <img class="w-7 h-7 rounded-full object-cover" src="{{ follower.profile_picture.url }}" alt="{{ follower.username }}" class="w-full h-full object-cover" style="image-rendering: pixelated;">
+                        </a>
+                      {% endfor %}
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div class="mini-screen flex-1 min-w-[70px] border-3 border-green-950 rounded-md p-1.5">
-                <div class="text-lime-400 text-center mb-1 tracking-wider" style="font-size: 9px; text-shadow: 0 0 2px rgba(132, 204, 22, 0.5);">NEST</div>
-                <div class="text-center mt-4">
-                  <div x-show="isIncubating" class="flex items-center justify-center gap-1">
-                    <span class="text-orange-500 break-all font-bold" style="font-size: 10px; text-shadow: 0 0 2px rgba(132, 204, 22, 0.5);">HATCHING...</span>
-                  </div>
-                  <div x-show="!isIncubating" class="flex items-center justify-center gap-1">
-                    <span class="text-amber-400 break-all font-bold" style="font-size: 10px; text-shadow: 0 0 2px rgba(132, 204, 22, 0.5);">READY</span>
+                <div class="mini-screen flex-1 min-w-[70px] border-3 border-green-950 rounded-md p-1.5">
+                  <div class="text-lime-400 text-center mb-1 tracking-wider" style="font-size: 9px; text-shadow: 0 0 2px rgba(132, 204, 22, 0.5);">NEST</div>
+                  <div class="text-center mt-4">
+                    <div x-show="isIncubating" class="flex items-center justify-center gap-1">
+                      <span class="text-orange-500 break-all font-bold" style="font-size: 10px; text-shadow: 0 0 2px rgba(132, 204, 22, 0.5);">HATCHING...</span>
+                    </div>
+                    <div x-show="!isIncubating" class="flex items-center justify-center gap-1">
+                      <span class="text-amber-400 break-all font-bold" style="font-size: 10px; text-shadow: 0 0 2px rgba(132, 204, 22, 0.5);">READY</span>
+                    </div>
                   </div>
                 </div>
-              </div>
+                
+              {% endif %}
 
               <div class="mini-screen flex-1 min-w-[70px] border-3 border-green-950 rounded-md p-1.5">
                 <div class="text-lime-400 text-center mb-1 tracking-wider" style="font-size: 9px; text-shadow: 0 0 2px rgba(132, 204, 22, 0.5);">STATUS</div>
-                <div class="text-center">
-                  <img class="w-8 mx-auto" src="{{ activity.image }}" alt="User activity turtle image">
-                </div>
-                <div class="text-center mt-3">
-                  <span class="{{ activity.color }} break-all font-bold" style="font-size: 10px; text-shadow: 0 0 2px rgba(132, 204, 22, 0.5);">{{ activity.status }}</span>
-                </div>
+                {% if user.is_authenticated %}
+                  <div class="text-center">
+                    <img class="w-8 mx-auto" src="{{ activity.image }}" alt="User activity turtle image">
+                  </div>
+                  <div class="text-center mt-3">
+                    <span class="{{ activity.color }} break-all font-bold" style="font-size: 10px; text-shadow: 0 0 2px rgba(132, 204, 22, 0.5);">{{ activity.status }}</span>
+                  </div>
+                {% else %}
+                  <div 
+                    class="text-center cursor-pointer"
+                    hx-get="{% url 'account_login' %}"
+                    hx-target="#modal-container"
+                    hx-select="#auth-modal-content"
+                    @htmx:after-request="if($event.detail.successful) showModal = true;"
+                  >
+                    <span class="text-sky-400 status-text text-xs">Log in to show!</span>
+                  </div>
+                {% endif %}
               </div>
             </div>
           
@@ -122,7 +137,7 @@
                 hx-target="#modal-container"
                 hx-select="#auth-modal-content"
                 @htmx:after-request="if($event.detail.successful) showModal = true;"
-                class="console-btn flex-1 min-w-[60px] border-3 border-amber-700 rounded-lg px-1.5 py-2 no-underline flex flex-col items-center gap-0.5 transition-all duration-150 hover:-translate-y-0.5 hover:no-underline">
+                class="!no-underline console-btn flex-1 min-w-[60px] border-3 border-amber-700 rounded-lg px-1.5 py-2 no-underline flex flex-col items-center gap-0.5 transition-all duration-150 hover:-translate-y-0.5 hover:no-underline">
                 <span class="text-xs" style="filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.5));">🌊</span>
                 <span class="text-stone-100 font-bold tracking-wider" style="font-size: 12px; text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.8);">POND</span>
               </a>
@@ -131,7 +146,7 @@
                 hx-target="#modal-container"
                 hx-select="#auth-modal-content"
                 @htmx:after-request="if($event.detail.successful) showModal = true;"
-                class="console-btn flex-1 min-w-[60px] border-3 border-amber-700 rounded-lg px-1.5 py-2 no-underline flex flex-col items-center gap-0.5 transition-all duration-150 hover:-translate-y-0.5 hover:no-underline">
+                class="!no-underline console-btn flex-1 min-w-[60px] border-3 border-amber-700 rounded-lg px-1.5 py-2 no-underline flex flex-col items-center gap-0.5 transition-all duration-150 hover:-translate-y-0.5 hover:no-underline">
                 <span class="text-xs" style="filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.5));">🥚</span>
                 <span class="text-stone-100 font-bold tracking-wider" style="font-size: 12px; text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.8);">NEST</span>
               </a>
@@ -140,7 +155,7 @@
                 hx-target="#modal-container"
                 hx-select="#auth-modal-content"
                 @htmx:after-request="if($event.detail.successful) showModal = true;"
-                class="console-btn flex-1 min-w-[60px] border-3 border-amber-700 rounded-lg px-1.5 py-2 no-underline flex flex-col items-center gap-0.5 transition-all duration-150 hover:-translate-y-0.5 hover:no-underline cursor-pointer" 
+                class="!no-underline console-btn flex-1 min-w-[60px] border-3 border-amber-700 rounded-lg px-1.5 py-2 no-underline flex flex-col items-center gap-0.5 transition-all duration-150 hover:-translate-y-0.5 hover:no-underline cursor-pointer" 
                 x-show="!isIncubating"
               >
                 <span class="text-xs" style="filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.5));">✏️</span>
@@ -156,7 +171,14 @@
               
               <!-- Retro Slider Button -->
               <button 
-                @click="panelOpen = !panelOpen"
+                {% if user.is_authenticated %}
+                  @click="panelOpen = !panelOpen"
+                {% else %}
+                  hx-get="{% url 'account_login' %}"
+                  hx-target="#modal-container"
+                  hx-select="#auth-modal-content"
+                  @htmx:after-request="if($event.detail.successful) showModal = true;"
+                {% endif %}
                 class="slider-button flex-1 h-4 relative cursor-pointer transition-all duration-200"
                 :class="{ 'slider-active': panelOpen }">
                 
@@ -185,79 +207,82 @@
             </div>
             
             <!-- EGG Expandable Panel -->
-            <div class="expanded-panel transition-all duration-500 ease-in-out"
+            {% if user.is_authenticated %}
+                <div 
+                  class="expanded-panel transition-all duration-500 ease-in-out"
                   :class="panelOpen ? 'max-h-96 opacity-100 mt-3' : 'max-h-0 opacity-0 mt-0 pb-3'"
                   style="transform-origin: top;">
-              
-              <div class="panel-content"
-                    style="font-family: 'Press Start 2P', monospace; font-size: 8px; image-rendering: pixelated;">
-                
-                <!-- Panel Header -->
-                <div class="panel-header flex justify-between items-center relative px-3 py-2 border-b-4 border-green-900">
-                  <div class="text-lg italic text-stone-100 font-bold tracking-wide" style="text-shadow: 0 0 4px rgba(132, 204, 22, 0.3), 1px 1px 0px rgba(0, 0, 0, 0.8);">EGGS COLLECTED</div>
-                </div>
-                
-                <!-- Panel Content Grid -->
-                <div class="p-3 flex gap-1.5">
+                  
+                  <div class="panel-content"
+                        style="font-family: 'Press Start 2P', monospace; font-size: 8px; image-rendering: pixelated;">
+                    
+                    <!-- Panel Header -->
+                    <div class="panel-header flex justify-between items-center relative px-3 py-2 border-b-4 border-green-900">
+                      <div class="text-lg italic text-stone-100 font-bold tracking-wide" style="text-shadow: 0 0 4px rgba(132, 204, 22, 0.3), 1px 1px 0px rgba(0, 0, 0, 0.8);">EGGS COLLECTED</div>
+                    </div>
+                    
+                    <!-- Panel Content Grid -->
+                    <div class="p-3 flex gap-1.5">
 
-                  <!-- EASTER EGGS -->
-                  {% if user.profile.easter_eggs_count %}
-                    <div class="flex-1 mini-screen border-3 border-green-950 rounded-md p-2">
-                      <div class="text-pink-400 text-center mb-2 tracking-wider" style="font-size: 9px; text-shadow: 0 0 2px rgba(132, 204, 22, 0.5);">EASTER EGGS</div>
-                        <div class="text-center">
-                        <div class="counter-display bg-black text-green-500 font-mono text-xs font-bold px-1 py-0.5 rounded-sm mb-1 border border-green-900" style="text-shadow: 0 0 4px currentColor;">{{ user.profile.easter_eggs_count|stringformat:"03d" }}</div>
-                        <div class="flex gap-0.5 justify-center flex-wrap ">
-                          {% with egg=user.profile.easter_eggs|random_egg %}
-                            <div class="relative group">
-                              {% include 'posts/partial/egg_toolkit.html' with display_collected_date=True display_egg_image=True %}
-                              <img class="w-15 egg-levitation" src="{{ egg.url }}" alt="User's Easter {{ egg.name }} egg">
+                      <!-- EASTER EGGS -->
+                      {% if user.profile.easter_eggs_count %}
+                        <div class="flex-1 mini-screen border-3 border-green-950 rounded-md p-2">
+                          <div class="text-pink-400 text-center mb-2 tracking-wider" style="font-size: 9px; text-shadow: 0 0 2px rgba(132, 204, 22, 0.5);">EASTER EGGS</div>
+                            <div class="text-center">
+                            <div class="counter-display bg-black text-green-500 font-mono text-xs font-bold px-1 py-0.5 rounded-sm mb-1 border border-green-900" style="text-shadow: 0 0 4px currentColor;">{{ user.profile.easter_eggs_count|stringformat:"03d" }}</div>
+                            <div class="flex gap-0.5 justify-center flex-wrap ">
+                              {% with egg=user.profile.easter_eggs|random_egg %}
+                                <div class="relative group">
+                                  {% include 'posts/partial/egg_toolkit.html' with display_collected_date=True display_egg_image=True %}
+                                  <img class="w-15 egg-levitation" src="{{ egg.url }}" alt="User's Easter {{ egg.name }} egg">
+                                </div>
+                              {% endwith %}
                             </div>
-                          {% endwith %}
+                          </div>
+                        </div>
+                      {% endif %}
+                      
+                      
+                      <!-- LEGENDARY EGGS -->
+                      {% if user.profile.special_eggs_count %}
+                        <div class="flex-1 mini-screen border-3 border-green-950 rounded-md p-2">
+                          <div class="text-orange-400 text-center mb-2 tracking-wider" style="font-size: 9px; text-shadow: 0 0 2px rgba(132, 204, 22, 0.5);">LEGENDARY</div>
+                            <div class="text-center">
+                            <div class="counter-display bg-black text-green-500 font-mono text-xs font-bold px-1 py-0.5 rounded-sm mb-1 border border-green-900" style="text-shadow: 0 0 4px currentColor;">{{ user.profile.special_eggs_count|stringformat:"03d" }}</div>
+                            <div class="flex gap-0.5 justify-center flex-wrap ">
+                              {% with egg=user.profile.special_eggs|random_egg %}
+                                <div class="relative group">
+                                  {% include 'posts/partial/egg_toolkit.html' with display_collected_date=True display_egg_image=True %}
+                                  <img class="w-15 egg-levitation" src="{{ egg.url }}" alt="User's Legendary {{ egg.name }} egg">
+                                </div>
+                              {% endwith %}
+                            </div>
+                          </div>
+                        </div>
+                      {% endif %}
+                      
+                      <!-- CUTE EGGS -->
+                      <div class="flex-1 mini-screen border-3 border-green-950 rounded-md p-2">
+                        <div class="text-lime-400 text-center mb-2 tracking-wider" style="font-size: 9px; text-shadow: 0 0 2px rgba(132, 204, 22, 0.5);">CUTE</div>
+                          <div class="text-center">
+                          <div class="counter-display bg-black text-green-500 font-mono text-xs font-bold px-1 py-0.5 rounded-sm mb-1 border border-green-900" style="text-shadow: 0 0 4px currentColor;">{{ user.profile.regular_eggs_count|stringformat:"03d" }}</div>
+                          <div class="flex justify-center">
+                              {% with egg=user.profile.regular_eggs|random_egg %}
+                                <div class="relative group">
+                                  {% include 'posts/partial/egg_toolkit.html' with display_collected_date=True display_egg_image=True %}
+                                  <img class="w-15 egg-levitation" src="{{ egg.url }}" alt="User's Regular {{ egg.name }} egg">
+                                </div>
+                              {% endwith %}
+                          </div>
                         </div>
                       </div>
+
                     </div>
-                  {% endif %}
-                  
-                  
-                  <!-- LEGENDARY EGGS -->
-                  {% if user.profile.special_eggs_count %}
-                    <div class="flex-1 mini-screen border-3 border-green-950 rounded-md p-2">
-                      <div class="text-orange-400 text-center mb-2 tracking-wider" style="font-size: 9px; text-shadow: 0 0 2px rgba(132, 204, 22, 0.5);">LEGENDARY</div>
-                        <div class="text-center">
-                        <div class="counter-display bg-black text-green-500 font-mono text-xs font-bold px-1 py-0.5 rounded-sm mb-1 border border-green-900" style="text-shadow: 0 0 4px currentColor;">{{ user.profile.special_eggs_count|stringformat:"03d" }}</div>
-                        <div class="flex gap-0.5 justify-center flex-wrap ">
-                          {% with egg=user.profile.special_eggs|random_egg %}
-                            <div class="relative group">
-                              {% include 'posts/partial/egg_toolkit.html' with display_collected_date=True display_egg_image=True %}
-                              <img class="w-15 egg-levitation" src="{{ egg.url }}" alt="User's Legendary {{ egg.name }} egg">
-                            </div>
-                          {% endwith %}
-                        </div>
-                      </div>
-                    </div>
-                  {% endif %}
-                  
-                  <!-- CUTE EGGS -->
-                  <div class="flex-1 mini-screen border-3 border-green-950 rounded-md p-2">
-                    <div class="text-lime-400 text-center mb-2 tracking-wider" style="font-size: 9px; text-shadow: 0 0 2px rgba(132, 204, 22, 0.5);">CUTE</div>
-                      <div class="text-center">
-                      <div class="counter-display bg-black text-green-500 font-mono text-xs font-bold px-1 py-0.5 rounded-sm mb-1 border border-green-900" style="text-shadow: 0 0 4px currentColor;">{{ user.profile.regular_eggs_count|stringformat:"03d" }}</div>
-                      <div class="flex justify-center">
-                          {% with egg=user.profile.regular_eggs|random_egg %}
-                            <div class="relative group">
-                              {% include 'posts/partial/egg_toolkit.html' with display_collected_date=True display_egg_image=True %}
-                              <img class="w-15 egg-levitation" src="{{ egg.url }}" alt="User's Regular {{ egg.name }} egg">
-                            </div>
-                          {% endwith %}
-                      </div>
-                    </div>
+                    
                   </div>
-                  
                 </div>
-                
-              </div>
-            </div>
-              
+          
+            {% endif %}
           </div>
         </div>
       </div>
