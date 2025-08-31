@@ -42,12 +42,12 @@ class ActivityManagerService:
 
     ACTIVITY_OBJECT = {
         "swimming": {
-            "image": "/media/defaults/turtle_proud.png",
+            "image": "/media/defaults/turtle_swimming.gif",
             "color": "text-blue-400",
             "status": "Swimming",
         },
         "resting": {
-            "image": "/media/defaults/turtle_following.png",
+            "image": "/media/defaults/turtle_resting.gif",
             "color": "text-gray-500",
             "status": "Resting",
         },
@@ -57,7 +57,7 @@ class ActivityManagerService:
             "status": "Exploring",
         },
         "sunbathing": {
-            "image": "/media/defaults/turtle_hurray.png",
+            "image": "/media/defaults/turtle_sunbathing.gif",
             "color": "text-yellow-500",
             "status": "Sunbathing",
         },
