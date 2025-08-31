@@ -14,16 +14,6 @@ from .services import PostMediaService
 class PostForm(forms.ModelForm):
     """Form for create/edit form."""
 
-    content = forms.CharField(
-        required=True,
-        widget=forms.Textarea(
-            attrs={
-                "class": "form-control",
-                "rows": "4",
-                "placeholder": "What's on your mind?",
-            }
-        ),
-    )
     images = MultipleFileField(required=False, validators=[validate_image_extension])
     video = MultipleFileField(required=False, validators=[validate_video_extension])
 
