@@ -311,10 +311,62 @@
 
   0%,
   100% {
-    transform: translateY(0px);
+    transform: translateY(6px);
   }
 
   50% {
-    transform: translateY(-8px);
+    transform: translateY(-2px);
+  }
+}
+
+/* wave bg */
+.pixel-wave {
+  background:
+    linear-gradient(45deg, #1e40af 25%, transparent 25%),
+    linear-gradient(-45deg, #1e40af 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #2563eb 75%),
+    linear-gradient(-45deg, transparent 75%, #2563eb 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+.wave-layer-1 {
+  background:
+    radial-gradient(circle at 50% 100%, #3b82f6 0%, #3b82f6 30%, transparent 30%);
+  background-size: 40px 20px;
+  animation: wave1 4s ease-in-out infinite;
+}
+
+.wave-layer-2 {
+  background:
+    radial-gradient(circle at 50% 100%, #1d4ed8 0%, #1d4ed8 25%, transparent 25%);
+  background-size: 60px 30px;
+  animation: wave2 6s ease-in-out infinite reverse;
+}
+
+@keyframes wave1 {
+
+  0%,
+  100% {
+    transform: translateX(0px);
+  }
+
+  50% {
+    transform: translateX(20px);
+  }
+}
+
+@keyframes wave2 {
+
+  0%,
+  100% {
+    transform: translateX(0px);
+  }
+
+  50% {
+    transform: translateX(-30px);
   }
 }
