@@ -70,7 +70,7 @@
   hx-swap="outerHTML"
   hx-encoding="multipart/form-data"
   enctype="multipart/form-data"
-  @post-edit-error="displayAlertMessage($event)" 
+  @post-submit-error="displayAlertMessage($event)" 
 >
   {{ post.media_objects|json_script:"post-medias-data" }},
   <!-- Post content edit field -->
