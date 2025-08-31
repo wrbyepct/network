@@ -7,8 +7,8 @@
     </p>
     <p><span class="italic font-black">{{ egg.name|title }}</span> egg</p>
   {% endif %}
-  <p class="mb-1">Egg type: </p>
-  <p>{% if egg.egg_type == "special" %}<span class="text-fuchsia-500 font-black">Rare </span><span class="text-amber-500 font-black">Lengendary </span>{% elif egg.egg_type == "easter" %}<span class="font-bold text-rose-500">Extremely rare </span> <span class="text-pink-400 font-bold">Easter</span> {% else %}Li'l <span class="text-emerald-700 font-black">Cute</span>
+    <p class="mb-1">Egg type: </p>
+    <p>{% if egg.egg_type == "special" %}<span class="text-fuchsia-500 font-black">Rare </span><span class="text-amber-500 font-black">Lengendary </span>{% elif egg.egg_type == "easter" %}<span class="font-bold text-rose-500">Extremely rare </span> <span class="text-pink-400 font-bold">Easter</span> {% else %}Li'l <span class="text-emerald-700 font-black">Cute</span>
 {% endif %}type</p>
   <!-- Bigger egg image -->
   {% if display_egg_image %}

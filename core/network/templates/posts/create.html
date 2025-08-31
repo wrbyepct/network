@@ -3,137 +3,138 @@
 {% block body %}
 {# Main container with a cozy, pixel-art feel #}
 <div
-    id="post-create-container"
-    class="w-full max-w-2xl mx-auto bg-amber-50 border-4 border-emerald-800 rounded-lg p-4 sm:p-8 shadow-[8px_8px_0px_#25422a]"
-    @click.outside="showModal = false; $el.remove();" {# This click.outside might interfere with the new modal #}
-    x-data="{
-        selectedMedia: { 
-            images: [],
-            videos: [],
-        },
-        get allMedia() {
-          return [
-            ...this.selectedMedia.images,
-            ...this.selectedMedia.videos
-          ]
-        },
-        addMedia(file, type) {
-            this.selectedMedia[type].push({ 
-                file: file, 
-                url: URL.createObjectURL(file),
-                type: type
-            });
-        },
-        handleMediaUpload(event) {
-            const files = Array.from(event.target.files);
-            files.forEach(file => {
-                if (file.type.startsWith('image/')) this.addMedia(file, 'images');
-                if (file.type.startsWith('video/')) this.addMedia(file, 'videos');
-            });
-        },
-        removeMedia(index, type) {
-            // This is to clean up memory
-            URL.revokeObjectURL(this.selectedMedia[type][index].url); 
+  id="post-create-container"
+  class="w-full max-w-2xl mx-auto bg-amber-50 border-4 border-emerald-800 rounded-lg p-4 sm:p-8 shadow-[8px_8px_0px_#25422a]"
+  @click.outside="showModal = false; $el.remove();" {# This click.outside might interfere with the new modal #}
+  x-data="{
+      selectedMedia: { 
+          images: [],
+          videos: [],
+      },
+      get allMedia() {
+        return [
+          ...this.selectedMedia.images,
+          ...this.selectedMedia.videos
+        ]
+      },
+      addMedia(file, type) {
+          this.selectedMedia[type].push({ 
+              file: file, 
+              url: URL.createObjectURL(file),
+              type: type
+          });
+      },
+      handleMediaUpload(event) {
+          const files = Array.from(event.target.files);
+          files.forEach(file => {
+              if (file.type.startsWith('image/')) this.addMedia(file, 'images');
+              if (file.type.startsWith('video/')) this.addMedia(file, 'videos');
+          });
+      },
+      removeMedia(index, type) {
+          // This is to clean up memory
+          URL.revokeObjectURL(this.selectedMedia[type][index].url); 
 
-            this.selectedMedia[type].splice(index, 1);
-        },
- 
-        prepareMediaThenSubmit() {
-            // Put the newest list in media input before submit
-            const imageTransfer = new DataTransfer();
-            this.selectedMedia.images.forEach( image => imageTransfer.items.add(image.file));
-            this.$refs.imageInput.files = imageTransfer.files;
+          this.selectedMedia[type].splice(index, 1);
+      },
 
-            const videoTransfer = new DataTransfer();
-            this.selectedMedia.videos.forEach( video => videoTransfer.items.add(video.file));
-            this.$refs.videoInput.files = videoTransfer.files;
+      prepareMediaThenSubmit() {
+          // Put the newest list in media input before submit
+          const imageTransfer = new DataTransfer();
+          this.selectedMedia.images.forEach( image => imageTransfer.items.add(image.file));
+          this.$refs.imageInput.files = imageTransfer.files;
 
-        },
-    }"
+          const videoTransfer = new DataTransfer();
+          this.selectedMedia.videos.forEach( video => videoTransfer.items.add(video.file));
+          this.$refs.videoInput.files = videoTransfer.files;
+
+      },
+  }"
 >
 
-    <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-emerald-900 mb-4 sm:mb-6 text-center font-mono">Incubate a New Turtie</h2>
+  <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-emerald-900 mb-4 sm:mb-6 text-center font-mono">Incubate a New Turtie</h2>
 
-    {# Display non-field errors, if any #}
-    {% for error in form.non_field_errors %}
-        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded-md" role="alert">
-            <p>{{ error }}</p>
-        </div>
-    {% endfor %}
+  {# Display non-field errors, if any #}
+  {% for error in form.non_field_errors %}
+      <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded-md" role="alert">
+          <p>{{ error }}</p>
+      </div>
+  {% endfor %}
 
-    <form 
-        id="post-form"  
-        class="space-y-6"
-        hx-post="{% url 'post_create' %}"
-        hx-target="#modal-container"
-        hx-select="#egg-modal-content"
-        hx-swap="innerHTML"
-        hx-trigger="submit" 
-        hx-encoding="multipart/form-data"
-        enctype="multipart/form-data"
-        @submit.prevent="prepareMediaThenSubmit()" {# htmx will wait for this to complete before issue a post reqiest #}
-    >
+  <form 
+      id="post-form"  
+      class="space-y-6"
+      hx-post="{% url 'post_create' %}"
+      hx-target="#modal-container"
+      hx-select="#egg-modal-content"
+      hx-swap="innerHTML"
+      hx-trigger="submit" 
+      hx-encoding="multipart/form-data"
+      enctype="multipart/form-data"
+      @submit.prevent="prepareMediaThenSubmit()" {# htmx will wait for this to complete before issue a post reqiest #}
+      @post-submit-error="displayAlertMessage($event)" 
+  >
 
-        {# Content Textarea #}
-        <div>
-            <label for="{{ form.content.id_for_label }}" class="block text-lg font-medium text-emerald-800 mb-2">Your thoughts?</label>
-            {# Manually rendering the field to add classes and placeholder #}
-            <textarea
-                name="{{ form.content.name }}"
-                id="{{ form.content.id_for_label }}"
-                class="w-full p-4 bg-white border-2 border-emerald-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition duration-150 ease-in-out font-mono"
-                rows="6"
-                placeholder="Take a deep breath... what's on your mind?"
-            >{{ form.content.value|default_if_none:'' }}</textarea>
-            {% for error in form.content.errors %}
-                <p class="text-red-500 text-sm mt-1">{{ error }}</p>
-            {% endfor %}
-        </div>
+      {# Content Textarea #}
+      <div>
+          <label for="{{ form.content.id_for_label }}" class="block text-lg font-medium text-emerald-800 mb-2">Your thoughts?</label>
+          {# Manually rendering the field to add classes and placeholder #}
+          <textarea
+              name="{{ form.content.name }}"
+              id="{{ form.content.id_for_label }}"
+              class="w-full p-4 bg-white border-2 border-emerald-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition duration-150 ease-in-out font-mono"
+              rows="6"
+              placeholder="Take a deep breath... what's on your mind?"
+          >{{ form.content.value|default_if_none:'' }}</textarea>
+          {% for error in form.content.errors %}
+              <p class="text-red-500 text-sm mt-1">{{ error }}</p>
+          {% endfor %}
+      </div>
 
-        {# Custom File Inputs Buttons #}
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {% include 'posts/partial/media_upload_btn.html' %}
-        </div>
+      {# Custom File Inputs Buttons #}
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {% include 'posts/partial/media_upload_btn.html' %}
+      </div>
 
-        {# Media Pond Preview Area #}
-        <div x-show=" allMedia.length > 0" class="mt-6 p-4 bg-amber-100 border-4 border-emerald-700 rounded-lg shadow-[4px_4px_0px_#25422a]">
-          
-            {# Image Previews #}
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-              <template x-for="(media, index) in allMedia">
-                <div class="relative w-full aspect-square border-2 border-emerald-600 rounded-md overflow-hidden">
-                  <template x-if="media.type === 'images'">
-                    <img :src="media.url" class="w-full h-full object-cover" />
-                  </template>
+      {# Media Pond Preview Area #}
+      <div x-show=" allMedia.length > 0" class="mt-6 p-4 bg-amber-100 border-4 border-emerald-700 rounded-lg shadow-[4px_4px_0px_#25422a]">
+        
+          {# Image Previews #}
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            <template x-for="(media, index) in allMedia">
+              <div class="relative w-full aspect-square border-2 border-emerald-600 rounded-md overflow-hidden">
+                <template x-if="media.type === 'images'">
+                  <img :src="media.url" class="w-full h-full object-cover" />
+                </template>
 
-                  <template x-if="media.type === 'videos'">
-                    <video 
-                      class="w-full h-full object-cover"
-                      controls 
-                      preload="metadata" 
-                      :src="media.url" 
-                    ></video>
-                  </template>
+                <template x-if="media.type === 'videos'">
+                  <video 
+                    class="w-full h-full object-cover"
+                    controls 
+                    preload="metadata" 
+                    :src="media.url" 
+                  ></video>
+                </template>
 
-                  <button @click="removeMedia(index, media.type)" type="button" class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold opacity-80 hover:opacity-100 transition-opacity duration-150">
-                      X
-                  </button>
-                </div>
-              </template>
-            </div>
+                <button @click="removeMedia(index, media.type)" type="button" class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold opacity-80 hover:opacity-100 transition-opacity duration-150">
+                    X
+                </button>
+              </div>
+            </template>
+          </div>
 
-        </div>
+      </div>
 
-        {# Submit Button #}
-        <div>
-            <button
-                type="submit"
-                class="w-full bg-emerald-600 text-white font-bold py-4 px-6 rounded-lg hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-300 transition duration-150 ease-in-out shadow-[4px_4px_0px_#25422a]"
-            >
-                Incubate Egg
-            </button>
-        </div>
-    </form>
+      {# Submit Button #}
+      <div>
+          <button
+              type="submit"
+              class="w-full bg-emerald-600 text-white font-bold py-4 px-6 rounded-lg hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-300 transition duration-150 ease-in-out shadow-[4px_4px_0px_#25422a]"
+          >
+              Incubate Egg
+          </button>
+      </div>
+  </form>
 </div>
 
 

@@ -3,8 +3,8 @@
         displayDirection(el) {
             if('{{ toolkit_display_direction }}' === 'right') {
                 el.classList.add('-translate-x-full', 'translate-y-1/4', 'xl:translate-x-1/5', 'xl:top-1/2', 'xl:-translate-y-1/2', 'ml-3') 
-            } else if ('{{ toolkit_display_direction }}' === 'down-left') {
-                el.classList.add('top-full', 'right-full', 'ml-3') 
+            } else if ('{{ toolkit_display_direction }}' === 'left') {
+                el.classList.add('bottom-1/2', 'translate-y-1/2', 'right-full', 'ml-3') 
             } else {
                 el.classList.add('bottom-full', 'left-1/2', '-translate-x-1/2', 'mb-3') 
             }
@@ -14,7 +14,7 @@
     class="absolute transform  hidden group-hover:flex flex-col items-center z-50"
 >
    <!-- Toolkit -->
-    <div class="bg-emerald-300 border-4 border-black rounded-md p-2 shadow-[4px_4px_0px_#000] text-sm font-mono text-black w-max text-center">
+    <div class="bg-emerald-300 border-4 border-black rounded-md p-3 shadow-[4px_4px_0px_#000] w-max text-center text-xs text-stone-600" style="font-family: 'Press Start 2P';">
         {% block toolkit_content %}
         {% endblock %} 
     </div>

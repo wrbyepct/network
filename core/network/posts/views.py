@@ -83,18 +83,42 @@ class PostCreateView(LoginRequiredMixin, CreateView):
             else "posts/partial/egg_modal.html"
         )
 
+    def form_invalid(self, form):
+        """Return form errro message through HTMX trigger."""
+        error_messages = [
+            f"{field.title()}: {error}"
+            for field, errors in form.errors.items()
+            for error in errors
+        ]
+
+        resp = HttpResponse(status=400)
+        resp["HX-Trigger"] = json.dumps(
+            {"post-submit-error": {"message": " ".join(error_messages)}}
+        )
+        return resp
+
     def form_valid(self, form):
         """Save images and videos to PostMedia if they are valid."""
         user = self.request.user
-        egg_gif_url = IncubationService.get_random_egg_url()
-        egg_static_url = EggManageService.get_static_egg_img_url(egg_gif_url)
-        egg = EggManageService.create_egg_or_update_qnt(
-            self.request.user, egg_static_url
-        )
+
+        try:
+            form.validate_allowed_media_num()
+        except ValidationError as e:
+            # Catch error from validating
+            resp = HttpResponse(status=400)
+            resp["HX-Trigger"] = json.dumps(
+                {"post-submit-error": {"message": " ".join(e.messages)}}
+            )
+            return resp
         with transaction.atomic():
+            egg_gif_url = IncubationService.get_random_egg_url()
+            egg_static_url = EggManageService.get_static_egg_img_url(egg_gif_url)
+            egg = EggManageService.create_egg_or_update_qnt(
+                self.request.user, egg_static_url
+            )
             form.instance.user = user
             form.instance.egg = egg
-            # Set a random publish_at time between 20 minutes and 24 hours from now
+
             super().form_valid(form)
             form.save_media(self.object)
 
@@ -132,8 +156,6 @@ class PostEditView(LoginRequiredMixin, GetUserPostMixin, UpdateView):
 
     def form_valid(self, form):
         """Handle deleting old files and add new files."""
-        import json
-
         delete_ids = json.loads(self.request.POST.get("delete_media", "[]"))
         try:
             with transaction.atomic():
@@ -145,7 +167,7 @@ class PostEditView(LoginRequiredMixin, GetUserPostMixin, UpdateView):
             # Catch error from validating
             resp = HttpResponse(status=400)
             resp["HX-Trigger"] = json.dumps(
-                {"post-edit-error": {"message": " ".join(e.messages)}}
+                {"post-submit-error": {"message": " ".join(e.messages)}}
             )
             return resp
 
