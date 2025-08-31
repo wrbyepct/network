@@ -1,12 +1,14 @@
 {% extends 'network/layout.html' %} 
 {% load post_extra %}
 {% block body %}
-  <div x-data="{ 
-    isPostDetail: false, 
-    isIncubating: {{ is_incubating|yesno:'true,false' }},
-    onListPage: true
-  }" > 
-    <div class="w-full xl:w-[95vw] lg:container-2xl mt-4 mx-auto px-2 lg:px-0">
+  <div 
+    x-data="{ 
+      isPostDetail: false, 
+      isIncubating: {{ is_incubating|yesno:'true,false' }},
+      onListPage: true
+    }" 
+  > 
+    <div class="w-full xl:w-[95vw] lg:container-2xl pt-4 mx-auto px-2 lg:px-0">
       <div class="row">
         <!-- Left sidebar -->
        {% include 'posts/partial/turboy.html' %}

@@ -1,49 +1,53 @@
- {% load profile_extra %}
- <!-- Retro Pond Console (Left Sidebar) -->
+{% load profile_extra %}
+ <!-- Diving Device Console (Left Sidebar) -->
       <div class="col-lg-4 d-none d-lg-block">
         <div 
-            class="turtle-console sticky top-5 rounded-xl border-[6px] border-stone-700" style="font-family: 'Press Start 2P', monospace; font-size: 8px; image-rendering: pixelated;">
+            class="diving-console sticky top-5 rounded-xl border-[6px] border-slate-700" style="font-family: 'Press Start 2P', monospace; font-size: 8px; image-rendering: pixelated;">
             <!-- Console Header -->
-            <div class="console-header flex justify-between items-center relative px-3 py-2 border-b-4 border-green-900">
-              <div class="text-xl italic text-stone-800 font-bold tracking-wide" style="text-shadow: 0 0 4px rgba(132, 204, 22, 0.3), 1px 1px 0px rgba(0, 0, 0, 0.8);">TUR-BOY</div>
-              <div class="text-neutral-400 opacity-80" style="font-size: 6px; text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.5);">v1.0</div>
+            <div class="console-header flex justify-between items-center relative px-3 py-2 border-b-4 border-blue-900">
+              <div class="text-xl italic text-slate-800 font-bold tracking-wide" style="text-shadow: 0 0 4px rgba(255, 255, 0, 0.4), 1px 1px 0px rgba(0, 0, 0, 0.8);">TUR-BOY</div>
+              <div class="text-neutral-400 opacity-80" style="font-size: 6px; text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.5);">v2.0</div>
             </div>
             
-            <!-- Main Habitat Screen -->
-            <div class="habitat-screen mx-3 my-4 border-4 border-green-800 rounded-lg relative overflow-hidden" style="height: 280px;">
-              <div class="screen-bezel h-full p-4 border-2 rounded border-green-400/30">
-                <div class="habitat-environment h-full relative rounded">
-                  <!-- List page egg container -->
-                  <div 
-                    id="incubating-egg-container"
-                    hx-get="{% url 'egg' %}"
-                    hx-trigger="egg-fetch-ready"
-                    hx-swap="innerHTML"
-                    x-ref="eggDiv"
-                    x-effect="if(isIncubating) $nextTick(() => $dispatch('egg-fetch-ready'))"
-                    @post-created.window="isIncubating = true"
-                    {# Error means the post has hatched, just refresh the page #}
-                    @htmx:response-error="window.location.href = '/'"
-                  ></div>
-                  <div
-                    x-show="!isIncubating"
-                    >
-                    <!-- Animated Turtle Avatar -->
-                    <div class="turtle-avatar {% if is_incubating %}nesting{% else %}swimming{% endif %}">
-                      🐢
+            <!-- Main Underwater Screen -->
+            <div class="underwater-screen mx-3 my-4 border-4 border-blue-800 rounded-lg relative overflow-hidden" style="height: 280px;">
+              <div class="screen-bezel h-full p-4 border-2 rounded border-blue-400/30">
+                <div class="underwater-environment h-full relative rounded">
+                  <!-- List page diving container -->
+                   {% if user.is_authenticated %}
+                    <div 
+                      id="incubating-egg-container"
+                      hx-get="{% url 'egg' %}"
+                      hx-trigger="egg-fetch-ready"
+                      hx-swap="innerHTML"
+                      x-ref="eggDiv"
+                      x-effect="if(isIncubating) $nextTick(() => $dispatch('egg-fetch-ready'))"
+                      @post-created.window="isIncubating = true"
+                      {# Error means the post has hatched, just refresh the page #}
+                      @htmx:response-error="window.location.href = '/'"
+                    ></div>
+                    <div
+                      x-show="!isIncubating"
+                      >
+                      <!-- Animated Diver Avatar -->
+                      <img src="/media/defaults/turtle_sunbathing.gif" class="w-8 diver-avatar {% if is_incubating %}diving{% else %}swimming{% endif %}">
+                      
+                      <!-- Underwater Elements -->
+                      <div class="underwater-element coral coral-1">🪸</div>
+                      <div class="underwater-element coral coral-2">🪸</div>
+                      <div class="underwater-element kelp kelp-1">🌿</div>
+                      <div class="underwater-element kelp kelp-2">🌿</div>
+                      
+                      <!-- Water Bubbles -->
+                      <div class="water-bubble bubble-1"></div>
+                      <div class="water-bubble bubble-2"></div>
                     </div>
-                    
-                    <!-- Pond Elements -->
-                    <div class="pond-element lily-pad lily-pad-1">🪷</div>
-                    <div class="pond-element lily-pad lily-pad-2">🪷</div>
-                    <div class="pond-element reed reed-1">🌾</div>
-                    <div class="pond-element reed reed-2">🌾</div>
-                    
-                    <!-- Water Ripples -->
-                    <div class="water-ripple ripple-1"></div>
-                    <div class="water-ripple ripple-2"></div>
-
-                  </div>
+                  {% else %}
+                    <div class="flex justify-center items-center h-full">
+                      <span class="text-xl text-red-500" >Not connected</span>
+                      <img class="mb-3" src="/media/defaults/red_dots.gif" alt="Red dots">
+                    </div>
+                  {% endif %}
                 </div>
               </div>
             </div>
@@ -51,15 +55,15 @@
             <!-- Mini Console Screens -->
             <div class="flex gap-2 mx-3 flex-wrap">
               {% if user.is_authenticated %}
-                <div class="mini-screen flex-1 min-w-[70px] border-3 border-green-950 rounded-md p-1.5">
-                  <div class="text-lime-400 text-center mb-1 break-all tracking-wider" style="font-size: 9px; text-shadow: 0 0 2px rgba(132, 204, 22, 0.5);">FOLLOWERS</div>
+                <div class="mini-screen flex-1 min-w-[70px] border-3 border-blue-950 rounded-md p-1.5">
+                  <div class="text-yellow-400 text-center mb-1 break-all tracking-wider" style="font-size: 9px; text-shadow: 0 0 2px rgba(255, 255, 0, 0.5);">CREW</div>
                   <div class="text-center">
-                    <div class="counter-display bg-black text-green-500 font-mono text-xs font-bold px-1 py-0.5 rounded-sm mb-1 border border-green-900" style="text-shadow: 0 0 4px currentColor;">{{ user.profile.followers.count|stringformat:"03d" }}</div>
+                    <div class="counter-display bg-black text-blue-500 font-mono text-xs font-bold px-1 py-0.5 rounded-sm mb-1 border border-blue-900" style="text-shadow: 0 0 4px currentColor;">{{ user.profile.followers.count|stringformat:"03d" }}</div>
                     <div class="flex gap-0.5 justify-center flex-wrap ">
                       {% for follower in user.profile.followers.all|slice:":3" %}
                       
 
-                        <a href="{% url 'profile_about' follower.username %}" class="rounded-full border border-lime-400 cursor-pointer relative group" style="box-shadow: 0 0 2px rgba(132, 204, 22, 0.3);">
+                        <a href="{% url 'profile_about' follower.username %}" class="rounded-full border border-yellow-400 cursor-pointer relative group" style="box-shadow: 0 0 2px rgba(255, 255, 0, 0.3);">
                           <!-- Toolkit -->
                           {% include 'profiles/partials/avatar_toolkit.html' with profile=follower  %}
                           <img class="w-7 h-7 rounded-full object-cover" src="{{ follower.profile_picture.url }}" alt="{{ follower.username }}" class="w-full h-full object-cover" style="image-rendering: pixelated;">
@@ -69,28 +73,35 @@
                   </div>
                 </div>
 
-                <div class="mini-screen flex-1 min-w-[70px] border-3 border-green-950 rounded-md p-1.5">
-                  <div class="text-lime-400 text-center mb-1 tracking-wider" style="font-size: 9px; text-shadow: 0 0 2px rgba(132, 204, 22, 0.5);">NEST</div>
+                <div class="mini-screen flex-1 min-w-[70px] border-3 border-blue-950 rounded-md p-1.5">
+                  <div class="text-yellow-400 text-center mb-1 tracking-wider" style="font-size: 9px; text-shadow: 0 0 2px rgba(255, 255, 0, 0.5);">NEST</div>
                   <div class="text-center mt-4">
-                    <div x-show="isIncubating" class="flex items-center justify-center gap-1">
-                      <span class="text-orange-500 break-all font-bold" style="font-size: 10px; text-shadow: 0 0 2px rgba(132, 204, 22, 0.5);">HATCHING...</span>
+                    <div 
+                      x-show="isIncubating" 
+                      x-cloak 
+                      class="flex items-center justify-center gap-1">
+                      <span class="text-orange-400 break-all font-bold" style="font-size: 10px; text-shadow: 0 0 2px rgba(255, 255, 0, 0.5);">HATCHING...</span>
                     </div>
-                    <div x-show="!isIncubating" class="flex items-center justify-center gap-1">
-                      <span class="text-amber-400 break-all font-bold" style="font-size: 10px; text-shadow: 0 0 2px rgba(132, 204, 22, 0.5);">READY</span>
+                    <div 
+                      x-show="!isIncubating" 
+                      x-cloak 
+                      class="flex items-center justify-center gap-1"
+                    >
+                      <span class="text-cyan-400 break-all font-bold" style="font-size: 10px; text-shadow: 0 0 2px rgba(0, 255, 255, 0.5);">READY</span>
                     </div>
                   </div>
                 </div>
                 
               {% endif %}
 
-              <div class="mini-screen flex-1 min-w-[70px] border-3 border-green-950 rounded-md p-1.5">
-                <div class="text-lime-400 text-center mb-1 tracking-wider" style="font-size: 9px; text-shadow: 0 0 2px rgba(132, 204, 22, 0.5);">STATUS</div>
+              <div class="mini-screen flex-1 min-w-[70px] border-3 border-blue-950 rounded-md p-1.5">
+                <div class="text-yellow-400 text-center mb-1 tracking-wider" style="font-size: 9px; text-shadow: 0 0 2px rgba(255, 255, 0, 0.5);">STATUS</div>
                 {% if user.is_authenticated %}
                   <div class="text-center">
-                    <img class="w-8 mx-auto" src="{{ activity.image }}" alt="User activity turtle image">
+                    <img class="w-8 mx-auto" src="{{ activity.image }}" alt="User activity diving image">
                   </div>
                   <div class="text-center mt-3">
-                    <span class="{{ activity.color }} break-all font-bold" style="font-size: 10px; text-shadow: 0 0 2px rgba(132, 204, 22, 0.5);">{{ activity.status }}</span>
+                    <span class="{{ activity.color }} break-all font-bold" style="font-size: 10px; text-shadow: 0 0 2px rgba(0, 255, 255, 0.5);">{{ activity.status }}</span>
                   </div>
                 {% else %}
                   <div 
@@ -106,68 +117,62 @@
               </div>
             </div>
           
-        {% if request.user.is_authenticated %}
           <!-- Console Action Buttons (Authenticated User) -->
-          <div class="flex gap-1.5 p-3 flex-wrap">
-            <a href="{% url 'profile_about' user.profile.username %}?sub_tab=follow" class="text-decoration-none console-btn flex-1 min-w-[60px] border-3 border-amber-700 rounded-lg px-1.5 py-2 no-underline flex flex-col items-center gap-0.5 transition-all duration-150 hover:-translate-y-0.5 hover:no-underline">
-              <span class="text-xs" style="filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.5));">🌊</span>
-              <span class="text-stone-100 font-bold tracking-wider" style="font-size: 12px; text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.8);">POND</span>
-            </a>
-            <a href="{% url 'profile_nest' user.profile.username %}" class="!no-underline console-btn flex-1 min-w-[60px] border-3 border-amber-700 rounded-lg px-1.5 py-2 no-underline flex flex-col items-center gap-0.5 transition-all duration-150 hover:-translate-y-0.5 hover:no-underline">
-              <span class="text-xs" style="filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.5));">🥚</span>
-              <span class="text-stone-100 font-bold tracking-wider" style="font-size: 12px; text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.8);">NEST</span>
-            </a>
-            <a 
-              hx-get="{% url 'post_create' %}"
-              hx-target="#modal-container"
-              hx-select="#post-create-container"
-              @htmx:after-request="if($event.detail.successful) showModal = true;"
-              class="text-decoration-none console-btn flex-1 min-w-[60px] border-3 border-amber-700 rounded-lg px-1.5 py-2 no-underline flex flex-col items-center gap-0.5 transition-all duration-150 hover:-translate-y-0.5 hover:no-underline cursor-pointer" 
-              x-show="!isIncubating" 
-            >
-              <span class="text-xs" style="filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.5));">✏️</span>
-              <span class="text-stone-100 font-bold tracking-wider" style="font-size: 12px; text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.8);">POST</span>
-            </a>
-          </div>
-        {% else %}
-            <!-- Console Action Buttons (Not Authenticated User) -->
-            <div class="flex gap-1.5 p-3 flex-wrap">
-              <a href="{% url 'account_login' %}" 
-                hx-get="{% url 'account_login' %}"
-                hx-target="#modal-container"
-                hx-select="#auth-modal-content"
-                @htmx:after-request="if($event.detail.successful) showModal = true;"
-                class="!no-underline console-btn flex-1 min-w-[60px] border-3 border-amber-700 rounded-lg px-1.5 py-2 no-underline flex flex-col items-center gap-0.5 transition-all duration-150 hover:-translate-y-0.5 hover:no-underline">
-                <span class="text-xs" style="filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.5));">🌊</span>
-                <span class="text-stone-100 font-bold tracking-wider" style="font-size: 12px; text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.8);">POND</span>
-              </a>
-              <a href="{% url 'account_login' %}" 
-                hx-get="{% url 'account_login' %}"
-                hx-target="#modal-container"
-                hx-select="#auth-modal-content"
-                @htmx:after-request="if($event.detail.successful) showModal = true;"
-                class="!no-underline console-btn flex-1 min-w-[60px] border-3 border-amber-700 rounded-lg px-1.5 py-2 no-underline flex flex-col items-center gap-0.5 transition-all duration-150 hover:-translate-y-0.5 hover:no-underline">
-                <span class="text-xs" style="filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.5));">🥚</span>
-                <span class="text-stone-100 font-bold tracking-wider" style="font-size: 12px; text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.8);">NEST</span>
-              </a>
+          <div 
+            class="flex gap-1.5 p-3 flex-wrap"
+            x-data="{
+              actions: [
+                {
+                  emoji: '💧', 
+                  name: 'POND',
+                  url: {% if user.is_authenticated %}'{% url 'profile_about' user.profile.username %}?sub_tab=follow' {% else %}null {% endif %}
+                },
+                {
+                  emoji: '🪺', 
+                  name: 'NEST', 
+                  url: {% if user.is_authenticated %}'{% url 'profile_nest' user.profile.username %}'{% else %}null{% endif %}
+                },
+                {
+                  emoji: '🖍️', 
+                  name: 'POST', 
+                  url: {% if user.is_authenticated %}'{% url 'post_create' %}'{% else %}null{% endif %}
+                },
+              ]
+            }"
+          >
+            <template x-for="(action, index) in actions" :key="index">     
               <a 
-                hx-get="{% url 'account_login' %}"
-                hx-target="#modal-container"
-                hx-select="#auth-modal-content"
-                @htmx:after-request="if($event.detail.successful) showModal = true;"
-                class="!no-underline console-btn flex-1 min-w-[60px] border-3 border-amber-700 rounded-lg px-1.5 py-2 no-underline flex flex-col items-center gap-0.5 transition-all duration-150 hover:-translate-y-0.5 hover:no-underline cursor-pointer" 
-                x-show="!isIncubating"
-              >
-                <span class="text-xs" style="filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.5));">✏️</span>
-                <span class="text-stone-100 font-bold tracking-wider" style="font-size: 12px; text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.8);">POST</span>
+                {% if user.is_authenticated %}
+                  :hx-get="action.name === 'POST' && action.url"
+                  :hx-select="action.name === 'POST' && '#post-create-container'"
+                  :hx-target="action.name === 'POST' && '#modal-container'"
+                  :href="action.name !== 'POST' && action.url "
+                {% else %}
+                  href="{% url 'account_login' %}" 
+                  hx-get="{% url 'account_login' %}"
+                  hx-select="#auth-modal-content"
+                  hx-target="#modal-container"
+                {% endif %}
+                  @htmx:after-request="if($event.detail.successful) showModal = true;"
+                  class="text-decoration-none console-btn flex-1 min-w-[60px] border-3 border-yellow-700 rounded-lg px-1.5 py-2 no-underline flex flex-col items-center gap-0.5 transition-all duration-150 hover:-translate-y-0.5 hover:no-underline cursor-pointer"
+                >
+                <span 
+                  class="text-xs" 
+                  style="filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.5));" 
+                  x-text="action.emoji"></span>
+                <span 
+                  class="text-slate-100 font-bold tracking-wider" 
+                  style="font-size: 12px; text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.8);" 
+                  x-text="action.name"></span>
               </a>
-            </div>
-        {% endif %}
-            <!-- Console Slider Control -->
-          <div class="slider-control-section border-t-2 border-green-800 pt-3 mt-auto"
-                x-data="{ panelOpen: false }">
+            </template>
+          </div>
+
+          <!-- Console Slider Control -->
+          <div class="slider-control-section border-t-2 border-blue-800 pt-3 mt-auto"
+                x-data="{ panelOpen: $persist(false) }">
             <div class="max-w-[10rem] mx-auto flex items-center justify-between gap-2">
-              <span class="text-lime-400 font-bold tracking-wide" style="font-size: 6px; text-shadow: 0 0 2px rgba(132, 204, 22, 0.5);">CONSOLE</span>
+              <span class="text-yellow-400 font-bold tracking-wide" style="font-size: 6px; text-shadow: 0 0 2px rgba(255, 255, 0, 0.5);">CONSOLE</span>
               
               <!-- Retro Slider Button -->
               <button 
@@ -183,104 +188,111 @@
                 :class="{ 'slider-active': panelOpen }">
                 
                 <!-- Slider Track -->
-                <div class="slider-track h-full bg-black border border-green-800 rounded-sm relative">
+                <div class="slider-track h-full bg-black border border-blue-800 rounded-sm relative">
                   <div class="slider-track-fill h-full transition-all duration-300" 
                         :style="{ width: panelOpen ? '100%' : '20%' }"
-                        style="background: linear-gradient(90deg, #00ff00 0%, #84cc16 100%); box-shadow: 0 0 4px rgba(0, 255, 0, 0.3);"></div>
+                        style="background: linear-gradient(90deg, #0ea5e9 0%, #0284c7 100%); box-shadow: 0 0 4px rgba(14, 165, 233, 0.3);"></div>
                 </div>
                 
                 <!-- Slider Knob -->
                 <div class="slider-knob absolute top-0 h-full w-6 transition-all duration-300 ease-out"
                       :style="{ left: panelOpen ? 'calc(100% - 24px)' : '0px' }">
-                  <div class="knob-visual h-full w-full bg-gradient-to-b from-amber-200 via-amber-300 to-amber-500 
-                              border-2 border-stone-700 rounded-sm
+                  <div class="knob-visual h-full w-full bg-gradient-to-b from-yellow-200 via-yellow-300 to-yellow-500 
+                              border-2 border-slate-700 rounded-sm
                               shadow-[2px_2px_0px_rgba(0,0,0,0.4)] hover:shadow-[3px_3px_0px_rgba(0,0,0,0.4)]"
                         style="text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.3);">
-                    <div class="w-full h-full flex items-center justify-center text-stone-800 font-bold" style="font-size: 8px;">
+                    <div class="w-full h-full flex items-center justify-center text-slate-800 font-bold" style="font-size: 8px;">
                       <span x-text="panelOpen ? '▲' : '▼'"></span>
                     </div>
                   </div>
                 </div>
               </button>
               
-              <span class="text-lime-400 font-bold tracking-wide" style="font-size: 6px; text-shadow: 0 0 2px rgba(132, 204, 22, 0.5);">PANEL</span>
+              <span class="text-yellow-400 font-bold tracking-wide" style="font-size: 6px; text-shadow: 0 0 2px rgba(255, 255, 0, 0.5);">PANEL</span>
             </div>
             
             <!-- EGG Expandable Panel -->
             {% if user.is_authenticated %}
-                <div 
-                  class="expanded-panel transition-all duration-500 ease-in-out"
-                  :class="panelOpen ? 'max-h-96 opacity-100 mt-3' : 'max-h-0 opacity-0 mt-0 pb-3'"
-                  style="transform-origin: top;">
+              <div 
+                x-show="panelOpen"
+                x-cloak
+                x-collapse.duration.300ms
+                class="expanded-panel mt-3"
+                style="transform-origin: top;">
+                
+                <div class="panel-content"
+                      style="font-family: 'Press Start 2P', monospace; font-size: 8px; image-rendering: pixelated;">
                   
-                  <div class="panel-content"
-                        style="font-family: 'Press Start 2P', monospace; font-size: 8px; image-rendering: pixelated;">
-                    
-                    <!-- Panel Header -->
-                    <div class="panel-header flex justify-between items-center relative px-3 py-2 border-b-4 border-green-900">
-                      <div class="text-lg italic text-stone-100 font-bold tracking-wide" style="text-shadow: 0 0 4px rgba(132, 204, 22, 0.3), 1px 1px 0px rgba(0, 0, 0, 0.8);">EGGS COLLECTED</div>
-                    </div>
-                    
-                    <!-- Panel Content Grid -->
-                    <div class="p-3 flex gap-1.5">
+                  <!-- Panel Header -->
+                  <div class="panel-header flex justify-between items-center relative px-3 py-2 border-b-4 border-blue-900">
+                    <div class="text-lg italic text-slate-100 font-bold tracking-wide" style="text-shadow: 0 0 4px rgba(255, 255, 0, 0.4), 1px 1px 0px rgba(0, 0, 0, 0.8);">EGGS COLLECTED</div>
+                  </div>
+                  
+                  <!-- Panel Content Grid -->
+                  <div class="p-3 flex gap-1.5">
 
-                      <!-- EASTER EGGS -->
-                      {% if user.profile.easter_eggs_count %}
-                        <div class="flex-1 mini-screen border-3 border-green-950 rounded-md p-2">
-                          <div class="text-pink-400 text-center mb-2 tracking-wider" style="font-size: 9px; text-shadow: 0 0 2px rgba(132, 204, 22, 0.5);">EASTER EGGS</div>
-                            <div class="text-center">
-                            <div class="counter-display bg-black text-green-500 font-mono text-xs font-bold px-1 py-0.5 rounded-sm mb-1 border border-green-900" style="text-shadow: 0 0 4px currentColor;">{{ user.profile.easter_eggs_count|stringformat:"03d" }}</div>
-                            <div class="flex gap-0.5 justify-center flex-wrap ">
-                              {% with egg=user.profile.easter_eggs|random_egg %}
-                                <div class="relative group">
-                                  {% include 'posts/partial/egg_toolkit.html' with display_collected_date=True display_egg_image=True %}
-                                  <img class="w-15 egg-levitation" src="{{ egg.url }}" alt="User's Easter {{ egg.name }} egg">
-                                </div>
-                              {% endwith %}
-                            </div>
-                          </div>
-                        </div>
-                      {% endif %}
-                      
-                      
-                      <!-- LEGENDARY EGGS -->
-                      {% if user.profile.special_eggs_count %}
-                        <div class="flex-1 mini-screen border-3 border-green-950 rounded-md p-2">
-                          <div class="text-orange-400 text-center mb-2 tracking-wider" style="font-size: 9px; text-shadow: 0 0 2px rgba(132, 204, 22, 0.5);">LEGENDARY</div>
-                            <div class="text-center">
-                            <div class="counter-display bg-black text-green-500 font-mono text-xs font-bold px-1 py-0.5 rounded-sm mb-1 border border-green-900" style="text-shadow: 0 0 4px currentColor;">{{ user.profile.special_eggs_count|stringformat:"03d" }}</div>
-                            <div class="flex gap-0.5 justify-center flex-wrap ">
-                              {% with egg=user.profile.special_eggs|random_egg %}
-                                <div class="relative group">
-                                  {% include 'posts/partial/egg_toolkit.html' with display_collected_date=True display_egg_image=True %}
-                                  <img class="w-15 egg-levitation" src="{{ egg.url }}" alt="User's Legendary {{ egg.name }} egg">
-                                </div>
-                              {% endwith %}
-                            </div>
-                          </div>
-                        </div>
-                      {% endif %}
-                      
-                      <!-- CUTE EGGS -->
-                      <div class="flex-1 mini-screen border-3 border-green-950 rounded-md p-2">
-                        <div class="text-lime-400 text-center mb-2 tracking-wider" style="font-size: 9px; text-shadow: 0 0 2px rgba(132, 204, 22, 0.5);">CUTE</div>
+                    <!-- EASTER EGGS -->
+                    {% if user.profile.easter_eggs_count %}
+                      <div class="flex-1 mini-screen border-3 border-blue-950 rounded-md p-2">
+                        <div class="text-pink-400 text-center mb-2 tracking-wider" style="font-size: 9px; text-shadow: 0 0 2px rgba(255, 255, 0, 0.5);">EASTER EGGS</div>
                           <div class="text-center">
-                          <div class="counter-display bg-black text-green-500 font-mono text-xs font-bold px-1 py-0.5 rounded-sm mb-1 border border-green-900" style="text-shadow: 0 0 4px currentColor;">{{ user.profile.regular_eggs_count|stringformat:"03d" }}</div>
-                          <div class="flex justify-center">
-                              {% with egg=user.profile.regular_eggs|random_egg %}
-                                <div class="relative group">
-                                  {% include 'posts/partial/egg_toolkit.html' with display_collected_date=True display_egg_image=True %}
-                                  <img class="w-15 egg-levitation" src="{{ egg.url }}" alt="User's Regular {{ egg.name }} egg">
-                                </div>
-                              {% endwith %}
+                          <div class="counter-display bg-black text-blue-500 font-mono text-xs font-bold px-1 py-0.5 rounded-sm mb-1 border border-blue-900" style="text-shadow: 0 0 4px currentColor;">{{ user.profile.easter_eggs_count|stringformat:"03d" }}</div>
+                          <div class="flex gap-0.5 justify-center flex-wrap ">
+                            {% with egg=user.profile.easter_eggs|random_egg %}
+                              <div class="relative group">
+                                {% include 'posts/partial/egg_toolkit.html' with display_collected_date=True display_egg_image=True %}
+                                <img class="w-15 treasure-glow" src="{{ egg.url }}" alt="User's Golden {{ egg.name }} treasure">
+                              </div>
+                            {% endwith %}
                           </div>
                         </div>
                       </div>
-
-                    </div>
+                    {% endif %}
                     
+                    
+                    <!-- LENGENDARY EGGS -->
+                    {% if user.profile.special_eggs_count %}
+                      <div class="flex-1 mini-screen border-3 border-blue-950 rounded-md p-2">
+                        <div class="text-orange-400 text-center mb-2 tracking-wider" style="font-size: 9px; text-shadow: 0 0 2px rgba(0, 255, 255, 0.5);">LENGENDARY</div>
+                          <div class="text-center">
+                          <div class="counter-display bg-black text-blue-500 font-mono text-xs font-bold px-1 py-0.5 rounded-sm mb-1 border border-blue-900" style="text-shadow: 0 0 4px currentColor;">{{ user.profile.special_eggs_count|stringformat:"03d" }}</div>
+                          <div class="flex gap-0.5 justify-center flex-wrap ">
+                            {% with egg=user.profile.special_eggs|random_egg %}
+                              <div class="relative group">
+                                {% include 'posts/partial/egg_toolkit.html' with display_collected_date=True display_egg_image=True %}
+                                <img class="w-15 treasure-glow" src="{{ egg.url }}" alt="User's Ancient {{ egg.name }} treasure">
+                              </div>
+                            {% endwith %}
+                          </div>
+                        </div>
+                      </div>
+                    {% endif %}
+                    
+                    <!-- CUTE EGGS -->
+                    {% if user.profile.regular_eggs_count %}
+                    <div class="flex-1 mini-screen border-3 border-blue-950 rounded-md p-2">
+                      <div class="text-green-400 text-center mb-2 tracking-wider" style="font-size: 9px; text-shadow: 0 0 2px rgba(59, 130, 246, 0.5);">CUTE</div>
+                        <div class="text-center">
+                        <div class="counter-display bg-black text-blue-500 font-mono text-xs font-bold px-1 py-0.5 rounded-sm mb-1 border border-blue-900" style="text-shadow: 0 0 4px currentColor;">{{ user.profile.regular_eggs_count|stringformat:"03d" }}</div>
+                        <div class="flex justify-center">
+                            {% with egg=user.profile.regular_eggs|random_egg %}
+                              <div class="relative group">
+                                {% include 'posts/partial/egg_toolkit.html' with display_collected_date=True display_egg_image=True %}
+                                <img class="w-15 treasure-glow" src="{{ egg.url }}" alt="User's Common {{ egg.name }} treasure">
+                              </div>
+                            {% endwith %}
+                        </div>
+                      </div>
+                    </div>
+                    {% else %}
+                      <div class="flex flex-1 justify-center">
+                        <span class="text-[12px] text-yellow-400 ">LAY YOUR FIRST EGG!</span>
+                      </div>
+                    {% endif %}
                   </div>
+                  
                 </div>
+              </div>
           
             {% endif %}
           </div>
@@ -288,131 +300,31 @@
       </div>
 
 <style>
-/* Essential Retro Gaming Console Styles - Minimal Custom CSS */
+/* Essential Diving Device Console Styles - Blue & Yellow Theme */
 
-/* Main Console - Retro Wood/Metal Texture */
-.turtle-console {
-  background: linear-gradient(180deg, #8b7355 0%, #a0956b 15%, #8b7355 85%, #6b5d4a 100%);
-  box-shadow: 6px 6px 0px #3B3B3B, inset 2px 2px 0px rgba(255, 255, 255, 0.1);
+/* Main Console - Deep Sea Blue with Metallic Finish */
+.diving-console {
+  background: linear-gradient(180deg, #1e40af 0%, #2563eb 15%, #1e40af 85%, #1d4ed8 100%);
+  box-shadow: 6px 6px 0px #1e293b, inset 2px 2px 0px rgba(255, 255, 255, 0.1);
 }
 
-/* Wood Grain Texture Overlay */
-.turtle-console::before {
+/* Metallic Texture Overlay for Diving Equipment */
+.diving-console::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(139, 115, 85, 0.1) 2px, rgba(139, 115, 85, 0.1) 4px);
-  pointer-events: none;
-  opacity: 0.3;
-}
-
-/* Console Header Green Gradient */
-.console-header {
-  background: linear-gradient(135deg, #2d5016 0%, #3d6b1f 50%, #2d5016 100%);
-  box-shadow: inset 0 1px 0px rgba(125, 211, 252, 0.2), 0 2px 0px rgba(0, 0, 0, 0.1);
-}
-
-/* Habitat Screen - Pond Environment */
-.habitat-screen {
-  background: radial-gradient(ellipse at center, rgba(134, 239, 172, 0.3) 0%, rgba(74, 222, 128, 0.2) 30%, rgba(34, 197, 94, 0.1) 60%, rgba(21, 128, 61, 0.05) 100%);
-  box-shadow: inset 0 0 20px rgba(21, 128, 61, 0.1), 2px 2px 0px rgba(0, 0, 0, 0.3);
-}
-
-.screen-bezel {
-  background: linear-gradient(45deg, rgba(16, 185, 129, 0.1) 0%, rgba(34, 197, 94, 0.1) 50%, rgba(21, 128, 61, 0.1) 100%);
-}
-
-.habitat-environment {
-  background: radial-gradient(circle at 30% 20%, rgba(74, 222, 128, 0.2) 0%, transparent 40%),
-              radial-gradient(circle at 70% 80%, rgba(34, 197, 94, 0.15) 0%, transparent 50%);
-}
-
-/* Mini Screen Dark Green Gradient */
-.mini-screen {
-  background: linear-gradient(135deg, #1a2e0a 0%, #2d5016 100%);
-  box-shadow: inset 0 1px 0px rgba(74, 222, 128, 0.2), 2px 2px 0px rgba(0, 0, 0, 0.3);
-}
-
-/* Console Button Brown Gradient */
-.console-btn {
-  background: linear-gradient(135deg, #8b4513 0%, #a0522d 100%);
-  box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.4), inset 0 1px 0px rgba(255, 255, 255, 0.1);
-}
-
-.console-btn:hover {
-  box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.4), inset 0 1px 0px rgba(255, 255, 255, 0.2);
-}
-
-.console-btn:active {
-  box-shadow: 1px 1px 0px rgba(0, 0, 0, 0.4), inset 0 1px 0px rgba(255, 255, 255, 0.1);
-}
-
-/* Status Bar Dark Green */
-.slider-control-section {
-  background: linear-gradient(135deg, #1a2e0a 0%, #0f1a05 100%);
-}
-
-/* Slider Button Styles */
-.slider-button {
-  position: relative;
-  background: transparent;
-  border: none;
-  outline: none;
-}
-
-.slider-button:focus {
-  outline: 2px solid rgba(132, 204, 22, 0.5);
-}
-
-.slider-track {
-  background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.7) 100%);
-  box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.8);
-}
-
-.slider-knob {
-  z-index: 10;
-}
-
-.knob-visual {
-  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%);
-  cursor: grab;
-}
-
-.knob-visual:active {
-  cursor: grabbing;
-  transform: scale(0.95);
-}
-
-.slider-button.slider-active .knob-visual {
-  background: linear-gradient(135deg, #84cc16 0%, #65a30d 50%, #4d7c0f 100%);
-}
-
-/* Expandable Panel Styles */
-.expanded-panel {
-  transform-origin: top;
-}
-
-.panel-content {
-  background: linear-gradient(180deg, #8b7355 0%, #a0956b 15%, #8b7355 85%, #6b5d4a 100%);
-  box-shadow: 6px 6px 0px #3B3B3B, inset 2px 2px 0px rgba(255, 255, 255, 0.1);
-}
-
-.panel-content::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(139, 115, 85, 0.1) 2px, rgba(139, 115, 85, 0.1) 4px);
+  background: repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(30, 64, 175, 0.1) 2px, rgba(30, 64, 175, 0.1) 4px);
   pointer-events: none;
   opacity: 0.3;
 }
 
 .panel-header {
-  background: linear-gradient(135deg, #2d5016 0%, #3d6b1f 50%, #2d5016 100%);
-  box-shadow: inset 0 1px 0px rgba(125, 211, 252, 0.2), 0 2px 0px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, #0c4a6e 0%, #075985 50%, #0c4a6e 100%);
+  box-shadow: inset 0 1px 0px rgba(255, 255, 0, 0.2), 0 2px 0px rgba(0, 0, 0, 0.1);
 }
 
 .panel-actions {
-  background: linear-gradient(135deg, #1a2e0a 0%, #0f1a05 100%);
+  background: linear-gradient(135deg, #0c4a6e 0%, #064e3b 100%);
 }
 
 .quick-action-btn:hover {
@@ -425,8 +337,8 @@
   box-shadow: 1px 1px 0px rgba(0, 0, 0, 0.4);
 }
 
-/* Turtle Animations */
-.turtle-avatar {
+/* Diver Animations */
+.diver-avatar {
   position: absolute;
   font-size: 20px;
   z-index: 10;
@@ -434,67 +346,177 @@
   filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
 }
 
-.turtle-avatar.swimming {
+.diver-avatar.swimming {
   top: 40%; left: 30%;
-  animation: turtle-swim 6s ease-in-out infinite;
+  animation: diver-swim 6s ease-in-out infinite;
 }
 
-.turtle-avatar.nesting {
+.diver-avatar.diving {
   top: 60%; left: 50%;
   transform: translateX(-50%);
-  animation: turtle-nest 3s ease-in-out infinite;
+  animation: diver-descent 3s ease-in-out infinite;
 }
 
-/* Pond Elements */
-.pond-element {
+/* Underwater Elements */
+.underwater-element {
   position: absolute;
   font-size: 16px;
   opacity: 0.7;
 }
 
-.lily-pad-1 { top: 20%; left: 60%; animation: float-gentle 4s ease-in-out infinite; }
-.lily-pad-2 { bottom: 30%; left: 20%; animation: float-gentle 4s ease-in-out infinite 2s; }
-.reed-1 { top: 10%; right: 20%; animation: sway 3s ease-in-out infinite; }
-.reed-2 { bottom: 10%; right: 10%; animation: sway 3s ease-in-out infinite 1s; }
+.coral-1 { top: 20%; left: 60%; animation: coral-sway 4s ease-in-out infinite; }
+.coral-2 { bottom: 30%; left: 20%; animation: coral-sway 4s ease-in-out infinite 2s; }
+.kelp-1 { top: 10%; right: 20%; animation: kelp-drift 3s ease-in-out infinite; }
+.kelp-2 { bottom: 10%; right: 10%; animation: kelp-drift 3s ease-in-out infinite 1s; }
 
-/* Water Ripples */
-.water-ripple {
+/* Water Bubbles */
+.water-bubble {
   position: absolute;
   border-radius: 50%;
-  border: 1px solid rgba(74, 222, 128, 0.3);
-  animation: ripple 4s ease-out infinite;
+  border: 1px solid rgba(59, 130, 246, 0.4);
+  animation: bubble-rise 4s ease-out infinite;
 }
 
-.ripple-1 { top: 30%; left: 40%; width: 20px; height: 20px; }
-.ripple-2 { top: 70%; left: 70%; width: 15px; height: 15px; animation-delay: 2s; }
+.bubble-1 { top: 30%; left: 40%; width: 20px; height: 20px; }
+.bubble-2 { top: 70%; left: 70%; width: 15px; height: 15px; animation-delay: 2s; }
+
+/* Treasure Float Animation */
+.treasure-glow {
+  animation: treasure-glow 4s ease-in-out infinite;
+}
 
 /* Keyframe Animations */
-@keyframes turtle-swim {
+@keyframes diver-swim {
   0%, 100% { transform: translateX(0px) rotate(0deg); }
-  25% { transform: translateX(20px) rotate(-5deg); }
+  25% { transform: translateX(20px) rotate(-3deg); }
   50% { transform: translateX(10px) translateY(-10px) rotate(0deg); }
-  75% { transform: translateX(-10px) rotate(5deg); }
+  75% { transform: translateX(-10px) rotate(3deg); }
 }
 
-@keyframes turtle-nest {
-  0%, 100% { transform: translateX(-50%) scale(1); }
-  50% { transform: translateX(-50%) scale(1.1); }
+@keyframes diver-descent {
+  0%, 100% { transform: translateX(-50%) scale(1) translateY(0px); }
+  50% { transform: translateX(-50%) scale(1.1) translateY(-5px); }
 }
 
-@keyframes float-gentle {
+@keyframes coral-sway {
   0%, 100% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-3px) rotate(1deg); }
+  50% { transform: translateY(-3px) rotate(2deg); }
 }
 
-@keyframes sway {
+@keyframes kelp-drift {
   0%, 100% { transform: rotate(0deg); }
-  50% { transform: rotate(2deg); }
+  50% { transform: rotate(3deg); }
 }
 
-@keyframes ripple {
-  0% { transform: scale(0.5); opacity: 0.8; }
-  100% { transform: scale(3); opacity: 0; }
+@keyframes bubble-rise {
+  0% { transform: scale(0.5) translateY(20px); opacity: 0.8; }
+  100% { transform: scale(1.5) translateY(-20px); opacity: 0; }
 }
 
+@keyframes treasure-glow {
+  0%, 100% { filter: drop-shadow(0 0 2px rgba(255, 255, 0, 0.3)); transform: translateY(6px);}
+  50% { filter: drop-shadow(0 0 8px rgba(255, 255, 0, 0.6)); transform: translateY(-2px);}
+}
+
+
+/* Console Header Deep Ocean Blue */
+.console-header {
+  background: linear-gradient(135deg, #0c4a6e 0%, #075985 50%, #0c4a6e 100%);
+  box-shadow: inset 0 1px 0px rgba(255, 255, 0, 0.2), 0 2px 0px rgba(0, 0, 0, 0.1);
+}
+
+/* Underwater Screen - Deep Ocean Environment */
+.underwater-screen {
+  background: radial-gradient(ellipse at center, rgba(59, 130, 246, 0.4) 0%, rgba(37, 99, 235, 0.3) 30%, rgba(29, 78, 216, 0.2) 60%, rgba(30, 58, 138, 0.1) 100%);
+  box-shadow: inset 0 0 20px rgba(30, 58, 138, 0.2), 2px 2px 0px rgba(0, 0, 0, 0.3);
+}
+
+.screen-bezel {
+  background: linear-gradient(45deg, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.1) 50%, rgba(30, 58, 138, 0.1) 100%);
+}
+
+.underwater-environment {
+  background: radial-gradient(circle at 30% 20%, rgba(59, 130, 246, 0.3) 0%, transparent 40%),
+              radial-gradient(circle at 70% 80%, rgba(37, 99, 235, 0.2) 0%, transparent 50%);
+}
+
+/* Mini Screen Deep Ocean Blue */
+.mini-screen {
+  background: linear-gradient(135deg, #0c4a6e 0%, #075985 100%);
+  box-shadow: inset 0 1px 0px rgba(59, 130, 246, 0.2), 2px 2px 0px rgba(0, 0, 0, 0.3);
+}
+
+/* Console Button Navy with Yellow Accents */
+.console-btn {
+  background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 100%);
+  box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.4), inset 0 1px 0px rgba(255, 255, 0, 0.1);
+}
+
+.console-btn:hover {
+  box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.4), inset 0 1px 0px rgba(255, 255, 0, 0.2);
+}
+
+.console-btn:active {
+  box-shadow: 1px 1px 0px rgba(0, 0, 0, 0.4), inset 0 1px 0px rgba(255, 255, 0, 0.1);
+}
+
+/* Status Bar Deep Navy */
+.slider-control-section {
+  background: linear-gradient(135deg, #0c4a6e 0%, #064e3b 100%);
+}
+
+/* Slider Button Styles */
+.slider-button {
+  position: relative;
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
+.slider-button:focus {
+  outline: 2px solid rgba(255, 255, 0, 0.5);
+}
+
+.slider-track {
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.7) 100%);
+  box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.slider-knob {
+  z-index: 10;
+}
+
+.knob-visual {
+  background: linear-gradient(135deg, #fde047 0%, #eab308 50%, #ca8a04 100%);
+  cursor: grab;
+}
+
+.knob-visual:active {
+  cursor: grabbing;
+  transform: scale(0.95);
+}
+
+.slider-button.slider-active .knob-visual {
+  background: linear-gradient(135deg, #22d3ee 0%, #0891b2 50%, #0e7490 100%);
+}
+
+/* Expandable Panel Styles */
+.expanded-panel {
+  transform-origin: top;
+}
+
+.panel-content {
+  background: linear-gradient(180deg, #1e40af 0%, #2563eb 15%, #1e40af 85%, #1d4ed8 100%);
+  box-shadow: 6px 6px 0px #1e293b, inset 2px 2px 0px rgba(255, 255, 255, 0.1);
+}
+
+.panel-content::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(30, 64, 175, 0.1) 2px, rgba(30, 64, 175, 0.1) 4px);
+  pointer-events: none;
+  opacity: 0.3;
+}
 
 </style>
