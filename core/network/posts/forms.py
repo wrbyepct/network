@@ -21,11 +21,21 @@ class PostForm(forms.ModelForm):
         model = Post
         fields = ["content", "publish_at"]
 
+    def __init__(self, *args, in_post_create_view=None, **kwargs):  # noqa: ANN204
+        super().__init__(*args, **kwargs)
+        self.in_post_create_view = in_post_create_view
+
     def save_media(self, post):
         """Save cleaned medias."""
         images = self.cleaned_data.get("images")
         video = self.cleaned_data.get("video")
         PostMediaService.save_media(post, images, video)
+
+    def clean(self):
+        """Also validate allowed media in full clean."""
+        if self.in_post_create_view:
+            self.validate_allowed_media_num()
+        return super().clean()
 
     def validate_allowed_media_num(self):
         """Validate allowed media amount."""
