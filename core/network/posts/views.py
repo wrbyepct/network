@@ -1,6 +1,7 @@
 """Post views."""
 
 import json
+import random
 
 import redis
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -48,6 +49,30 @@ class PostListView(ListView):
         context["is_incubating"] = bool(
             IncubationService.get_incubating_post_id(self.request.user.id)
         )
+        profile = self.request.user.profile
+        context["egg_panels"] = [
+            {
+                "label": "EASTER EGGS",
+                "color": "text-pink-300",
+                "shadow": "rgba(255, 255, 0, 0.5)",
+                "count": profile.easter_eggs_count,
+                "egg": random.choice(profile.easter_eggs),
+            },
+            {
+                "label": "LEGENDARY",
+                "color": "text-orange-300",
+                "shadow": "rgba(0, 255, 255, 0.5)",
+                "count": profile.special_eggs_count,
+                "egg": random.choice(profile.special_eggs),
+            },
+            {
+                "label": "CUTE",
+                "color": "text-green-400",
+                "shadow": "rgba(59, 130, 246, 0.5)",
+                "count": profile.regular_eggs_count,
+                "egg": random.choice(profile.regular_eggs),
+            },
+        ]
         if self.request.user.is_authenticated:
             context["activity"] = ActivityManagerService.get_activity_obj(
                 user=self.request.user
