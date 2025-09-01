@@ -109,6 +109,13 @@ class Profile(TimestampedModel, FollowMixin):
         return 0
 
     @cached_property
+    def total_eggs_count(self):
+        """Return total eggs count."""
+        return (
+            self.easter_eggs_count + self.special_eggs_count + self.regular_eggs_count
+        )
+
+    @cached_property
     def posts_count(self):
         """Return user's posts count."""
         return self.user.posts.count()
