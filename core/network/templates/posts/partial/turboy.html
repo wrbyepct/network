@@ -2,7 +2,7 @@
  <!-- Diving Device Console (Left Sidebar) -->
       <div class="col-lg-4 d-none d-lg-block">
         <div 
-            class="diving-console sticky top-5 rounded-xl border-[6px] border-slate-700" style="font-family: 'Press Start 2P', monospace; font-size: 8px; image-rendering: pixelated;">
+            class="diving-console sticky top-5 rounded-xl border-[6px] border-slate-700" style="font-family: 'Press Start 2P', monospace; font-size: 8px;">
             <!-- Console Header -->
             <div class="console-header flex justify-between items-center relative px-3 py-2 border-b-4 border-blue-900">
               <div class="text-xl italic text-slate-800 font-bold tracking-wide" style="text-shadow: 0 0 4px rgba(255, 255, 0, 0.4), 1px 1px 0px rgba(0, 0, 0, 0.8);">TUR-BOY</div>
@@ -252,8 +252,12 @@
                           <div class="relative group">
                             {% with egg=panel.egg %}
                               {% include 'posts/partial/egg_toolkit.html' with egg=egg display_collected_date=True display_egg_image=True %}
-                              <img class="w-15 treasure-glow cursor-pointer" src="{{ egg.url }}" 
-                                  alt="User's {{ panel.label }} {{ egg.name }} treasure">
+                              
+                              <div class="{{ panel.color}} text-center text-[11px] pt-2 break-all">{{ egg.name|title }}</div>
+                              <img 
+                                class="w-15 treasure-glow cursor-pointer mx-auto" 
+                                src="{{ egg.url }}" 
+                                alt="User's {{ panel.label }} {{ egg.name }} treasure">
                             {% endwith %}
                           </div>
                         </div>
