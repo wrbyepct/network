@@ -219,19 +219,6 @@
 }
 
 
-.shimmer {
-  animation: shimmer 2s linear;
-  background: linear-gradient(90deg, #c0c0c0 40%, #efefef 50%, #c0c0c0 60%);
-  background-size: 200%;
-  background-position-x: 200%;
-}
-
-@keyframes shimmer {
-  to {
-    background-position-x: 0;
-  }
-}
-
 
 /* Golden Shimmer Effect */
 .golden-shimmer {

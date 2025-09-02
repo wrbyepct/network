@@ -7,7 +7,7 @@
       isIncubating: {{ is_incubating|yesno:'true,false' }},
       onListPage: true
     }" 
-    class="bg-[#A8D5A0]"
+    class="relative z-10"
   > 
     <div class="w-full xl:w-[98vw] lg:container-2xl pt-4 mx-auto px-2 lg:px-0">
       <div class="row">
@@ -93,39 +93,255 @@
   </div>
 
 <style>
+    /* Holographic Content Cards */
+    .post-card {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.15),
+        inset 0 2px 4px rgba(255, 255, 255, 0.05);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      color: rgba(255, 255, 255, 0.9);
+    }
 
+    .post-card:hover {
+      background: rgba(6, 182, 212, 0.08);
+      border-color: rgba(6, 182, 212, 0.3);
+      box-shadow: 
+        0 30px 60px rgba(0, 0, 0, 0.2),
+        0 0 40px rgba(6, 182, 212, 0.15),
+        inset 0 2px 4px rgba(255, 255, 255, 0.1);
+      transform: translateY(-5px);
+    }
+
+    /* Breathing Effect for Cards */
+    @keyframes card-breathe {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.01); }
+    }
+
+    .breathing {
+      animation: card-breathe 4s ease-in-out infinite;
+    }
+
+    .breathing:hover {
+      animation: none;
+    }
+
+    /* Card Text Colors */
+    .post-card h6 {
+      color: rgba(255, 255, 255, 0.95) !important;
+      text-shadow: 0 0 10px rgba(52, 211, 153, 0.3);
+    }
+
+    .post-card .text-muted {
+      color: rgba(255, 255, 255, 0.7) !important;
+    }
+
+    .post-card .text-stone-800 {
+      color: rgba(255, 255, 255, 0.95) !important;
+    }
+
+    /* Holographic Pagination Buttons */
     .pixel-btn {
-      box-shadow:
-        6px 6px 0px rgba(0, 0, 0, 0.3),
-        inset 2px 2px 0px rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(6, 182, 212, 0.4);
+      color: var(--holo-glow, #06b6d4);
+      border-radius: 8px;
+      padding: 8px 16px;
       text-decoration: none;
-      font-weight: bold;
-      letter-spacing: 1px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      backdrop-filter: blur(15px);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pixel-btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, 
+        transparent, 
+        rgba(6, 182, 212, 0.2), 
+        transparent
+      );
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .pixel-btn:hover::after {
+      opacity: 1;
     }
 
     .pixel-btn:hover {
-      box-shadow:
-        4px 4px 0px rgba(0, 0, 0, 0.3),
-        inset 2px 2px 0px rgba(255, 255, 255, 0.3);
+      background: rgba(6, 182, 212, 0.15);
+      border-color: rgba(6, 182, 212, 0.6);
+      box-shadow: 
+        0 0 30px rgba(6, 182, 212, 0.4),
+        inset 0 2px 4px rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+      text-decoration: none;
+      color: #34d399;
+      text-shadow: 0 0 10px rgba(52, 211, 153, 0.5);
     }
 
     .pixel-btn:active {
-      box-shadow:
-        2px 2px 0px rgba(0, 0, 0, 0.3),
-        inset 1px 1px 0px rgba(0, 0, 0, 0.2);
+      transform: translateY(0);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
+    /* Holographic Digital Display */
     .digit-display {
       font-family: 'Courier New', monospace;
-      text-shadow: 0 0 4px currentColor;
+      background: rgba(0, 0, 0, 0.8);
+      border: 1px solid rgba(6, 182, 212, 0.3);
+      backdrop-filter: blur(10px);
+      box-shadow: 
+        0 2px 4px rgba(0, 0, 0, 0.1),
+        inset 0 1px 2px rgba(6, 182, 212, 0.2);
+      color: #06b6d4;
+      text-shadow: 0 0 8px currentColor;
     }
 
-    /* Mobile responsiveness */
+    /* Glass Page Counter */
+    .bg-yellow-200 {
+      background: rgba(255, 255, 255, 0.08) !important;
+      border: 1px solid rgba(6, 182, 212, 0.2) !important;
+      backdrop-filter: blur(15px);
+      box-shadow: 
+        0 4px 8px rgba(0, 0, 0, 0.1),
+        inset 0 1px 2px rgba(255, 255, 255, 0.05);
+      color: rgba(255, 255, 255, 0.9) !important;
+    }
+
+    .text-stone-700 {
+      color: rgba(255, 255, 255, 0.8) !important;
+      text-shadow: 0 0 5px rgba(6, 182, 212, 0.3);
+    }
+
+    /* Mobile responsiveness for glass effects */
     @media (max-width: 640px) {
       .pixel-btn {
-        px-3 py-2;
+        padding: 6px 12px;
+        font-size: 8px;
+        /* Reduced blur for mobile performance */
+        backdrop-filter: blur(10px);
       }
-     
+      
+      .post-card {
+        /* Lighter glass effects for mobile */
+        backdrop-filter: blur(15px);
+        box-shadow: 
+          0 10px 20px rgba(0, 0, 0, 0.1),
+          inset 0 1px 2px rgba(255, 255, 255, 0.05);
+      }
+      
+      .post-card:hover {
+        /* Simplified mobile hover */
+        transform: translateY(-2px);
+        box-shadow: 
+          0 15px 30px rgba(0, 0, 0, 0.15),
+          0 0 20px rgba(6, 182, 212, 0.1);
+      }
+      
+      /* Reduced animation complexity on mobile */
+      .breathing {
+        animation: none;
+      }
+      
+      .digit-display {
+        backdrop-filter: blur(8px);
+      }
+      
+      .bg-yellow-200 {
+        backdrop-filter: blur(10px) !important;
+      }
+    }
+
+    /* Reduced motion preference */
+    @media (prefers-reduced-motion: reduce) {
+      .breathing,
+      .post-card,
+      .pixel-btn {
+        animation: none;
+        transition: none;
+      }
+    }
+
+    /* Holographic Form Elements */
+    .holo-comment-form {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(6, 182, 212, 0.3);
+      backdrop-filter: blur(15px);
+      box-shadow: 
+        0 4px 8px rgba(0, 0, 0, 0.1),
+        inset 0 1px 2px rgba(255, 255, 255, 0.05);
+    }
+
+    .holo-textarea {
+      color: rgba(255, 255, 255, 0.9) !important;
+    }
+
+    .holo-textarea::placeholder {
+      color: rgba(255, 255, 255, 0.5) !important;
+    }
+
+    .holo-textarea:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.3);
+    }
+
+    .holo-submit-btn {
+      color: rgba(255, 255, 255, 0.7);
+      transition: all 0.3s ease;
+    }
+
+    .holo-submit-btn:hover:not(:disabled) {
+      color: #06b6d4;
+      text-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+      transform: scale(1.1);
+    }
+
+    .holo-composer-container {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(6, 182, 212, 0.2);
+      backdrop-filter: blur(20px);
+      box-shadow: 
+        0 8px 16px rgba(0, 0, 0, 0.1),
+        inset 0 1px 2px rgba(255, 255, 255, 0.05);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .holo-composer-container:hover {
+      background: rgba(6, 182, 212, 0.1);
+      border-color: rgba(6, 182, 212, 0.4);
+      box-shadow: 
+        0 12px 24px rgba(0, 0, 0, 0.15),
+        0 0 30px rgba(6, 182, 212, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .holo-input-field {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(6, 182, 212, 0.3);
+      color: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(10px);
+    }
+
+    .holo-input-field span {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .holo-avatar {
+      border: 2px solid rgba(6, 182, 212, 0.4);
+      box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
+      filter: drop-shadow(0 0 8px rgba(6, 182, 212, 0.2));
     }
   </style>
 

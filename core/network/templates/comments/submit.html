@@ -1,9 +1,9 @@
 
 <div>
-  <div class="flex items-center bg-stone-200 rounded-md p-1 shadow-inner">
+  <div class="flex items-center holo-comment-form rounded-md p-1 shadow-inner">
     <textarea 
       name="content" 
-      class="flex-grow bg-transparent border-none focus:ring-0 overflow-hidden p-2 text-stone-700 placeholder-stone-500"
+      class="flex-grow bg-transparent border-none focus:ring-0 overflow-hidden p-2 holo-textarea"
       rows="1"
       required
       style="resize: none;"
@@ -25,7 +25,7 @@
         {% endif %}
       ></textarea>
     <button 
-      class="text-stone-500 hover:text-emerald-600 disabled:text-stone-400 disabled:cursor-not-allowed transition-colors duration-200 p-2"
+      class="holo-submit-btn disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 p-2"
       type="submit"
       :disabled="commentBody === ''"
       >
