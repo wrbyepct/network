@@ -84,8 +84,8 @@
               <!-- Desktop Menu -->
               <div class="nav-menu-desktop">
                 {% if request.user.is_authenticated %}
-                  <a href="{% url 'profile_about' request.user.profile.username %}" class="nav-btn nav-btn-primary holo-glow">
-                    🏠 My Shell
+                  <a href="{% url 'profile_about' request.user.profile.username %}" class="nav-btn nav-btn-primary flex items-center holo-glow">
+                    <span> 🏠 My Shell</span>
                   </a>
                   <a href="{% url 'profile_about' request.user.profile.username %}?sub_tab=follow" class="nav-btn nav-btn-secondary holo-glow">
                     💧 Pond
@@ -528,7 +528,7 @@
           .nav-btn,
           .console-btn,
           .nav-mobile-toggle {
-            min-height: 44px;
+           
             min-width: 44px;
             touch-action: manipulation;
           }
