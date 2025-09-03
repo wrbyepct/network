@@ -196,7 +196,11 @@
   }
 
   100% {
-    box-shadow: 4px 4px 0px #a8a29e;
+    box-shadow:
+      0 0 0px 0px var(--c1),
+      0 0 0px 0px var(--c2),
+      0 0 0px 0px var(--c3),
+      0 0 0px 0px var(--c4);
   }
 }
 
@@ -214,7 +218,7 @@
   }
 
   100% {
-    box-shadow: 4px 4px 0px #a8a29e;
+    box-shadow: 0;
   }
 }
 
