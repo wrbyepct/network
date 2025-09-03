@@ -4,85 +4,108 @@
 
 {% block body %}
 <div 
-  class="min-h-screen bg-amber-50 p-4"
-  style="background-image: url('data:image/svg+xml,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20viewBox%3D%220%200%2020%2020%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Crect%20width%3D%2220%22%20height%3D%2220%22%20fill%3D%22%23F59E0B%22%20opacity%3D%220.05%22/%3E%3Crect%20width%3D%2210%22%20height%3D%2210%22%20fill%3D%22%23D97706%22%20opacity%3D%220.1%22/%3E%3C/svg%3E');
-  "
+  class="w-full min-h-screen holographic-ocean-bg relative z-10 px-4 py-8"
   x-data="profileEditor()"
 >  
-  <!-- Turtle Header -->
-  <div class="max-w-2xl mx-auto mb-8">
-    <div class="bg-green-800 border-4 border-green-900 rounded-lg p-6 font-mono text-center relative overflow-hidden">
-      <!-- Pixel decorations -->
-      <div class="absolute top-2 left-2 w-3 h-3 bg-green-600 border border-green-900"></div>
-      <div class="absolute top-2 right-2 w-3 h-3 bg-green-600 border border-green-900"></div>
-      <div class="absolute bottom-2 left-2 w-3 h-3 bg-green-600 border border-green-900"></div>
-      <div class="absolute bottom-2 right-2 w-3 h-3 bg-green-600 border border-green-900"></div>
+  <!-- Holographic Console Header -->
+  <div class="max-w-4xl mx-auto mb-6 sm:mb-8">
+    <div class="post-card holo-composer-container rounded-xl p-4 sm:p-6 text-center relative overflow-hidden "
+         style="font-family: 'Press Start 2P', monospace; font-size: 8px; sm:font-size: 10px; image-rendering: pixelated;">
       
-      <h1 class="text-2xl font-bold text-green-100 mb-2">TURTLE PROFILE EDITOR</h1>
-      <p class="text-green-200 text-sm">Customize your shell and personality!</p>
+      <!-- Console Header Gradient -->
+      <div class="console-header rounded-lg p-3 sm:p-4 mb-4">
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4">
+          <img src="/media/defaults/turtle.png" alt="Profile Editor" 
+               class="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-cyan-400 holo-avatar"
+               style="image-rendering: pixelated;">
+          <div class="text-sm sm:text-xl font-bold text-cyan-400 title tracking-wider text-center">
+            PROFILE EDITOR
+          </div>
+        </div>
+        <div class="text-neutral-400 opacity-80 mt-2 text-center" style="font-size: 6px; sm:font-size: 8px;">
+          v3.0 - Holographic System
+        </div>
+      </div>
+      
+      <!-- Status Indicators -->
+      <div class="flex flex-col sm:flex-row justify-center gap-2 sm:gap-4">
+        <div class="flex items-center justify-center gap-2">
+          <div class="w-2 h-2 sm:w-3 sm:h-3 bg-cyan-400 rounded-full animate-pulse"></div>
+          <span class="text-cyan-300 text-xs">ACTIVE</span>
+        </div>
+        <div class="flex items-center justify-center gap-2">
+          <div class="w-2 h-2 sm:w-3 sm:h-3 bg-green-400 rounded-full"></div>
+          <span class="text-green-300 text-xs">READY</span>
+        </div>
+      </div>
     </div>
   </div>
 
   <!-- Main Form Container -->
-  <div class="max-w-2xl mx-auto" >
+  <div class="max-w-4xl mx-auto" >
     <form method="post" 
           action="{% url 'profile_edit' %}" 
           enctype="multipart/form-data"
           @submit.prevent="prepareUploadFile($el)" 
-          class="bg-green-700 border-4 border-green-900 rounded-lg p-8 font-mono shadow-xl"
+          class="post-card holo-composer-container rounded-xl p-4 sm:p-6 lg:p-8 shadow-xl backdrop-blur-xl"
+          style="font-family: 'Press Start 2P', monospace; font-size: 8px; sm:font-size: 10px; image-rendering: pixelated;"
         >
       {% csrf_token %}
 
       <!-- Profile Picture Section -->
       <div class="mb-8">
-        <div class="flex items-center gap-2 mb-4">
-          <div class="w-4 h-4 bg-green-500 border-2 border-green-900"></div>
-          <label class="text-lg font-bold text-green-100">TURTLE AVATAR</label>
-        </div>
-        
-        <div class="bg-green-600 border-2 border-green-800 rounded p-6">
+        <div class="rounded-lg p-6 mb-6 ">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-4 h-4 bg-cyan-400 rounded-full animate-pulse"></div>
+            <label class="text-lg font-bold text-cyan-300 tracking-wide">AVATAR CONFIGURATION</label>
+          </div>
+          
           <!-- Current Picture Display -->
           {% if user.profile.profile_picture %}
-          <div class="mb-4 text-center">
-            <div class="inline-block bg-amber-100 border-4 border-green-900 p-2 rounded">
+          <div class="mb-6 text-center">
+            <div class="inline-block post-card rounded-lg p-4">
               <img src="{{ user.profile.profile_picture.url }}"
-                   alt="Current Turtle Avatar"
-                   class="w-24 h-24 object-cover border-2 border-green-800 rounded pixelated"
+                   alt="Current Avatar"
+                   class="w-24 h-24 object-cover border-2 border-cyan-400 rounded-lg holo-avatar mx-auto"
                    style="image-rendering: pixelated;">
             </div>
-            <p class="text-green-100 text-sm mt-2">Current Shell Design</p>
+            <p class="text-cyan-200 text-xs mt-3">CURRENT PROFILE IMAGE</p>
           </div>
           {% endif %}
 
-          <!-- File Upload Area -->
+          <!-- Holographic Upload Area -->
           <div class="relative">
-            <div class="border-4 border-dashed border-green-400 rounded-lg p-8 text-center bg-green-500 hover:bg-green-400 transition-colors cursor-pointer"
+            <div class="border-2 border-dashed border-cyan-400/50 rounded-xl p-8 text-center 
+                        post-card backdrop-blur-lg hover:border-cyan-400 transition-all duration-300 cursor-pointer
+                        hover:shadow-lg hover:shadow-cyan-400/20"
                  @click="$refs.fileInput.click()"
                  @dragover.prevent="isDragging = true"
                  @dragleave="isDragging = false"
                  @drop.prevent="handleFileDrop($event)"
-                 :class="isDragging ? 'border-amber-400 bg-amber-200' : ''"
+                 :class="isDragging ? 'border-cyan-300 bg-cyan-400/10' : ''"
                  x-ref="dropZone">
 
-              <div x-show="!previewImage">
-                <div>
-                  <img src="/media/defaults/turtle_proud.png" class="w-15 mx-auto mb-2" >
+              <div x-show="!previewImage" class="space-y-4">
+                <div class="flex justify-center">
+                  <img src="/media/defaults/turtle.png" 
+                       class="w-16 h-16 rounded-full border-2 border-cyan-400 holo-avatar" 
+                       style="image-rendering: pixelated;">
                 </div>
 
-                <div class="text-green-900 font-bold mb-2">
-                  DROP YOUR SHELL HERE!
+                <div class="text-cyan-300 font-bold text-sm tracking-wide">
+                  UPLOAD AVATAR IMAGE
                 </div>
-                <div class="text-green-800 text-sm mb-4" >
-                  Or click to browse files
+                <div class="text-cyan-400/80 text-xs">
+                  Drag & drop or click to browse
                 </div>
               </div>
                 
               <!-- Preview Image -->
-              <div x-show="previewImage" class="mb-4">
-                <img :src="previewImage.url" 
-                     class="w-32 h-32 object-cover border-4 border-green-900 rounded mx-auto pixelated"
+              <div x-show="previewImage" class="space-y-4">
+                <img :src="previewImage && previewImage.url"  
+                     class="w-32 h-32 object-cover border-2 border-cyan-400 rounded-xl mx-auto holo-avatar"
                      style="image-rendering: pixelated;">
-                <p class="text-green-900 text-sm mt-2 font-bold">New Shell Preview!</p>
+                <p class="text-cyan-300 text-xs font-bold">PREVIEW READY</p>
               </div>
               
               <input type="file" 
@@ -90,154 +113,235 @@
                      name="profile_picture" 
                      class="hidden"
                      id="id_profile_picture"
-                     @change="$store.fileUploadManager.handleFileSelect($event)"
+                     @change="handleFileSelect($event)"
                      x-ref="fileInput">
             </div>
             
-            <!-- File Input Styled Button -->
-            <div class="mt-4 text-center">
+            <!-- Holographic Upload Button -->
+            <div class="mt-6 text-center">
               <button type="button"
                       @click="$refs.fileInput.click()"
-                      class="bg-amber-500 hover:bg-amber-400 border-4 border-amber-700 text-amber-900 font-bold py-2 px-6 rounded text-sm transition-colors">
-                📁 BROWSE SHELL FILES
+                      class="console-btn nav-btn nav-btn-secondary px-6 py-3 rounded-lg font-bold text-xs tracking-wider">
+                📁 SELECT IMAGE FILE
               </button>
             </div>
           </div>
           
           <!-- Error Display -->
-          <div class="mt-4" x-show="Object.keys(errors).length > 0">
+          <div class="mt-4 text-red-300 text-xs" x-show="Object.keys(errors).length > 0">
             {{ form.profile_picture.errors }}
           </div>
         </div>
       </div>
 
       <!-- Personal Info Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+      <div class="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-8">
         
-        <!-- Username -->
-        <div>
-          <div class="flex items-center gap-2 mb-2">
-            <div class="w-3 h-3 bg-amber-500 border border-amber-700"></div>
-            <label for="id_username" class="text-green-100 font-bold text-sm">TURTLE NAME</label>
-          </div>
-          <input type="text" 
-                 name="username" 
-                 class="w-full bg-green-600 border-2 border-green-800 rounded px-4 py-3 text-green-100 font-mono placeholder-green-300 focus:border-amber-400 focus:outline-none transition-colors"
-                 id="id_username" 
-                 value="{{ form.username.value|default_if_none:'' }}"
-                 placeholder="Enter your turtle name...">
-          <div class="text-red-300 text-xs mt-1">{{ form.username.errors }}</div>
-        </div>
 
-        <!-- First Name -->
-        <div>
-          <div class="flex items-center gap-2 mb-2">
-            <div class="w-3 h-3 bg-amber-500 border border-amber-700"></div>
-            <label for="id_first_name" class="text-green-100 font-bold text-sm">FIRST SHELL</label>
-          </div>
-          <input type="text" 
-                 name="first_name" 
-                 class="w-full bg-green-600 border-2 border-green-800 rounded px-4 py-3 text-green-100 font-mono placeholder-green-300 focus:border-amber-400 focus:outline-none transition-colors"
-                 id="id_first_name" 
-                 value="{{ form.first_name.value|default_if_none:'' }}"
-                 placeholder="First name...">
-          <div class="text-red-300 text-xs mt-1">{{ form.first_name.errors }}</div>
-        </div>
-
-        <!-- Last Name -->
-        <div>
-          <div class="flex items-center gap-2 mb-2">
-            <div class="w-3 h-3 bg-amber-500 border border-amber-700"></div>
-            <label for="id_last_name" class="text-green-100 font-bold text-sm">FAMILY SHELL</label>
-          </div>
-          <input type="text" 
-                 name="last_name" 
-                 class="w-full bg-green-600 border-2 border-green-800 rounded px-4 py-3 text-green-100 font-mono placeholder-green-300 focus:border-amber-400 focus:outline-none transition-colors"
-                 id="id_last_name" 
-                 value="{{ form.last_name.value|default_if_none:'' }}"
-                 placeholder="Last name...">
-          <div class="text-red-300 text-xs mt-1">{{ form.last_name.errors }}</div>
-        </div>
-
-        <!-- Phone Number -->
-        <div>
-          <div class="flex items-center gap-2 mb-2">
-            <div class="w-3 h-3 bg-amber-500 border border-amber-700"></div>
-            <label for="id_phonenumber" class="text-green-100 font-bold text-sm">SHELL PHONE</label>
+        <!-- First Name Field -->
+        <div class="rounded-lg p-4 ">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-3 h-3 bg-green-400 rounded-full"></div>
+            <label for="id_first_name" class="text-green-300 font-bold text-sm tracking-wide">FIRST NAME</label>
           </div>
           <div class="relative">
-            {{ form.phonenumber|add_class:"w-full bg-green-600 border-2 border-green-800 rounded px-4 py-3 text-green-100 font-mono placeholder-green-300 focus:border-amber-400 focus:outline-none transition-colors" }}
-            <div class="absolute right-3 top-3 text-green-300">📞</div>
+            <input type="text" 
+                   name="first_name" 
+                   class="w-full bg-black/30 border border-cyan-400/30 backdrop-blur-lg rounded-lg px-4 py-3 
+                          text-cyan-100 text-xs placeholder-cyan-400/60 focus:border-cyan-400 focus:outline-none 
+                          focus:ring-2 focus:ring-cyan-400/30 transition-all duration-300"
+                   id="id_first_name" 
+                   value="{{ form.first_name.value|default_if_none:'' }}"
+                   placeholder="First name...">
+          
           </div>
-          <div class="text-red-300 text-xs mt-1">{{ form.phonenumber.errors }}</div>
+          <div class="text-red-300 text-xs mt-2">{{ form.first_name.errors }}</div>
+        </div>
+
+        <!-- Username Field -->
+        <div class="rounded-lg p-4 ">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-3 h-3 bg-cyan-400 rounded-full"></div>
+            <label for="id_username" class="text-cyan-300 font-bold text-sm tracking-wide">USERNAME</label>
+          </div>
+          <div class="relative">
+            <input type="text" 
+                   name="username" 
+                   class="w-full bg-black/30 border border-cyan-400/30 backdrop-blur-lg rounded-lg px-4 py-3 
+                          text-cyan-100 text-xs placeholder-cyan-400/60 focus:border-cyan-400 focus:outline-none 
+                          focus:ring-2 focus:ring-cyan-400/30 transition-all duration-300"
+                   id="id_username" 
+                   value="{{ form.username.value|default_if_none:'' }}"
+                   placeholder="Enter username...">
+            
+          </div>
+          <div class="text-red-300 text-xs mt-2">{{ form.username.errors }}</div>
+        </div>
+
+        <!-- Last Name Field -->
+        <div class="rounded-lg p-4 ">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-3 h-3 bg-green-400 rounded-full"></div>
+            <label for="id_last_name" class="text-green-300 font-bold text-sm tracking-wide">LAST NAME</label>
+          </div>
+          <div class="relative">
+            <input type="text" 
+                   name="last_name" 
+                   class="w-full bg-black/30 border border-cyan-400/30 backdrop-blur-lg rounded-lg px-4 py-3 
+                          text-cyan-100 text-xs placeholder-cyan-400/60 focus:border-cyan-400 focus:outline-none 
+                          focus:ring-2 focus:ring-cyan-400/30 transition-all duration-300"
+                   id="id_last_name" 
+                   value="{{ form.last_name.value|default_if_none:'' }}"
+                   placeholder="Last name...">
+            
+          </div>
+          <div class="text-red-300 text-xs mt-2">{{ form.last_name.errors }}</div>
+        </div>
+
+        <!-- Phone Number Field -->
+        <div class="rounded-lg p-4 ">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-3 h-3 bg-yellow-400 rounded-full"></div>
+            <label for="id_phonenumber" class="text-yellow-300 font-bold text-sm tracking-wide">PHONE</label>
+          </div>
+          <div class="relative">
+            {{ form.phonenumber|add_class:"w-full bg-black/30 border border-cyan-400/30 backdrop-blur-lg rounded-lg px-4 py-3 text-cyan-100 text-xs placeholder-cyan-400/60 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/30 transition-all duration-300" }}
+          
+          </div>
+          <div class="text-red-300 text-xs mt-2">{{ form.phonenumber.errors }}</div>
         </div>
       </div>
 
       <!-- Birth Date -->
-      <div class="mb-8">
-        <div class="flex items-center gap-2 mb-2">
-          <div class="w-3 h-3 bg-amber-500 border border-amber-700"></div>
-          <label for="id_birth_date" class="text-green-100 font-bold text-sm">SHELL BIRTHDAY</label>
+    <div class="mb-8">
+      <div class="rounded-lg p-6 ">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-3 h-3 bg-purple-400 rounded-full"></div>
+          <label for="id_birth_date" class="text-purple-300 font-bold text-sm tracking-wide">BIRTH DATE</label>
         </div>
-        <div class="relative">
-          {{ form.birth_date|add_class:"w-full bg-green-600 border-2 border-green-800 rounded px-4 py-3 text-green-100 font-mono focus:border-amber-400 focus:outline-none transition-colors" }}
-          <div class="absolute right-3 top-3 text-green-300">🎂</div>
+
+        <!-- Flatpickr wrapper -->
+        <div class="relative flatpickr" data-wrap>
+          <!-- Input (alt input gets styled nicely) -->
+          <input 
+            type="text" 
+            name="birth_date" 
+            id="id_birth_date" 
+            data-input
+            class="w-full bg-black/30 border border-cyan-400/30 backdrop-blur-lg rounded-lg px-4 py-3 
+                  text-cyan-100 text-xs focus:border-cyan-400 focus:outline-none 
+                  focus:ring-2 focus:ring-cyan-400/30 transition-all duration-300"
+            value="{{ form.birth_date.value|default_if_none:'' }}"
+            {% if form.birth_date.field.required %}required{% endif %}>
+          
+          <!-- Calendar icon trigger -->
+          <button type="button" data-toggle 
+                  class="absolute right-3 top-1/2 -translate-y-1/2 text-cyan-300 hover:text-cyan-100">
+            📅
+          </button>
         </div>
-        <div class="text-red-300 text-xs mt-1">{{ form.birth_date.errors }}</div>
+
+        <div class="text-red-300 text-xs mt-2">{{ form.birth_date.errors }}</div>
       </div>
+    </div>
+
 
       <!-- Bio Section -->
       <div class="mb-8">
-        <div class="flex items-center gap-2 mb-2">
-          <div class="w-3 h-3 bg-amber-500 border border-amber-700"></div>
-          <label for="id_bio" class="text-green-100 font-bold text-sm">TURTLE STORY</label>
-          <div class="ml-auto text-green-300 text-xs" x-text="bioLength + '/280 characters'"></div>
-        </div>
-        <div class="relative">
-          <textarea name="bio" 
-                    class="w-full bg-green-600 border-2 border-green-800 rounded px-4 py-3 text-green-100 font-mono placeholder-green-300 focus:border-amber-400 focus:outline-none transition-colors resize-none"
-                    id="id_bio"
-                    rows="4"
-                    maxlength="280"
-                    placeholder="Tell the world about your turtle adventures..."
-                    x-model="bio"
-                    @input="bioLength = $event.target.value.length">{{ form.bio.value|default_if_none:'' }}</textarea>
-          
-          <!-- Character Count Visual -->
-          <div class="mt-2 h-2 bg-green-800 rounded border border-green-900">
-            <div class="h-full bg-gradient-to-r from-green-400 to-amber-500 rounded transition-all duration-300"
-                 :style="{ width: (bioLength / 280) * 100 + '%' }"
-                 :class="bioLength > 250 ? 'from-amber-400 to-red-500' : 'from-green-400 to-amber-500'"></div>
+        <div class="rounded-lg p-6 ">
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-3">
+              <div class="w-3 h-3 bg-blue-400 rounded-full"></div>
+              <label for="id_bio" class="text-blue-300 font-bold text-sm tracking-wide">BIO / PROFILE DESCRIPTION</label>
+            </div>
+            <div class="text-blue-400/80 text-xs" x-text="bioLength + '/280'"></div>
           </div>
+          
+          <div class="relative">
+            <textarea name="bio" 
+                      class="w-full bg-black/30 border border-cyan-400/30 backdrop-blur-lg rounded-lg px-4 py-3 
+                             text-cyan-100 text-xs placeholder-cyan-400/60 focus:border-cyan-400 focus:outline-none 
+                             focus:ring-2 focus:ring-cyan-400/30 transition-all duration-300 resize-none"
+                      id="id_bio"
+                      rows="5"
+                      maxlength="280"
+                      placeholder="Share your story with the community..."
+                      x-model="bio"
+                      @input="bioLength = $event.target.value.length">{{ form.bio.value|default_if_none:'' }}</textarea>
+            
+            <!-- Holographic Character Counter -->
+            <div class="mt-4 space-y-2">
+              <div class="flex justify-between items-center">
+                <span class="text-blue-300/60 text-xs">CHARACTER USAGE</span>
+                <span class="text-xs" 
+                     :class="bioLength > 250 ? 'text-red-400' : bioLength > 200 ? 'text-yellow-400' : 'text-cyan-400'">
+                  <span x-text="bioLength"></span> / 280
+                </span>
+              </div>
+              
+              <!-- Digital Progress Bar -->
+              <div class="h-2 bg-black/50 rounded-lg border border-cyan-400/30 overflow-hidden">
+                <div class="h-full transition-all duration-300 relative"
+                     :style="{ width: (bioLength / 280) * 100 + '%' }"
+                     :class="bioLength > 250 ? 'bg-gradient-to-r from-red-400 to-red-600' : 
+                             bioLength > 200 ? 'bg-gradient-to-r from-yellow-400 to-orange-500' : 
+                             'bg-gradient-to-r from-cyan-400 to-blue-500'">
+                  <div class="absolute inset-0 bg-white/20 animate-pulse"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="text-red-300 text-xs mt-2">{{ form.bio.errors }}</div>
         </div>
-        <div class="text-red-300 text-xs mt-1">{{ form.bio.errors }}</div>
       </div>
 
       <!-- Submit Button -->
       <div class="text-center">
         <button type="submit" 
-                class="bg-amber-500 hover:bg-amber-400 active:bg-amber-600 border-4 border-amber-700 hover:border-amber-600 text-amber-900 font-bold py-4 px-12 rounded-lg text-lg transition-all duration-200 transform hover:scale-105 active:scale-95"
+                class="console-btn nav-btn nav-btn-primary px-12 py-4 rounded-xl text-sm font-bold 
+                       tracking-wider transform hover:scale-105 active:scale-95 transition-all duration-300
+                       hover:shadow-lg hover:shadow-cyan-400/30 disabled:opacity-50 disabled:cursor-not-allowed"
                 :disabled="isSubmitting"
-                x-text="isSubmitting ? '🐢 UPDATING SHELL...' : '💾 SAVE TURTLE PROFILE'">
+                x-text="isSubmitting ? '⚡ UPDATING PROFILE...' : '💾 SAVE CONFIGURATION'">
         </button>
         
-        <p class="text-green-200 text-xs mt-4">
-          🌿 Your turtle profile will be updated immediately
-        </p>
+        <div class="mt-6 space-y-2">
+          <p class="text-cyan-300/80 text-xs tracking-wide">
+            ✨ PROFILE CHANGES WILL BE APPLIED IMMEDIATELY
+          </p>
+          <div class="flex justify-center items-center gap-2">
+            <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+            <span class="text-green-300 text-xs">SYSTEM READY</span>
+          </div>
+        </div>
       </div>
     </form>
   </div>
   
-  <!-- Success Message -->
+  <!-- Holographic Success Message -->
   <div x-show="showSuccess" 
        x-cloak
        x-init="hideSuccessMessage()"
-       class="fixed top-8 right-8 bg-green-500 border-4 border-green-700 rounded-lg p-4 text-green-900 font-mono font-bold shadow-xl z-50">
-    🎉 Turtle profile updated successfully! 🐢
+       class="fixed top-4 sm:top-8 right-4 sm:right-8 left-4 sm:left-auto post-card rounded-xl p-4 sm:p-6 
+              shadow-2xl z-50 border border-cyan-400/30 animate-pulse max-w-sm"
+       style="font-family: 'Press Start 2P', monospace; font-size: 8px; sm:font-size: 10px;">
+    <div class="flex items-center gap-2 sm:gap-3">
+      <div class="w-3 h-3 sm:w-4 sm:h-4 bg-green-400 rounded-full animate-pulse"></div>
+      <span class="text-cyan-300 font-bold text-xs sm:text-sm">PROFILE UPDATED</span>
+    </div>
+    <div class="text-green-300 text-xs mt-2 opacity-80">✨ Changes saved</div>
   </div>
 
 </div>
 <script>
+  flatpickr(".flatpickr", {
+    
+    dateFormat: "Y-m-d",    // Value sent to backend: "2025-09-04"
+    position: "auto right",
+  
+  });
+
   function profileEditor() {
     return {
       isDragging: false,
