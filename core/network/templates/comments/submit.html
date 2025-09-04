@@ -1,9 +1,9 @@
 
 <div>
-  <div class="flex items-center holo-form rounded-md p-1 shadow-inner">
+  <div class="flex items-center rounded-lg p-2 ">
     <textarea 
       name="content" 
-      class="flex-grow bg-transparent border-none focus:ring-0 overflow-hidden p-2 holo-textarea"
+      class="holo-comment-textarea flex-grow bg-transparent border-none focus:ring-0 overflow-hidden p-3 rounded-md transition-all duration-200"
       rows="1"
       required
       style="resize: none;"
@@ -15,6 +15,8 @@
           x-effect="if(editing) $nextTick(() => resize($el))"
         {% endif %}
         @input="resize($el)"
+        @focus="$el.parentElement.classList.add('holo-comment-submit-focus')"
+        @blur="$el.parentElement.classList.remove('holo-comment-submit-focus')"
       {% else %}
         tabindex="-1"
         hx-get="{% url 'account_login' %}"
@@ -25,14 +27,89 @@
         {% endif %}
       ></textarea>
     <button 
-      class="holo-submit-btn disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 p-2"
+      class="disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 p-3 rounded-lg ml-2 relative overflow-hidden"
       type="submit"
       :disabled="commentBody === ''"
       >
       <!-- Etching Chisel Icon -->
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
         <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.5L14.732 5.232z" />
       </svg>
     </button>
   </div>
 </div>
+
+<style>
+/* Holographic Comment Submit Form */
+.holo-comment-submit-container {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(6, 182, 212, 0.3);
+    backdrop-filter: blur(15px);
+    box-shadow: 
+        0 4px 8px rgba(0, 0, 0, 0.1),
+        inset 0 1px 2px rgba(255, 255, 255, 0.05);
+}
+
+.holo-comment-submit-hover {
+    background: rgba(6, 182, 212, 0.08) !important;
+    border-color: rgba(6, 182, 212, 0.4) !important;
+    box-shadow: 
+        0 8px 16px rgba(0, 0, 0, 0.15),
+        0 0 30px rgba(6, 182, 212, 0.1),
+        inset 0 1px 2px rgba(255, 255, 255, 0.1) !important;
+    transform: translateY(-1px);
+}
+
+.holo-comment-submit-focus {
+    background: rgba(16, 185, 129, 0.08) !important;
+    border-color: rgba(16, 185, 129, 0.4) !important;
+    box-shadow: 
+        0 0 0 2px rgba(16, 185, 129, 0.3),
+        0 8px 16px rgba(0, 0, 0, 0.15),
+        inset 0 1px 2px rgba(255, 255, 255, 0.1) !important;
+}
+
+.holo-comment-textarea {
+    color: rgba(255, 255, 255, 0.9) !important;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(6, 182, 212, 0.2);
+    backdrop-filter: blur(5px);
+}
+
+.holo-comment-textarea::placeholder {
+    color: rgba(255, 255, 255, 0.5) !important;
+    text-shadow: 0 0 3px rgba(6, 182, 212, 0.3);
+}
+
+.holo-comment-textarea:focus {
+    outline: none;
+    background: rgba(0, 0, 0, 0.3);
+    border-color: rgba(16, 185, 129, 0.4);
+    box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.2);
+}
+
+
+/* Mobile optimizations */
+@media (max-width: 640px) {
+    .holo-comment-submit-container {
+        backdrop-filter: blur(10px);
+    }
+    
+    .holo-comment-submit-hover {
+        transform: none;
+    }
+    
+    .holo-comment-submit-btn:hover:not(:disabled) {
+        transform: scale(1.02);
+    }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .holo-comment-submit-container,
+    .holo-comment-submit-btn {
+        transition: none;
+        transform: none !important;
+    }
+}
+</style>
