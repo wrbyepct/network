@@ -52,8 +52,8 @@
           };
 
         },
-        clearUpForm(e) {
-          e.target.reset();
+        clearUpForm(form) {
+          form.reset();
           this.resize(this.$refs.textarea);
         },
         {# Alert #}
@@ -513,8 +513,7 @@
           @media (hover: none) and (pointer: coarse) {
             /* Touch device optimizations */
             .nav-btn:hover,
-            .console-btn:hover,
-            .post-card:hover {
+            .console-btn:hover {
               /* Remove hover effects on touch devices */
               background: initial;
               transform: initial;

@@ -59,13 +59,21 @@ class CommentCreateView(
 
     def get_response(self):
         """Get partial response."""
+        is_reply = self.request.POST.get("is_reply")
+        template = (
+            "comments/comment.html"
+            if is_reply == "true"
+            else "comments/comment_for_multi_swap.html"
+        )
+
         post = self.object.post
+
         context = {
             "comment": self.object,
             "is_new_comment": True,
             "post": post,
         }
-        return render(self.request, "comments/comment_for_multi_swap.html", context)
+        return render(self.request, template, context)
 
     def form_valid(self, form):
         """
