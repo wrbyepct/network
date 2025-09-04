@@ -8,8 +8,8 @@
       required
       style="resize: none;"
       :placeholder="replying ? 'Etch your reply to {{ comment.username }}...' : 'Etch your reply...'  " 
+      x-ref="textarea"
       {% if request.user.is_authenticated %}
-        x-ref="textarea"
         x-model="commentBody"
         {% if for_comment_submit %}
           x-effect="if(editing) $nextTick(() => resize($el))"
