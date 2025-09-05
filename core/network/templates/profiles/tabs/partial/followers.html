@@ -1,13 +1,13 @@
 
 
 <div 
-  class="community-pond-container p-4 bg-gradient-to-b from-emerald-100 to-emerald-200 min-h-screen"
+  class="p-4 sm:p-6 lg:p-8"
   style="font-family: 'Press Start 2P', monospace; font-size: 8px; image-rendering: pixelated;"
 >
     <template x-if="followersCount">
       <div 
         id="follow-container" 
-        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4"
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6"
         hx-get="{% url 'followers_paginator' profile.username %}"
         hx-trigger="load"
         hx-swap="beforeend"
@@ -16,32 +16,22 @@
     </template>
 
     <template x-if="!followersCount">
-      <!-- Empty State - Lonely Turtle in Pond -->
-      <div class="flex items-center justify-center h-96">
+      <!-- Holographic Empty State -->
+      <div class="flex items-center justify-center min-h-[60vh]">
         <div class="text-center">
-          <!-- Lonely Swimming Turtle -->
+          <!-- Holographic Scanner Animation -->
           <div class="relative w-32 h-32 mx-auto mb-8">
-            <div class="lonely-turtle relative w-20 h-16 mx-auto">
-              <!-- Turtle Shell -->
-              <div class="turtle-shell emerald w-16 h-16 mx-auto relative">
-                  <div class="absolute inset-2 bg-gradient-to-br from-emerald-300 to-emerald-400 rounded-full border border-emerald-500"></div>
-              </div>
-              
-              <!-- Sad Turtle Head -->
-              <div class="turtle-head emerald"></div>
-              
-              <!-- Turtle Legs -->
-              <div class="turtle-leg emerald front-left"></div>
-              <div class="turtle-leg emerald front-right"></div>
-              <div class="turtle-leg emerald back-left"></div>
-              <div class="turtle-leg emerald back-right"></div>
+            <div class="w-20 h-20 mx-auto border-2 border-cyan-400/30 rounded-full animate-spin">
+              <div class="absolute inset-2 border-2 border-cyan-400/50 rounded-full animate-pulse"></div>
+              <div class="absolute inset-4 border-2 border-cyan-400/70 rounded-full animate-ping"></div>
             </div>
           </div>
             
           <!-- Empty State Message -->
-          <div class="bg-white bg-opacity-90 rounded-lg border-4 border-emerald-600 p-4 text-emerald-800 text-xs max-w-xs mx-auto">
-              <p class="mb-2">🐢 This pond is waiting for turtlers...</p>
-              <p>Share your profile to attract fellow turtles!</p>
+          <div class="bg-white/8 border border-cyan-400/30 backdrop-blur-xl rounded-xl p-6 text-white/90 text-xs max-w-sm mx-auto shadow-lg shadow-cyan-500/20 holo-glow">
+              <p class="mb-3 text-cyan-400 font-bold">⟦ SCANNING DEPTHS... ⟧</p>
+              <p class="mb-2 text-white/80">No followers detected in the holographic ocean.</p>
+              <p class="text-white/60">Share your profile to attract fellow digital explorers!</p>
           </div>
         </div>
       </div>
