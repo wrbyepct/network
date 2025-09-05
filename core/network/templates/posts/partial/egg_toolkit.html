@@ -1,23 +1,57 @@
 {% extends 'common/toolkit.html' %}
-  <!-- Tooltip Bubble -->
 {% block toolkit_content %}
-  {% if display_born_from %}
-    <p class="mb-1">
-      Hatched from: 
-    </p>
-    <p><span class="italic font-black">{{ egg.name|title }}</span> egg</p>
-  {% endif %}
-    <p class="mb-1">Egg type: </p>
-    <p>{% if egg.egg_type == "special" %}<span class="text-fuchsia-500 font-black">Rare </span><span class="text-amber-500 font-black">Lengendary </span>{% elif egg.egg_type == "easter" %}<span class="font-bold text-rose-500">Extremely rare </span> <span class="text-pink-400 font-bold">Easter</span> {% else %}Li'l <span class="text-emerald-700 font-black">Cute</span>
-{% endif %}type</p>
-  <!-- Bigger egg image -->
-  {% if display_egg_image %}
-    <img class="w-30 egg-levitation mx-auto" src="{{ egg.url }}" alt="Bigger Egg image">
-  {% endif %}
-  
-  {% if display_collected_date %}
-    <p>First collected on:</p>
-    <p>{{ egg.created_at|date:"Y/m/d" }}</p>
-  {% endif %}
+    <div class="text-white/90 space-y-3 min-w-[140px]">
+        <!-- Digital Header -->
+        <div class="text-center border-b border-cyan-400/30 pb-2">
+            <div class="text-yellow-400 font-bold text-[7px] tracking-wider">EGG DATA</div>
+        </div>
 
+        {% if display_born_from %}
+            <!-- Hatched From Section -->
+            <div class="bg-black/40 border border-blue-400/20 rounded px-2 py-3">
+                <div class="text-cyan-400 text-[8px] mb-1" style="text-shadow: 0 0 3px rgba(6, 182, 212, 0.5);">HATCHED FROM:</div>
+                <div class="text-white/90 text-[12px] font-bold mt-3">{{ egg.name|title }} EGG</div>
+            </div>
+        {% endif %}
+
+        <!-- Egg Type Console Display -->
+        <div class="bg-black/40 border border-blue-400/20 rounded px-2 py-3">
+            <div class="text-cyan-400 text-[8px] mb-1" style="text-shadow: 0 0 3px rgba(6, 182, 212, 0.5);">TYPE:</div>
+            <div class="text-[12px] font-bold mt-3">
+                {% if egg.egg_type == "special" %}
+                <div class="flex px-3">
+                    <span class="text-fuchsia-400 me-3" style="text-shadow: 0 0 8px rgba(192, 132, 252, 0.6);">RARE</span>
+                    <span class="text-amber-400" style="text-shadow: 0 0 8px rgba(251, 191, 36, 0.6);">LEGENDARY</span>
+                </div>
+          
+                {% elif egg.egg_type == "easter" %}
+                <div class="flex p-3"> 
+                      <span class="text-rose-400 me-3" style="text-shadow: 0 0 8px rgba(251, 113, 133, 0.6);">ULTRA RARE</span>
+                    <span class="text-pink-400" style="text-shadow: 0 0 8px rgba(244, 114, 182, 0.6);">EASTER</span>
+                </div>
+                  
+                {% else %}
+                    <span class="text-emerald-400" style="text-shadow: 0 0 8px rgba(52, 211, 153, 0.6);">CUTE</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Bigger Egg Display -->
+        {% if display_egg_image %}
+            <div class="text-center py-2">
+                <img class="w-30 h-auto mx-auto" 
+                     src="{{ egg.url }}" 
+                     alt="Egg Image"
+                     style="filter: drop-shadow(0 0 8px rgba(255, 255, 0, 0.3));">
+            </div>
+        {% endif %}
+
+        {% if display_collected_date %}
+            <!-- Collection Date Console -->
+            <div class="bg-black/40 border border-blue-400/20 rounded px-2 py-3">
+                <div class="text-cyan-400 text-[8px] mb-1" style="text-shadow: 0 0 3px rgba(6, 182, 212, 0.5);">COLLECTED:</div>
+                <div class="text-white/90 text-[15px] font-mono">{{ egg.created_at|date:"Y/m/d" }}</div>
+            </div>
+        {% endif %}
+    </div>
 {% endblock %}
