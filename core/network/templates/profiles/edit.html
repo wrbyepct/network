@@ -1,16 +1,58 @@
 {% extends "network/layout.html" %}
-
 {% load form_filters %}
 
 {% block body %}
+
 <div 
   class="w-full min-h-screen holographic-ocean-bg relative z-10 px-4 py-8"
-  x-data="profileEditor()"
->  
+  x-data="{
+        isDragging: false,
+        previewImage: null,
+        bio: '{{ form.bio.value|default_if_none:""|escapejs }}',
+        bioLength: '{{ form.bio.value|default_if_none:""|length }}',
+        errors: {},
+        isSubmitting: false,
+        showSuccess: {{ edited_success|yesno:'true,false' }},
+
+        handleFileSelect(event) {
+          const file = event.target.files[0];
+          this.previewFile(file);
+        },
+
+        handleFileDrop(event) {
+          this.isDragging = false;
+          const file = event.dataTransfer.files[0];
+          this.previewFile(file);
+        },
+
+        previewFile(file) {
+          if (file && file.type && file.type.startsWith('image/')) {
+            this.previewImage = { 
+                file: file, 
+                url: URL.createObjectURL(file),
+            }
+          }
+        },
+        prepareUploadFile(form) {
+          if (this.previewImage && this.$refs.fileInput) {
+            const dt = new DataTransfer();
+            dt.items.add(this.previewImage.file);
+            this.$refs.fileInput.files = dt.files;
+          } 
+          form.submit();
+        },
+        hideSuccessMessage() {
+          if (this.showSuccess) setTimeout(() => { this.showSuccess = false; }, 3000)
+        },
+        init() {
+          // Initialize bio length (ensure number)
+          this.bioLength = parseInt('{{ form.bio.value|default_if_none:""|length }}') || 0;
+        }
+      }">  
   <!-- Holographic Console Header -->
   <div class="max-w-4xl mx-auto mb-6 sm:mb-8">
-    <div class="post-card holo-composer-container rounded-xl p-4 sm:p-6 text-center relative overflow-hidden "
-         style="font-family: 'Press Start 2P', monospace; font-size: 8px; sm:font-size: 10px; image-rendering: pixelated;">
+    <div class="post-card holo-composer-container rounded-xl p-4 sm:p-6 text-center relative overflow-hidden text-[8px] sm:text-[10px]"
+         style="font-family: 'Press Start 2P', monospace; image-rendering: pixelated;">
       
       <!-- Console Header Gradient -->
       <div class="console-header rounded-lg p-3 sm:p-4 mb-4">
@@ -22,7 +64,7 @@
             PROFILE EDITOR
           </div>
         </div>
-        <div class="text-neutral-400 opacity-80 mt-2 text-center" style="font-size: 6px; sm:font-size: 8px;">
+        <div class="text-neutral-400 opacity-80 mt-2 text-center text-[6px] sm:text-[8px]">
           v3.0 - Holographic System
         </div>
       </div>
@@ -42,19 +84,19 @@
   </div>
 
   <!-- Main Form Container -->
-  <div class="max-w-4xl mx-auto" >
+  <div class="max-w-4xl mx-auto">
     <form method="post" 
           action="{% url 'profile_edit' %}" 
           enctype="multipart/form-data"
           @submit.prevent="prepareUploadFile($el)" 
-          class="post-card holo-composer-container rounded-xl p-4 sm:p-6 lg:p-8 shadow-xl backdrop-blur-xl"
-          style="font-family: 'Press Start 2P', monospace; font-size: 8px; sm:font-size: 10px; image-rendering: pixelated;"
+          class="post-card holo-composer-container rounded-xl p-4 sm:p-6 lg:p-8 shadow-xl backdrop-blur-xl text-[8px] sm:text-[10px]"
+          style="font-family: 'Press Start 2P', monospace; image-rendering: pixelated;"
         >
       {% csrf_token %}
 
       <!-- Profile Picture Section -->
       <div class="mb-8">
-        <div class="rounded-lg p-6 mb-6 ">
+        <div class="rounded-lg p-6 mb-6">
           <div class="flex items-center gap-3 mb-6">
             <div class="w-4 h-4 bg-cyan-400 rounded-full animate-pulse"></div>
             <label class="text-lg font-bold text-cyan-300 tracking-wide">AVATAR CONFIGURATION</label>
@@ -137,9 +179,8 @@
       <!-- Personal Info Grid -->
       <div class="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-8">
         
-
         <!-- First Name Field -->
-        <div class="rounded-lg p-4 ">
+        <div class="rounded-lg p-4">
           <div class="flex items-center gap-3 mb-4">
             <div class="w-3 h-3 bg-green-400 rounded-full"></div>
             <label for="id_first_name" class="text-green-300 font-bold text-sm tracking-wide">FIRST NAME</label>
@@ -153,13 +194,12 @@
                    id="id_first_name" 
                    value="{{ form.first_name.value|default_if_none:'' }}"
                    placeholder="First name...">
-          
           </div>
           <div class="text-red-300 text-xs mt-2">{{ form.first_name.errors }}</div>
         </div>
 
         <!-- Username Field -->
-        <div class="rounded-lg p-4 ">
+        <div class="rounded-lg p-4">
           <div class="flex items-center gap-3 mb-4">
             <div class="w-3 h-3 bg-cyan-400 rounded-full"></div>
             <label for="id_username" class="text-cyan-300 font-bold text-sm tracking-wide">USERNAME</label>
@@ -173,13 +213,12 @@
                    id="id_username" 
                    value="{{ form.username.value|default_if_none:'' }}"
                    placeholder="Enter username...">
-            
           </div>
           <div class="text-red-300 text-xs mt-2">{{ form.username.errors }}</div>
         </div>
 
         <!-- Last Name Field -->
-        <div class="rounded-lg p-4 ">
+        <div class="rounded-lg p-4">
           <div class="flex items-center gap-3 mb-4">
             <div class="w-3 h-3 bg-green-400 rounded-full"></div>
             <label for="id_last_name" class="text-green-300 font-bold text-sm tracking-wide">LAST NAME</label>
@@ -193,62 +232,59 @@
                    id="id_last_name" 
                    value="{{ form.last_name.value|default_if_none:'' }}"
                    placeholder="Last name...">
-            
           </div>
           <div class="text-red-300 text-xs mt-2">{{ form.last_name.errors }}</div>
         </div>
 
         <!-- Phone Number Field -->
-        <div class="rounded-lg p-4 ">
+        <div class="rounded-lg p-4">
           <div class="flex items-center gap-3 mb-4">
             <div class="w-3 h-3 bg-yellow-400 rounded-full"></div>
             <label for="id_phonenumber" class="text-yellow-300 font-bold text-sm tracking-wide">PHONE</label>
           </div>
           <div class="relative">
             {{ form.phonenumber|add_class:"w-full bg-black/30 border border-cyan-400/30 backdrop-blur-lg rounded-lg px-4 py-3 text-cyan-100 text-xs placeholder-cyan-400/60 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/30 transition-all duration-300" }}
-          
           </div>
           <div class="text-red-300 text-xs mt-2">{{ form.phonenumber.errors }}</div>
         </div>
       </div>
 
       <!-- Birth Date -->
-    <div class="mb-8">
-      <div class="rounded-lg p-6 ">
-        <div class="flex items-center gap-3 mb-4">
-          <div class="w-3 h-3 bg-purple-400 rounded-full"></div>
-          <label for="id_birth_date" class="text-purple-300 font-bold text-sm tracking-wide">BIRTH DATE</label>
-        </div>
+      <div class="mb-8">
+        <div class="rounded-lg p-6">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-3 h-3 bg-purple-400 rounded-full"></div>
+            <label for="id_birth_date" class="text-purple-300 font-bold text-sm tracking-wide">BIRTH DATE</label>
+          </div>
 
-        <!-- Flatpickr wrapper -->
-        <div class="relative flatpickr" data-wrap>
-          <!-- Input (alt input gets styled nicely) -->
-          <input 
-            type="text" 
-            name="birth_date" 
-            id="id_birth_date" 
-            data-input
-            class="w-full bg-black/30 border border-cyan-400/30 backdrop-blur-lg rounded-lg px-4 py-3 
-                  text-cyan-100 text-xs focus:border-cyan-400 focus:outline-none 
-                  focus:ring-2 focus:ring-cyan-400/30 transition-all duration-300"
-            value="{{ form.birth_date.value|default_if_none:'' }}"
-            {% if form.birth_date.field.required %}required{% endif %}>
-          
-          <!-- Calendar icon trigger -->
-          <button type="button" data-toggle 
-                  class="absolute right-3 top-1/2 -translate-y-1/2 text-cyan-300 hover:text-cyan-100">
-            📅
-          </button>
-        </div>
+          <!-- Flatpickr wrapper -->
+          <div class="relative flatpickr" data-wrap="true">
+            <!-- Input (alt input gets styled nicely) -->
+            <input 
+              type="text" 
+              name="birth_date" 
+              id="id_birth_date" 
+              data-input
+              class="w-full bg-black/30 border border-cyan-400/30 backdrop-blur-lg rounded-lg px-4 py-3 
+                    text-cyan-100 text-xs focus:border-cyan-400 focus:outline-none 
+                    focus:ring-2 focus:ring-cyan-400/30 transition-all duration-300"
+              value="{{ form.birth_date.value|default_if_none:'' }}"
+              {% if form.birth_date.field.required %}required{% endif %}>
+            
+            <!-- Calendar icon trigger -->
+            <button type="button" data-toggle 
+                    class="absolute right-3 top-1/2 -translate-y-1/2 text-cyan-300 hover:text-cyan-100">
+              📅
+            </button>
+          </div>
 
-        <div class="text-red-300 text-xs mt-2">{{ form.birth_date.errors }}</div>
+          <div class="text-red-300 text-xs mt-2">{{ form.birth_date.errors }}</div>
+        </div>
       </div>
-    </div>
-
 
       <!-- Bio Section -->
       <div class="mb-8">
-        <div class="rounded-lg p-6 ">
+        <div class="rounded-lg p-6">
           <div class="flex items-center justify-between mb-4">
             <div class="flex items-center gap-3">
               <div class="w-3 h-3 bg-blue-400 rounded-full"></div>
@@ -324,74 +360,25 @@
        x-cloak
        x-init="hideSuccessMessage()"
        class="fixed top-4 sm:top-8 right-4 sm:right-8 left-4 sm:left-auto post-card rounded-xl p-4 sm:p-6 
-              shadow-2xl z-50 border border-cyan-400/30 animate-pulse max-w-sm"
-       style="font-family: 'Press Start 2P', monospace; font-size: 8px; sm:font-size: 10px;">
+              shadow-2xl z-50 border border-cyan-400/30 animate-pulse max-w-sm text-[8px] sm:text-[10px]"
+       style="font-family: 'Press Start 2P', monospace;">
     <div class="flex items-center gap-2 sm:gap-3">
       <div class="w-3 h-3 sm:w-4 sm:h-4 bg-green-400 rounded-full animate-pulse"></div>
       <span class="text-cyan-300 font-bold text-xs sm:text-sm">PROFILE UPDATED</span>
     </div>
     <div class="text-green-300 text-xs mt-2 opacity-80">✨ Changes saved</div>
   </div>
-
-</div>
-<script>
-  flatpickr(".flatpickr", {
+  <script>
+  flatpickr('.flatpickr', {
+        wrap: true,                // ← critical
+        dateFormat: 'Y-m-d',
+        position: 'auto right',
+        maxDate: 'today',             // Birth date can't be in future
+        minDate: '1900-01-01',        // Reasonable minimum
+      });
+  document.addEventListener('DOMContentLoaded', () => {
     
-    dateFormat: "Y-m-d",    // Value sent to backend: "2025-09-04"
-    position: "auto right",
-  
-  });
-
-  function profileEditor() {
-    return {
-      isDragging: false,
-      previewImage: null,
-      bio: '{{ form.bio.value|default_if_none:"" }}',
-      bioLength: '{{ form.bio.value|default_if_none:""|length }}',
-      errors: {},
-      isSubmitting: false,
-      showSuccess: {{ edited_success|yesno:'true, false' }},
-
-
-      handleFileSelect(event) {
-        const file = event.target.files[0];
-        this.previewFile(file);
-      },
-
-      handleFileDrop(event) {
-        this.isDragging = false;
-        const file = event.dataTransfer.files[0];
-        this.previewFile(file);
-      },
-
-      previewFile(file) {
-        if (file.type.startsWith('image/')) {
-          this.previewImage = { 
-              file: file, 
-              url: URL.createObjectURL(file),
-          }
-        }
-      },
-      prepareUploadFile(form) {
-        if(this.previewImage) {
-          const dt = new DataTransfer();
-          dt.items.add(this.previewImage.file);
-          this.$refs.fileInput.files = dt.files;
-        } 
-        form.submit();
-      },
-      hideSuccessMessage() {
-        if(this.showSuccess) setTimeout(() => { this.showSuccess = false; }, 3000)
-      },
-      init() {
-        // Initialize bio length
-        this.bioLength = parseInt('{{ form.bio.value|default_if_none:""|length }}') || 0;
-      }
-    }
-  }
-
-  // Add pixelated rendering style
-  document.addEventListener('DOMContentLoaded', function() {
+    // Add pixelated rendering style (utility)
     const style = document.createElement('style');
     style.textContent = `
       .pixelated {
@@ -404,5 +391,4 @@
     document.head.appendChild(style);
   });
 </script>
-
 {% endblock %}

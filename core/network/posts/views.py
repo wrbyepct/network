@@ -49,31 +49,40 @@ class PostListView(ListView):
         context["is_incubating"] = bool(
             IncubationService.get_incubating_post_id(self.request.user.id)
         )
-        profile = self.request.user.profile
-        context["egg_panels"] = [
-            {
-                "label": "EASTER EGGS",
-                "color": "text-pink-300",
-                "shadow": "rgba(255, 255, 0, 0.5)",
-                "count": profile.easter_eggs_count,
-                "egg": random.choice(profile.easter_eggs),
-            },
-            {
-                "label": "LEGENDARY",
-                "color": "text-orange-300",
-                "shadow": "rgba(0, 255, 255, 0.5)",
-                "count": profile.special_eggs_count,
-                "egg": random.choice(profile.special_eggs),
-            },
-            {
-                "label": "CUTE",
-                "color": "text-green-400",
-                "shadow": "rgba(59, 130, 246, 0.5)",
-                "count": profile.regular_eggs_count,
-                "egg": random.choice(profile.regular_eggs),
-            },
-        ]
+
         if self.request.user.is_authenticated:
+            profile = self.request.user.profile
+            easter_eggs = profile.easter_eggs
+            special_eggs = profile.special_eggs
+            regular_eggs = profile.regular_eggs
+            context["egg_panels"] = [
+                {
+                    "label": "EASTER EGGS",
+                    "color": "text-pink-300",
+                    "shadow": "rgba(255, 255, 0, 0.5)",
+                    "count": profile.easter_eggs_count,
+                    "egg": random.choice(profile.easter_eggs) if easter_eggs else None,
+                },
+                {
+                    "label": "LEGENDARY",
+                    "color": "text-orange-300",
+                    "shadow": "rgba(0, 255, 255, 0.5)",
+                    "count": profile.special_eggs_count,
+                    "egg": random.choice(profile.special_eggs)
+                    if special_eggs
+                    else None,
+                },
+                {
+                    "label": "CUTE",
+                    "color": "text-green-400",
+                    "shadow": "rgba(59, 130, 246, 0.5)",
+                    "count": profile.regular_eggs_count,
+                    "egg": random.choice(profile.regular_eggs)
+                    if regular_eggs
+                    else None,
+                },
+            ]
+
             context["activity"] = ActivityManagerService.get_activity_obj(
                 user=self.request.user
             )

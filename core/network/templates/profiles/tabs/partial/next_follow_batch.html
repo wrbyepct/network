@@ -1,6 +1,7 @@
 
 {% if page_obj.has_next %}
 
+<!-- Holographic Loading Trigger -->
 <div
   hx-get="{{ fetch_url }}"
   hx-vals='{ "page": {{ page_obj.next_page_number }}}'
@@ -8,6 +9,25 @@
   hx-swap="beforeend"
   hx-trigger="revealed once"
   @htmx:after-request="if($event.detail.successful) $el.remove();"
-></div>
+  class="col-span-full flex justify-center items-center py-12"
+  style="font-family: 'Press Start 2P', monospace; font-size: 8px;"
+>
+  <!-- Ocean Scanning Animation -->
+  <div class="text-center">
+    <div class="relative w-16 h-16 mx-auto mb-4">
+      <!-- Sonar Rings -->
+      <div class="absolute inset-0 border-2 border-cyan-400/30 rounded-full animate-ping"></div>
+      <div class="absolute inset-2 border-2 border-cyan-400/50 rounded-full animate-pulse"></div>
+      <div class="absolute inset-4 border-2 border-cyan-400/70 rounded-full animate-spin"></div>
+      <!-- Center Dot -->
+      <div class="absolute inset-6 bg-cyan-400 rounded-full animate-pulse"></div>
+    </div>
+    
+    <!-- Loading Message -->
+    <div class="bg-white/8 border border-cyan-400/30 backdrop-blur-xl rounded-lg px-4 py-2 text-cyan-400 holo-glow">
+      <span class="animate-pulse">⟦ Scanning Ocean Depths... ⟧</span>
+    </div>
+  </div>
+</div>
 
 {% endif %}
