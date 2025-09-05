@@ -1,6 +1,6 @@
 
 <div 
-  class="turtle-social-container bg-gradient-to-b from-emerald-50 to-blue-50 min-h-screen"
+  class="holographic-ocean-bg min-h-screen"
   style="font-family: 'Press Start 2P', monospace;"
   x-data="{ 
     activeTab: 'followers',
@@ -8,42 +8,42 @@
     followingCount: {{ profile.following.count }},
   }"
 >
-  <!-- Tab Navigation -->
-  <div class="sticky top-0 bg-white bg-opacity-95 backdrop-blur-sm border-b-4 border-emerald-600 z-10">
+  <!-- Holographic Tab Navigation -->
+  <div class="sticky top-0 bg-black/90 backdrop-blur-xl border-b border-cyan-400/30 z-10 shadow-lg shadow-cyan-500/10">
     <div class="container-sm px-2 sm:px-4 py-3">
-      <!-- Tab Stats Summary -->
+      <!-- Holographic Stats Summary -->
       <div class="flex flex-col sm:flex-row justify-center items-center space-y-2 sm:space-y-0 sm:space-x-4 mb-4">
         <div 
           id="followers-count" 
-          class="stat-pill bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full border-2 border-emerald-600 text-xs sm:text-sm"
+          class="bg-white/8 border border-cyan-400/30 backdrop-blur-xl px-4 py-2 rounded-lg text-cyan-400 text-xs sm:text-sm font-bold shadow-lg shadow-cyan-500/20 holo-glow"
           x-init="followerCount = {{ profile.followers.count }}"
         >
-        {{ profile.followers.count }} Followers
+        <span class="text-white/90">{{ profile.followers.count }}</span> FOLLOWERS
         </div>
         <div 
           id="following-count" 
-          class="stat-pill bg-blue-100 text-blue-800 px-3 py-1 rounded-full border-2 border-blue-600 text-xs sm:text-sm"
+          class="bg-white/8 border border-emerald-400/30 backdrop-blur-xl px-4 py-2 rounded-lg text-emerald-400 text-xs sm:text-sm font-bold shadow-lg shadow-emerald-500/20 holo-glow"
           x-init="followingCount = {{ profile.following.count }}"
         >
-        {{ profile.following.count }} Following
+        <span class="text-white/90">{{ profile.following.count }}</span> FOLLOWING
         </div>
       </div>
       
-      <!-- Tab Navigation Buttons -->
-      <div class="flex justify-center space-x-1 sm:space-x-2">
+      <!-- Holographic Tab Navigation Buttons -->
+      <div class="flex justify-center space-x-2 sm:space-x-4">
         <button
           @click="activeTab = 'followers'"
-          :class="activeTab === 'followers' ? 'bg-emerald-500 text-white border-emerald-700' : 'bg-white text-emerald-700 border-emerald-500 hover:bg-emerald-50'"
-          class="flex-1 sm:flex-none px-3 sm:px-4 py-2 rounded-lg font-bold text-xs sm:text-sm border-3 transition-all duration-200 hover:scale-105 min-h-[44px] flex items-center justify-center"
+          :class="activeTab === 'followers' ? 'bg-cyan-500/20 border-cyan-400/60 text-cyan-300 shadow-cyan-400/40' : 'bg-white/10 border-white/20 text-white/70 hover:bg-cyan-500/15 hover:border-cyan-400/40'"
+          class="pixel-btn px-4 sm:px-6 py-3 rounded-lg font-bold text-xs sm:text-sm border backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-lg min-h-[44px] flex items-center justify-center holo-glow"
         >
-          <img class="w-15" src="/media/defaults/turtle_followers.png" alt="Turtle Follower image">
+          ◀ FOLLOWERS
         </button>
         <button
           @click="activeTab = 'following'"
-          :class="activeTab === 'following' ? 'bg-blue-500 text-white border-blue-700' : 'bg-white text-blue-700 border-blue-500 hover:bg-blue-50'"
-          class="flex-1 sm:flex-none px-3 sm:px-4 py-2 rounded-lg font-bold text-xs sm:text-sm border-3 transition-all duration-200 hover:scale-105 min-h-[44px] flex items-center justify-center"
+          :class="activeTab === 'following' ? 'bg-emerald-500/20 border-emerald-400/60 text-emerald-300 shadow-emerald-400/40' : 'bg-white/10 border-white/20 text-white/70 hover:bg-emerald-500/15 hover:border-emerald-400/40'"
+          class="pixel-btn px-4 sm:px-6 py-3 rounded-lg font-bold text-xs sm:text-sm border backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-lg min-h-[44px] flex items-center justify-center holo-glow"
         >
-          <img class="w-15" src="/media/defaults/turtle_following.png" alt="Turtle Following image">
+          FOLLOWING ▶
         </button>
       </div>
     </div>
@@ -78,213 +78,49 @@
 </div>
 
 <style>
-  /* Shared Turtle Social Styles - DRY Implementation */
-  .pixelated {
-    image-rendering: pixelated;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: crisp-edges;
-  }
-  
-  /* Base Turtle Shell Structure */
-  .turtle-shell {
-    position: relative;
-    border-radius: 50%;
-    border: 3px solid;
-  }
-  
-  .turtle-shell::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 70%;
-    height: 70%;
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    border: 2px solid;
-  }
-  
-  .turtle-shell::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 40%;
-    height: 40%;
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    border: 1px solid;
-  }
-  
-  /* Emerald Theme (Followers) */
-  .turtle-shell.emerald {
-    background: linear-gradient(135deg, #10b981, #059669);
-    border-color: #064e3b;
-  }
-  
-  .turtle-shell.emerald::before {
-    background: linear-gradient(135deg, #34d399, #10b981);
-    border-color: #065f46;
-  }
-  
-  .turtle-shell.emerald::after {
-    background: #d1fae5;
-    border-color: #059669;
-  }
-  
-  /* Blue Theme (Following) */
-  .turtle-shell.blue {
-    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-    border-color: #1e40af;
-  }
-  
-  .turtle-shell.blue::before {
-    background: linear-gradient(135deg, #60a5fa, #3b82f6);
-    border-color: #1e40af;
-  }
-  
-  .turtle-shell.blue::after {
-    background: #dbeafe;
-    border-color: #3b82f6;
-  }
-  
-  /* Base Turtle Head Structure */
-  .turtle-head {
-    position: absolute;
-    width: 20px;
-    height: 16px;
-    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-    border: 2px solid;
-    top: -8px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 2;
-  }
-  
-  /* Emerald Turtle Head */
-  .turtle-head.emerald {
-    background: linear-gradient(135deg, #10b981, #059669);
-    border-color: #064e3b;
-  }
-  
-  /* Blue Turtle Head */
-  .turtle-head.blue {
-    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-    border-color: #1e40af;
-  }
-  
-  /* Base Turtle Leg Structure */
-  .turtle-leg {
-    position: absolute;
-    width: 12px;
-    height: 8px;
-    border-radius: 50%;
-    border: 1px solid;
-  }
-  
-  /* Emerald Turtle Legs */
-  .turtle-leg.emerald {
-    background: linear-gradient(135deg, #10b981, #059669);
-    border-color: #064e3b;
-  }
-  
-  /* Blue Turtle Legs */
-  .turtle-leg.blue {
-    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-    border-color: #1e40af;
-  }
-  
-  /* Leg Positioning */
-  .turtle-leg.front-left { top: 12px; left: -6px; }
-  .turtle-leg.front-right { top: 12px; right: -6px; }
-  .turtle-leg.back-left { bottom: 12px; left: -6px; }
-  .turtle-leg.back-right { bottom: 12px; right: -6px; }
-  
-  /* Card Hover Animations */
-  @keyframes gentle-float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-2px); }
-  }
-  
-  .turtle-social-card:hover .turtle-shell-container {
-    animation: gentle-float 2s ease-in-out infinite;
-  }
-  
-  /* Lonely Turtle Animation */
-  @keyframes lonely-swim {
-    0% { transform: translateX(0) rotate(0deg); }
-    25% { transform: translateX(50px) rotate(90deg); }
-    50% { transform: translateX(50px) translateY(25px) rotate(180deg); }
-    75% { transform: translateX(0) translateY(25px) rotate(270deg); }
-    100% { transform: translateX(0) rotate(360deg); }
-  }
-  
-  .lonely-turtle {
-    animation: lonely-swim 6s ease-in-out infinite;
+  .holo-profile-card {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    box-shadow: 
+      0 20px 40px rgba(0, 0, 0, 0.15),
+      inset 0 2px 4px rgba(255, 255, 255, 0.05);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  /* Mobile-first responsive design improvements */
+  .holo-profile-card:hover {
+    background: rgba(6, 182, 212, 0.1);
+    border-color: rgba(6, 182, 212, 0.3);
+    box-shadow: 
+      0 30px 60px rgba(0, 0, 0, 0.2),
+      0 0 40px rgba(6, 182, 212, 0.3),
+      inset 0 2px 4px rgba(255, 255, 255, 0.1);
+    transform: translateY(-4px);
+  }
+
+  /* Avatar glow */
+  .holo-avatar {
+    border: 2px solid rgba(6, 182, 212, 0.4);
+    box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
+    filter: drop-shadow(0 0 10px rgba(6, 182, 212, 0.2));
+    image-rendering: pixelated;
+  }
+
+  /* Mobile optimizations */
   @media (max-width: 640px) {
-    .turtle-social-container {
-      font-size: 6px;
+    .holo-profile-card {
+      backdrop-filter: blur(15px);
     }
-    
-    /* Ensure better touch targets on mobile */
-    .stat-pill {
-      font-size: 10px !important;
-    }
-    
-    /* Improve card spacing on mobile */
-    .turtle-social-card {
-      margin-bottom: 1rem;
-    }
-    
-    /* Better button text wrapping */
-    button span {
-      white-space: nowrap;
+    .holo-profile-card:hover {
+      transform: translateY(-2px);
     }
   }
-  
-  /* Tablet optimizations */
-  @media (min-width: 641px) and (max-width: 1024px) {
-    .turtle-social-container {
-      font-size: 7px;
-    }
-  }
-  
-  /* Desktop and larger */
-  @media (min-width: 1025px) {
-    .turtle-social-container {
-      font-size: 8px;
-    }
-  }
-  
-  /* Custom breakpoint for very small screens */
-  @media (min-width: 480px) {
-    .xs\:inline {
-      display: inline !important;
-    }
-  }
-  
-  /* Enhance tab transitions for better UX */
-  .tab-content > div {
-    will-change: transform, opacity;
-  }
-  
-  /* Improved focus states for accessibility */
-  button:focus {
-    outline: 2px solid #1d4ed8;
-    outline-offset: 2px;
-  }
-  
-  /* Better hover states that respect reduced motion */
+
+  /* Reduced motion support */
   @media (prefers-reduced-motion: reduce) {
-    .turtle-social-card:hover {
-      transform: none;
+    .holo-profile-card,
+    .holo-profile-card:hover {
       transition: none;
-    }
-    
-    button:hover {
       transform: none;
     }
   }
