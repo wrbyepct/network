@@ -9,6 +9,8 @@ from phonenumber_field.modelfields import PhoneNumberField
 from network.common.models import TimestampedModel
 from network.tools.media import generate_file_path
 
+from .services import ActivityManagerService
+
 
 class FollowMixin:
     """Functions for follow and unflow a profile."""
@@ -119,6 +121,11 @@ class Profile(TimestampedModel, FollowMixin):
     def posts_count(self):
         """Return user's posts count."""
         return self.user.posts.count()
+
+    @property
+    def activity(self):
+        """Return user's actiity status."""
+        return ActivityManagerService.get_activity_obj(user=self.user)
 
 
 class SpecialEggChoices(models.TextChoices):

@@ -19,7 +19,6 @@ from network.posts.services import IncubationService
 from .constants import PHOTO_TABS, PROFILE_TABS
 from .forms import ProfileForm
 from .models import Profile
-from .services import ActivityManagerService
 
 
 # Photo uploads view
@@ -157,9 +156,6 @@ class AboutView(LoginRequiredMixin, ProfileTabsBaseMixin, TemplateView):
     def get_context_data(self, **kwargs):
         """Inject user activity status in context."""
         context = super().get_context_data(**kwargs)
-        context["activity"] = ActivityManagerService.get_activity_obj(
-            user=self.profile.user
-        )
 
         context["sub_tab"] = self.request.GET.get("sub_tab", "story")
 
