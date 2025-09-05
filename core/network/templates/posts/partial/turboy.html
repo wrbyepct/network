@@ -236,35 +236,43 @@
                 <div class="p-3 flex gap-1.5">
                 {% for panel in egg_panels %}
                   {% if panel.count %}
-                    <div class="flex-1 mini-screen border-3 border-blue-950 rounded-md p-2">
-                      <!-- Label -->
-                      <div  class="text-center mb-2 tracking-wider {{ panel.color }}" 
-                          
-                          style="font-size: 9px; text-shadow: 0 0 2px {{ panel.shadow }};">
-                        <span >{{ panel.label }}</span>
-                      </div>
-                      
-                      <!-- Count -->
-                      <div class="text-center">
-                        <div class="counter-display bg-black text-blue-500 font-mono text-xs font-bold 
-                                    px-1 py-0.5 rounded-sm mb-1 border border-blue-900"
-                            style="text-shadow: 0 0 4px currentColor;">{{ panel.count|stringformat:"03d" }}</div>
-                      </div>
+                    <div class="flex-1 mini-screen border-3 border-blue-950 rounded-md p-2 relative">
+                      <!-- glass layer -->
+                      <div class="pointer-events-none absolute inset-0 rounded-md z-10"
+                          style="backdrop-filter: blur(15px);"></div>
 
-                      <!-- Eggs -->
-                      <div class="flex gap-0.5 justify-center flex-wrap">
-                        <div class="relative group">
-                          {% with egg=panel.egg %}
-                            {% include 'posts/partial/egg_toolkit.html' with egg=egg display_collected_date=True display_egg_image=True %}
+                      <!-- real content above glass -->
+                      <div class="relative z-10">
+                        <!-- Label -->
+                        <div  class="text-center mb-2 tracking-wider {{ panel.color }}" 
                             
-                            <div class="{{ panel.color}} text-center text-[11px] pt-2 break-all">{{ egg.name|title }}</div>
-                            <img 
-                              class="w-15 treasure-glow cursor-pointer mx-auto" 
-                              src="{{ egg.url }}" 
-                              alt="User's {{ panel.label }} {{ egg.name }} treasure">
-                          {% endwith %}
+                            style="font-size: 9px; text-shadow: 0 0 2px {{ panel.shadow }};">
+                          <span >{{ panel.label }}</span>
                         </div>
+                        
+                        <!-- Count -->
+                        <div class="text-center">
+                          <div class="counter-display bg-black text-blue-500 font-mono text-xs font-bold 
+                                      px-1 py-0.5 rounded-sm mb-1 border border-blue-900"
+                              style="text-shadow: 0 0 4px currentColor;">{{ panel.count|stringformat:"03d" }}</div>
+                        </div>
+
+                        
                       </div>
+                      <!-- Eggs -->
+                        <div class="flex gap-0.5 justify-center flex-wrap z-10">
+                          <div class="relative group">
+                            {% with egg=panel.egg %}
+                              {% include 'posts/partial/egg_toolkit.html' with egg=egg display_collected_date=True display_egg_image=True %}
+                              
+                              <div class="{{ panel.color}} text-center text-[11px] pt-2 break-all">{{ egg.name|title }}</div>
+                              <img 
+                                class="w-15 treasure-glow cursor-pointer mx-auto" 
+                                src="{{ egg.url }}" 
+                                alt="User's {{ panel.label }} {{ egg.name }} treasure">
+                            {% endwith %}
+                          </div>
+                        </div>
                     </div>
                     {% endif %}
                 {% endfor %}
@@ -571,7 +579,6 @@
   box-shadow: 
     inset 0 2px 4px rgba(255, 255, 255, 0.05),
     0 8px 15px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(15px);
   color: rgba(255, 255, 255, 0.9);
 }
 
