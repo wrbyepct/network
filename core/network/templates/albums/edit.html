@@ -2,14 +2,24 @@
 {% load widget_tweaks %}
 {% block body %}
 
+
+
 <div class="w-full min-h-screen holographic-ocean-bg relative z-10" 
      x-data="albumEditor()"
      style="font-family: 'Press Start 2P', monospace; font-size: 10px;">
   
 
 
+
   <!-- Main Container -->
   <div class="w-full xl:w-[98vw] lg:container-2xl pt-4 mx-auto px-2 lg:px-0">
+
+    <!-- Back to gallery button -->
+    <div class="mb-4 w-fit ms-auto">
+      {% include 'albums/back_btn.html' %}
+
+    </div>
+
     <form 
       method="post" 
       action="{% url 'album_edit' album.pk %}" 
@@ -19,10 +29,11 @@
       {% csrf_token %}
       <!-- Two Column Layout -->
       <div class="grid grid-cols-1 lg:grid-cols-6 gap-4 lg:gap-6">
-        <!-- LEFT COLUMN: Current Photos -->
+        <!-- RIGHT COLUMN: Current Photos -->
         <div class="lg:col-span-4 order-2 lg:order-1">
+          
           <!-- Selection Controls -->
-          <div class="post-card rounded-lg p-3 sm:p-4 mb-4 backdrop-blur-lg border border-cyan-500/30">
+          <div class="post-card rounded-lg p-3 sm:p-4 mb-4 border border-cyan-500/30">
             <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
               <!-- Select All Checkbox -->
               <div class="flex items-center gap-2 sm:gap-3">
@@ -52,7 +63,7 @@
           </div>
 
           <!-- Current Photos Grid -->
-          <div class="post-card rounded-lg p-4 backdrop-blur-lg border border-cyan-500/30">
+          <div class="post-card rounded-lg p-4 border border-cyan-500/30">
             
             <div class="relative z-10">
               <!-- Photos Grid -->
@@ -106,11 +117,12 @@
         </div>
       <!-- END LEFT COLUMN -->
 
-        <!-- RIGHT COLUMN: Edit Form -->
+        <!-- LEFT COLUMN: Edit Form -->
         <div class="lg:col-span-2 order-1 lg:order-2 space-y-4">
-          
+
+
           <!-- Edit Form Header -->
-          <div class="post-card rounded-lg p-4 text-center backdrop-blur-lg border border-cyan-500/30">
+          <div class="post-card rounded-lg p-4 text-center border border-cyan-500/30">
             
             <!-- Form Icon -->
             <div class="mb-3 relative">
@@ -130,7 +142,7 @@
           </div>
 
           <!-- Right form Container -->
-          <div class="post-card rounded-lg p-4 backdrop-blur-lg border border-cyan-500/30 space-y-4">
+          <div class="post-card rounded-lg p-4 border border-cyan-500/30 space-y-4">
         
             <!-- Album Name Field -->
             <div>
@@ -160,7 +172,7 @@
             <div>
               <div class="flex items-center gap-2 mb-3">
                 <div class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
-                <label for="{{ form.medias.id_for_label }}" class="text-xs font-bold text-emerald-400 tracking-wider">ADD MORE MEDIA</label>
+                <label for="{{ form.medias.id_for_label }}" class="text-xs font-bold text-emerald-400 tracking-wider">ADD MORE SHELLS</label>
               </div>
               
               <div class="text-center">

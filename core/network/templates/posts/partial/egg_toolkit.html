@@ -6,14 +6,6 @@
             <div class="text-yellow-400 font-bold text-[7px] tracking-wider">EGG DATA</div>
         </div>
 
-        {% if display_born_from %}
-            <!-- Hatched From Section -->
-            <div class="bg-black/40 border border-blue-400/20 rounded px-2 py-3">
-                <div class="text-cyan-400 text-[8px] mb-1" style="text-shadow: 0 0 3px rgba(6, 182, 212, 0.5);">HATCHED FROM:</div>
-                <div class="text-white/90 text-[12px] font-bold mt-3">{{ egg.name|title }} EGG</div>
-            </div>
-        {% endif %}
-
         <!-- Egg Type Console Display -->
         <div class="bg-black/40 border border-blue-400/20 rounded px-2 py-3">
             <div class="text-cyan-400 text-[8px] mb-1" style="text-shadow: 0 0 3px rgba(6, 182, 212, 0.5);">TYPE:</div>
@@ -39,10 +31,26 @@
         <!-- Bigger Egg Display -->
         {% if display_egg_image %}
             <div class="text-center py-2">
-                <img class="w-30 h-auto mx-auto" 
+                <img class="w-40 mx-auto" 
                      src="{{ egg.url }}" 
                      alt="Egg Image"
                      style="filter: drop-shadow(0 0 8px rgba(255, 255, 0, 0.3));">
+            </div>
+        {% endif %}
+
+
+        {% if display_born_from %}
+            <!-- Hatched From Section -->
+            <div class="bg-black/40 border border-blue-400/20 rounded px-2 py-3">
+                <div class="text-cyan-400 text-[8px] mb-1" style="text-shadow: 0 0 3px rgba(6, 182, 212, 0.5);">HATCHED FROM:</div>
+                <div class="text-white/90 text-[12px] font-bold mt-3"><span class="
+                    {% if egg.egg_type == "special" %}
+                        text-amber-400
+                    {% elif egg.egg_type == "easter" %}
+                        text-pink-400
+                    {% else %}
+                        text-emerald-400
+                    {% endif %}">{{ egg.name|title }}</span> EGG</div>
             </div>
         {% endif %}
 
