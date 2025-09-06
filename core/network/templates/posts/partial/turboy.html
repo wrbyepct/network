@@ -1,6 +1,6 @@
 {% load profile_extra %}
  <!-- Diving Device Console (Left Sidebar) -->
-  <div class="hidden lg:block lg:col-span-4 lg:sticky lg:top-4 self-start">
+  <div class="hidden lg:block lg:col-span-4 lg:sticky lg:top-8 self-start">
     <div 
       class="diving-console rounded-xl border-[6px] border-slate-700" style="font-family: 'Press Start 2P', monospace; font-size: 8px;">
       <!-- Console Header -->
@@ -173,9 +173,9 @@
         </div>
 
         <!-- Console Slider Control -->
-        <div class="slider-control-section border-t-2 border-blue-800 pt-3 mt-auto"
+        <div class="slider-control-section border-t-2 border-blue-800"
               x-data="{ panelOpen: $persist(false) }">
-          <div class="max-w-[10rem] mx-auto flex items-center justify-between gap-2">
+          <div class="max-w-[10rem] mx-auto flex items-center justify-between gap-2 py-3">
             <span class="text-yellow-400 font-bold tracking-wide" style="font-size: 6px; text-shadow: 0 0 2px rgba(255, 255, 0, 0.5);">CONSOLE</span>
             
             <!-- Retro Slider Button -->
@@ -221,7 +221,7 @@
               x-show="panelOpen"
               x-cloak
               x-collapse.duration.300ms
-              class="expanded-panel mt-3"
+              class="expanded-panel"
               style="transform-origin: top;">
               
               <div class="panel-content"
