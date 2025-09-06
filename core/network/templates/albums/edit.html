@@ -2,47 +2,49 @@
 {% load widget_tweaks %}
 {% block body %}
 
-<div class="min-h-screen bg-[#A8D5A0] p-4 font-mono" 
+<div class="w-full min-h-screen holographic-ocean-bg relative z-10" 
      x-data="albumEditor()"
-     style="background-image: url('data:image/svg+xml,%3Csvg width=&quot;100&quot; height=&quot;20&quot; viewBox=&quot;0 0 100 20&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E%3Cpath d=&quot;M20 20v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zM0 16v-4h4v4H0zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zM0 12v-4h4v4H0zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zM0 8v-4h4v4H0zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zM0 4V0h4v4H0zm20 0V0h4v4h-4zm20 0V0h4v4h-4zm20 0V0h4v4h-4zm20 0V0h4v4h-4z&quot; fill=&quot;%23D2B48C&quot; fill-opacity=&quot;0.4&quot; fill-rule=&quot;evenodd&quot;/%3E%3C/svg%3E');">
+     style="font-family: 'Press Start 2P', monospace; font-size: 10px;">
   
 
 
   <!-- Main Container -->
-  <div class="max-w-7xl mx-auto">
+  <div class="w-full xl:w-[98vw] lg:container-2xl pt-4 mx-auto px-2 lg:px-0">
     <form 
       method="post" 
       action="{% url 'album_edit' album.pk %}" 
-      enctype="multipart/form-data" class="relative z-1"
+      enctype="multipart/form-data" class="relative z-10"
       x-ref="albumEditForm"
       @submit.prevent="$store.fileUploadManager.handleSubmit($el, $refs.fileInput)">
       {% csrf_token %}
       <!-- Two Column Layout -->
-      <div class="grid grid-cols-1 lg:grid-cols-6 gap-8">
+      <div class="grid grid-cols-1 lg:grid-cols-6 gap-4 lg:gap-6">
         <!-- LEFT COLUMN: Current Photos -->
-        <div class="lg:col-span-4 order-1 lg:order-1">
+        <div class="lg:col-span-4 order-2 lg:order-1">
           <!-- Selection Controls -->
-          <div class="bg-[#2E7D32] border-4 border-[#1B5E20] p-4 mb-6 shadow-[8px_8px_0px_#3B3B3B] relative">
-            <div class="flex justify-between items-center">
+          <div class="post-card rounded-lg p-3 sm:p-4 mb-4 backdrop-blur-lg border border-cyan-500/30">
+            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
               <!-- Select All Checkbox -->
-              <div class="flex items-center gap-3">
+              <div class="flex items-center gap-2 sm:gap-3">
                 <div class="relative">
                   <input type="checkbox" 
                         id="select-all"
                         x-model="selectAll"
                         @change="toggleSelectAll()"
-                        class="w-5 h-5 bg-[#A5D6A7] border-2 border-[#4CAF50] rounded focus:ring-2 focus:ring-[#FBBF24]">
+                        class="w-4 h-4 bg-black/30 border border-cyan-500/50 rounded focus:ring-2 focus:ring-cyan-500/50 text-cyan-500 touch-manipulation">
                 </div>
-                <label for="select-all" class="text-[#A5D6A7] font-bold font-mono text-sm sm:text-base">SELECT ALL SHELLS</label>
+                <label for="select-all" class="text-cyan-400 font-bold text-xs sm:text-xs tracking-wider">SELECT ALL MEDIA</label>
               </div>
 
               <!-- Selection Counter and Actions -->
-              <div class="flex items-center gap-4">
-                <span class="text-[#FBBF24] font-mono text-sm" x-text="`${selectedMedias.length} selected`"></span>
+              <div class="flex items-center gap-2 sm:gap-3">
+                <span class="text-emerald-400 text-xs font-mono" x-text="`${selectedMedias.length} selected`"></span>
                 <button type="submit"
                         x-show="selectedMedias.length > 0"
                         x-cloak
-                        class="bg-[#FF5722] hover:bg-[#F44336] border-2 border-[#3B3B3B] text-white font-mono text-xs py-1 px-3 rounded transition-colors">
+                        class="bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 text-red-400 
+                               text-xs py-2 px-3 rounded-md transition-all duration-200 hover:-translate-y-0.5
+                               backdrop-blur-sm touch-manipulation min-h-[44px] min-w-[44px]">
                   🗑️ Delete Selected
                 </button>
               </div>
@@ -50,13 +52,11 @@
           </div>
 
           <!-- Current Photos Grid -->
-          <div class="bg-[#A5D6A7] border-4 border-[#5D4037] rounded-lg p-4 shadow-[8px_8px_0px_#3B3B3B] relative">
-            <!-- Grass pattern background -->
-            <div class="absolute inset-0 opacity-20 rounded" style="background: repeating-linear-gradient(0deg, transparent 0px, transparent 2px, #4CAF50 2px, #4CAF50 3px);"></div>
+          <div class="post-card rounded-lg p-4 backdrop-blur-lg border border-cyan-500/30">
             
             <div class="relative z-10">
               <!-- Photos Grid -->
-              <div class="grid grid-cols-2 lg:grid-cols-3 gap-2 lg:gap-4">
+              <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4">
                 {% for media in medias %}
                   <div class="relative group">
                     <!-- Checkbox -->
@@ -65,12 +65,14 @@
                             name="delete_media" 
                             value="{{ media.id }}"
                             x-model="selectedMedias"
-                            class="w-4 h-4 sm:w-5 sm:h-5 bg-[#A5D6A7] border-2 border-[#4CAF50] rounded focus:ring-2 focus:ring-[#FBBF24] shadow-lg">
+                            class="w-4 h-4 bg-black/30 border border-cyan-500/50 rounded focus:ring-2 focus:ring-cyan-500/50 text-cyan-500 shadow-lg">
                     </div>
                     
                     <!-- Image/Video Preview -->
-                    <div class="aspect-square bg-[#C8E6C9] border-4 border-[#2E7D32] rounded overflow-hidden shadow-[4px_4px_0px_#3B3B3B] hover:shadow-[6px_6px_0px_#3B3B3B] transition-all duration-200"
-                        :class="selectedMedias.includes('{{ media.id }}') ? 'ring-4 ring-[#FBBF24]' : ''">
+                    <div class="aspect-square bg-black/20 border border-white/20 rounded-lg overflow-hidden 
+                                transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl
+                                hover:shadow-cyan-500/20 hover:border-cyan-500/40 backdrop-blur-sm"
+                        :class="selectedMedias.includes('{{ media.id }}') ? 'ring-2 ring-cyan-500 shadow-cyan-500/30' : ''">
                       {% if media.is_image %}
                         <img src="{{ media.file.url }}" 
                             alt="Turtle Photo"
@@ -80,9 +82,9 @@
                           <source src="{{ media.file.url }}">
                         </video>
                         <!-- Video Play Overlay -->
-                        <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                          <div class="w-8 h-8 bg-[#FFD66F] border-2 border-[#5D4037] rounded-full flex items-center justify-center">
-                            <div class="w-0 h-0 border-l-4 border-l-[#5D4037] border-y-2 border-y-transparent ml-1"></div>
+                        <div class="absolute inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+                          <div class="w-8 h-8 bg-cyan-500/20 border border-cyan-400 rounded-full flex items-center justify-center backdrop-blur-sm">
+                            <div class="w-0 h-0 border-l-4 border-l-cyan-400 border-y-2 border-y-transparent ml-1"></div>
                           </div>
                         </div>
                       {% endif %}
@@ -91,10 +93,10 @@
                   </div>
                 {% empty %}
                   <div class="col-span-full text-center py-12">
-                    <div class="w-16 h-16 bg-[#C8E6C9] border-4 border-[#4CAF50] rounded mx-auto mb-4 flex items-center justify-center">
-                      <div class="text-[#4CAF50] text-2xl">🐢</div>
+                    <div class="w-16 h-16 bg-white/10 border border-cyan-500/30 rounded-lg mx-auto mb-4 flex items-center justify-center backdrop-blur-sm">
+                      <div class="text-cyan-400 text-2xl">🐢</div>
                     </div>
-                    <p class="text-[#4CAF50] font-mono text-sm">No turtle photos in this album yet</p>
+                    <p class="text-cyan-400/80 text-xs tracking-wide">No media in this album yet</p>
                   </div>
                 {% endfor %}
               </div>
@@ -105,76 +107,74 @@
       <!-- END LEFT COLUMN -->
 
         <!-- RIGHT COLUMN: Edit Form -->
-        <div class="lg:col-span-2 order-2 lg:order-2 space-y-6">
+        <div class="lg:col-span-2 order-1 lg:order-2 space-y-4">
           
           <!-- Edit Form Header -->
-          <div class="bg-[#8B4513] border-4 border-[#5D4037] rounded-lg p-4 text-center shadow-[12px_12px_0px_#3B3B3B] relative overflow-hidden">
-            <!-- Wooden grain pattern -->
-            <div class="absolute inset-0 opacity-20" style="background: repeating-linear-gradient(90deg, #6F4E37 0px, transparent 1px, transparent 4px, #6F4E37 5px);"></div>
+          <div class="post-card rounded-lg p-4 text-center backdrop-blur-lg border border-cyan-500/30">
             
             <!-- Form Icon -->
-            <div class="mb-3 relative z-10">
-              <div class="w-12 h-12 bg-[#4CAF50] border-4 border-[#3B3B3B] relative turtle-shell mx-auto hover:scale-105 transition-transform duration-200">
-                <div class="absolute inset-2 bg-[#2E7D32] border-2 border-[#1B5E20] flex items-center justify-center">
-                  <!-- Settings icon -->
-                  <div class="w-6 h-6 border-2 border-[#A5D6A7] rounded relative">
-                    <div class="absolute top-1 left-1 w-1 h-1 bg-[#A5D6A7]"></div>
-                    <div class="absolute top-1 right-1 w-1 h-1 bg-[#A5D6A7]"></div>
-                    <div class="absolute bottom-1 left-1 w-1 h-1 bg-[#A5D6A7]"></div>
-                    <div class="absolute bottom-1 right-1 w-1 h-1 bg-[#A5D6A7]"></div>
-                  </div>
+            <div class="mb-3 relative">
+              <div class="w-12 h-12 bg-cyan-500/20 border border-cyan-400/50 rounded-lg mx-auto hover:scale-105 transition-transform duration-200 backdrop-blur-sm flex items-center justify-center">
+                <!-- Settings icon -->
+                <div class="w-6 h-6 border border-cyan-400 rounded-md relative">
+                  <div class="absolute top-1 left-1 w-1 h-1 bg-cyan-400 rounded-full"></div>
+                  <div class="absolute top-1 right-1 w-1 h-1 bg-cyan-400 rounded-full"></div>
+                  <div class="absolute bottom-1 left-1 w-1 h-1 bg-cyan-400 rounded-full"></div>
+                  <div class="absolute bottom-1 right-1 w-1 h-1 bg-cyan-400 rounded-full"></div>
                 </div>
               </div>
             </div>
             
-            <h2 class="text-lg font-bold text-[#FFD66F] mb-1 pixel-title relative z-10" style="text-shadow: 2px 2px #3B3B3B;">ALBUM SETTINGS</h2>
-            <p class="text-[#D2B48C] text-sm relative z-10">Update your collection</p>
+            <h2 class="text-sm font-bold text-cyan-400 mb-1 tracking-wider relative">ALBUM SETTINGS</h2>
+            <p class="text-cyan-400/70 text-xs relative">Update your collection</p>
           </div>
 
           <!-- Right form Container -->
-          <div class="bg-[#FFD66F] border-4 border-[#5D4037] rounded-lg p-6 shadow-[8px_8px_0px_#3B3B3B] relative">
-            <!-- Grass pattern background -->
-           <div class="absolute inset-0 opacity-30 -z-100" style="background: repeating-linear-gradient(0deg, transparent 0px, transparent 2px, #4CAF50 2px, #4CAF50 3px);"></div>
+          <div class="post-card rounded-lg p-4 backdrop-blur-lg border border-cyan-500/30 space-y-4">
         
             <!-- Album Name Field -->
-            <div class="mb-6">
-              <div class="flex items-center gap-3 mb-4">
-                <div class="w-4 h-4 bg-[#4CAF50] border-2 border-[#3B3B3B] shell-dot"></div>
-                <label for="{{ form.name.id_for_label }}" class="text-sm sm:text-base font-bold text-[#5D4037] font-mono pixel-title">ALBUM NAME</label>
+            <div>
+              <div class="flex items-center gap-2 mb-3">
+                <div class="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></div>
+                <label for="{{ form.name.id_for_label }}" class="text-xs font-bold text-cyan-400 tracking-wider">ALBUM NAME</label>
               </div>
               
-              <div class="bg-[#A5D6A7] border-4 border-[#5D4037] rounded p-2 shadow-[4px_4px_0px_#3B3B3B]">
+              <div class="holo-input-field rounded-lg">
                 <input type="text" 
                        name="name" 
                        id="{{ form.name.id_for_label }}"
-                       class="w-full bg-[#C8E6C9] border-2 border-[#2E7D32] rounded px-4 py-3 text-[#1B5E20] font-mono font-bold placeholder-[#4CAF50] focus:border-[#FBBF24] focus:outline-none transition-colors"
+                       class="w-full bg-black/30 border border-cyan-500/30 rounded-lg px-3 py-2 text-white/90 
+                              text-xs placeholder-cyan-400/50 focus:border-cyan-500/60 focus:outline-none 
+                              focus:ring-1 focus:ring-cyan-500/50 transition-all duration-200 backdrop-blur-sm"
                        placeholder="Enter album name..."
                        value="{{ form.name.value|default_if_none:'' }}">
               </div>
               {% if form.name.errors %}
-                <div class="mt-2 text-[#8B4513] text-sm font-bold bg-[#D2B48C] border-2 border-[#5D4037] p-2 rounded">
-                  🐢 {{ form.name.errors }}
+                <div class="mt-2 text-red-400 text-xs bg-red-500/10 border border-red-500/30 p-2 rounded-lg backdrop-blur-sm">
+                  ⚠️ {{ form.name.errors }}
                 </div>
               {% endif %}
             </div>
 
             <!-- Add More Photos Field -->
-            <div class="mb-6">
-              <div class="flex items-center gap-3 mb-4">
-                <div class="w-4 h-4 bg-[#FBBF24] border-2 border-[#3B3B3B] shell-dot pixel-blink"></div>
-                <label for="{{ form.medias.id_for_label }}" class="text-sm sm:text-base font-bold text-[#5D4037] font-mono pixel-title">ADD MORE PHOTOS</label>
+            <div>
+              <div class="flex items-center gap-2 mb-3">
+                <div class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+                <label for="{{ form.medias.id_for_label }}" class="text-xs font-bold text-emerald-400 tracking-wider">ADD MORE MEDIA</label>
               </div>
               
               <div class="text-center">
                 <button type="button"
                         @click="$refs.fileInput.click()"
-                        class="bg-[#8BC34A] hover:bg-[#AED581] border-4 border-[#5D4037] text-[#2E7D32] font-mono font-bold py-2 px-4 sm:py-3 sm:px-6 rounded text-xs sm:text-sm transition-colors shadow-[4px_4px_0px_#3B3B3B] game-button">
-                  🐢 ADD TURTLE SHELLS
+                        class="bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/50 text-emerald-400 
+                               py-2 px-4 rounded-lg text-xs transition-all duration-200 hover:-translate-y-0.5
+                               backdrop-blur-sm w-full">
+                  📸 ADD MEDIA FILES
                 </button>
                 
                 <input 
                   type="file" 
-                  accept="image/*" 
+                  accept="image/*,video/*" 
                   name="medias" 
                   id="{{ form.medias.id_for_label }}"
                   multiple 
@@ -185,8 +185,8 @@
               </div>
               
               {% if form.medias.errors %}
-                <div class="mt-4 text-[#8B4513] text-sm font-bold bg-[#D2B48C] border-2 border-[#5D4037] p-3 rounded">
-                  🚫 {{ form.medias.errors }}
+                <div class="mt-3 text-red-400 text-xs bg-red-500/10 border border-red-500/30 p-2 rounded-lg backdrop-blur-sm">
+                  ⚠️ {{ form.medias.errors }}
                 </div>
               {% endif %}
             </div>
@@ -194,19 +194,23 @@
        
 
             <!-- Action Buttons -->
-            <div class="space-y-4">
+            <div class="space-y-3">
               <!-- Update Button -->
               <button type="submit" 
-                      class="w-full bg-[#FBBF24] hover:bg-[#FFE082] active:bg-[#F57C00] border-4 border-[#5D4037] hover:border-[#3B3B3B] text-[#2E7D32] font-mono font-bold py-3 px-6 rounded-lg text-sm sm:text-base transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-[8px_8px_0px_#3B3B3B] game-button"
+                      class="w-full bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500/50 text-cyan-400 
+                             py-3 px-4 rounded-lg text-xs transition-all duration-200 hover:-translate-y-0.5
+                             backdrop-blur-sm font-bold tracking-wider"
                       :disabled="$store.fileUploadManager.isSubmitting"
-                      x-text="$store.fileUploadManager.isSubmitting ? '🐢 UPDATING ALBUM...' : '💾 UPDATE ALBUM'">
+                      x-text="$store.fileUploadManager.isSubmitting ? '⚡ UPDATING ALBUM...' : '💾 UPDATE ALBUM'">
               </button>
               
               <!-- Delete Album Button -->
               <button type="button" 
                       @click="confirmDeleteAlbum()"
-                      class="w-full bg-[#FF5722] hover:bg-[#F44336] border-4 border-[#5D4037] text-white font-mono font-bold py-3 px-6 rounded-lg text-sm sm:text-base transition-all duration-200 shadow-[6px_6px_0px_#3B3B3B] game-button">
-                🗑️ DELETE ENTIRE ALBUM
+                      class="w-full bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 text-red-400 
+                             py-3 px-4 rounded-lg text-xs transition-all duration-200 hover:-translate-y-0.5
+                             backdrop-blur-sm font-bold tracking-wider">
+                🗑️ DELETE ALBUM
               </button>
             </div>
           </div>
@@ -215,9 +219,8 @@
       </div>
 
       <!-- NEW UPLOAD MEDIA MODAL -->
-
         <div 
-          class="fixed inset-0 bg-transparent bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
           x-show="showUploadModal"
           x-cloak
           x-transition:enter="transition ease-out duration-300"
@@ -229,15 +232,7 @@
 
           <!-- Modal Container -->
           <div 
-            class="bg-[#A8D5A0] border-8 border-[#5D4037] rounded-lg p-6 max-w-4xl w-full max-h-[90vh]
-      overflow-y-auto shadow-[16px_16px_0px_#3B3B3B] relative"
-            style="background-image: url('data:image/svg+xml,%3Csvg width=&quot;100&quot; height=&quot;20&quot;
-      viewBox=&quot;0 0 100 20&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E%3Cpath d=&quot;M20
-      20v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zM0 16v-4h4v4H0zm20 0v-4h4v4h-4zm20
-      0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zM0 12v-4h4v4H0zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20
-      0v-4h4v4h-4zM0 8v-4h4v4H0zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zM0 4V0h4v4H0zm20
-      0V0h4v4h-4zm20 0V0h4v4h-4zm20 0V0h4v4h-4zm20 0V0h4v4h-4z&quot; fill=&quot;%23D2B48C&quot;
-      fill-opacity=&quot;0.4&quot; fill-rule=&quot;evenodd&quot;/%3E%3C/svg%3E');"
+            class="post-card rounded-lg p-4 sm:p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto backdrop-blur-lg border border-cyan-500/30 bg-white-/10"
             x-transition:enter="transition ease-out duration-300 delay-150"
             x-transition:enter-start="opacity-0 scale-95 translate-y-4"
             x-transition:enter-end="opacity-100 scale-100 translate-y-0"
@@ -246,38 +241,25 @@
             x-transition:leave-end="opacity-0 scale-95">
 
             <!-- Modal Header -->
-            <div class="bg-[#8B4513] border-4 border-[#5D4037] rounded-lg p-4 mb-6 text-center
-      shadow-[8px_8px_0px_#3B3B3B] relative overflow-hidden">
-              <!-- Wooden grain pattern -->
-              <div class="absolute inset-0 opacity-20" style="background: repeating-linear-gradient(90deg, #6F4E37 0px,
-      transparent 1px, transparent 4px, #6F4E37 5px);"></div>
+            <div class="rounded-lg p-4 mb-6 text-center ">
 
               <!-- Header Icon -->
-              <div class="mb-3 relative z-10">
-                <div class="w-12 h-12 bg-[#4CAF50] border-4 border-[#3B3B3B] relative turtle-shell mx-auto">
-                  <div class="absolute inset-2 bg-[#2E7D32] border-2 border-[#1B5E20] flex items-center
-      justify-center">
+              <div class="mb-3 relative">
+                <div class="w-12 h-12 bg-cyan-500/20 border border-cyan-400/50 rounded-lg mx-auto flex items-center justify-center">
                     <!-- Preview icon -->
-                    <div class="w-6 h-4 bg-[#A5D6A7] border border-[#4CAF50] rounded relative">
-                      <div class="absolute top-0.5 left-1 w-1 h-1 bg-[#2E7D32] rounded-full"></div>
-                      <div class="absolute top-0.5 right-1 w-1 h-1 bg-[#2E7D32] rounded-full"></div>
+                    <div class="w-6 h-4 bg-cyan-400/20 border border-cyan-400 rounded relative">
+                      <div class="absolute top-0.5 left-1 w-1 h-1 bg-cyan-400 rounded-full"></div>
+                      <div class="absolute top-0.5 right-1 w-1 h-1 bg-cyan-400 rounded-full"></div>
                     </div>
-                  </div>
                 </div>
               </div>
 
-              <h3 class="text-lg sm:text-xl font-bold text-[#FFD66F] mb-1 pixel-title relative z-10"
-      style="text-shadow: 2px 2px #3B3B3B;">NEW TURTLE PHOTOS</h3>
-              <p class="text-[#D2B48C] text-sm relative z-10" x-text="`${$store.fileUploadManager.newUploadMedias.length} new photos ready to
-      add`"></p>
+              <h3 class="text-sm font-bold text-cyan-400 mb-1 tracking-wider relative">NEW MEDIA PREVIEW</h3>
+              <p class="text-cyan-400/70 text-xs relative" x-text="`${$store.fileUploadManager.newUploadMedias.length} files ready to add`"></p>
             </div>
 
             <!-- Media Grid -->
-            <div class="bg-[#FFD66F] border-4 border-[#5D4037] rounded-lg p-4 shadow-[8px_8px_0px_#3B3B3B] relative
-      mb-6">
-              <!-- Grass pattern background -->
-              <div class="absolute inset-0 opacity-30" style="background: repeating-linear-gradient(0deg, transparent
-      0px, transparent 2px, #4CAF50 2px, #4CAF50 3px);"></div>
+            <div class="rounded-lg p-4 mb-6">
 
               <div class="relative z-10">
                 <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -286,26 +268,21 @@
                   {% include 'albums/media_previews.html' %}
 
                   <!-- Add More Button -->
-                  <div class="aspect-square border-4 border-dashed border-[#4CAF50] rounded bg-[#E8F5E8]
-      hover:bg-[#C8E6C9] transition-colors cursor-pointer flex items-center justify-center group"
+                  <div class="aspect-square border-2 border-dashed border-cyan-500/50 rounded-lg bg-cyan-500/10
+      hover:bg-cyan-500/20 transition-colors cursor-pointer flex items-center justify-center group"
                       @click="$refs.fileInput.click()">
 
-                    <!-- Turtle Shell Add Icon -->
+                    <!-- Add Icon -->
                     <div class="text-center">
-                      <div class="w-16 h-16 bg-[#4CAF50] border-4 border-[#2E7D32] relative turtle-shell mx-auto mb-2
-      group-hover:scale-110 transition-transform duration-200">
-                        <div class="absolute inset-2 bg-[#2E7D32] border-2 border-[#1B5E20] flex items-center
-      justify-center">
+                      <div class="w-12 h-12 bg-cyan-500/20 border border-cyan-400/50 rounded-lg mx-auto mb-2
+      group-hover:scale-110 transition-transform duration-200 flex items-center justify-center">
                           <!-- Plus Sign -->
                           <div class="relative">
-                            <div class="w-6 h-2 bg-[#A5D6A7] border border-[#4CAF50]"></div>
-                            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-2 h-6
-      bg-[#A5D6A7] border border-[#4CAF50]"></div>
+                            <div class="w-5 h-1 bg-cyan-400"></div>
+                            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-1 h-5 bg-cyan-400"></div>
                           </div>
-                        </div>
                       </div>
-                      <div class="text-[#4CAF50] font-mono font-bold text-sm">ADD MORE</div>
-                      <div class="text-[#4CAF50] font-mono text-xs">🐢 PHOTOS</div>
+                      <div class="text-cyan-400 text-xs font-bold tracking-wide">ADD MORE</div>
                     </div>
                   </div>
 
@@ -316,19 +293,20 @@
             <!-- Clear all action -->
             {% include 'albums/clear_all_media.html' %}
             <!-- Action Buttons -->
-            <div class="flex flex-col sm:flex-row gap-4">
+            <div class="flex flex-col sm:flex-row gap-3">
               <button 
                 type="submit"
-                class="flex-1 bg-[#FBBF24] hover:bg-[#FFE082] border-4 border-[#5D4037] text-[#2E7D32] font-mono
-      font-bold py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-[6px_6px_0px_#3B3B3B]
-      game-button">
+                class="flex-1 bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500/50 text-cyan-400
+                       py-3 px-4 rounded-lg text-xs font-bold tracking-wider transition-all duration-200 
+                       hover:-translate-y-0.5 backdrop-blur-sm">
                 💾 ADD TO ALBUM
               </button>
 
               <button type="button"
                       @click="$store.fileUploadManager.clearAllFiles(); showUploadModal = false;"
-                      class="flex-1 bg-[#FF9800] hover:bg-[#FFB74D] border-4 border-[#5D4037] text-[#2E7D32] font-mono
-      font-bold py-3 px-6 rounded-lg transition-all duration-200 shadow-[4px_4px_0px_#3B3B3B] game-button">
+                      class="flex-1 bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 text-red-400
+                             py-3 px-4 rounded-lg text-xs font-bold tracking-wider transition-all duration-200 
+                             hover:-translate-y-0.5 backdrop-blur-sm">
                 🗑️ CANCEL
               </button>
             </div>
@@ -364,8 +342,8 @@
         }
       },
       confirmDeleteAlbum() {
-        if (confirm('🚨 Are you absolutely sure you want to delete this entire turtle album? This action cannot be undone!')) {
-          this.$refs.albumEditForm.submit();
+        if (confirm('🚨 Are you absolutely sure you want to delete this entire album? This action cannot be undone!')) {
+          document.getElementById('album-delete-form').submit();
         }
       },
 
@@ -382,94 +360,63 @@
 </script>
 
 <style>
-  /* Turtle shell rotate animation */
-  .shell-spin {
-    animation: shell-rotate 4s linear infinite;
+  /* Holographic Text Glow */
+  .holo-text-glow {
+    text-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
   }
-
-  @keyframes shell-rotate {
-    0% { transform: rotateY(0deg); }
-    25% { transform: rotateY(90deg) scaleX(0.8); }
-    50% { transform: rotateY(180deg); }
-    75% { transform: rotateY(270deg) scaleX(0.8); }
-    100% { transform: rotateY(360deg); }
+  
+  /* Glass Shimmer Effect */
+  .glass-shimmer::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    background-size: 200% 100%;
+    animation: shimmer 3s ease-in-out infinite;
+    pointer-events: none;
   }
-
-  /* Pixel blink animation */
-  .pixel-blink {
-    animation: turtle-blink 2s infinite;
+  
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
   }
-
-  @keyframes turtle-blink {
-    0%, 85%, 100% { opacity: 1; }
-    90%, 95% { opacity: 0.3; }
+  
+  /* Enhanced Focus Ring */
+  .holo-focus:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.5);
   }
-
-
-
-  /* Game button effects - Turtle theme */
-  .game-button:hover:not(.pressed) {
-    transform: translate(-2px, -2px);
-    box-shadow: 8px 8px 0px #5D4037 !important;
-  }
-
-  .game-button.pressed {
-    transform: translate(4px, 4px);
-    box-shadow: 2px 2px 0px #5D4037 !important;
-  }
-
-  /* Pixel title styling */
-  .pixel-title {
-    letter-spacing: 0.1em;
-    image-rendering: pixelated;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: -webkit-crisp-edges;
-    image-rendering: crisp-edges;
-  }
-
-  /* Shell segment animation */
-  .shell-segment {
-    animation: segment-glow 3s ease-in-out infinite;
-  }
-
-  @keyframes segment-glow {
-    0%, 100% { background-color: #A5D6A7; }
-    50% { background-color: #C8E6C9; }
-  }
-
-  /* Turtle hover animation */
-  .turtle-shell:hover {
-    animation: turtle-bounce 0.6s ease-in-out;
-  }
-
-  @keyframes turtle-bounce {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-8px); }
-  }
-
-  /* Shell dot pulse */
-  .shell-dot {
-    animation: shell-pulse 2s ease-in-out infinite;
-  }
-
-  @keyframes shell-pulse {
-    0%, 100% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.1); opacity: 0.8; }
-  }
-
-  /* Responsive turtle shell sizes using Tailwind-like approach */
-  @media (max-width: 1024px) {
-    .turtle-shell {
-      width: 3.5rem;
-      height: 3.5rem;
-    }
-  }
-
+  
+  /* Mobile Optimizations */
   @media (max-width: 640px) {
-    .turtle-shell {
-      width: 3rem;
-      height: 3rem;
+    .post-card {
+      backdrop-filter: blur(10px);
     }
+    
+    /* Reduce hover effects on mobile */
+    .post-card:hover {
+      transform: none !important;
+    }
+    
+    /* Touch-friendly buttons */
+    button {
+      min-height: 44px;
+      min-width: 44px;
+    }
+  }
+  
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
+  
+  /* Performance GPU Acceleration */
+  .post-card, button {
+    transform: translateZ(0);
+    will-change: transform, opacity;
   }
 </style>
 
