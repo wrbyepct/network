@@ -1,30 +1,47 @@
-<div class="container-fluid bg-[#8B4513] border-4 border-[#5D4037] p-6 mx-auto max-w-6xl" style="box-shadow: 8px 8px 0px #3B3B3B;">
+<!-- Holographic Photos Container -->
+<div class="w-full max-w-7xl mx-auto px-4 py-6 bg-transparent">
   
-  <!-- Header Section -->
-  <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
-    <!-- Title with Pixel Shell Icon -->
+  <!-- Header Section with Ocean Glass Design -->
+  <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 mb-8">
+    
+    <!-- Title with Holographic Turtle Shell Icon -->
     <div class="flex items-center gap-4">
-      <!-- Pixelated Turtle Shell Icon -->
-      <div class="w-12 h-12 bg-[#A0522D] border-3 border-[#5D4037] relative pixel-shell" style="box-shadow: 4px 4px 0px #3B3B3B;">
-        <!-- Shell pattern -->
-        <div class="absolute top-2 left-2 w-2 h-2 bg-[#CD853F]"></div>
-        <div class="absolute top-2 right-2 w-2 h-2 bg-[#CD853F]"></div>
-        <div class="absolute bottom-2 left-2 w-2 h-2 bg-[#CD853F]"></div>
-        <div class="absolute bottom-2 right-2 w-2 h-2 bg-[#CD853F]"></div>
-        <div class="absolute top-4 left-4 w-4 h-4 bg-[#FFD66F] border border-[#D4A843]"></div>
-        <!-- Cute eyes -->
-        <div class="absolute top-1 left-4 w-1 h-1 bg-[#000]"></div>
-        <div class="absolute top-1 right-4 w-1 h-1 bg-[#000]"></div>
+      <!-- Holographic Turtle Shell Icon -->
+      <div class="relative w-14 h-14">
+        <div class="absolute inset-0 bg-gradient-to-br from-cyan-400/20 to-emerald-400/20 
+                    rounded-xl border border-cyan-400/30 backdrop-filter backdrop-blur-15
+                    shadow-lg shadow-cyan-500/20">
+          <!-- Shell pattern with holographic effect -->
+          <div class="absolute top-2 left-2 w-3 h-3 bg-gradient-to-br from-emerald-300 to-cyan-400 
+                      rounded border border-cyan-400/50 shadow-sm shadow-emerald-400/30"></div>
+          <div class="absolute top-2 right-2 w-3 h-3 bg-gradient-to-br from-emerald-300 to-cyan-400 
+                      rounded border border-cyan-400/50 shadow-sm shadow-emerald-400/30"></div>
+          <div class="absolute bottom-2 left-2 w-3 h-3 bg-gradient-to-br from-emerald-300 to-cyan-400 
+                      rounded border border-cyan-400/50 shadow-sm shadow-emerald-400/30"></div>
+          <div class="absolute bottom-2 right-2 w-3 h-3 bg-gradient-to-br from-emerald-300 to-cyan-400 
+                      rounded border border-cyan-400/50 shadow-sm shadow-emerald-400/30"></div>
+          <!-- Central glow -->
+          <div class="absolute top-3 left-3 w-8 h-8 bg-gradient-to-br from-yellow-300/60 to-cyan-300/60 
+                      rounded-lg border border-yellow-400/40 shadow-lg shadow-yellow-400/20"></div>
+          <!-- Turtle eyes with glow -->
+          <div class="absolute top-1 left-5 w-1.5 h-1.5 bg-black rounded-full shadow-sm shadow-cyan-400/50"></div>
+          <div class="absolute top-1 right-5 w-1.5 h-1.5 bg-black rounded-full shadow-sm shadow-cyan-400/50"></div>
+        </div>
+        <!-- Ambient glow ring -->
+        <div class="absolute -inset-1 bg-gradient-to-r from-cyan-400/20 via-emerald-400/20 to-cyan-400/20 
+                    rounded-xl blur-sm animate-pulse"></div>
       </div>
       
-      <span 
-        class="text-2xl font-bold text-amber-400 pixel-text" 
-        style="font-family: 'Press Start 2P'">SHELL GALLERY</span>
+      <div class="text-2xl md:text-3xl font-bold text-white/95 tracking-wide"
+          style="font-family: 'Press Start 2P', monospace; font-size: 18px;
+                 text-shadow: 0 0 20px rgba(52, 211, 153, 0.8), 0 0 40px rgba(6, 182, 212, 0.4);">
+        SHELL GALLERY
+      </div>
     </div>
     
-    <!-- Upload Button - Pixel Game Style -->
-    <div x-data="{ isPressed: false, isHovered: false }">
-      <a
+    <!-- Upload Button with Ocean Glass Morphism -->
+    <div class="relative">
+      <div
         {% if request.user.is_authenticated %}
           hx-get="{% url 'post_create' %}"
           hx-target="#modal-container"
@@ -35,180 +52,281 @@
           hx-select="#auth-modal-content"
         {% endif %}
         @htmx:after-request="if($event.detail.successful) showModal = true;" 
-         @mousedown="isPressed = true"
-         @mouseup="isPressed = false" 
-         @mouseleave="isPressed = false; isHovered = false"
-         @mouseenter="isHovered = true"
-          class="inline-flex items-center gap-3 bg-[#32CD32] border-3 border-[#228B22] text-[#004225] font-mono font-bold py-4 px-6 text-sm relative pixel-button transition-all duration-150 !no-underline"
-         :class="isPressed ? 'pressed' : ''"
-         style="box-shadow: 4px 4px 0px #1F5F1F, 8px 8px 0px #0F3F0F;">
+        class="group inline-flex items-center gap-3 px-6 py-3 overflow-hidden
+               bg-gradient-to-r from-emerald-400/20 to-cyan-400/20 text-yellow-400
+                rounded-xl backdrop-filter backdrop-blur-20 border border-cyan-400/20
+              font-bold text-sm transition-all duration-300 ease-out
+               hover:from-emerald-400/30 hover:to-cyan-400/30 hover:border-emerald-400/50
+               hover:shadow-lg hover:shadow-emerald-400/25 hover:-translate-y-1
+               active:translate-y-0 active:shadow-sm cursor-pointer holo-glow"
+        style="font-family: 'Press Start 2P', monospace;">
         
-        <!-- Pixel Camera Icon -->
-        <div class="flex-shrink-0">
-          <!-- Camera body -->
-          <div class="w-8 h-6 bg-[#654321] border-2 border-[#4A4A4A] relative" style="box-shadow: 2px 2px 0px #2F2F2F;">
-            <!-- Lens -->
-            <div class="absolute top-1 left-1 w-4 h-4 bg-[#2F2F2F] border border-[#1A1A1A]">
-              <div class="absolute top-0.5 left-0.5 w-3 h-3 bg-[#4169E1] border border-[#191970]"></div>
-              <div class="absolute top-1 left-1 w-1 h-1 bg-[#87CEEB]" 
-                   :class="isHovered ? 'animate-ping' : ''"></div>
+        <!-- Holographic Camera Icon -->
+        <div class="relative flex-shrink-0">
+          <div class="w-8 h-6 bg-gradient-to-br from-slate-600/80 to-slate-800/80 
+                      border border-slate-400/30 rounded backdrop-filter backdrop-blur-10
+                      shadow-sm shadow-slate-500/20 relative">
+            <!-- Lens with holographic effect -->
+            <div class="absolute top-0.5 left-0.5 w-5 h-5 bg-gradient-to-br from-blue-600/80 to-indigo-800/80 
+                        border border-blue-400/40 rounded shadow-sm shadow-blue-500/30">
+              <div class="absolute top-0.5 left-0.5 w-4 h-4 bg-gradient-to-br from-blue-500/60 to-indigo-600/60 
+                          border border-blue-300/30 rounded"></div>
+              <div class="absolute top-1.5 left-1.5 w-2 h-2 bg-gradient-to-br from-cyan-300 to-white 
+                          rounded-full shadow-sm shadow-cyan-400/50 
+                          group-hover:animate-ping group-hover:shadow-lg group-hover:shadow-cyan-400/60"></div>
             </div>
-            <!-- Flash -->
-            <div class="absolute -top-1 right-1 w-2 h-2 bg-[#FFD700] border border-[#DAA520]" 
-                 :class="isHovered ? 'animate-pulse' : ''"></div>
-            <!-- Viewfinder -->
-            <div class="absolute -top-2 left-3 w-2 h-2 bg-[#654321] border border-[#4A4A4A]"></div>
+            <!-- Flash with glow -->
+            <div class="absolute -top-1 right-0.5 w-2.5 h-2.5 bg-gradient-to-br from-yellow-300 to-amber-400 
+                        border border-yellow-400/50 rounded shadow-sm shadow-yellow-400/30
+                        group-hover:shadow-lg group-hover:shadow-yellow-400/60 group-hover:animate-pulse"></div>
           </div>
         </div>
         
-        <span class="tracking-wider font-bold" style="font-family: 'Press Start 2P'">+ NEW SHELLS</span>
+        <span class="tracking-wider">+ NEW SHELLS</span>
         
-        <!-- Button press effect -->
-        <div class="absolute inset-0 bg-[#228B22] opacity-0 transition-opacity duration-150"
-             :class="isPressed ? 'opacity-40' : ''"></div>
-      </a>
+        <!-- Holographic shimmer overlay -->
+        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent 
+                    -skew-x-12 -translate-x-full group-hover:translate-x-full 
+                    transition-transform duration-700 ease-in-out rounded-xl"></div>
+      </div>
     </div>
   </div>
 
-  <!-- Photo Tabs Section -->
-  <div class="bg-[#A0522D] border-3 border-[#5D4037] p-4 mb-6" 
-       style="box-shadow: 6px 6px 0px #3B3B3B;"
+  <!-- Holographic Tabs Section -->
+  <div class="relative mb-8"
        id="photos-tabs"
        x-data="{ activeTab: '{{ current_photo_tab }}' }">
     
-    
-    <!-- Pixel Tabs -->
-    <div class="flex flex-wrap gap-3">
-      {% for tab in photo_tabs %}
-      <div class="relative" style="font-family: 'Press Start 2P'">
-        <div class="block px-6 py-3 font-bold text-sm border-3 transition-all duration-150 cursor-pointer pixel-tab"
-           :class="{ 
-             'bg-[#FFD66F] border-[#D4A843] text-[#8B4513] active-tab': activeTab === '{{ tab }}',
-             'bg-[#CD853F] border-[#A0522D] text-[#5D4037] hover:bg-[#DEB887] hover:border-[#BC9A6A]': activeTab !== '{{ tab }}'
-           }"
-           :style="activeTab === '{{ tab }}' ? 'box-shadow: inset 4px 4px 0px #B8860B;' : 'box-shadow: 4px 4px 0px #8B4513;'"
-           @click="activeTab = '{{ tab }}'"
-           hx-get="{% url 'profile_photos_'|add:tab profile.username %}"
-           hx-swap="innerHTML"
-           hx-target="#media-container"
-           hx-push-url="{% url 'profile_photos_'|add:tab profile.username %}">
-          
-          <!-- Tab Icon -->
-          <div class="flex items-center gap-2">
-            <div class="w-4 h-4 bg-[#8B4513] border border-[#5D4037] flex items-center justify-center text-xs">
-              {% if tab == 'all' %}🗂️{% elif tab == 'photos' %}📷{% else %}📁{% endif %}
+    <!-- Glass morphism container -->
+    <div class="bg-white/5 rounded-2xl 
+                backdrop-filter backdrop-blur-20 p-6 
+                shadow-2xl shadow-black/10">
+      
+      <!-- Holographic Tabs -->
+      <div class="flex flex-wrap gap-3">
+        {% for tab in photo_tabs %}
+        <div class="relative group">
+          <button
+             class="px-6 py-3 font-bold text-sm rounded-xl transition-all duration-300 ease-out
+                    cursor-pointer border backdrop-filter backdrop-blur-15
+                    hover:-translate-y-1 hover:shadow-lg active:translate-y-0"
+             :class="{ 
+               'bg-gradient-to-r from-cyan-400/30 to-emerald-400/30 border-cyan-400/50 text-white shadow-lg shadow-cyan-400/25 translate-y-0': activeTab === '{{ tab }}',
+               'bg-white/8 border-white/20 text-white/80 hover:bg-white/12 hover:border-cyan-400/30 hover:text-white hover:shadow-cyan-400/20': activeTab !== '{{ tab }}'
+             }"
+             @click="activeTab = '{{ tab }}'"
+             hx-get="{% url 'profile_photos_'|add:tab profile.username %}"
+             hx-swap="innerHTML"
+             hx-target="#media-container"
+             hx-push-url="{% url 'profile_photos_'|add:tab profile.username %}"
+             style="font-family: 'Press Start 2P', monospace; font-size: 10px;">
+            
+            <!-- Tab Icon and Label -->
+            <div class="flex items-center gap-3">
+              <div class="w-5 h-5 rounded border border-current/30 flex items-center justify-center text-xs
+                          bg-gradient-to-br from-white/10 to-transparent">
+                {% if tab == 'all' %}🗂️{% elif tab == 'photos' %}📷{% else %}📁{% endif %}
+              </div>
+              <span class="tracking-wider">{{ tab|title|upper }}</span>
             </div>
-            <span class="tracking-wide">{{ tab|title|upper }}</span>
+            
+            <!-- Holographic shimmer effect -->
+            <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent 
+                        -skew-x-12 opacity-0 group-hover:opacity-100 group-hover:animate-pulse
+                        transition-opacity duration-500 rounded-xl"></div>
+          </button>
+          
+          <!-- Active indicator with glow -->
+          <div x-show="activeTab === '{{ tab }}'" x-cloak
+               class="absolute -top-2 left-1/2 transform -translate-x-1/2">
+            <div class="w-2 h-2 bg-gradient-to-br from-cyan-300 to-white rounded-full
+                        shadow-lg shadow-cyan-400/60 animate-bounce
+                        border border-cyan-400/50"></div>
           </div>
           
-          <!-- Active indicator -->
-          <div x-show="activeTab === '{{ tab }}'" class="absolute -top-2 left-1/2 transform -translate-x-1/2">
-            <div class="w-2 h-2 bg-[#FFD700] border border-[#DAA520] animate-bounce"></div>
-          </div>
+          <!-- Ambient glow for active tab -->
+          <div x-show="activeTab === '{{ tab }}'" x-cloak
+               class="absolute -inset-1 bg-gradient-to-r from-cyan-400/20 to-emerald-400/20 
+                      rounded-xl blur-sm -z-10 animate-pulse"></div>
         </div>
+        {% endfor %}
       </div>
-      {% endfor %}
+    </div>
+    
+    <!-- Floating particles background -->
+    <div class="absolute inset-0 overflow-hidden rounded-2xl pointer-events-none">
+      <div class="absolute top-4 left-4 w-1 h-1 bg-cyan-400/40 rounded-full animate-pulse"></div>
+      <div class="absolute top-8 right-8 w-1 h-1 bg-emerald-400/40 rounded-full animate-ping" style="animation-delay: 0.5s;"></div>
+      <div class="absolute bottom-6 left-1/3 w-1 h-1 bg-yellow-400/40 rounded-full animate-pulse" style="animation-delay: 1s;"></div>
+      <div class="absolute bottom-4 right-1/4 w-1 h-1 bg-cyan-400/40 rounded-full animate-ping" style="animation-delay: 1.5s;"></div>
     </div>
   </div>
 
-  <!-- Loading State -->
+  <!-- Holographic Loading State -->
   <div hx-get="{% url 'profile_photos_'|add:current_photo_tab profile.username%}"
        hx-target="#media-container"
        hx-trigger="load"
        @htmx:after-request="if($event.detail.successful) $el.remove()"
-       class="bg-[#CD853F] border-3 border-[#A0522D] p-8 mb-6 text-center" 
-       style="box-shadow: 4px 4px 0px #8B4513;">
+       class="relative bg-white/5 border border-cyan-400/20 rounded-2xl 
+              backdrop-filter backdrop-blur-20 p-8 mb-8 text-center
+              shadow-xl shadow-black/10">
     
-    <div class="flex items-center justify-center gap-4">
-      <!-- Loading turtle -->
-      <div class="w-8 h-8 bg-[#32CD32] border-2 border-[#228B22] relative animate-bounce">
-        <div class="absolute top-1 left-1 w-6 h-6 bg-[#90EE90] border border-[#7CFC00]"></div>
-        <div class="absolute top-2 left-2 w-1 h-1 bg-[#000]"></div>
-        <div class="absolute top-2 right-2 w-1 h-1 bg-[#000]"></div>
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-6">
+      <!-- Holographic Loading Turtle -->
+      <div class="relative">
+        <div class="w-12 h-12 bg-gradient-to-br from-emerald-400/30 to-cyan-400/30 
+                    border border-emerald-400/50 rounded-xl relative 
+                    backdrop-filter backdrop-blur-15 shadow-lg shadow-emerald-400/20
+                    animate-bounce">
+          <div class="absolute top-2 left-2 w-8 h-8 bg-gradient-to-br from-emerald-300/60 to-cyan-300/60 
+                      border border-cyan-400/40 rounded-lg shadow-sm shadow-cyan-400/30"></div>
+          <!-- Turtle eyes with glow -->
+          <div class="absolute top-3 left-4 w-1.5 h-1.5 bg-black rounded-full shadow-sm shadow-cyan-400/50"></div>
+          <div class="absolute top-3 right-4 w-1.5 h-1.5 bg-black rounded-full shadow-sm shadow-cyan-400/50"></div>
+        </div>
+        <!-- Ambient glow -->
+        <div class="absolute -inset-2 bg-gradient-to-r from-emerald-400/20 to-cyan-400/20 
+                    rounded-xl blur-md animate-pulse"></div>
       </div>
       
-      <span class="font-mono font-bold text-[#5D4037] text-lg">LOADING SHELLS...</span>
-      
-      <div class="flex gap-1">
-        <div class="w-2 h-2 bg-[#FFD700] animate-pulse"></div>
-        <div class="w-2 h-2 bg-[#FFD700] animate-pulse" style="animation-delay: 0.3s;"></div>
-        <div class="w-2 h-2 bg-[#FFD700] animate-pulse" style="animation-delay: 0.6s;"></div>
+      <div class="text-center">
+        <span class="text-white/90 font-bold text-lg block mb-2"
+              style="font-family: 'Press Start 2P', monospace; font-size: 14px;
+                     text-shadow: 0 0 15px rgba(6, 182, 212, 0.6);">
+          LOADING SHELLS...
+        </span>
+        
+        <!-- Animated dots -->
+        <div class="flex justify-center gap-2">
+          <div class="w-2 h-2 bg-gradient-to-br from-cyan-300 to-emerald-300 rounded-full 
+                      shadow-sm shadow-cyan-400/50 animate-pulse"></div>
+          <div class="w-2 h-2 bg-gradient-to-br from-emerald-300 to-cyan-300 rounded-full 
+                      shadow-sm shadow-emerald-400/50 animate-pulse" style="animation-delay: 0.3s;"></div>
+          <div class="w-2 h-2 bg-gradient-to-br from-cyan-300 to-yellow-300 rounded-full 
+                      shadow-sm shadow-yellow-400/50 animate-pulse" style="animation-delay: 0.6s;"></div>
+        </div>
       </div>
+    </div>
+    
+    <!-- Floating particles -->
+    <div class="absolute inset-0 overflow-hidden rounded-2xl pointer-events-none">
+      <div class="absolute top-4 left-6 w-1 h-1 bg-cyan-400/40 rounded-full animate-ping"></div>
+      <div class="absolute bottom-6 right-8 w-1 h-1 bg-emerald-400/40 rounded-full animate-pulse" style="animation-delay: 0.8s;"></div>
+      <div class="absolute top-1/2 right-6 w-1 h-1 bg-yellow-400/40 rounded-full animate-ping" style="animation-delay: 1.2s;"></div>
     </div>
   </div>
   
-  <!-- Media Container -->
-  <div class="bg-[#A0522D] border-3 border-[#5D4037] p-4" style="box-shadow: 6px 6px 0px #3B3B3B;">
+  <!-- Holographic Media Container -->
+  <div class="relative bg-white/5 border border-cyan-400/20 rounded-2xl 
+              backdrop-filter backdrop-blur-20 p-6
+              shadow-2xl shadow-black/10">
     {% include 'profiles/partials/media_container.html' %}
+    
+    <!-- Container ambient glow -->
+    <div class="absolute -inset-1 bg-gradient-to-br from-cyan-400/10 via-emerald-400/10 to-cyan-400/10 
+                rounded-2xl blur-sm -z-10 opacity-60"></div>
   </div>
 </div>
 
 <style>
-/* Pixel button effects */
-.pixel-button:hover:not(.pressed) {
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0px #1F5F1F, 10px 10px 0px #0F3F0F !important;
+/* Enhanced Holographic Shell Container with Floating Animation */
+.holo-shell-container::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(45deg, 
+    rgba(6, 182, 212, 0.3) 0%, 
+    rgba(16, 185, 129, 0.3) 25%,
+    rgba(251, 191, 36, 0.2) 50%,
+    rgba(16, 185, 129, 0.3) 75%,
+    rgba(6, 182, 212, 0.3) 100%
+  );
+  border-radius: 14px;
+  animation: shell-glow 4s ease-in-out infinite;
+  z-index: -1;
 }
 
-.pixel-button.pressed {
-  transform: translate(4px, 4px);
-  box-shadow: 0px 0px 0px #1F5F1F, 4px 4px 0px #0F3F0F !important;
+@keyframes shell-glow {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
 }
 
-.pixel-button:active {
-  transform: translate(4px, 4px);
-  box-shadow: 0px 0px 0px #1F5F1F, 4px 4px 0px #0F3F0F !important;
+/* Subtle floating animation for the shell icon */
+.holo-shell-container {
+  animation: gentle-float 6s ease-in-out infinite;
 }
 
-/* Pixel text styling */
-.pixel-text {
-  text-shadow: 3px 3px 0px #8B4513;
+@keyframes gentle-float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  25% { transform: translateY(-3px) rotate(1deg); }
+  50% { transform: translateY(-2px) rotate(0deg); }
+  75% { transform: translateY(-1px) rotate(-1deg); }
 }
 
-/* Tab hover effects */
-.pixel-tab:hover:not(.active-tab) {
-  transform: translate(-1px, -1px);
-  box-shadow: 5px 5px 0px #8B4513 !important;
+/* Mobile Responsive Design */
+@media (max-width: 768px) {
+  /* Reduced blur for better mobile performance */
+  .backdrop-blur-20 { backdrop-filter: blur(15px); }
+  .backdrop-blur-15 { backdrop-filter: blur(12px); }
+  
+  /* Optimize button sizes for touch */
+  .px-6 { padding-left: 1rem; padding-right: 1rem; }
+  .py-3 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+  
+  /* Scale down shell container */
+  .holo-shell-container { width: 3rem; height: 3rem; }
+  
+  /* Adjust font sizes for mobile */
+  .text-2xl { font-size: 1.25rem; }
+  .text-3xl { font-size: 1.5rem; }
+  
+  /* Stack header elements on small screens */
+  .lg\\:flex-row { flex-direction: column; align-items: center; text-align: center; }
 }
 
-.pixel-tab:active {
-  transform: translate(2px, 2px);
-}
-
-/* Border width utilities */
-.border-3 {
-  border-width: 3px;
-}
-
-/* Responsive adjustments */
 @media (max-width: 640px) {
-  .pixel-button {
-    font-size: 0.75rem;
-    padding: 0.75rem 1rem;
-  }
+  /* Further reduce effects for mobile performance */
+  .shadow-2xl { box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); }
+  .shadow-xl { box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); }
+  .shadow-lg { box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); }
   
-  .pixel-text {
-    font-size: 1.5rem;
-  }
+  /* Disable animations for better performance */
+  .animate-bounce, .animate-pulse, .animate-ping { animation: none; }
   
-  .pixel-tab {
-    font-size: 0.75rem;
-    padding: 0.5rem 1rem;
-  }
-  
-  .container-fluid {
-    padding: 1rem;
-  }
+  /* Reduce padding and spacing */
+  .p-6 { padding: 1rem; }
+  .gap-6 { gap: 1rem; }
+  .mb-8 { margin-bottom: 1.5rem; }
 }
 
 @media (max-width: 480px) {
-  .pixel-text {
-    font-size: 1.25rem;
-  }
+  /* Minimal spacing for very small screens */
+  .px-4 { padding-left: 0.75rem; padding-right: 0.75rem; }
+  .py-6 { padding-top: 1rem; padding-bottom: 1rem; }
   
-  .flex-col {
-    align-items: center !important;
-    text-align: center;
-  }
+  /* Hide decorative particles on mobile */
+  .absolute.w-1 { display: none; }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .border-cyan-400\\/20 { border-color: rgba(6, 182, 212, 0.8); }
+  .border-emerald-400\\/30 { border-color: rgba(16, 185, 129, 0.8); }
+  .text-white\\/90 { color: #ffffff; }
+  .bg-white\\/5 { background-color: rgba(255, 255, 255, 0.2); }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+  .hover\\:-translate-y-1:hover { transform: none; }
+  .group-hover\\:animate-ping, .group-hover\\:animate-pulse { animation: none; }
+}
+
+/* Focus states for accessibility */
+button:focus,
+a:focus {
+  outline: 2px solid rgba(52, 211, 153, 0.8);
+  outline-offset: 2px;
 }
 </style>
