@@ -34,8 +34,8 @@
 {% empty %}
 <!-- Empty State -->
 <div class="col-span-4 text-center mt-5">
-    <i class="bi bi-image fs-1 text-muted d-block mb-2"></i>
-    <p class="text-muted">No shell in this album yet</p>
+    <i class="bi bi-image fs-1 text-white d-block mb-2"></i>
+    <p class="text-emerald-400">No shell in this album yet</p>
     {% if request.user == album.profile.user %}
     <a href="{% url 'album_edit' album.pk %}" class="btn btn-primary btn-sm">Add More!</a>
     {% endif %}
