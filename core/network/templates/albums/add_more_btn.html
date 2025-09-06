@@ -6,37 +6,55 @@
   @mouseenter="isHovered = true" 
   @mouseleave="isHovered = false">
 
-      <!-- Turtle Shell Create Card -->
-      <div class="h-full flex flex-col bg-[#8B4513] border-4 border-dashed border-[#5D4037] rounded-lg p-2 shadow-[6px_6px_0px_#3B3B3B] transition-all duration-300 group-hover:shadow-[8px_8px_0px_#3B3B3B]">
+      <!-- Holographic Create Card -->
+      <div class="h-full flex flex-col bg-white/5 border border-dashed border-cyan-400/40 backdrop-blur-20 rounded-2xl p-3 
+                  shadow-xl shadow-cyan-500/10 transition-all duration-300 ease-out
+                  hover:-translate-y-1 hover:shadow-2xl hover:shadow-cyan-400/20 hover:bg-white/8 hover:border-cyan-400/60">
         
-        <!-- Create Album Container -->
-        <div class="relative flex-grow bg-[#FFD66F] border-2 border-dashed border-[#5D4037] rounded overflow-hidden flex items-center justify-center" style="height: 160px;">
+        <!-- Holographic Creation Portal -->
+        <div class="relative flex-grow bg-gradient-to-br from-slate-800/20 to-slate-900/40 
+                    border border-dashed border-cyan-400/50 backdrop-blur-15 rounded-xl 
+                    overflow-hidden flex items-center justify-center" style="height: 160px;">
           
-          <!-- Animated Plus Icon -->
-          <div class="text-center">
-            <div class="text-6xl text-[#5D4037] font-bold transition-transform duration-300 group-hover:scale-110" 
-                 :class="isHovered ? 'animate-bounce' : ''">
+          <!-- Holographic Plus Icon -->
+          <div class="text-center relative z-10">
+            <div class="text-6xl text-white/80 font-bold transition-all duration-300 
+                        group-hover:scale-110 group-hover:text-cyan-300" 
+                 :class="isHovered ? 'animate-bounce' : ''"
+                 style="text-shadow: 0 0 20px rgba(6, 182, 212, 0.6), 0 0 40px rgba(52, 211, 153, 0.3);">
               ＋
             </div>
-            <div class="mt-2 text-[#5D4037] font-mono text-xs font-bold">
+            <div class="mt-2 text-white/80"
+                 style="font-family: 'Press Start 2P', monospace; font-size: 8px;
+                        text-shadow: 0 0 10px rgba(6, 182, 212, 0.5);">
               NEW SHELL
             </div>
           </div>
           
-          <!-- Sparkle Effect -->
-          <div class="absolute top-4 left-4 w-2 h-2 bg-[#FBBF24] rounded-full transition-all duration-500" 
+          <!-- Holographic Particles -->
+          <div class="absolute top-4 left-4 w-2 h-2 bg-gradient-to-br from-cyan-300 to-emerald-300 
+                      rounded-full shadow-sm shadow-cyan-400/50 transition-all duration-500" 
                :class="isHovered ? 'animate-ping' : ''"></div>
-          <div class="absolute bottom-4 right-4 w-2 h-2 bg-[#FBBF24] rounded-full transition-all duration-700" 
+          <div class="absolute bottom-4 right-4 w-2 h-2 bg-gradient-to-br from-emerald-300 to-yellow-300 
+                      rounded-full shadow-sm shadow-yellow-400/50 transition-all duration-700" 
                :class="isHovered ? 'animate-ping' : ''"></div>
+          <div class="absolute top-6 right-6 w-1 h-1 bg-cyan-400/60 rounded-full animate-pulse"></div>
+          <div class="absolute bottom-8 left-6 w-1 h-1 bg-emerald-400/60 rounded-full animate-ping" style="animation-delay: 0.5s;"></div>
           
-          <!-- Hover Glow Effect -->
-          <div class="absolute inset-0 bg-[#FBBF24] opacity-0 group-hover:opacity-20 transition-all duration-300 rounded"></div>
+          <!-- Holographic Energy Field -->
+          <div class="absolute inset-0 bg-gradient-to-br from-cyan-400/10 to-emerald-400/10 
+                      opacity-0 group-hover:opacity-40 transition-all duration-300 rounded-xl"></div>
         </div>
         
-        <!-- Create Album Info -->
-        <div class="mt-3 text-center">
-          <div class="bg-[#F5F5DC] border-2 border-dashed border-[#5D4037] rounded grow-y px-3 py-2 shadow-[2px_2px_0px_#3B3B3B]">
-            <div class="text-[#8B4513] text-xs font-mono mt-1">Start collecting!</div>
+        <!-- Holographic Album Info -->
+        <div class="mt-4 text-center">
+          <div class="bg-white/8 border border-dashed border-white/30 backdrop-blur-15 rounded-xl px-4 py-3 
+                      shadow-lg transition-all duration-300 hover:bg-white/12 hover:border-cyan-400/50">
+            <div class="text-white/80 font-bold"
+                 style="font-family: 'Press Start 2P', monospace; font-size: 10px;
+                        text-shadow: 0 0 10px rgba(6, 182, 212, 0.4);">
+              START COLLECTING!
+            </div>
           </div>
         </div>
       </div>
