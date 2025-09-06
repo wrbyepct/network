@@ -200,10 +200,7 @@
         <!-- Enhanced Navigation Styles -->
         <style>
           /* Global Overflow Fix */
-          html, body {
-            overflow-x: hidden;
-            max-width: 100%;
-          }
+          
           
           * {
             box-sizing: border-box;
@@ -240,8 +237,7 @@
             
             position: relative;
             
-            overflow-x: hidden;
-           
+            
           }
 
           /* Tech Grid Overlay */
@@ -258,8 +254,9 @@
           }
 
           @keyframes grid-float {
-            0%, 100% { transform: translate(0, 0); opacity: 0.3; }
-            50% { transform: translate(10px, -10px); opacity: 0.1; }
+            0%, 100% { transform: translateY(0); opacity: 1; }
+            25% { transform: translateY(-10px); opacity: 0.3;}
+            75% { transform: translateY(10px); opacity: 0.7;}
           }
 
           /* Premium Holographic Shimmer Effects */
