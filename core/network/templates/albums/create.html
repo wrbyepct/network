@@ -2,171 +2,176 @@
 {% load widget_tweaks %}
 {% block body %}
 
-<div class="min-h-screen bg-[#A8D5A0] p-4 font-mono" 
-     x-data="albumCreator()"
-     style="background-image: url('data:image/svg+xml,%3Csvg width=&quot;100&quot; height=&quot;20&quot; viewBox=&quot;0 0 100 20&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E%3Cpath d=&quot;M20 20v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zM0 16v-4h4v4H0zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zM0 12v-4h4v4H0zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zM0 8v-4h4v4H0zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zm20 0v-4h4v4h-4zM0 4V0h4v4H0zm20 0V0h4v4h-4zm20 0V0h4v4h-4zm20 0V0h4v4h-4zm20 0V0h4v4h-4z&quot; fill=&quot;%23D2B48C&quot; fill-opacity=&quot;0.4&quot; fill-rule=&quot;evenodd&quot;/%3E%3C/svg%3E');">
-  
+<div 
+  class="w-full min-h-screen holographic-ocean-bg relative z-10"
+  x-data="albumCreator()"
+  style="font-family: 'Press Start 2P', monospace; font-size: 10px;">
 
   <!-- Main Container -->
-  <div class="p-4">
+  <div class="w-full xl:w-[98vw] lg:container-2xl pt-4 mx-auto px-2 lg:px-0">
+
+    <!-- Back to gallery button -->
+    <div class="mb-4 w-fit ms-auto">
+      {% include 'albums/back_btn.html' %}
+
+    </div>
     
     <!-- Two Column Layout -->
-    <div class="grid grid-cols-1 lg:grid-cols-6 gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-6 gap-4 lg:gap-6">
       
-      <!-- RIGHT COLUMN: Form Section -->
-      <div class="space-y-6 col-span-1 lg:col-span-2 order-2 lg:order-1">
+      <!-- LEFT COLUMN: Form Section -->
+      <div class="space-y-6 col-span-1 lg:col-span-2">
         
         <!-- Header Section -->
-        <div class="bg-[#8B4513] border-4 border-[#5D4037] rounded-lg p-6 text-center shadow-[12px_12px_0px_#3B3B3B] relative overflow-hidden">
-        <!-- Wooden grain pattern -->
-        <div class="absolute inset-0 opacity-20" style="background: repeating-linear-gradient(90deg, #6F4E37 0px, transparent 1px, transparent 4px, #6F4E37 5px);"></div>
+        <div class="post-card rounded-lg p-4 text-center backdrop-blur-lg border border-cyan-500/30">
+          
+          <!-- Holographic decorations -->
+          <div class="absolute top-2 left-2 w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></div>
+          <div class="absolute top-2 right-2 w-2 h-2 bg-emerald-400 rounded-full animate-pulse" style="animation-delay: 0.5s;"></div>
+          <div class="absolute bottom-2 left-2 w-2 h-2 bg-cyan-400 rounded-full animate-pulse" style="animation-delay: 1s;"></div>
+          <div class="absolute bottom-2 right-2 w-2 h-2 bg-emerald-400 rounded-full animate-pulse" style="animation-delay: 1.5s;"></div>
         
-        <!-- Pixel decorations -->
-        <div class="absolute top-2 left-2 w-4 h-4 bg-[#4CAF50] border-2 border-[#3B3B3B] shell-dot pixel-blink"></div>
-        <div class="absolute top-2 right-2 w-4 h-4 bg-[#FBBF24] border-2 border-[#3B3B3B] shell-dot pixel-blink" style="animation-delay: 0.5s;"></div>
-        <div class="absolute bottom-2 left-2 w-4 h-4 bg-[#8BC34A] border-2 border-[#3B3B3B] shell-dot pixel-blink" style="animation-delay: 1s;"></div>
-        <div class="absolute bottom-2 right-2 w-4 h-4 bg-[#4CAF50] border-2 border-[#3B3B3B] shell-dot pixel-blink" style="animation-delay: 1.5s;"></div>
-        
-        <!-- Turtle Shell Icon -->
-        <div class="mb-4 relative z-10">
-          <div class="w-16 h-16 bg-[#4CAF50] border-4 border-[#3B3B3B] relative turtle-shell mx-auto hover:scale-105 transition-transform duration-200">
-            <div class="absolute inset-2 bg-[#2E7D32] border-2 border-[#1B5E20]">
-              <!-- Shell hexagon segments -->
-              <div class="absolute top-0 left-1 w-2 h-2 bg-[#A5D6A7] border border-[#2E7D32] shell-segment"></div>
-              <div class="absolute top-0 right-1 w-2 h-2 bg-[#A5D6A7] border border-[#2E7D32] shell-segment"></div>
-              <div class="absolute bottom-0 left-1 w-2 h-2 bg-[#A5D6A7] border border-[#2E7D32] shell-segment"></div>
-              <div class="absolute bottom-0 right-1 w-2 h-2 bg-[#A5D6A7] border border-[#2E7D32] shell-segment"></div>
-              <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-[#A5D6A7] border border-[#2E7D32] shell-segment"></div>
-            </div>
-            <!-- Plus sign for creating -->
-            <div class="absolute inset-0 flex items-center justify-center">
-              <div class="w-6 h-2 bg-[#FFD66F] border border-[#3B3B3B]"></div>
-              <div class="absolute w-2 h-6 bg-[#FFD66F] border border-[#3B3B3B]"></div>
+        <!-- Holographic Album Icon -->
+        <div class="mb-3 relative">
+          <div class="w-12 h-12 bg-cyan-500/20 border border-cyan-400/50 rounded-lg mx-auto hover:scale-105 transition-transform duration-200 backdrop-blur-sm flex items-center justify-center holo-icon">
+            <!-- Album icon -->
+            <div class="w-6 h-4 bg-cyan-400/20 border border-cyan-400 rounded relative">
+              <div class="absolute top-0.5 left-1 w-1 h-1 bg-cyan-400 rounded-full"></div>
+              <div class="absolute top-0.5 right-1 w-1 h-1 bg-cyan-400 rounded-full"></div>
+              <!-- Plus sign overlay for creating -->
+              <div class="absolute -top-2 -right-2 w-4 h-4 bg-emerald-500/20 border border-emerald-400 rounded-full flex items-center justify-center">
+                <div class="w-2 h-0.5 bg-emerald-400"></div>
+                <div class="absolute w-0.5 h-2 bg-emerald-400"></div>
+              </div>
             </div>
           </div>
         </div>
       
-        <h1 class="text-lg sm:text-xl lg:text-2xl font-bold text-[#FFD66F] mb-2 pixel-title relative z-10" style="text-shadow: 2px 2px #3B3B3B;">CREATE SHELL ALBUM</h1>
-        <p class="text-[#D2B48C] text-sm relative z-10">Build your shell collection!</p>
-        </div>
+            <h2 class="text-sm font-bold text-cyan-400 mb-1 tracking-wider relative">CREATE SHELL ALBUM</h2>
+            <p class="text-cyan-400/70 text-xs relative">Build your collection</p>
+          </div>
 
         <!-- Form Container -->
-        <div class="bg-[#FFD66F] border-4 border-[#5D4037] rounded-lg p-8 shadow-[8px_8px_0px_#3B3B3B] relative">
-          <!-- Grass pattern background -->
-          <div class="absolute inset-0 opacity-30" style="background: repeating-linear-gradient(0deg, transparent 0px, transparent 2px, #4CAF50 2px, #4CAF50 3px);"></div>
+        <div class="post-card rounded-lg p-4 backdrop-blur-lg border border-cyan-500/30 space-y-4">
           
           <form method="post" action="{% url 'album_create' %}" enctype="multipart/form-data" class="relative z-10"
                 @submit.prevent="$store.fileUploadManager.handleSubmit($el, $refs.fileInput)">
             {% csrf_token %}
-          
             <!-- Album Name Field -->
-            <div class="mb-8">
-              <div class="flex items-center gap-3 mb-4">
-                <div class="w-4 h-4 bg-[#4CAF50] border-2 border-[#3B3B3B] shell-dot"></div>
-                <label for="{{ form.name.id_for_label }}" class="text-sm sm:text-base lg:text-lg font-bold text-[#5D4037] font-mono pixel-title">ALBUM NAME</label>
+            <div>
+              <div class="flex items-center gap-2 mb-3">
+                <div class="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></div>
+                <label for="{{ form.name.id_for_label }}" class="text-xs font-bold text-cyan-400 tracking-wider">ALBUM NAME</label>
               </div>
-          
-          <div class="bg-[#A5D6A7] border-4 border-[#5D4037] rounded p-2 shadow-[4px_4px_0px_#3B3B3B]">
-            <input type="text" 
-                   name="name" 
-                   id="{{ form.name.id_for_label }}"
-                   class="w-full bg-[#C8E6C9] border-2 border-[#2E7D32] rounded px-4 py-3 text-[#1B5E20] font-mono font-bold placeholder-[#4CAF50] focus:border-[#FBBF24] focus:outline-none transition-colors"
-                   placeholder="Enter your shell album name..."
-                   value="{{ form.name.value|default_if_none:'' }}"
-                   x-model="albumName">
-            <input 
-                type="file" 
-                accept="image/*" 
-                name="medias" 
-                id="{{ form.medias.id_for_label }}"
-                multiple 
-                class="hidden"
-                @change="$store.fileUploadManager.handleFileSelect($event)"
-                x-ref="fileInput"
-              >
+              
+              <div class="holo-input-field rounded-lg">
+                <input type="text" 
+                       name="name" 
+                       id="{{ form.name.id_for_label }}"
+                       class="w-full bg-black/30 border border-cyan-500/30 rounded-lg px-3 py-2 text-white/90 
+                              text-xs placeholder-cyan-400/50 focus:border-cyan-500/60 focus:outline-none 
+                              focus:ring-1 focus:ring-cyan-500/50 transition-all duration-200 backdrop-blur-sm"
+                       placeholder="Enter album name..."
+                       value="{{ form.name.value|default_if_none:'' }}"
+                       x-model="albumName">
+                <input 
+                  type="file" 
+                  accept="image/*,video/*" 
+                  name="medias" 
+                  id="{{ form.medias.id_for_label }}"
+                  multiple 
+                  class="hidden"
+                  @change="$store.fileUploadManager.handleFileSelect($event)"
+                  x-ref="fileInput"
+                >
+              </div>
+              {% if form.name.errors %}
+                <div class="mt-2 text-red-400 text-xs bg-red-500/10 border border-red-500/30 p-2 rounded-lg backdrop-blur-sm">
+                  ⚠️ {{ form.name.errors }}
+                </div>
+              {% endif %}
             </div>
-            {% if form.name.errors %}
-              <div class="mt-2 text-[#8B4513] text-sm font-bold bg-[#D2B48C] border-2 border-[#5D4037] p-2 rounded">
-                🐢 {{ form.name.errors }}
-              </div>
-            {% endif %}
-          </div>
 
-        <!-- File Upload Section -->
-        <div class="mb-8">
-          <div class="flex items-center gap-3 mb-4">
-            <div class="w-4 h-4 bg-[#FBBF24] border-2 border-[#3B3B3B] shell-dot pixel-blink"></div>
-            <label for="{{ form.medias.id_for_label }}" class="text-sm sm:text-base lg:text-lg font-bold text-[#5D4037] font-mono pixel-title">TURTLE PHOTOS</label>
-          </div>
-          
-            <!-- File Input Styled Button -->
-              <div class="mt-4 text-center">
+            <!-- File Upload Section -->
+            <div>
+              <div class="flex items-center gap-2 my-4">
+                <div class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+                <label for="{{ form.medias.id_for_label }}" class="text-xs font-bold text-emerald-400 tracking-wider">ADD MEDIA FILES</label>
+              </div>
+              
+              <div class="text-center">
                 <button type="button"
                         @click="$refs.fileInput.click()"
-                        class="bg-[#8BC34A] hover:bg-[#AED581] border-4 border-[#5D4037] text-[#2E7D32] font-mono font-bold py-2 px-4 sm:py-3 sm:px-6 rounded text-xs sm:text-sm transition-colors shadow-[4px_4px_0px_#3B3B3B] game-button">
-                  🐢 BROWSE LOCAL SHELLS
+                        class="bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/50 text-emerald-400 
+                               py-3 px-4 rounded-lg text-xs transition-all duration-200 hover:-translate-y-0.5
+                               backdrop-blur-sm w-full">
+                  📸 BROWSE SHELLS
                 </button>
               </div>
-            
-            <!-- Error Display -->
-            {% if form.medias.errors %}
-              <div class="mt-4 text-[#8B4513] text-sm font-bold bg-[#D2B48C] border-2 border-[#5D4037] p-3 rounded">
-                🚫 {{ form.medias.errors }}
-              </div>
-            {% endif %}
-          
-        </div>
+              
+              {% if form.medias.errors %}
+                <div class="mt-3 text-red-400 text-xs bg-red-500/10 border border-red-500/30 p-2 rounded-lg backdrop-blur-sm">
+                  ⚠️ {{ form.medias.errors }}
+                </div>
+              {% endif %}
+            </div>
 
-        <!-- Submit Button -->
-        <div class="text-center">
-          <button type="submit" 
-                  class="bg-[#FBBF24] hover:bg-[#FFE082] active:bg-[#F57C00] border-4 border-[#5D4037] hover:border-[#3B3B3B] text-[#2E7D32] font-mono font-bold py-3 px-8 sm:py-4 sm:px-12 rounded-lg text-base sm:text-lg transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-[8px_8px_0px_#3B3B3B] game-button"
-                  :disabled="isSubmitting"
-                  x-text="isSubmitting ? '🐢 BUILDING SHELL ALBUM...' : '💾 CREATE SHELL ALBUM'">
-          </button>
-          
-              <p class="text-[#5D4037] text-xs mt-4 font-mono">
-                🌿 Your turtle album will be created in the habitat
-              </p>
+            <!-- Submit Button -->
+            <div class="text-center">
+              <button type="submit" 
+                      class="w-full bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500/50 text-cyan-400 
+                             py-3 px-4 rounded-lg text-xs transition-all duration-200 hover:-translate-y-0.5
+                             backdrop-blur-sm font-bold tracking-wider"
+                      :disabled="isSubmitting"
+                      x-text="isSubmitting ? '⚡ CREATING ALBUM...' : '💾 CREATE ALBUM'">
+              </button>
+              <div class="flex items-center gap-2 my-4">
+                <div class="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
+                <div class="text-yellow-400 " style="font-family: 'Press Start 2P', monospace; font-size: 10px;">
+                  Your treasured memories stay in Shell Album
+                </div>
+              </div>
+
             </div>
           </form>
         </div>
           
       </div>
-      <!-- END RIGHT COLUMN -->
+      <!-- END LEFT COLUMN -->
 
       
-      <!-- LEFT COLUMN: Media Preview Section -->
-      <div class="space-y-6 col-span-1 lg:col-span-4" >
+      <!-- RIGHT COLUMN: Media Preview Section -->
+      <div class="space-y-6 col-span-1 lg:col-span-4 lg:min-h-[80vh]">
           <template x-if="$store.fileUploadManager.newUploadMedias.length === 0">
-            <div class="flex items-center justify-center h-full border-4 border-dashed border-[#4CAF50] rounded-lg p-8 text-center bg-[#C8E6C9] hover:bg-[#E8F5E8] transition-colors cursor-pointer"
+            <div class="flex items-center justify-center h-full border-2 border-dashed border-cyan-500/50 rounded-lg p-8 text-center post-card backdrop-blur-lg hover:border-cyan-500/70 transition-colors cursor-pointer"
                     x-show="$store.fileUploadManager.newUploadMedias.length === 0"
                     @click="$refs.fileInput.click()"
                     @dragover.prevent="isDragging = true"
                     @dragleave="isDragging = false"
                     @drop.prevent="handleFileDrop($event)"
-                    :class="isDragging ? 'border-[#FBBF24] bg-[#FFF8E1]' : ''"
+                    :class="isDragging ? 'border-emerald-400/70 bg-emerald-500/10' : ''"
                     x-ref="dropZone">
 
                   <div x-show="$store.fileUploadManager.newUploadMedias.length === 0">
-                    <!-- Turtle Upload Icon -->
+                    <!-- Holographic Upload Icon -->
                     <div class="mb-4 flex justify-center">
-                      <div class="w-16 h-16 bg-[#4CAF50] border-4 border-[#2E7D32] relative turtle-shell">
-                        <div class="absolute inset-2 bg-[#2E7D32] border-2 border-[#1B5E20] flex items-center justify-center">
+                      <div class="w-16 h-16 bg-cyan-500/20 border border-cyan-400/50 rounded-lg backdrop-blur-sm flex items-center justify-center">
+                        <!-- Upload Icon -->
+                        <div class="relative">
+                          <div class="w-6 h-8 bg-cyan-400/20 border border-cyan-400 rounded"></div>
                           <!-- Upload Arrow -->
-                          <div class="relative">
-                            <div class="w-4 h-6 bg-[#A5D6A7] border border-[#4CAF50]"></div>
-                            <div class="absolute -top-1 left-1 w-2 h-2 bg-[#A5D6A7] border border-[#4CAF50] transform rotate-45"></div>
+                          <div class="absolute -top-2 left-1/2 transform -translate-x-1/2">
+                            <div class="w-4 h-4 border-l-2 border-t-2 border-cyan-400 transform rotate-45"></div>
                           </div>
                         </div>
                       </div>
                     </div>
 
-                    <div class="text-[#2E7D32] font-mono font-bold mb-2 text-sm sm:text-base lg:text-lg">
-                      DROP YOUR TURTLE PHOTOS HERE!
+                    <div class="text-cyan-400 font-bold mb-2 text-sm tracking-wider">
+                      DROP SHELL FILES HERE!
                     </div>
-                    <div class="text-[#4CAF50] text-sm mb-4 font-mono">
-                      Or click to browse shell collection files
+                    <div class="text-cyan-400/70 text-xs mb-4">
+                      Or click to browse your collection
                     </div>
                   </div>
                 </div>
@@ -176,11 +181,7 @@
             <!-- Media Grid Preview -->
             <div 
               x-show="$store.fileUploadManager.newUploadMedias.length > 0"
-              class="bg-[#A5D6A7] border-4 border-[#5D4037] rounded-lg p-4 shadow-[8px_8px_0px_#3B3B3B] relative">
-              <!-- Grass pattern background -->
-              <div 
-                class="absolute inset-0 opacity-20 rounded"  
-                style="background: repeating-linear-gradient(0deg, transparent 0px, transparent 2px, #4CAF50 2px, #4CAF50 3px);"></div>
+              class="post-card rounded-lg p-4 backdrop-blur-lg border border-cyan-500/30">
             
               <div class="relative z-10">
                 <!-- Preview Grid -->
@@ -192,17 +193,16 @@
                 {% include 'albums/clear_all_media.html' %}
               </div>
             </div>
-          </div>
-       
       </div>
-    <!-- END LEFT COLUMN -->
+       
     </div>
-    <!-- END TWO COLUMN LAYOUT -->
+    <!-- END LEFT COLUMN -->
   </div>
-  <!-- END MAIN CONTAINER -->
-
-
+    <!-- END TWO COLUMN LAYOUT -->
 </div>
+<!-- END MAIN CONTAINER -->
+
+
 
 <script>
   function albumCreator() {
@@ -223,88 +223,29 @@
 </script>
 
 <style>
-  /* Turtle shell rotate animation */
-
-  /* Pixel blink animation */
-  .pixel-blink {
-    animation: turtle-blink 2s infinite;
+  /* Minimal Holographic Effects */
+  
+  /* Holographic glow animation */
+  @keyframes holo-glow {
+    0%, 100% { box-shadow: 0 0 10px rgba(6, 182, 212, 0.3); }
+    50% { box-shadow: 0 0 20px rgba(6, 182, 212, 0.6); }
   }
-
-  @keyframes turtle-blink {
-    0%, 85%, 100% { opacity: 1; }
-    90%, 95% { opacity: 0.3; }
+  
+  /* Icon hover glow */
+  .holo-icon:hover {
+    animation: holo-glow 2s ease-in-out infinite;
   }
-
-
-  /* Game button effects - Turtle theme */
-  .game-button:hover:not(.pressed) {
-    transform: translate(-2px, -2px);
-    box-shadow: 8px 8px 0px #5D4037 !important;
+  
+  /* Upload zone enhanced hover */
+  .post-card:hover {
+    background: rgba(6, 182, 212, 0.05);
+    border-color: rgba(6, 182, 212, 0.4);
   }
-
-  .game-button.pressed {
-    transform: translate(4px, 4px);
-    box-shadow: 2px 2px 0px #5D4037 !important;
-  }
-
-  /* Pixel title styling */
-  .pixel-title {
-    letter-spacing: 0.1em;
-    image-rendering: pixelated;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: -webkit-crisp-edges;
-    image-rendering: crisp-edges;
-  }
-
-
-  /* Turtle hover animation */
-  .turtle-shell:hover {
-    animation: turtle-bounce 0.6s ease-in-out;
-  }
-
-  @keyframes turtle-bounce {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-8px); }
-  }
-
-  /* Shell dot pulse */
-  .shell-dot {
-    animation: shell-pulse 2s ease-in-out infinite;
-  }
-
-  @keyframes shell-pulse {
-    0%, 100% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.1); opacity: 0.8; }
-  }
-
-  .aspect-square {
-    aspect-ratio: 1 / 1;
-  }
-
-  .pixel-button {
-    transition: all 0.2s ease;
-  }
-
-  .pixel-button:hover {
-    transform: scale(1.1);
-    box-shadow: 0 0 8px rgba(255, 87, 34, 0.6);
-  }
-
-  /* Responsive turtle shell sizes using Tailwind-like approach */
-  @media (max-width: 1024px) {
-    .turtle-shell {
-      width: 3.5rem;
-      height: 3.5rem;
-    }
-  }
-
+  
+  /* Mobile optimizations */
   @media (max-width: 640px) {
-    .turtle-shell {
-      width: 3rem;
-      height: 3rem;
-    }
+    .post-card { backdrop-filter: blur(10px); }
   }
-
 </style>
 
 {% endblock %}
