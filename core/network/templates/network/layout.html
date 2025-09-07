@@ -29,7 +29,6 @@
     <body 
       :class="showModal && 'overflow-hidden'"
       hx-headers='{"x-csrftoken": "{{ csrf_token }}"}'
-      hx-ext="multi-swap"
       hx-ext="response-targets"
       x-data="{ 
         showModal: false,
@@ -216,7 +215,7 @@
         <!-- htmx core -->
         <script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"></script>
         <!-- htmx response target -->
-        <script src="https://cdn.jsdelivr.net/npm/htmx-ext-response-targets@2.0.2"></script>
+        <script src="https://cdn.jsdelivr.net/npm/htmx-ext-response-targets@2.0.2" ></script>
         <!-- htmx multi swap -->
          <script src="https://unpkg.com/htmx.org@1.9.12/dist/ext/multi-swap.js"></script>
         <!-- SweetAlert2 JS -->
@@ -326,7 +325,7 @@
             opacity: 0.2;
           }
           /* Counter glow animation */
-          
+
           .holo-counter {
               text-shadow: 0 0 4px currentColor;
               animation: counter-glow 2s ease-in-out infinite alternate;

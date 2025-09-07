@@ -1,4 +1,10 @@
-<form method="post" action="{% url 'account_signup' %}" class="space-y-6">
+<form 
+ 
+  hx-post="{% url 'account_signup' %}"
+  hx-target-400="#modal-container"
+  hx-select="#auth-modal-content"
+ 
+  class="space-y-6">
   {% csrf_token %}
 
   <!-- Error message -->
@@ -6,7 +12,7 @@
 
   <!-- Email -->
   <div>
-    <label class="block text-xs font-bold text-cyan-400 mb-2 tracking-wide">📧 SHELL EMAIL</label>
+    <label class="block text-xs font-bold text-cyan-400 mb-2 tracking-wide">📧 SHELL USERNAME</label>
     <input
       type="email"
       name="email"
