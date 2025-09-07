@@ -2,54 +2,6 @@
 {% load profile_extra %}
 {% block body %}
 
-<!-- Mobile Performance Optimizations -->
-<style>
-  /* Enhanced mobile blur effects fallback */
-  @media (max-width: 640px) {
-    .backdrop-blur-15 {
-      backdrop-filter: blur(10px);
-    }
-    .backdrop-blur-20 {
-      backdrop-filter: blur(15px);
-    }
-    /* Simplified animations for mobile performance */
-    .breathing {
-      animation: none;
-    }
-  }
-  
-  /* High contrast mode support */
-  @media (prefers-contrast: high) {
-    .post-card {
-      border-width: 2px;
-      border-color: #06b6d4;
-    }
-    .nav-btn {
-      border-width: 2px;
-    }
-  }
-  
-  /* Reduced motion preferences */
-  @media (prefers-reduced-motion: reduce) {
-    .breathing,
-    .animate-bounce,
-    .animate-pulse,
-    .animate-ping {
-      animation: none;
-    }
-  }
-  
-  /* Touch device optimizations */
-  @media (hover: none) and (pointer: coarse) {
-    .nav-btn:hover {
-      background: initial;
-      border-color: initial;
-    }
-    .nav-btn:active {
-      transform: scale(0.95);
-    }
-  }
-</style>
 
 <div 
   class="w-full min-h-screen pt-4 px-2 sm:px-4 lg:px-8 relative z-10"
@@ -172,3 +124,53 @@
 </div>
 
 {% endblock %}
+
+
+<!-- Mobile Performance Optimizations -->
+<style>
+  /* Enhanced mobile blur effects fallback */
+  @media (max-width: 640px) {
+    .backdrop-blur-15 {
+      backdrop-filter: blur(10px);
+    }
+    .backdrop-blur-20 {
+      backdrop-filter: blur(15px);
+    }
+    /* Simplified animations for mobile performance */
+    .breathing {
+      animation: none;
+    }
+  }
+  
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    .post-card {
+      border-width: 2px;
+      border-color: #06b6d4;
+    }
+    .nav-btn {
+      border-width: 2px;
+    }
+  }
+  
+  /* Reduced motion preferences */
+  @media (prefers-reduced-motion: reduce) {
+    .breathing,
+    .animate-bounce,
+    .animate-pulse,
+    .animate-ping {
+      animation: none;
+    }
+  }
+  
+  /* Touch device optimizations */
+  @media (hover: none) and (pointer: coarse) {
+    .nav-btn:hover {
+      background: initial;
+      border-color: initial;
+    }
+    .nav-btn:active {
+      transform: scale(0.95);
+    }
+  }
+</style>
