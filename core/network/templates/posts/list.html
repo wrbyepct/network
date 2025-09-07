@@ -42,10 +42,9 @@
 
         {% if page_obj.has_previous %}
           <a href="?page={{ page_obj.previous_page_number }}"
-            class="text-decoration-none pixel-btn bg-green-400 border-4 border-green-800 
-                    !text-stone-900 px-4 py-2
-                    rounded-md shadow-[4px_4px_0px_#3B3B3B]
-                    hover:bg-green-300 hover:-translate-y-1 hover:shadow-[6px_6px_0px_#3B3B3B]
+            class="text-decoration-none text-bold bg-green-400 border-4 border-green-800 
+                    !text-emerald-900 px-4 py-2 
+                    rounded-xl hover:bg-green-300 hover:-translate-y-1 hover:shadow-[6px_6px_0px_#3B3B3B]
                     active:translate-y-0 transition-all duration-150">
             ◀ PREV
           </a>
@@ -82,9 +81,8 @@
 
         {% if page_obj.has_next %}
           <a href="?page={{ page_obj.next_page_number }}"
-            class="text-decoration-none pixel-btn bg-green-400 border-4 border-green-800 !text-stone-900 px-4 py-2
-                    rounded-md shadow-[4px_4px_0px_#3B3B3B]
-                    hover:bg-green-300 hover:-translate-y-1 hover:shadow-[6px_6px_0px_#3B3B3B]
+            class="text-decoration-none text-bold bg-green-400 border-4 border-green-800 !text-emerald-900 px-4 py-2
+                    rounded-xl hover:bg-green-300 hover:-translate-y-1 hover:shadow-[6px_6px_0px_#3B3B3B]
                     active:translate-y-0 transition-all duration-150">
             NEXT ▶
           </a>

@@ -42,7 +42,12 @@
     <span>New to the pond?</span>
     
     <a 
-      href="{% url 'account_signup' %}" 
+      hx-boost
+      hx-get="{% url 'account_signup' %}"
+      hx-target="#modal-container"
+      hx-select="#auth-modal-content"
+      @htmx:after-request="if($event.detail.successful) showModal = true;"
+      href="{% url 'account_signup' %}"
       class="nav-btn nav-btn-primary"
       style="font-size: 8px;"
       >Become a Turtler!</a>
