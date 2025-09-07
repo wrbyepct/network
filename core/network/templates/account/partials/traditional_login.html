@@ -1,4 +1,9 @@
-<form method="post" action="{% url 'account_login' %}" class="space-y-6">
+<form 
+ 
+  hx-post="{% url 'account_login' %}"
+  hx-target-400="#modal-container"
+  hx-select="#auth-modal-content"
+  class="space-y-6">
   {% csrf_token %}
 
   <!-- Error message -->
@@ -54,6 +59,12 @@
   </div>
     
  
-    <a href="{% url 'account_reset_password' %}" class="block !no-underline !text-emerald-400 rounded-lg p-3 hover:text-emerald-300 hover:underline font-bold hover:!text-green-300  transform hover:scale-105 duration-200 ease-in-out">LOST SHELL PASSWORD?</a>
+    <a 
+      hx-boost
+      hx-get="{% url 'account_reset_password' %}"
+      hx-target="#modal-container"
+      hx-select="#auth-modal-content"
+      href="{% url 'account_reset_password' %}" 
+      class="block !no-underline !text-emerald-400 rounded-lg p-3 hover:text-emerald-300 hover:underline font-bold hover:!text-green-300  transform hover:scale-105 duration-200 ease-in-out">LOST SHELL PASSWORD?</a>
  
 </div>
