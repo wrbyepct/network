@@ -4,7 +4,6 @@
 <div 
   x-data="{ activeTab: '{{ sub_tab }}' }" 
   class="holo-about-container p-6 rounded-xl font-mono relative overflow-hidden
-         bg-white/[0.06] backdrop-blur-3xl
          shadow-[0_20px_40px_rgba(0,0,0,0.15)] shadow-inner"
   style="font-family: 'Press Start 2P'; font-size: 10px; image-rendering: pixelated;">
 
@@ -252,16 +251,6 @@
     50% { left: 100%; opacity: 1; }
 }
 
-/* Counter glow animation */
-.holo-counter {
-    text-shadow: 0 0 8px currentColor;
-    animation: counter-glow 2s ease-in-out infinite alternate;
-}
-
-@keyframes counter-glow {
-    0% { text-shadow: 0 0 8px currentColor; }
-    100% { text-shadow: 0 0 8px currentColor, 0 0 16px currentColor; }
-}
 
 /* Avatar float animation */
 .holo-avatar {

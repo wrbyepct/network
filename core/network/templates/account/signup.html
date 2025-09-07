@@ -1,33 +1,58 @@
 {% extends "account/partials/auth_card.html" %} 
 {% load socialaccount %}
 
-
 {% block auth_content %}
+  <!-- Turtle Signup Header -->
+  <div class="text-center mb-8">
+    <div class="flex justify-center mb-4">
+      <img src="/media/defaults/turtle.png" alt="Turtle Signup" class="w-16 h-16 rounded-full border-2 border-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.4)]" style="image-rendering: pixelated;">
+    </div>
+    <h6 class="font-bold text-emerald-400 tracking-wider mb-2">JOIN THE TURTLE POND</h6>
+    <p class="text-xs text-emerald-200/70 tracking-wide">Create your shell to become a turtler!</p>
+  </div>
 
-    <h4 class="font-semibold text-center text-gray-800 mb-6">Sign Up</h4>
+  <!-- Traditional Signup Form -->
+  {% include "account/partials/traditional_signup.html" %}
 
-    <!-- Social Providers  -->
-    {% include 'account/partials/social_providers.html' %}
-
-    <!-- Divider -->
-    <div class="relative my-6">
-        <div class="absolute inset-0 flex items-center">
-            <div class="w-full border-t border-gray-300"></div>
-        </div>
-        <div class="relative flex justify-center text-sm">
-            <span class="px-2 bg-white text-gray-500">Or sign up with email</span>
-        </div>
+  <!-- Social Signup Divider -->
+  {% get_providers as socialaccount_providers %}
+  {% if socialaccount_providers %}
+    <div class="relative my-8">
+      <div class="absolute inset-0 flex items-center">
+        <div class="w-full border-t border-emerald-400/30"></div>
+      </div>
+      <div class="relative flex justify-center">
+        <span class="p-3 bg-slate-900 text-emerald-400 font-bold tracking-wider border border-emerald-400/30 rounded-full"
+          style="font-size: 8px;"
+        >
+          OR USE SOCIAL SHELLS
+        </span>
+      </div>
     </div>
 
-    <!-- Traditional Signup -->
-    {% include "account/partials/traditional_signup.html" %}
+    <!-- Social Providers -->
+    {% include 'account/partials/social_providers.html' %}
+  {% endif %}
 
-    <!-- Footer Link -->
-    <p class="mt-6 text-center text-sm text-gray-600">
-    Already have an account?
-    <a href="{% url 'account_login' %}" class="text-blue-600 hover:underline font-medium">
-        Log in here
-    </a>
-    </p>
+  <!-- Footer Link -->
+  <div class="text-center mt-6 space-y-2 text-cyan-200/80">
+    <div class="flex space-x-4 justify-center items-center">
+      <div class="flex flex-col">
+        <span>Already swimming</span>
+        <span>in the pond?</span>
+      </div>
+ 
+      <a 
+        hx-boost
+        hx-get="{% url 'account_login' %}"
+        hx-target="#modal-container"
+        hx-select="#auth-modal-content"
+        @htmx:after-request="if($event.detail.successful) showModal = true;"
+        href="{% url 'account_login' %}" 
+        class="nav-btn nav-btn-secondary"
+        style="font-size: 8px;"
+        >Dive In!</a>
+    </div>
+  </div>
 
 {% endblock %}
