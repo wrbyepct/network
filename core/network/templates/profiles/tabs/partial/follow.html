@@ -30,21 +30,21 @@
       </div>
       
       <!-- Holographic Tab Navigation Buttons -->
-      <div class="flex justify-center space-x-2 sm:space-x-4">
-        <button
+      <div class="flex justify-center">
+        <img
+          src="/media/defaults/turtle_followers.png"
           @click="activeTab = 'followers'"
-          :class="activeTab === 'followers' ? 'bg-cyan-500/20 border-cyan-400/60 text-cyan-300 shadow-cyan-400/40' : 'bg-white/10 border-white/20 text-white/70 hover:bg-cyan-500/15 hover:border-cyan-400/40'"
-          class="pixel-btn px-4 sm:px-6 py-3 rounded-lg font-bold text-xs sm:text-sm border backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-lg min-h-[44px] flex items-center justify-center holo-glow"
+          :class="activeTab === 'followers' ? 'bg-cyan-500/20 border-cyan-400/60 shadow-cyan-400/40' : 'bg-white/10 border-white/20 hover:bg-cyan-500/15 hover:border-cyan-400/40'"
+          class="pixel-btn w-20 border backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-lg min-h-[44px] flex items-center justify-center holo-glow cursor-pointer"
         >
-          ◀ FOLLOWERS
-        </button>
-        <button
+        
+        <img
+          src="/media/defaults/turtle_following.png"
           @click="activeTab = 'following'"
-          :class="activeTab === 'following' ? 'bg-emerald-500/20 border-emerald-400/60 text-emerald-300 shadow-emerald-400/40' : 'bg-white/10 border-white/20 text-white/70 hover:bg-emerald-500/15 hover:border-emerald-400/40'"
-          class="pixel-btn px-4 sm:px-6 py-3 rounded-lg font-bold text-xs sm:text-sm border backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-lg min-h-[44px] flex items-center justify-center holo-glow"
+          :class="activeTab === 'following' ? 'bg-emerald-500/20 border-emerald-400/60 shadow-emerald-400/40' : 'bg-white/10 border-white/20 hover:bg-emerald-500/15 hover:border-emerald-400/40'"
+          class="pixel-btn w-20  border backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-lg min-h-[44px] flex items-center justify-center holo-glow cursor-pointer"
         >
-          FOLLOWING ▶
-        </button>
+        
       </div>
     </div>
   </div>
