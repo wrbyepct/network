@@ -1,6 +1,13 @@
 {% load profile_extra %}
  <!-- Diving Device Console (Left Sidebar) -->
-  <div class="hidden lg:block lg:col-span-4 lg:sticky lg:top-8 self-start">
+  <div
+    x-cloak
+    {% if in_modal %}
+    @click.outside="closeFullTurboy"
+    {% endif %}
+    class="{% if in_modal %}block{% else %}hidden{% endif%} lg:block lg:col-span-4 lg:sticky lg:top-8 self-start"
+    
+  >
     <div 
       class="diving-console rounded-xl border-[6px] border-slate-700" style="font-family: 'Press Start 2P', monospace; font-size: 8px;">
       <!-- Console Header -->
