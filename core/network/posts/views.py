@@ -154,7 +154,11 @@ class PostCreateView(LoginRequiredMixin, CreateView):
         IncubationService.incubate_post(self.object, egg_gif_url)
         # Render Resposne
         egg_template = self.get_response_template(egg.egg_type)
-        context = {"egg_url": egg_gif_url, "egg_type": egg.egg_type}
+        context = {
+            "egg_url": egg_gif_url,
+            "egg_type": egg.egg_type,
+            "egg_name": egg.name,
+        }
         resp = render(self.request, egg_template, context)
         resp["HX-Trigger"] = "post-created"
         return resp
