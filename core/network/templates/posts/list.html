@@ -3,6 +3,7 @@
 {% block body %}
   <div 
     x-data="{ 
+
       isPostDetail: false, 
       isIncubating: {{ is_incubating|yesno:'true,false' }},
       onListPage: true
@@ -89,6 +90,13 @@
         {% endif %}
       </div>
     </div>
+
+
+    <!-- Floating Mini Turboy Console (Mobile/Tablet) -->
+    {% if request.user.is_authenticated %}
+      {% include 'common/floating_mini_turboy.html' %}
+    {% endif %}
+
   </div>
 
 <style>

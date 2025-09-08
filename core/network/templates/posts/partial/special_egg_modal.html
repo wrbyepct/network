@@ -200,34 +200,72 @@
         </button>
     </div>
     
-    <!-- Premium TUR-BOY Console Styles -->
-    <style>
-/* Premium Console Effects - Under 20 lines */
+<!-- Premium TUR-BOY Console Styles -->
+<style>
+/* Premium Console Effects */
 .premium-turboy-console {
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.1);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5), inset 0 2px 4px rgba(255,255,255,0.1);
 }
 
-.legendary-header { background: linear-gradient(135deg, #4c1d95 0%, #1e1b4b 50%, #4c1d95 100%); }
-.garden-header { background: linear-gradient(135deg, #be185d 0%, #0f172a 50%, #be185d 100%); }
+.legendary-header {
+    background: linear-gradient(135deg, #4c1d95 0%, #1e1b4b 50%, #4c1d95 100%);
+}
+.garden-header {
+    background: linear-gradient(135deg, #be185d 0%, #0f172a 50%, #be185d 100%);
+}
 
-.premium-title { animation: premium-glow 3s ease-in-out infinite alternate; }
+.premium-title {
+    animation: premium-glow 3s ease-in-out infinite alternate;
+}
 
-.legendary-screen { background: radial-gradient(ellipse at center, rgba(147, 51, 234, 0.15) 0%, rgba(0, 0, 0, 0.9) 70%); }
-.garden-screen { background: radial-gradient(ellipse at center, rgba(236, 72, 153, 0.15) 0%, rgba(0, 0, 0, 0.9) 70%); }
+.legendary-screen {
+    background: radial-gradient(ellipse at center, rgba(147,51,234,0.15) 0%, rgba(0,0,0,0.9) 70%);
+}
+.garden-screen {
+    background: radial-gradient(ellipse at center, rgba(236,72,153,0.15) 0%, rgba(0,0,0,0.9) 70%);
+}
 
-.scan-lines { background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(6, 182, 212, 0.1) 2px, rgba(6, 182, 212, 0.1) 4px); }
+.scan-lines {
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(6,182,212,0.1) 2px, rgba(6,182,212,0.1) 4px);
+}
 
-.legendary-hologram { animation: legendary-float 4s ease-in-out infinite; filter: drop-shadow(0 0 20px rgba(251, 191, 36, 0.6)); }
-.garden-hologram { animation: garden-float 4s ease-in-out infinite; filter: drop-shadow(0 0 20px rgba(236, 72, 153, 0.6)); }
+.legendary-hologram {
+    animation: legendary-float 4s ease-in-out infinite;
+    filter: drop-shadow(0 0 20px rgba(251,191,36,0.6));
+}
+.garden-hologram {
+    animation: garden-float 4s ease-in-out infinite;
+    filter: drop-shadow(0 0 20px rgba(236,72,153,0.6));
+}
 
-@keyframes premium-glow { 0% { text-shadow: 0 0 8px currentColor; } 100% { text-shadow: 0 0 20px currentColor, 0 0 30px currentColor; } }
-@keyframes legendary-float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-8px); } }
-@keyframes garden-float { 0%, 100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-8px) rotate(2deg); } }
+@keyframes premium-glow {
+    0% { text-shadow: 0 0 8px currentColor; }
+    100% { text-shadow: 0 0 20px currentColor, 0 0 30px currentColor; }
+}
+@keyframes legendary-float {
+    0%,100% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+}
+@keyframes garden-float {
+    0%,100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-8px) rotate(2deg); }
+}
 
-/* Keep existing animations */
-.turtle-surprise-entrance { animation: surprise-bounce 1.2s ease-out forwards; }
-@keyframes surprise-bounce { 0% { transform: translateY(100px) scale(0.5); opacity: 0; } 60% { transform: translateY(-20px) scale(1.1); } 100% { transform: translateY(0) scale(1); opacity: 1; } }
-.turtle-excited { animation: excited-wiggle 0.8s ease-in-out infinite; }
-@keyframes excited-wiggle { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+/* Animations */
+.turtle-surprise-entrance {
+    animation: surprise-bounce 1.2s ease-out forwards;
+}
+@keyframes surprise-bounce {
+    0% { transform: translateY(100px) scale(0.5); opacity: 0; }
+    60% { transform: translateY(-20px) scale(1.1); }
+    100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+.turtle-excited {
+    animation: excited-wiggle 0.8s ease-in-out infinite;
+}
+@keyframes excited-wiggle {
+    0%,100% { transform: rotate(-3deg); }
+    50% { transform: rotate(3deg); }
+}
 </style>
 </div>
