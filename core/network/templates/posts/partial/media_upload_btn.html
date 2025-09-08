@@ -1,8 +1,8 @@
-{# Image Upload Button #}
+{# Holographic Image Upload Button #}
   <div>
-    <label for="image-upload" class="w-full flex items-center justify-center px-4 py-3 border-2 border-dashed border-emerald-600 rounded-lg cursor-pointer hover:bg-emerald-50 transition duration-150 ease-in-out">
-        <svg class="w-8 h-8 text-emerald-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-        <span class="text-emerald-800 font-medium">Add Images</span>
+    <label for="image-upload" class="w-full flex items-center justify-center px-4 py-3 bg-white/[0.08] border border-cyan-400/30 rounded-lg cursor-pointer backdrop-blur-md hover:bg-cyan-400/15 hover:border-cyan-400/50 transition-all duration-300">
+        <span class="text-lg mr-3">📸</span>
+        <span class="text-white/90 font-bold tracking-wider" style="font-family: 'Press Start 2P', monospace; font-size: 10px; text-shadow: 0 0 5px rgba(6, 182, 212, 0.3);">ADD IMAGES</span>
     </label>
     <input type="file" name="images" id="image-upload" accept="image/*" class="hidden" multiple x-ref="imageInput" @change="handleMediaUpload($event)" />
     {% for error in form.images.errors %}
@@ -10,11 +10,11 @@
     {% endfor %}
   </div>
 
-  {# Video Upload Button #}
+  {# Holographic Video Upload Button #}
   <div>
-    <label for="video-upload" class="w-full flex items-center justify-center px-4 py-3 border-2 border-dashed border-emerald-600 rounded-lg cursor-pointer hover:bg-emerald-50 transition duration-150 ease-in-out">
-      <svg class="w-8 h-8 text-emerald-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.55a1 1 0 011.45.89V15.1a1 1 0 01-1.45.89L15 12M4 6h11a1 1 0 011 1v10a1 1 0 01-1 1H4a1 1 0 01-1-1V7a1 1 0 011-1z"></path></svg>
-      <span class="text-emerald-800 font-medium">Add Video</span>
+    <label for="video-upload" class="w-full flex items-center justify-center px-4 py-3 bg-white/[0.08] border border-cyan-400/30 rounded-lg cursor-pointer backdrop-blur-md hover:bg-cyan-400/15 hover:border-cyan-400/50 transition-all duration-300">
+      <span class="text-lg mr-3">🎥</span>
+      <span class="text-white/90 font-bold tracking-wider" style="font-family: 'Press Start 2P', monospace; font-size: 10px; text-shadow: 0 0 5px rgba(6, 182, 212, 0.3);">ADD VIDEO</span>
     </label>
     <input type="file" name="video" id="video-upload" accept="video/*" class="hidden" x-ref="videoInput" @change="handleMediaUpload($event)" />
       {% for error in form.video.errors %}
