@@ -65,7 +65,7 @@ class IncubationService:
 
     default_egg_url = "/media/defaults/regular_eggs/green.gif"
     EGG_TYPES = ["regular_eggs", "special_eggs", "easter_eggs"]
-    WEIGHTS = [0.2, 0.7, 0.1]
+    WEIGHTS = [1, 0, 0]
     SPECIAL_EGGS = [
         "volcano",
         "rainbow",
