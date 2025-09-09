@@ -61,14 +61,14 @@
         >
     </div>
 
-    <template x-if="onListPage">
-      <div
-        id="fetch-hached-post"
-        hx-get="{% url 'hatched_post' post_id %}"
-        hx-trigger="post-hatched from:window"
-        hx-target="#published-posts"
-        hx-swap="afterbegin"
-        @htmx:after-request="addGlowEffectToPost('{{post_id}}'); removeEgg();">
-      </div>
-    </template>
+      <template x-if="onListPage">
+        <div
+          id="fetch-hached-post"
+          hx-get="{% url 'hatched_post' post_id %}"
+          hx-trigger="post-hatched from:window"
+          hx-target="#published-posts"
+          hx-swap="afterbegin"
+          @htmx:after-request="addGlowEffectToPost('{{post_id}}'); removeEgg();">
+        </div>
+      </template>
 </div>
