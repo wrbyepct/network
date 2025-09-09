@@ -1,22 +1,24 @@
 {% extends 'common/toolkit.html' %}
 {% block toolkit_content %}
-    <div class="text-white/90 space-y-2">
-        <!-- Turtle Icon Header -->
-        <div class="flex items-center justify-center mb-2">
-            <span class="text-emerald-400 animate-pulse">🐢</span>
-        </div>
-        
-        <!-- Username Display -->
-        <div class="text-center">
-            <p class="text-white/70 mb-1" style="text-shadow: 0 0 5px rgba(6, 182, 212, 0.3);">Turtler</p>
-            <p class="text-cyan-400 font-bold tracking-wider break-all" 
-               style="text-shadow: 0 0 10px rgba(6, 182, 212, 0.5);">{{ profile.username }}</p>
-        </div>
-        
-        <!-- Status Badge -->
-        <div class="bg-emerald-500/20 border border-emerald-400/30 rounded px-2 py-1 text-center backdrop-blur-sm">
-            <span class="text-emerald-300 text-[7px] font-bold" 
-                  style="text-shadow: 0 0 8px rgba(16, 185, 129, 0.5);">FOLLOWS YOU!</span>
-        </div>
+
+
+  <div class="text-white/90 space-y-2">
+    <!-- Turtle Icon Header -->
+    <div class="flex items-center justify-center mb-2">
+        <span class="text-emerald-400 animate-pulse">🐢</span>
     </div>
+    
+    <!-- Username Display -->
+    <div class="text-center">
+        <p class="text-white/70 mb-1" style="text-shadow: 0 0 5px rgba(6, 182, 212, 0.3);">Turtler</p>
+        <p class="text-cyan-400 font-bold tracking-wider break-all" 
+            style="text-shadow: 0 0 10px rgba(6, 182, 212, 0.5);">{{ profile.username }}</p>
+    </div>
+    
+    <!-- Status Badge -->
+    <div class="bg-emerald-500/20 border border-emerald-400/30 rounded px-2 py-1 text-center backdrop-blur-sm">
+        <span class="text-emerald-300 text-[7px] font-bold" 
+              style="text-shadow: 0 0 8px rgba(16, 185, 129, 0.5);">FOLLOWS YOU!</span>
+    </div>
+  </div>
 {% endblock %}
