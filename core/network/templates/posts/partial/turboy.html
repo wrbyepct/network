@@ -6,13 +6,16 @@
     eggHover0: false,
     eggHover1: false,
     eggHover2: false,
+    followerHover0: false,
+    followerHover1: false,
+    followerHover2: false,
+    
   }"
     x-cloak
-    {% if in_modal %}
+    {% if in_modal %}  {# If it's displayed by floating button #}
     @click.outside="closeFullTurboy"
     {% endif %}
     class="{% if in_modal %}block{% else %}hidden{% endif%} lg:block lg:col-span-4 lg:sticky lg:top-2 self-start"
-    
     
   >
     <div 
@@ -63,7 +66,18 @@
                 </div>
 
                 <!-- Toolkit info display -->
-                <div id="eggDisplayScreen" x-show="displayScreen" class="fixed inset-0 bg-black z-50">
+                <div 
+                  x-show="displayScreen"
+                  class="fixed inset-0 bg-black z-50 px-2 xl:px-8">
+                  {% for follower in user.profile.followers.all|slice:":3" %}
+                       {% include 'profiles/tabs/partial/follow_card.html' with in_turboy_screen=True  %}
+
+                  {% endfor %}
+
+                  {% for panel in egg_panels %}
+                      {% include 'posts/partial/egg_screen_display.html'  with egg=panel.egg display_collected_date=True display_egg_image=True display_born_from=True %}
+                  {% endfor %}
+
                 </div>
 
               {% else %}
@@ -90,11 +104,13 @@
                 <div class="flex gap-0.5 justify-center flex-wrap ">
                   {% for follower in user.profile.followers.all|slice:":3" %}
                   
-
                     <a href="{% url 'profile_about' follower.username %}" class="rounded-full border border-yellow-400 cursor-pointer relative group" style="box-shadow: 0 0 2px rgba(255, 255, 0, 0.3);">
-                      <!-- Toolkit -->
-                      {% include 'profiles/partials/avatar_toolkit.html' with profile=follower  %}
-                      <img class="w-7 h-7 rounded-full object-cover" src="{{ follower.profile_picture.url }}" alt="{{ follower.username }}" class="w-full h-full object-cover" style="image-rendering: pixelated;">
+            
+                      <img
+                        @mouseover="followerHover{{ forloop.counter0 }} = true; displayScreen = true" 
+                        @mouseleave="followerHover{{ forloop.counter0 }} = false; displayScreen = false" 
+                        class="w-7 h-7 rounded-full object-cover" 
+                        src="{{ follower.profile_picture.url }}" alt="{{ follower.username }}" class="w-full h-full object-cover" style="image-rendering: pixelated;">
                     </a>
                   {% endfor %}
                 </div>
@@ -281,17 +297,11 @@
                                       px-1 py-0.5 rounded-sm mb-1 border border-blue-900"
                               style="text-shadow: 0 0 4px currentColor;">{{ panel.count|stringformat:"03d" }}</div>
                         </div>
-
-                        
                       </div>
                       <!-- Eggs -->
                         <div class="flex gap-0.5 justify-center flex-wrap z-10">
                           <div class="relative group">
                             {% with egg=panel.egg %}
-                              
-                              <template x-teleport="#eggDisplayScreen">
-                                {% include 'posts/partial/egg_screen_display.html'  with egg=egg display_collected_date=True display_egg_image=True display_born_from=True %}
-                              </template>
                               
                               <div class="{{ panel.color}} text-center text-[11px] pt-2 break-all">{{ egg.name|title }}</div>
                               <img 
