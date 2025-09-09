@@ -1,0 +1,75 @@
+<!-- Holographic Toolkit Container -->
+
+  <div class="text-white/90 space-y-3 h-full">
+    <!-- Digital Header -->
+    <div class="text-center border-b border-cyan-400/30 pb-2">
+        <div class="text-yellow-400 font-bold text-[7px] tracking-wider">EGG DATA</div>
+    </div>
+
+       {% if display_collected_date %}
+          <!-- Collection Date Console -->
+          <div class="mt-2 flex items-center justify-center space-x-3">
+              <div class="text-cyan-400 text-[8px]" style="text-shadow: 0 0 3px rgba(6, 182, 212, 0.5);">COLLECTED:</div>
+              <div class="text-white/90 text-[12px] font-mono">{{ egg.created_at|date:"Y/m/d" }}</div>
+          </div>
+      {% endif %}
+
+      <!-- Bigger Egg Display -->
+      {% if display_egg_image %}
+          <div class="text-center">
+              <img class="w-40 mx-auto" 
+                    src="{{ egg.url }}" 
+                    alt="Egg Image"
+                    style="filter: drop-shadow(0 0 8px rgba(255, 255, 0, 0.3));">
+          </div>
+      {% endif %}
+
+
+      {% if display_born_from %}
+        <!-- Hatched From Section -->
+        <div class="bg-black/40 border border-blue-400/20 rounded px-4 py-2 grid grid-cols-2 ">
+          <!-- Egg Type Console Display -->
+
+          <div class="col-span-1"> 
+            <div class="text-cyan-400 text-[8px] mb-3 text-center" style="text-shadow: 0 0 3px rgba(6, 182, 212, 0.5);">TYPE:</div>
+
+            <div class="text-[10px] font-bold">
+              {% if egg.egg_type == "special" %}
+                <div class="px-3">
+                    <div class="text-sky-400 mb-2" style="text-shadow: 0 0 8px rgba(132, 218, 252, 0.6);">RARE</div>
+                    <div class="text-amber-400" style="text-shadow: 0 0 8px rgba(251, 191, 36, 0.6);">LEGENDARY</div>
+                </div>
+        
+              {% elif egg.egg_type == "easter" %}
+                <div class="px-3"> 
+                  <div class="text-fuchsia-400 mb-2" style="text-shadow: 0 0 8px rgba(192, 132, 252, 0.6);">ULTRA RARE</div>
+                  <div class="text-pink-400" style="text-shadow: 0 0 8px rgba(244, 114, 182, 0.6);">EASTER</div>
+                </div>
+                  
+              {% else %}
+                  <div class="text-emerald-400" style="text-shadow: 0 0 8px rgba(52, 211, 153, 0.6);">CUTE</div>
+              {% endif %}
+            </div>
+          </div>
+        
+          <div class="col-span-1">
+            <div class="text-cyan-400 text-[8px] mb-1 text-center mb-3" style="text-shadow: 0 0 3px rgba(6, 182, 212, 0.5);">HATCHED FROM:</div>
+
+            <div class="text-white/90 text-[10px] font-bold">
+              <div class="
+                mb-2
+                {% if egg.egg_type == "special" %}
+                    text-amber-400
+                {% elif egg.egg_type == "easter" %}
+                    text-pink-400
+                {% else %}
+                    text-emerald-400
+                {% endif %}">{{ egg.name|title }}</div>
+                <div>EGG</div> 
+            </div>
+          </div>
+        </div>
+      {% endif %}
+
+   
+  </div>
