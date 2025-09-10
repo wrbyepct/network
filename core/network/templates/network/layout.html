@@ -58,6 +58,12 @@
           form.reset();
           this.resize(this.$refs.textarea);
         },
+        {# Egg Management #}
+        hatchedPostId: $persist(null),
+        eggHatched: $persist(false),
+        startFadeEgg: false,
+        isHatching: false, {# Control egg hatching effect showing #}
+
         {# Alert #}
         alertVisible: false, 
         alertMessage: '' ,
@@ -67,7 +73,7 @@
         }
       }"
       @form-error.window="() => { alert($event.detail.value); }"
-    
+      @beforeunload.window="if(isHatching) eggHatched = true;" 
     >
       <!-- Alert -->
       {% include 'common/alert.html' %}

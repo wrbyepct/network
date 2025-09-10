@@ -1,8 +1,5 @@
 <!-- Holographic Turtle Nest Collection -->
 <div
-  x-data="{
-    displayScreen: false
-  }"
   class="min-h-screen p-3 lg:p-6">
   <div class="max-w-6xl mx-auto">
     
@@ -32,14 +29,15 @@
 
     <!-- Sacred Nesting Grounds -->
       
-    <div class="rounded-xl p-4 lg:p-6 min-h-96"
-            x-data="{ 
-              isIncubating: {{ is_incubating|yesno:'true,false' }},
-              postHatched: false,
-              onListPage: false,
-              hatchedPostId: null
-            }">
-        
+    <div 
+      class="rounded-xl p-4 lg:p-6 min-h-96"
+      x-data="{ 
+        isIncubating: {{ is_incubating|yesno:'true,false' }},
+        onListPage: false,
+        displayScreen: false,
+
+      }">
+    
         <!-- Nest Title -->
         <div class="text-center mb-6">
           <div class="flex items-center justify-center mb-2">
@@ -53,11 +51,13 @@
         <!-- Nest Container -->
         <div class="flex flex-col items-center justify-center">
           <!-- Incubating State -->
-          <div x-show="!postHatched"
-                x-transition:enter="transition ease-out duration-500"
-                x-transition:enter-start="opacity-0 scale-95"
-                x-transition:enter-end="opacity-100 scale-100"
-                class="text-center">
+          <div 
+            x-show="!eggHatched"
+            x-cloak
+            x-transition:enter="transition ease-out duration-500"
+            x-transition:enter-start="opacity-0 scale-95"
+            x-transition:enter-end="opacity-100 scale-100"
+            class="text-center">
             
             <!-- Holographic Incubation Chamber -->
             <div class="relative mb-6">
@@ -82,7 +82,7 @@
                               w-16 h-6 bg-gradient-to-t from-cyan-400/20 to-transparent 
                               rounded-full border border-cyan-400/30 backdrop-blur-sm"></div>
                   
-                  <!-- The Incubating Egg - Floating -->
+                  <!-- The Incubating Egg -->
                   <div 
                       id="egg-nest"
                       class="absolute w-full transform translate-y-8 text-center animate-bounce"
@@ -116,11 +116,11 @@
               Digital energy nurtures the precious egg...
             </p>
             
-        </div>
-          <!-- Post Hatched State -->
+          </div>
+
+        <!-- Egg Hatched Congrats-->
         <div 
-          @post-hatched.window="postHatched = true; hatchedPostId = $event.detail.postId"
-          x-show="postHatched"
+          x-show="eggHatched && !isHatching"
           x-cloak
           x-transition:enter="transition ease-out duration-800 transform"
           x-transition:enter-start="opacity-0 scale-90 rotate-12"
@@ -159,6 +159,7 @@
           
           <a 
             :href="`{% url 'index' %}#${hatchedPostId}`"
+            @click="$nextTick(() => {eggHatched = false; hatchedPostId = null})"
             class="pixel-btn flex justify-center items-center text-white font-bold py-3 px-6 
                     no-underline transform hover:scale-105 transition-all duration-300"
             style="text-decoration: none; font-family: 'Press Start 2P', monospace; font-size: 10px;"
@@ -167,7 +168,8 @@
                   src="/media/defaults/turtle_run.png" 
                   alt="A turtle running"
                   style="image-rendering: pixelated;">
-            <span class="mx-2">TAKE ME TO MY BABY</span>
+            <span 
+              class="mx-2">SHUT UP AND TAKE ME TO MY BABY</span>
             <img class="w-8 lg:w-10 mx-2 rounded-full border border-cyan-400/50 holo-avatar" 
                   src="/media/defaults/turtle_run.png" 
                   alt="A turtle running"
