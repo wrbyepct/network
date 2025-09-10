@@ -135,8 +135,12 @@ class IncubationService:
         with transaction.atomic():
             post.publish_at = get_random_publish_time(timeout)
             post.celery_task_id = assign_publish_task(post)
-            IncubationService.set_incubating_egg_url(post.user.id, egg_url, timeout)
-            IncubationService.set_incubating_post_id(post.user.id, post.id, timeout)
+            IncubationService.set_incubating_egg_url(
+                post.user.id, egg_url, timeout + 10
+            )
+            IncubationService.set_incubating_post_id(
+                post.user.id, post.id, timeout + 10
+            )
             post.save(update_fields=["publish_at", "celery_task_id"])
 
     @staticmethod
