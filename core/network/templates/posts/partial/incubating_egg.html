@@ -3,9 +3,9 @@
   x-show="!displayScreen"
   x-ref="incubatingEgg"
   x-data="{
-    startFadeEgg: false,
+    startFadeEgg: $persist(false),
     isHatching: false, {# Control egg hatching effect showing #}
-    glowStyleIndex: '{{ egg_type }}' !== 'regular' ? Math.floor(Math.random() * 12) + 1 : 0,
+    glowStyleIndex: $persist('{{ egg_type }}' !== 'regular' ? Math.floor(Math.random() * 12) + 1 : 0),
     addGlowEffectToPost(postId) {
       const hatchedPost = document.getElementById(`post-${postId}`);
       hatchedPost.classList.add(`glow-scheme-${this.glowStyleIndex}`, 'post-pulsing-glow');
@@ -15,6 +15,7 @@
       $refs.incubatingEgg.remove();
     },
     hatching() {
+        this.glowStyleIndex = '{{ egg_type }}' !== 'regular' ? Math.floor(Math.random() * 12) + 1 : 0;
         this.isHatching = true;
         this.startFadeEgg = true; {# Makes egg slowly fade away #}
     },
@@ -41,15 +42,17 @@
    
     <div 
         class="relative"
-        x-show="!startFadeEgg"
-        x-transition:leave="transition delay-[5s] ease-in duration-5000 opacity-0"
-        @transitionend=" if(event.target === $el)  $dispatch('post-hatched', { postId: '{{ post_id }}'} ); "
+        :class="startFadeEgg && 'fade-out'"
+        x-show="isIncubating"
+
+        @animationend=" if(event.target === $el)  {$dispatch('post-hatched', { postId: '{{ post_id }}'} ); startFadeEgg = false }"
        >
        <!-- Glow effect placeholder -->
         <div 
             :class="`glow-scheme-${glowStyleIndex}`"
             class="absolute -z-1 top-1/2 -translate-y-1/2 left-1/2 transform -translate-x-1/2 pulsing-glow"
-            x-show="isHatching"
+            x-show="startFadeEgg"
+            x-cloak
             x-transition:enter="transition-opacity ease-in duration-2000"
             x-transition:enter-start="opacity-0"
             x-transition:enter-end="opacity-100"
@@ -72,3 +75,16 @@
         </div>
       </template>
 </div>
+
+<style>
+  .fade-out {
+    opacity: 1;
+    animation: fadeOut 5s ease-in forwards;
+    animation-delay: 5s;
+  }
+
+  @keyframes fadeOut {
+    from { opacity: 1; }
+    to   { opacity: 0; }
+  }
+</style>

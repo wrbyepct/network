@@ -1,5 +1,9 @@
 <!-- Holographic Turtle Nest Collection -->
-<div class="min-h-screen p-3 lg:p-6">
+<div
+  x-data="{
+    displayScreen: false
+  }"
+  class="min-h-screen p-3 lg:p-6">
   <div class="max-w-6xl mx-auto">
     
     <!-- Holographic Page Header -->
@@ -82,7 +86,7 @@
                   <div 
                       id="egg-nest"
                       class="absolute w-full transform translate-y-8 text-center animate-bounce"
-                      x-effect="if(isIncubating) { console.log('Yes it is incubating'); $nextTick(() => $dispatch('egg-fetch-ready')) }"
+                      x-effect="if(isIncubating) { $nextTick(() => $dispatch('egg-fetch-ready')) }"
                       x-init="htmx.process($el)"
                       hx-get="{% url 'egg' %}"
                       hx-trigger="egg-fetch-ready"
