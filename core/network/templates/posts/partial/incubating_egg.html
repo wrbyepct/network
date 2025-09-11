@@ -12,7 +12,7 @@
     waitForHatchingEvent() {
 
         console.log('Listening to server...');
-        eggHatched.url = '{{  egg_url|escapejs  }}';
+        eggHatchedUrl = '{{  egg_url|escapejs  }}';
 
         let eventSource = new EventSource('{% url "post_hatch_check" %}');
         eventSource.addEventListener('hatch', event => {
@@ -37,10 +37,11 @@
       $dispatch('post-hatched'); 
 
       isHatching = false;
-      eggHatched.state = true;
+      eggHatched = true;
 
+      console.log(eggHatched);
       if(!onListPage) {
-        this.removeEgg();
+        this.removeEgg(); 
       }
 
     },
