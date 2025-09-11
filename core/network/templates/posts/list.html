@@ -3,7 +3,6 @@
 {% block body %}
   <div 
     x-data="{ 
-
       isPostDetail: false, 
       isIncubating: {{ is_incubating|yesno:'true,false' }},
       onListPage: true
@@ -17,7 +16,7 @@
        {% include 'posts/partial/turboy.html' %}
         <!-- Main Content Area -->
         <div class="col-span-12 lg:col-span-8">
-          <div x-show="!isIncubating" class="mb-4">
+          <div x-show="!isIncubating && !isHatching" x-cloak class="mb-4">
              {% include 'posts/partial/post_composer.html' %}
           </div>
           

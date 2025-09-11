@@ -50,6 +50,9 @@ class ProfileTabsBaseMixin:
             context["current_tab"] = self.current_tab
 
         context["profile"] = self.profile
+        context["is_incubating"] = bool(
+            IncubationService.get_incubating_post_id(self.profile.user.id)
+        )
 
         return context
 
@@ -140,10 +143,6 @@ class NestView(ProfileTabsBaseMixin, TemplateView):
             {"name": "easter", "eggs": self.profile.easter_eggs},
         ]
         context["eggs"] = eggs
-
-        context["is_incubating"] = bool(
-            IncubationService.get_incubating_post_id(self.profile.user.id)
-        )
 
         return context
 
