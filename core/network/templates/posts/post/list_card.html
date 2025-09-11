@@ -13,7 +13,7 @@
 <div 
   id="post-list-comment-section-{{ post.id }}"
   x-ref="commentSection"
-  class="border-stone-300"
+  class="border-stone-300 overflow-x-auto"
   :class="commentCount && 'border-y-2 p-3' "
 >
 {% include 'posts/partial/post_list_comment_section.html' %}  
