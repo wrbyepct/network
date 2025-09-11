@@ -64,11 +64,11 @@
         },
         {# Egg Management #}
         hatchedPostId: $persist(null),
-        {% if profile.user == request.user %}
-          {# persist eggHatched state user's own page #}
-         eggHatched: $persist(false),
+
+        {% if profile.user == request.user  %}
+          eggHatched: $persist({state: false,  url: null}),
         {% else %}
-          eggHatched: false,
+          eggHatched: {state: false,  url: null},
         {% endif %}
         isHatching: false, {# Control egg hatching effect showing #}
 
@@ -81,8 +81,8 @@
         }
       }"
       @form-error.window="() => { alert($event.detail.value); }"
-      @beforeunload.window="if(isHatching) eggHatched = true;"  {# persis eggHatched state for user to check later#}
-      @post-created.window="eggHatched = false" {# New egg is created, so hatch state should be false  #}
+      @beforeunload.window="if(isHatching) eggHatched.state = true;"  {# persis eggHatched state for user to check later#}
+      @post-created.window="eggHatched.state = false" {# New egg is created, so hatch state should be false  #}
     >
       <!-- Alert -->
       {% include 'common/alert.html' %}

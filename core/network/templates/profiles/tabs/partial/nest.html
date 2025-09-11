@@ -50,7 +50,7 @@
         <div class="flex flex-col items-center justify-center">
           <!-- Incubating State -->
           <div 
-            x-show="!eggHatched"
+            x-show="!eggHatched.state"
             x-cloak
             x-transition:enter="transition ease-out duration-500"
             x-transition:enter-start="opacity-0 scale-95"
@@ -119,7 +119,7 @@
 
         <!-- Egg Hatched Congrats-->
         <div 
-          x-show="eggHatched && !isHatching"
+          x-show="eggHatched.state && !isHatching"
           x-cloak
           x-transition:enter="transition ease-out duration-800 transform"
           x-transition:enter-start="opacity-0 scale-90 rotate-12"
@@ -137,7 +137,7 @@
             </div>
             <!-- Celebration particles -->
             <div class="mx-2">
-              <span class="text-2xl animate-ping">🎉</span>
+              <img class="w-40 legendary-hologram" :src="eggHatched.url" alt="Hatched egg url image">
             </div>
             <div class="mx-2">
               <img class="w-12 rounded-full border-2 border-cyan-400 holo-avatar" 
@@ -162,7 +162,7 @@
           
           <a 
             :href="`{% url 'index' %}#${hatchedPostId}`"
-            @click="$nextTick(() => {eggHatched = false; hatchedPostId = null;})"
+            @click="eggHatched.state = false"
             class="pixel-btn flex justify-center items-center text-white font-bold py-3 px-6 
                     no-underline transform hover:scale-105 transition-all duration-300"
             style="text-decoration: none; font-family: 'Press Start 2P', monospace; font-size: 10px;"

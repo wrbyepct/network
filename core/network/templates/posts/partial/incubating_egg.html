@@ -35,7 +35,8 @@
       $dispatch('post-hatched'); 
 
       isHatching = false;
-      eggHatched = true;
+      eggHatched.state = true;
+      eggHatched.url = '{{  egg_url|escapejs  }}';
 
       if(!onListPage) {
         this.removeEgg();
