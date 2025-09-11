@@ -78,7 +78,6 @@
       enctype="multipart/form-data"
       @submit.prevent="prepareMediaThenSubmit()" {# htmx will wait for this to complete before issue a post reqiest #}
       @post-submit-error="displayAlertMessage($event)" 
-      @htmx:after-request="if($event.detail.successful) eggHatched = false;"
   >
 
       {# Content Textarea #}
