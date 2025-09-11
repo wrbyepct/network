@@ -38,7 +38,7 @@
                 <div 
                   id="incubating-egg-container"
                   hx-get="{% url 'egg' %}"
-                  hx-vals='{ "user_id": "{{ user.id }}" }'
+                  hx-vals='{"user_id": "{{ user.id }}"}'
                   hx-trigger="egg-fetch-ready"
                   hx-swap="innerHTML"
                   x-ref="eggDiv"
