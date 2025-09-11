@@ -38,10 +38,10 @@
         showModal: false,
         closeModal() {
           this.showModal = false;
-          {% if profile %}
+          {% if not on_list_page and profile %}
             window.location.href = '{% url 'profile_nest' profile.username %}';
           {% endif %}
-        },
+        }, 
         {# Media management #}
         selectedMedia: null, 
         clickedMedia: null,
@@ -66,10 +66,11 @@
         hatchedPostId: $persist(null),
 
         {% if profile.user == request.user  %}
-          eggHatched: $persist({state: false,  url: null}),
+        eggHatched: $persist(false),
         {% else %}
-          eggHatched: {state: false,  url: null},
+        eggHatched: false,
         {% endif %}
+        eggHatchedUrl: $persist(null),
         isHatching: false, {# Control egg hatching effect showing #}
 
         {# Alert Management#}
@@ -81,8 +82,8 @@
         }
       }"
       @form-error.window="() => { alert($event.detail.value); }"
-      @beforeunload.window="if(isHatching) eggHatched.state = true;"  {# persis eggHatched state for user to check later#}
-      @post-created.window="eggHatched.state = false" {# New egg is created, so hatch state should be false  #}
+      @beforeunload.window="if(isHatching) eggHatched = true;"  {# persis eggHatched state for user to check later#}
+      @post-created.window="eggHatched = false" {# New egg is created, so hatch state should be false  #}
     >
       <!-- Alert -->
       {% include 'common/alert.html' %}

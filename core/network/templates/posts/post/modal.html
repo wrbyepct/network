@@ -9,7 +9,7 @@
     @keydown.escape.window="close()"
     @click.outside="close()"
   >
-    {% with toolkit_display_direction="right" %}
+    {% with toolkit_display_direction="down-left" %}
       {% if post.medias_count %}
         {% include 'posts/post/with_media_slider.html' %}
       {% else %}

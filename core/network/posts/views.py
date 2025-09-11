@@ -79,6 +79,7 @@ class PostListView(ListView):
         context["activity"] = ActivityManagerService.get_activity_obj(
             user=self.request.user
         )
+        return context
 
     def get_context_data(self, **kwargs):
         """Insert incubating post id into context."""
@@ -86,6 +87,8 @@ class PostListView(ListView):
         context["is_incubating"] = bool(
             IncubationService.get_incubating_post_id(self.request.user.id)
         )
+
+        context["on_list_page"] = True
 
         if self.request.user.is_authenticated:
             context = self.get_turboy_context(context)
