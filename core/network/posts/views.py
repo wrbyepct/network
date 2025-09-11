@@ -49,6 +49,7 @@ class PostListView(ListView):
         context["is_incubating"] = bool(
             IncubationService.get_incubating_post_id(self.request.user.id)
         )
+        context["profile"] = self.request.user.profile
 
         if self.request.user.is_authenticated:
             profile = self.request.user.profile

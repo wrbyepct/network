@@ -283,6 +283,16 @@
   filter: drop-shadow(0 0 20px rgba(147, 51, 234, 0.7));
 }
 
+.legendary-hologram {
+  animation: legendary-float 4s ease-in-out infinite;
+  filter: drop-shadow(0 0 20px rgba(251, 191, 36, 0.6));
+}
+
+.garden-hologram {
+  animation: garden-float 4s ease-in-out infinite;
+  filter: drop-shadow(0 0 20px rgba(236, 72, 153, 0.6));
+}
+
 
 /* Egg Levitation Effect */
 .egg-levitation {
