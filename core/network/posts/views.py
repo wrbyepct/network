@@ -43,50 +43,52 @@ class PostListView(ListView):
         """Get optimized post queryset."""
         return Post.objects.published()
 
+    def get_turboy_context(self, context):
+        """Get egg and profile context for turboy."""
+        profile = self.request.user.profile
+        context["profile"] = profile
+        context["random_3_followers"] = profile.followers.order_by("?")[:3]
+
+        easter_eggs = profile.easter_eggs
+        special_eggs = profile.special_eggs
+        regular_eggs = profile.regular_eggs
+        context["egg_panels"] = [
+            {
+                "label": "EASTER EGGS",
+                "color": "text-pink-300",
+                "shadow": "rgba(255, 255, 0, 0.5)",
+                "count": profile.easter_eggs_count,
+                "egg": random.choice(profile.easter_eggs) if easter_eggs else None,
+            },
+            {
+                "label": "LEGENDARY",
+                "color": "text-orange-300",
+                "shadow": "rgba(0, 255, 255, 0.5)",
+                "count": profile.special_eggs_count,
+                "egg": random.choice(profile.special_eggs) if special_eggs else None,
+            },
+            {
+                "label": "CUTE",
+                "color": "text-green-400",
+                "shadow": "rgba(59, 130, 246, 0.5)",
+                "count": profile.regular_eggs_count,
+                "egg": random.choice(profile.regular_eggs) if regular_eggs else None,
+            },
+        ]
+
+        context["activity"] = ActivityManagerService.get_activity_obj(
+            user=self.request.user
+        )
+
     def get_context_data(self, **kwargs):
         """Insert incubating post id into context."""
         context = super().get_context_data(**kwargs)
         context["is_incubating"] = bool(
             IncubationService.get_incubating_post_id(self.request.user.id)
         )
-        context["profile"] = self.request.user.profile
 
         if self.request.user.is_authenticated:
-            profile = self.request.user.profile
-            easter_eggs = profile.easter_eggs
-            special_eggs = profile.special_eggs
-            regular_eggs = profile.regular_eggs
-            context["egg_panels"] = [
-                {
-                    "label": "EASTER EGGS",
-                    "color": "text-pink-300",
-                    "shadow": "rgba(255, 255, 0, 0.5)",
-                    "count": profile.easter_eggs_count,
-                    "egg": random.choice(profile.easter_eggs) if easter_eggs else None,
-                },
-                {
-                    "label": "LEGENDARY",
-                    "color": "text-orange-300",
-                    "shadow": "rgba(0, 255, 255, 0.5)",
-                    "count": profile.special_eggs_count,
-                    "egg": random.choice(profile.special_eggs)
-                    if special_eggs
-                    else None,
-                },
-                {
-                    "label": "CUTE",
-                    "color": "text-green-400",
-                    "shadow": "rgba(59, 130, 246, 0.5)",
-                    "count": profile.regular_eggs_count,
-                    "egg": random.choice(profile.regular_eggs)
-                    if regular_eggs
-                    else None,
-                },
-            ]
-
-            context["activity"] = ActivityManagerService.get_activity_obj(
-                user=self.request.user
-            )
+            context = self.get_turboy_context(context)
         return context
 
 
