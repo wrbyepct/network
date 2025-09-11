@@ -64,7 +64,12 @@
         },
         {# Egg Management #}
         hatchedPostId: $persist(null),
-        eggHatched: $persist(false),
+        {% if profile.user == request.user %}
+          {# persist eggHatched state user's own page #}
+         eggHatched: $persist(false),
+        {% else %}
+          eggHatched: false,
+        {% endif %}
         isHatching: false, {# Control egg hatching effect showing #}
 
         {# Alert Management#}

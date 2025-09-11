@@ -220,8 +220,9 @@ class IncubatingEggView(LoginRequiredMixin, View):
 
     def get(self, request, **kwargs):
         """Return incubating egg template."""
-        post_id = IncubationService.get_incubating_post_id(request.user.id)
-        egg_url = IncubationService.get_incubating_egg_url(request.user.id)
+        user_id = request.GET.get("user_id", request.user.id)
+        post_id = IncubationService.get_incubating_post_id(user_id)
+        egg_url = IncubationService.get_incubating_egg_url(user_id)
         egg_type = EggManageService.get_egg_type(egg_url)
         if post_id:
             return render(
