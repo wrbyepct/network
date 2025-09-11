@@ -25,7 +25,9 @@
             class="grid grid-cols-1 gap-4"
           >
             {% for post in posts %}
+              {% with toolkit_display_direction="left" %}
                 {% include 'posts/post/list_card.html' %}
+              {% endwith %}
             {% empty %}
               <p class="text-center text-muted">No turties yet... Let's hatch One!</p>
             {% endfor %}
@@ -57,7 +59,7 @@
 
           <!-- Current Page (editable egg) -->
           <div x-data="{ 
-                  page: {{ page_obj.number|stringformat:'02d' }},
+                  page: {{ page_obj.number|stringformat:'03d' }},
                   get pageUrl() { return `?page=${this.page}` }
               }"
               class="digit-display bg-green-200 border-4 border-green-700 

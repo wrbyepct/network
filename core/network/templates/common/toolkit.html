@@ -1,12 +1,13 @@
   <div 
     x-data="{
         displayDirection(el) {
-            if('{{ toolkit_display_direction }}' === 'right') {
-                el.classList.add('-translate-x-full', 'translate-y-1/4', 'xl:translate-x-1/5', 'xl:top-1/2', 'xl:-translate-y-1/2', 'ml-3') 
+            if('{{ toolkit_display_direction }}' === 'down-left') {
+                el.classList.add('top-full', 'right-full', 'translate-x-1/5', 'ml-3') 
             } else if ('{{ toolkit_display_direction }}' === 'left') {
                 el.classList.add('bottom-1/2', 'translate-y-1/2', 'right-full', 'ml-3') 
             } else {
-                el.classList.add('bottom-full', 'right-full', 'translate-x-2/3', 'mb-3') 
+                {# Display top #}
+                el.classList.add('bottom-full', 'right-full', 'translate-x-1/3', 'mb-3') 
             }
         }
     }"
