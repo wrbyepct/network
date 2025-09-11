@@ -28,8 +28,21 @@
         });
     },
     hatching() {
-        isHatching = true;
-        startFadeEgg = true; {# Makes egg slowly fade away #}
+      isHatching = true;
+      isIncubating = false;
+    },
+    hatchingEnd() {
+
+     
+      $dispatch('post-hatched'); 
+
+      isHatching = false;
+      eggHatched = true;
+
+      if(!onListPage) {
+        this.removeEgg();
+      }
+
     },
     removeEgg() {
       $refs.incubatingEgg.remove();
@@ -38,51 +51,40 @@
   }" 
   x-init="waitForHatchingEvent()"
 >
-   
+  
     <div 
-        class="relative"
-        :class="startFadeEgg && 'fade-out'"
-        x-show="isIncubating"
+      class="relative"
+      :class="isHatching && 'fade-out'"
+      x-show="isIncubating || isHatching"
 
-        @animationend=" if(event.target === $el) { 
-          startFadeEgg = false;
-          isHatching = false;
-          eggHatched = true;
-          isIncubating = false;
-          if(onListPage) {
-            $dispatch('post-hatched'); 
-          } else {
-            removeEgg();
-          }
-        }"
-       >
-       <!-- Glow effect placeholder -->
-        <div 
-            :class="`glow-scheme-${glowStyleIndex}`"
-            class="absolute -z-1 top-1/2 -translate-y-1/2 left-1/2 transform -translate-x-1/2 pulsing-glow"
-            x-show="isHatching"
-            x-cloak
-            x-transition:enter="transition-opacity ease-in duration-2000"
-            x-transition:enter-start="opacity-0"
-            x-transition:enter-end="opacity-100"
-        ></div>
-        <img
-          class="w-85 h-auto mx-auto"
-          src="{{ egg_url }}"
-          alt="Incubating Egg"
-        >
+      @animationend="if(event.target === $el) hatchingEnd()"
+      >
+      <!-- Glow effect placeholder -->
+      <div 
+          :class="`glow-scheme-${glowStyleIndex}`"
+          class="absolute -z-1 top-1/2 -translate-y-1/2 left-1/2 transform -translate-x-1/2 pulsing-glow"
+          x-show="isHatching"
+          x-cloak
+          x-transition:enter="transition-opacity ease-in duration-2000"
+          x-transition:enter-start="opacity-0"
+          x-transition:enter-end="opacity-100"
+      ></div>
+      <img
+        class="w-85 h-auto mx-auto"
+        src="{{ egg_url }}"
+        alt="Incubating Egg"
+      >
     </div>
     <template x-if="onListPage">
-
-      <div
-        id="fetch-hached-post"
-        hx-get="{% url 'hatched_post' post_id %}"
-        hx-trigger="post-hatched from:window"
-        hx-target="#published-posts"
-        hx-swap="afterbegin"
-        @htmx:after-request="addGlowEffectToPost('{{post_id}}'); removeEgg();">
-      </div>
-    </template>
+    <div
+      id="fetch-hached-post"
+      hx-get="{% url 'hatched_post' post_id %}"
+      hx-trigger="post-hatched from:window"
+      hx-target="#published-posts"
+      hx-swap="afterbegin"
+      @htmx:after-request="addGlowEffectToPost('{{post_id}}'); removeEgg();">
+    </div>
+  </template>
 </div>
 
 <style>

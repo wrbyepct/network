@@ -34,15 +34,19 @@
         showTurboy: false,
         showMiniTurboy: true,
 
+        {# Modal management #}
         showModal: false,
-        selectedMedia: null, 
         closeModal() {
           this.showModal = false;
           {% if profile %}
             window.location.href = '{% url 'profile_nest' profile.username %}';
           {% endif %}
         },
+        {# Media management #}
+        selectedMedia: null, 
         clickedMedia: null,
+
+        {# Post/Comment Submit Form Management #}
         resize(textarea) { 
           textarea.style.height = 'auto'; 
           textarea.style.height = textarea.scrollHeight + 'px'; 
@@ -61,10 +65,9 @@
         {# Egg Management #}
         hatchedPostId: $persist(null),
         eggHatched: $persist(false),
-        startFadeEgg: false,
         isHatching: false, {# Control egg hatching effect showing #}
 
-        {# Alert #}
+        {# Alert Management#}
         alertVisible: false, 
         alertMessage: '' ,
         displayAlertMessage(evt) {
@@ -73,7 +76,8 @@
         }
       }"
       @form-error.window="() => { alert($event.detail.value); }"
-      @beforeunload.window="if(isHatching) eggHatched = true;" 
+      @beforeunload.window="if(isHatching) eggHatched = true;"  {# persis eggHatched state for user to check later#}
+      @post-created.window="eggHatched = false" {# New egg is created, so hatch state should be false  #}
     >
       <!-- Alert -->
       {% include 'common/alert.html' %}
