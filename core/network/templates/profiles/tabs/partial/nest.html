@@ -32,10 +32,8 @@
     <div 
       class="rounded-xl p-4 lg:p-6 min-h-96"
       x-data="{ 
-        isIncubating: {{ is_incubating|yesno:'true,false' }},
         onListPage: false,
         displayScreen: false,
-
       }">
     
         <!-- Nest Title -->
@@ -150,16 +148,22 @@
           
           <div class="text-xl font-bold text-cyan-300 mb-3"
               style="text-shadow: 0 0 15px rgba(6, 182, 212, 0.7);">
-            🎊 THE TURTLE HATCHED! 🎊
+            🎊 THE TURTIE HATCHED! 🎊
           </div>
           <p class="text-cyan-400 mb-6 opacity-90"
               style="text-shadow: 0 0 10px rgba(52, 211, 153, 0.4);">
-            Congratulations! Your patience has been rewarded.
+            {% if profile.user == request.user %}
+              Congratulations! Your patience has been rewarded.
+            {% else %}
+              Amazing! A new little turtie is born! 
+            {% endif %}
           </p>
           
           <a 
             :href="`{% url 'index' %}#${hatchedPostId}`"
-            @click="$nextTick(() => {eggHatched = false; hatchedPostId = null})"
+            {% if profile.user == request.user %}
+              @click="$nextTick(() => {eggHatched = false; hatchedPostId = null})"
+            {% endif %}
             class="pixel-btn flex justify-center items-center text-white font-bold py-3 px-6 
                     no-underline transform hover:scale-105 transition-all duration-300"
             style="text-decoration: none; font-family: 'Press Start 2P', monospace; font-size: 10px;"
@@ -169,7 +173,13 @@
                   alt="A turtle running"
                   style="image-rendering: pixelated;">
             <span 
-              class="mx-2">SHUT UP AND TAKE ME TO MY BABY</span>
+              class="mx-2">
+              {% if profile.user == request.user %}
+                SHUT UP AND TAKE ME TO MY BABY
+              {% else  %}
+                TAKE ME TO IT
+              {% endif %}
+            </span>
             <img class="w-8 lg:w-10 mx-2 rounded-full border border-cyan-400/50 holo-avatar" 
                   src="/media/defaults/turtle_run.png" 
                   alt="A turtle running"

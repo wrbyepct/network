@@ -49,7 +49,7 @@
 
                 <!-- Rest state screen animation -->
                 <div
-                  x-show="!isIncubating && !displayScreen"
+                  x-show="!isIncubating && !isHatching && !displayScreen"
                   >
                   <!-- Animated Diver Avatar -->
                   <img src="/media/defaults/turtle_sunbathing.gif" class="w-8 diver-avatar {% if is_incubating %}diving{% else %}swimming{% endif %}">
@@ -117,18 +117,16 @@
             <div class="mini-screen flex-1 min-w-[70px] border-3 border-blue-950 rounded-md p-1.5">
               <div class="text-yellow-400 text-center mb-1 tracking-wider" style="font-size: 9px; text-shadow: 0 0 2px rgba(255, 255, 0, 0.5);">NEST</div>
               <div class="text-center mt-4">
-                <div 
-                  x-show="isIncubating" 
-                  x-cloak 
-                  class="flex items-center justify-center gap-1">
-                  <span class="text-orange-400 break-all font-bold" style="font-size: 10px; text-shadow: 0 0 2px rgba(255, 255, 0, 0.5);">HATCHING...</span>
-                </div>
-                <div 
-                  x-show="!isIncubating" 
-                  x-cloak 
-                  class="flex items-center justify-center gap-1"
-                >
-                  <span class="text-cyan-400 break-all font-bold" style="font-size: 10px; text-shadow: 0 0 2px rgba(0, 255, 255, 0.5);">READY</span>
+                <div x-cloak class="flex items-center justify-center gap-1">
+                  <span 
+                    :class="isIncubating || isHatching 
+                              ? 'text-orange-400' 
+                              : 'text-cyan-400'"
+                    class="break-all font-bold"
+                    style="font-size: 10px; text-shadow: 0 0 2px rgba(255,255,255,0.5);"
+                  >
+                    <span x-text="(isIncubating || isHatching) ? 'HATCHING...' : 'READY'"></span>
+                  </span>
                 </div>
               </div>
             </div>
@@ -189,11 +187,12 @@
                 :hx-target="action.name === 'POST' && '#modal-container'"
                 :href="action.name !== 'POST' && action.url "
               {% else %}
-                href="{% url 'account_login' %}" 
+                href="{% url 'account_login' %}"  
                 hx-get="{% url 'account_login' %}"
                 hx-select="#auth-modal-content"
                 hx-target="#modal-container"
               {% endif %}
+                x-show="action.name === 'POST' ? !isIncubating && !isHatching : true"
                 @htmx:after-request="if($event.detail.successful) showModal = true;"
                 class="text-decoration-none holo-glow flex-1 min-w-[60px] border-2 border-teal-500 rounded-lg px-1.5 py-2 no-underline flex flex-col items-center gap-0.5 transition-all duration-150 hover:-translate-y-0.5 hover:no-underline cursor-pointer"
               >
