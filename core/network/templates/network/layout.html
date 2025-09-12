@@ -6,6 +6,11 @@
     <head>
         <title>{% block title %}Social Network{% endblock %}</title>
         
+        <!-- PHASE 3: Performance Monitoring & Meta Optimization -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="theme-color" content="#0f172a">
+        
         <!-- PHASE 2: Resource Hints for Parallel Loading -->
         <!-- DNS Prefetch for CDN domains -->
         <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
@@ -18,6 +23,11 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link rel="preconnect" href="https://cdn.jsdelivr.net">
         
+        <!-- Performance hints for the browser -->
+        {% if request.user.is_authenticated %}
+        <link rel="prefetch" href="{% url 'profile_about' request.user.profile.username %}" />
+        {% endif %}
+
         <!-- Preload critical web font (async loading) -->
         <link 
           rel="preload" 
@@ -57,22 +67,11 @@
         <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css"></noscript>
         <script defer src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
         
-        <!-- CRITICAL STYLES - Moved from bottom for FOUC prevention -->
+        <!-- PHASE 3: OPTIMIZED CRITICAL STYLES -->
         <style>
-          /* CRITICAL: x-cloak must be first */
-          [x-cloak] {
-            display: none !important;
-          }
-
-          /* Global setup */
-          * {
-            box-sizing: border-box;
-            backface-visibility: hidden;
-            perspective: 1000;
-          }
-
-          /* CSS Variables - CRITICAL */
+          /* PHASE 3: Enhanced CSS Custom Properties System */
           :root {
+            /* Color Palette - Optimized */
             --holo-deep: #0f172a;
             --holo-mid: #1e293b;
             --holo-light: #334155;
@@ -80,11 +79,56 @@
             --turtle-green: #10b981;
             --turtle-glow: #34d399;
             --pixel-yellow: #fbbf24;
+            
+            /* Glass Morphism System */
             --glass-bg: rgba(255, 255, 255, 0.05);
             --glass-border: rgba(255, 255, 255, 0.1);
             --glass-glow: rgba(6, 182, 212, 0.2);
+            
+            /* Animation & Easing */
             --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
             --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+            --transition-fast: 0.2s;
+            --transition-normal: 0.3s;
+            
+            /* Layout Constants */
+            --nav-height: 60px;
+            --border-radius: 8px;
+            --shadow-glow: 0 0 20px rgba(52, 211, 153, 0.4);
+          }
+
+          /* CRITICAL: Progressive Enhancement Loading States */
+          [x-cloak] {
+            display: none !important;
+          }
+          
+          /* Loading state fallback - works without JS */
+          .holographic-ocean-bg:not([x-data]) {
+            opacity: 1;
+            transition: opacity var(--transition-normal) ease;
+          }
+          
+          /* Enhanced loading state when Alpine.js is ready */
+          .holographic-ocean-bg[x-data] {
+            opacity: 1;
+          }
+          
+          /* Fallback navigation without Alpine.js */
+          .nav-mobile-toggle:not([x-data]) + .nav-menu-mobile {
+            display: none;
+          }
+
+          /* Optimized Global Setup */
+          * {
+            box-sizing: border-box;
+          }
+          
+          /* Performance optimizations only for elements that need them */
+          [class*="nav-"], 
+          [class*="holo-"],
+          [class*="post-"] {
+            backface-visibility: hidden;
+            perspective: 1000;
           }
 
           /* Main Background - CRITICAL */
@@ -132,7 +176,7 @@
             align-items: center;
             gap: 12px;
             text-decoration: none;
-            transition: all 0.2s ease;
+            transition: all var(--transition-fast) ease;
           }
 
           .nav-logo-container {
@@ -146,16 +190,12 @@
             height: 100%;
             border-radius: 50%;
             border: 2px solid var(--turtle-glow);
-            box-shadow: 
-              0 0 20px rgba(52, 211, 153, 0.4),
-              inset 0 2px 4px rgba(255, 255, 255, 0.1);
+            box-shadow: var(--shadow-glow), inset 0 2px 4px rgba(255, 255, 255, 0.1);
             image-rendering: pixelated;
             position: relative;
             z-index: 2;
-            transition: all 0.3s ease;
-            filter: 
-              drop-shadow(0 0 8px rgba(52, 211, 153, 0.3))
-              saturate(1.2);
+            transition: all var(--transition-normal) ease;
+            filter: drop-shadow(0 0 8px rgba(52, 211, 153, 0.3)) saturate(1.2);
           }
 
           .nav-logo-text {
@@ -163,7 +203,7 @@
             font-weight: bold;
             text-transform: uppercase;
             letter-spacing: 1px;
-            transition: all 0.3s ease;
+            transition: all var(--transition-normal) ease;
             text-shadow: 0 0 10px rgba(52, 211, 153, 0.5);
           }
 
@@ -173,18 +213,21 @@
             gap: 8px;
           }
 
-          /* Navigation Buttons - CRITICAL */
+          /* MODULAR: Navigation Buttons System - CRITICAL */
           .nav-btn {
-            background: rgba(255, 255, 255, 0.1);
+            /* Base Structure */
+            background: var(--glass-bg);
             color: rgba(255, 255, 255, 0.9);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
             padding: 8px 16px;
             font-size: 9px;
             font-weight: 600;
             text-decoration: none;
             display: inline-block;
-            transition: all 0.2s ease;
+            
+            /* Performance & Interaction */
+            transition: all var(--transition-fast) var(--ease-out-quart);
             backdrop-filter: blur(10px);
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
             position: relative;
