@@ -213,9 +213,8 @@
         <!-- Console Slider Control -->
         <div class="slider-control-section border-t-2 border-blue-800"
               x-data="{ panelOpen: $persist(false) }">
-          <div class="max-w-[10rem] mx-auto flex items-center justify-between gap-2 py-3">
-            <span class="text-yellow-400 font-bold tracking-wide" style="font-size: 6px; text-shadow: 0 0 2px rgba(255, 255, 0, 0.5);">CONSOLE</span>
-            
+          <div class="max-w-[4rem] mx-auto flex items-center justify-between gap-2 py-3">
+     
             <!-- Retro Slider Button -->
             <button 
               {% if user.is_authenticated %}
@@ -250,7 +249,6 @@
               </div>
             </button>
             
-            <span class="text-yellow-400 font-bold tracking-wide" style="font-size: 6px; text-shadow: 0 0 2px rgba(255, 255, 0, 0.5);">PANEL</span>
           </div>
           
           <!-- EGG Expandable Panel -->
