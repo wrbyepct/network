@@ -25,6 +25,521 @@
         <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/focus@3.x.x/dist/cdn.min.js"></script>
         <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+        
+        <!-- CRITICAL STYLES - Moved from bottom for FOUC prevention -->
+        <style>
+          /* CRITICAL: x-cloak must be first */
+          [x-cloak] {
+            display: none !important;
+          }
+
+          /* Global setup */
+          * {
+            box-sizing: border-box;
+            backface-visibility: hidden;
+            perspective: 1000;
+          }
+
+          /* CSS Variables - CRITICAL */
+          :root {
+            --holo-deep: #0f172a;
+            --holo-mid: #1e293b;
+            --holo-light: #334155;
+            --holo-glow: #06b6d4;
+            --turtle-green: #10b981;
+            --turtle-glow: #34d399;
+            --pixel-yellow: #fbbf24;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-glow: rgba(6, 182, 212, 0.2);
+            --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+            --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+          }
+
+          /* Main Background - CRITICAL */
+          .holographic-ocean-bg {
+            background: 
+              radial-gradient(circle at 20% 80%, rgba(6, 182, 212, 0.03) 0%, transparent 50%),
+              radial-gradient(circle at 80% 20%, rgba(16, 185, 129, 0.02) 0%, transparent 50%),
+              radial-gradient(circle at 40% 40%, rgba(251, 191, 36, 0.01) 0%, transparent 50%),
+              linear-gradient(135deg, 
+                var(--holo-deep) 0%,
+                var(--holo-mid) 25%,
+                var(--holo-light) 75%,
+                #475569 100%
+              );
+            position: relative;
+          }
+
+          /* Navigation - CRITICAL */
+          .turtle-habitat-nav {
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(20px);
+            border: none;
+            border-bottom: 1px solid rgba(6, 182, 212, 0.3);
+            padding: 0;
+            box-shadow: 
+              0 8px 32px rgba(0, 0, 0, 0.3),
+              inset 0 1px 0 rgba(6, 182, 212, 0.1);
+            position: relative;
+            font-family: 'Press Start 2P', monospace; 
+            font-size: 10px; 
+            image-rendering: pixelated;
+          }
+
+          .nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            position: relative;
+            z-index: 10;
+          }
+
+          .nav-logo-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+          }
+
+          .nav-logo-container {
+            position: relative;
+            width: 40px;
+            height: 40px;
+          }
+
+          .nav-logo-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid var(--turtle-glow);
+            box-shadow: 
+              0 0 20px rgba(52, 211, 153, 0.4),
+              inset 0 2px 4px rgba(255, 255, 255, 0.1);
+            image-rendering: pixelated;
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s ease;
+            filter: 
+              drop-shadow(0 0 8px rgba(52, 211, 153, 0.3))
+              saturate(1.2);
+          }
+
+          .nav-logo-text {
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            text-shadow: 0 0 10px rgba(52, 211, 153, 0.5);
+          }
+
+          .nav-menu-desktop {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+          }
+
+          /* Navigation Buttons - CRITICAL */
+          .nav-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-size: 9px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+            min-width: 44px;
+            touch-action: manipulation;
+          }
+
+          .nav-btn-primary {
+            background: linear-gradient(135deg, #fcd34d 0%, #f59e0b 100%);
+            color: #92400e;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+          } 
+
+          .nav-btn-secondary {
+            background: linear-gradient(135deg, rgba(22, 148, 102, 0.776) 0%, rgba(36, 179, 155, 0.736) 100%);
+            color: #e3fff7;
+            border: 1px solid rgba(52, 211, 153, 0.3);
+          } 
+
+          .nav-btn-logout {
+            background: rgba(255, 96, 96, 0.969);
+            color: #8b1717;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+          }
+
+          /* Mobile Menu - CRITICAL */
+          .nav-mobile-toggle {
+            display: none;
+            flex-direction: column;
+            width: 30px;
+            height: 24px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            position: relative;
+            min-width: 44px;
+            touch-action: manipulation;
+          }
+
+          .nav-hamburger {
+            display: block;
+            width: 100%;
+            height: 3px;
+            background: #fbbf24;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+            position: absolute;
+            box-shadow: 0 1px 0px #15803d;
+          }
+
+          .nav-hamburger:nth-child(1) { top: 0; }
+          .nav-hamburger:nth-child(2) { top: 50%; transform: translateY(-50%); }
+          .nav-hamburger:nth-child(3) { bottom: 0; }
+
+          .nav-mobile-toggle.active .nav-hamburger:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+          }
+          .nav-mobile-toggle.active .nav-hamburger:nth-child(2) {
+            opacity: 0;
+          }
+          .nav-mobile-toggle.active .nav-hamburger:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+          }
+
+          .nav-menu-mobile {
+            display: none;
+            flex-direction: column;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(6, 182, 212, 0.3);
+            padding: 16px;
+            gap: 12px;
+            box-shadow: 
+              0 8px 16px rgba(0, 0, 0, 0.3),
+              inset 0 1px 2px rgba(255, 255, 255, 0.05);
+          }
+
+          .nav-btn-mobile {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 10px;
+            font-weight: bold;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-shadow: 0 0 5px rgba(6, 182, 212, 0.3);
+          }
+
+          .nav-btn-mobile.nav-btn-primary {
+            background: rgba(251, 191, 36, 0.2);
+            border-color: rgba(251, 191, 36, 0.4);
+            color: #fbbf24;
+            text-shadow: 0 0 8px rgba(251, 191, 36, 0.5);
+          }
+
+          .nav-btn-mobile.nav-btn-secondary {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: rgba(16, 185, 129, 0.4);
+            color: #10b981;
+            text-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+          }
+
+          .nav-btn-mobile.nav-btn-logout {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: rgba(239, 68, 68, 0.4);
+            color: #ef4444;
+            text-shadow: 0 0 8px rgba(239, 68, 68, 0.5);
+          }
+
+          /* Content Cards - CRITICAL */
+          .post-card {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            box-shadow: 
+              0 20px 40px rgba(0, 0, 0, 0.15),
+              inset 0 2px 4px rgba(255, 255, 255, 0.05);
+            position: relative;
+            color: rgba(255, 255, 255, 0.9);
+          }
+
+          .post-card h6 {
+            color: rgba(255, 255, 255, 0.95) !important;
+            text-shadow: 0 0 10px rgba(52, 211, 153, 0.3);
+          }
+
+          .post-card .text-muted {
+            color: rgba(255, 255, 255, 0.7) !important;
+          }
+
+          .post-card .text-stone-800 {
+            color: rgba(255, 255, 255, 0.95) !important;
+          }
+
+          /* Mobile Responsive - CRITICAL */
+          @media (max-width: 768px) {
+            .nav-menu-desktop { display: none; }
+            .nav-mobile-toggle { display: flex; }
+            .nav-menu-mobile { display: flex; }
+            .nav-container { padding: 10px 12px; }
+            .nav-logo-text { font-size: 8px; }
+            .nav-logo-img { width: 32px; height: 32px; }
+          }
+
+          @media (max-width: 480px) {
+            .nav-logo-text { display: none; }
+          }
+        </style>
+
+        <!-- ENHANCEMENT STYLES - Non-critical decorative effects -->
+        <style>
+          /* Tech Grid Overlay - ENHANCEMENT */
+          .holographic-ocean-bg::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: 
+              linear-gradient(rgba(6, 182, 212, 0.03) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(6, 182, 212, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            animation: grid-pulse 20s ease-in-out infinite;
+            pointer-events: none;
+          }
+
+          @keyframes grid-pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+          }
+
+          /* Logo Glow Effects - ENHANCEMENT */
+          .nav-logo-glow {
+            position: absolute;
+            inset: -4px;
+            background: radial-gradient(circle, rgba(52, 211, 153, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: logo-pulse 3s ease-in-out infinite;
+          }
+
+          @keyframes logo-pulse {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.1); }
+          }
+
+          /* Hover Effects - ENHANCEMENT */
+          .nav-logo-link:hover {
+            transform: translateY(-1px);
+          }
+
+          .nav-logo-link:hover .nav-logo-img {
+            box-shadow: 
+              0 0 30px rgba(52, 211, 153, 0.6),
+              inset 0 2px 4px rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+            border-color: var(--turtle-green);
+          }
+
+          .nav-logo-link:hover .nav-logo-text {
+            color: var(--turtle-glow);
+            text-shadow: 0 0 15px rgba(52, 211, 153, 0.8);
+          }
+
+          .nav-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+          }
+
+          .nav-btn:hover::before {
+            transform: translateX(100%);
+          }
+
+          .nav-btn:hover {
+            border-color: rgba(6, 182, 212, 0.4);
+            box-shadow: 
+              0 8px 25px rgba(6, 182, 212, 0.2),
+              inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+          }
+
+          .nav-btn-mobile:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+              0 4px 8px rgba(0, 0, 0, 0.2),
+              0 0 15px rgba(6, 182, 212, 0.3);
+            background: rgba(6, 182, 212, 0.15);
+            border-color: rgba(6, 182, 212, 0.5);
+          }
+
+          /* Holographic Glow Effects - ENHANCEMENT */
+          .holo-glow {
+            position: relative;
+          }
+
+          .holo-glow::after {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: radial-gradient(circle, var(--holo-glow) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            z-index: -1;
+          }
+
+          .holo-glow:hover::after {
+            opacity: 0.2;
+          }
+
+          /* Shimmer Effects - ENHANCEMENT */
+          @keyframes holo-shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+          }
+
+          .shimmer::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, 
+              transparent, 
+              rgba(255, 255, 255, 0.1), 
+              transparent
+            );
+            background-size: 200% 100%;
+            animation: holo-shimmer 3s ease-in-out infinite;
+            pointer-events: none;
+          }
+
+          /* Counter Glow - ENHANCEMENT */
+          .holo-counter {
+            text-shadow: 0 0 4px currentColor;
+            animation: counter-glow 2s ease-in-out infinite alternate;
+          }
+
+          @keyframes counter-glow {
+            0% { text-shadow: 0 0 8px currentColor; }
+            100% { text-shadow: 0 0 8px currentColor, 0 0 16px currentColor; }
+          }
+
+          /* Login Container - ENHANCEMENT */
+          .login-container {
+            background: rgba(15, 23, 42, 0.95);
+            border: 2px solid rgba(6, 182, 212, 0.4);
+            box-shadow: 
+              0 0 40px rgba(6, 182, 212, 0.2),
+              0 20px 40px rgba(0, 0, 0, 0.3),
+              inset 0 2px 4px rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+          }
+
+          .login-container::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(45deg, 
+              rgba(6, 182, 212, 0.5) 0%,
+              transparent 25%,
+              transparent 75%,
+              rgba(16, 185, 129, 0.5) 100%
+            );
+            border-radius: inherit;
+            opacity: 0.6;
+            animation: border-glow 3s ease-in-out infinite;
+            z-index: -1;
+          }
+
+          @keyframes border-glow {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.8; }
+          }
+
+          /* Accessibility - ENHANCEMENT */
+          @media (prefers-contrast: high) {
+            :root {
+              --holo-glow: #00ffff;
+              --turtle-glow: #00ff00;
+              --glass-border: rgba(255, 255, 255, 0.5);
+            }
+            
+            .post-card,
+            .nav-btn,
+            .console-btn {
+              border-width: 2px;
+              border-color: var(--holo-glow);
+            }
+            
+            .login-container {
+              border-width: 3px;
+              border-color: #00ffff;
+              background: rgba(0, 0, 0, 0.9);
+            }
+          }
+
+          @media (prefers-reduced-motion: reduce) {
+            .login-container::before,
+            .nav-logo-glow,
+            .holo-counter {
+              animation: none;
+            }
+            
+            .nav-btn {
+              transition: none;
+            }
+          }
+
+          /* Focus States - ENHANCEMENT */
+          .nav-btn:focus,
+          .console-btn:focus,
+          .pixel-btn:focus {
+            outline: 2px solid var(--turtle-glow);
+            outline-offset: 2px;
+            box-shadow: 0 0 0 4px rgba(52, 211, 153, 0.3);
+          }
+
+          .holo-input:focus {
+            transform: translateY(-1px);
+          }
+
+          /* Touch Device Optimizations - ENHANCEMENT */
+          @media (hover: none) and (pointer: coarse) {
+            .nav-btn:hover,
+            .console-btn:hover {
+              background: initial;
+              transform: initial;
+              box-shadow: initial;
+            }
+            
+            .nav-btn:active,
+            .console-btn:active {
+              transform: scale(0.95);
+              background: rgba(6, 182, 212, 0.2);
+            }
+          }
+        </style>
     </head>
     <body 
       :class="(showModal || showTurboy) && 'overflow-hidden'"
@@ -89,8 +604,7 @@
       {% include 'common/alert.html' %}
       <!-- Enhanced Turtle Habitat Navigation -->
       <nav class="turtle-habitat-nav" 
-           x-data="{ mobileMenuOpen: false }"
-           style="font-family: 'Press Start 2P', monospace; font-size: 10px; image-rendering: pixelated;">
+           x-data="{ mobileMenuOpen: false }">
 
             <div class="nav-container">
 
@@ -208,6 +722,7 @@
          
         <div  
           class="w-full min-h-screen holographic-ocean-bg"
+          x-cloak
         > 
           {% block body %}
           {% endblock %}
@@ -243,649 +758,7 @@
         <!-- Tailwind Flowbite -->
         <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
 
-        <!-- Enhanced Navigation Styles -->
-        <style>
-          /* Global Overflow Fix */
-          
-          
-          * {
-            box-sizing: border-box;
-          }
-
-          /* Holographic Ocean Background System */
-          :root {
-            --holo-deep: #0f172a;
-            --holo-mid: #1e293b;
-            --holo-light: #334155;
-            --holo-glow: #06b6d4;
-            --turtle-green: #10b981;
-            --turtle-glow: #34d399;
-            --pixel-yellow: #fbbf24;
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --glass-glow: rgba(6, 182, 212, 0.2);
-          }
-
-          .holographic-ocean-bg {
-            background: 
-              /* Floating particles */
-              radial-gradient(circle at 20% 80%, rgba(6, 182, 212, 0.03) 0%, transparent 50%),
-              radial-gradient(circle at 80% 20%, rgba(16, 185, 129, 0.02) 0%, transparent 50%),
-              radial-gradient(circle at 40% 40%, rgba(251, 191, 36, 0.01) 0%, transparent 50%),
-              
-              /* Main holographic gradient */
-              linear-gradient(135deg, 
-                var(--holo-deep) 0%,
-                var(--holo-mid) 25%,
-                var(--holo-light) 75%,
-                #475569 100%
-              );
-            
-            position: relative;
-            
-            
-          }
-
-          /* Tech Grid Overlay */
-          .holographic-ocean-bg::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background-image: 
-              linear-gradient(rgba(6, 182, 212, 0.03) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(6, 182, 212, 0.03) 1px, transparent 1px);
-            background-size: 60px 60px;
-            animation: grid-pulse 20s ease-in-out infinite;
-            pointer-events: none;
-          }
-
-          @keyframes grid-pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0;}
-   
-          }
-
-          /* Premium Holographic Shimmer Effects */
-          @keyframes holo-shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
-          }
-
-          .shimmer::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(90deg, 
-              transparent, 
-              rgba(255, 255, 255, 0.1), 
-              transparent
-            );
-            background-size: 200% 100%;
-            animation: holo-shimmer 3s ease-in-out infinite;
-            pointer-events: none;
-          }
-
-          /* Subtle ambient glow for interactive elements */
-          .holo-glow {
-            position: relative;
-          }
-
-          .holo-glow::after {
-            content: '';
-            position: absolute;
-            inset: -2px;
-            background: radial-gradient(circle, var(--holo-glow) 0%, transparent 70%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
-            z-index: -1;
-          }
-
-          .holo-glow:hover::after {
-            opacity: 0.2;
-          }
-          /* Counter glow animation */
-
-          .holo-counter {
-              text-shadow: 0 0 4px currentColor;
-              animation: counter-glow 2s ease-in-out infinite alternate;
-          }
-
-          @keyframes counter-glow {
-              0% { text-shadow: 0 0 8px currentColor; }
-              100% { text-shadow: 0 0 8px currentColor, 0 0 16px currentColor; }
-          }
-
-
-          /* Performance Optimizations for 60fps */
-          * {
-            /* GPU acceleration for transforms */
-            backface-visibility: hidden;
-            perspective: 1000;
-          }
-
-     
-          /* Smooth easing for premium feel */
-          :root {
-            --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
-            --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
-          }
-          /* Holographic Content Cards */
-          .post-card {
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            box-shadow: 
-              0 20px 40px rgba(0, 0, 0, 0.15),
-              inset 0 2px 4px rgba(255, 255, 255, 0.05);
-            position: relative;
-            color: rgba(255, 255, 255, 0.9);
-          }
-
-
-
-          /* Card Text Colors */
-          .post-card h6 {
-            color: rgba(255, 255, 255, 0.95) !important;
-            text-shadow: 0 0 10px rgba(52, 211, 153, 0.3);
-          }
-
-          .post-card .text-muted {
-            color: rgba(255, 255, 255, 0.7) !important;
-          }
-
-          .post-card .text-stone-800 {
-            color: rgba(255, 255, 255, 0.95) !important;
-          }
-
-          .nav-btn,
-          .post-card,
-          .console-btn {
-            transition-timing-function: var(--ease-out-quart);
-          }
-
-          /* Holographic Glass Navigation */
-          .turtle-habitat-nav {
-            background: rgba(0, 0, 0, 0.9);
-            backdrop-filter: blur(20px);
-            border: none;
-            border-bottom: 1px solid rgba(6, 182, 212, 0.3);
-            padding: 0;
-            box-shadow: 
-              0 8px 32px rgba(0, 0, 0, 0.3),
-              inset 0 1px 0 rgba(6, 182, 212, 0.1);
-            position: relative;
-          }
-
-
-          .nav-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 16px;
-            position: relative;
-            z-index: 10;
-          }
-
-          /* Logo Section */
-          .nav-logo-link {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
-            transition: all 0.2s ease;
-          }
-
-          .nav-logo-link:hover {
-            transform: translateY(-1px);
-          }
-
-          .nav-logo-container {
-            position: relative;
-            width: 40px;
-            height: 40px;
-          }
-
-          .nav-logo-img {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 2px solid var(--turtle-glow);
-            box-shadow: 
-              0 0 20px rgba(52, 211, 153, 0.4),
-              inset 0 2px 4px rgba(255, 255, 255, 0.1);
-            image-rendering: pixelated;
-            position: relative;
-            z-index: 2;
-            transition: all 0.3s ease;
-            filter: 
-              drop-shadow(0 0 8px rgba(52, 211, 153, 0.3))
-              saturate(1.2);
-          }
-
-          .nav-logo-glow {
-            position: absolute;
-            inset: -4px;
-            background: radial-gradient(circle, rgba(52, 211, 153, 0.2) 0%, transparent 70%);
-            border-radius: 50%;
-            animation: logo-pulse 3s ease-in-out infinite;
-          }
-
-          @keyframes logo-pulse {
-            0%, 100% { opacity: 0.5; transform: scale(1); }
-            50% { opacity: 0.8; transform: scale(1.1); }
-          }
-
-          .nav-logo-link:hover .nav-logo-img {
-            box-shadow: 
-              0 0 30px rgba(52, 211, 153, 0.6),
-              inset 0 2px 4px rgba(255, 255, 255, 0.2);
-            transform: scale(1.05);
-            border-color: var(--turtle-green);
-          }
-
-          .nav-logo-text {
-            color: rgba(255, 255, 255, 0.9);
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-            text-shadow: 0 0 10px rgba(52, 211, 153, 0.5);
-          }
-
-          .nav-logo-link:hover .nav-logo-text {
-            color: var(--turtle-glow);
-            text-shadow: 0 0 15px rgba(52, 211, 153, 0.8);
-          }
-
-          /* Desktop Menu */
-          .nav-menu-desktop {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-          }
-
-          /* Glass Morphism Navigation Buttons */
-          .nav-btn {
-            background: rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.9);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            padding: 8px 16px;
-            font-size: 9px;
-            font-weight: 600;
-            text-decoration: none;
-            display: inline-block;
-            transition: all 0.2s ease;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-            position: relative;
-            overflow: hidden;
-          }
-
-          .nav-btn::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transform: translateX(-100%);
-            transition: transform 0.6s;
-          }
-
-          .nav-btn:hover::before {
-            transform: translateX(100%);
-          }
-
-          .nav-btn-primary {
-            background: linear-gradient(135deg, #fcd34d 0%, #f59e0b 100%);
-            color: #92400e;
-            border: 1px solid rgba(245, 158, 11, 0.3);
-          } 
-
-          .nav-btn-secondary {
-            background: linear-gradient(135deg, rgba(22, 148, 102, 0.776) 0%, rgba(36, 179, 155, 0.736) 100%);
-            color: #e3fff7;
-            border: 1px solid rgba(52, 211, 153, 0.3);
-          } 
-
-          .nav-btn-logout {
-            background: rgba(255, 96, 96, 0.969);
-            color: #8b1717;
-            border: 1px solid rgba(239, 68, 68, 0.3);
-          }
-
-          .nav-btn:hover {
-            border-color: rgba(6, 182, 212, 0.4);
-            box-shadow: 
-              0 8px 25px rgba(6, 182, 212, 0.2),
-              inset 0 1px 0 rgba(255, 255, 255, 0.2);
-            transform: translateY(-2px);
-          }
-
-          .nav-btn-primary:hover {
-
-            box-shadow: 
-              0 8px 25px rgba(251, 191, 36, 0.2),
-              
-          }
-
-          .nav-btn-secondary:hover {
-   
-            box-shadow: 
-              0 8px 25px rgba(16, 185, 129, 0.2),
-              
-          }
-
-          .nav-btn-logout:hover {
-  
-            box-shadow: 
-              0 8px 25px rgba(239, 68, 68, 0.2),
-            
-          }
-
-          /* Enhanced Touch Interactions */
-          @media (hover: none) and (pointer: coarse) {
-            /* Touch device optimizations */
-            .nav-btn:hover,
-            .console-btn:hover {
-              /* Remove hover effects on touch devices */
-              background: initial;
-              transform: initial;
-              box-shadow: initial;
-            }
-            
-            .nav-btn:active,
-            .console-btn:active {
-              /* Enhanced touch feedback */
-              transform: scale(0.95);
-              background: rgba(6, 182, 212, 0.2);
-            }
-          }
-
-          /* Improved touch targets */
-          .nav-btn,
-          .console-btn,
-          .nav-mobile-toggle {
-           
-            min-width: 44px;
-            touch-action: manipulation;
-          }
-
-          /* Accessibility & High Contrast Support */
-          @media (prefers-contrast: high) {
-            :root {
-              --holo-glow: #00ffff;
-              --turtle-glow: #00ff00;
-              --glass-border: rgba(255, 255, 255, 0.5);
-            }
-            
-            .post-card,
-            .nav-btn,
-            .console-btn {
-              border-width: 2px;
-              border-color: var(--holo-glow);
-            }
-          }
-
-          /* Backdrop-filter fallbacks for older browsers */
-          @supports not (backdrop-filter: blur(10px)) {
-            .holographic-ocean-bg,
-            .turtle-habitat-nav,
-            .post-card,
-            .nav-btn,
-            .console-btn,
-            .mini-screen {
-              background: rgba(255, 255, 255, 0.15);
-            }
-            
-            .diving-console {
-              background: rgba(0, 0, 0, 0.8);
-            }
-          }
-
-          /* Focus states for keyboard navigation */
-          .nav-btn:focus,
-          .console-btn:focus,
-          .pixel-btn:focus {
-            outline: 2px solid var(--turtle-glow);
-            outline-offset: 2px;
-            box-shadow: 0 0 0 4px rgba(52, 211, 153, 0.3);
-          }
-
-          /* Mobile Menu Button */
-          .nav-mobile-toggle {
-            display: none;
-            flex-direction: column;
-            width: 30px;
-            height: 24px;
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            padding: 0;
-            position: relative;
-          }
-
-          .nav-hamburger {
-            display: block;
-            width: 100%;
-            height: 3px;
-            background: #fbbf24;
-            border-radius: 2px;
-            transition: all 0.3s ease;
-            position: absolute;
-            box-shadow: 0 1px 0px #15803d;
-          }
-
-          .nav-hamburger:nth-child(1) {
-            top: 0;
-          }
-
-          .nav-hamburger:nth-child(2) {
-            top: 50%;
-            transform: translateY(-50%);
-          }
-
-          .nav-hamburger:nth-child(3) {
-            bottom: 0;
-          }
-
-          .nav-mobile-toggle.active .nav-hamburger:nth-child(1) {
-            transform: rotate(45deg) translate(6px, 6px);
-          }
-
-          .nav-mobile-toggle.active .nav-hamburger:nth-child(2) {
-            opacity: 0;
-          }
-
-          .nav-mobile-toggle.active .nav-hamburger:nth-child(3) {
-            transform: rotate(-45deg) translate(7px, -7px);
-          }
-
-          /* Holographic Mobile Menu */
-          .nav-menu-mobile {
-            display: none;
-            flex-direction: column;
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(6, 182, 212, 0.3);
-            padding: 16px;
-            gap: 12px;
-            box-shadow: 
-              0 8px 16px rgba(0, 0, 0, 0.3),
-              inset 0 1px 2px rgba(255, 255, 255, 0.05);
-          }
-
-          .nav-btn-mobile {
-            background: rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.9);
-            border: 1px solid rgba(6, 182, 212, 0.3);
-            border-radius: 8px;
-            padding: 12px 16px;
-            font-size: 10px;
-            font-weight: bold;
-            text-decoration: none;
-            text-align: center;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            text-shadow: 0 0 5px rgba(6, 182, 212, 0.3);
-          }
-
-          .nav-btn-mobile.nav-btn-primary {
-            background: rgba(251, 191, 36, 0.2);
-            border-color: rgba(251, 191, 36, 0.4);
-            color: #fbbf24;
-            text-shadow: 0 0 8px rgba(251, 191, 36, 0.5);
-          }
-
-          .nav-btn-mobile.nav-btn-secondary {
-            background: rgba(16, 185, 129, 0.2);
-            border-color: rgba(16, 185, 129, 0.4);
-            color: #10b981;
-            text-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
-          }
-
-          .nav-btn-mobile.nav-btn-logout {
-            background: rgba(239, 68, 68, 0.2);
-            border-color: rgba(239, 68, 68, 0.4);
-            color: #ef4444;
-            text-shadow: 0 0 8px rgba(239, 68, 68, 0.5);
-          }
-
-          .nav-btn-mobile:hover {
-            transform: translateY(-2px);
-            box-shadow: 
-              0 4px 8px rgba(0, 0, 0, 0.2),
-              0 0 15px rgba(6, 182, 212, 0.3);
-            background: rgba(6, 182, 212, 0.15);
-            border-color: rgba(6, 182, 212, 0.5);
-          }
-
-          /* Responsive Breakpoints */
-          @media (max-width: 768px) {
-            .nav-menu-desktop {
-              display: none;
-            }
-
-            .nav-mobile-toggle {
-              display: flex;
-            }
-
-            .nav-menu-mobile {
-              display: flex;
-            }
-
-            .nav-container {
-              padding: 10px 12px;
-            }
-
-            .nav-logo-text {
-              font-size: 8px;
-            }
-
-            .nav-logo-img {
-              width: 32px;
-              height: 32px;
-            }
-          }
-
-          @media (max-width: 480px) {
-            .nav-logo-text {
-              display: none;
-            }
-          }
-
-
-          /* Holographic Login Container */
-          .login-container {
-            background: rgba(15, 23, 42, 0.95);
-            border: 2px solid rgba(6, 182, 212, 0.4);
-            box-shadow: 
-              0 0 40px rgba(6, 182, 212, 0.2),
-              0 20px 40px rgba(0, 0, 0, 0.3),
-              inset 0 2px 4px rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            position: relative;
-            overflow: hidden;
-          }
-
-          /* Holographic border glow animation */
-          .login-container::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(45deg, 
-              rgba(6, 182, 212, 0.5) 0%,
-              transparent 25%,
-              transparent 75%,
-              rgba(16, 185, 129, 0.5) 100%
-            );
-            border-radius: inherit;
-            opacity: 0.6;
-            animation: border-glow 3s ease-in-out infinite;
-            z-index: -1;
-          }
-
-          @keyframes border-glow {
-            0%, 100% { opacity: 0.4; }
-            50% { opacity: 0.8; }
-          }
-
-          /* Enhanced mobile responsiveness */
-          @media (max-width: 640px) {
-            .login-container {
-              backdrop-filter: blur(5px);
-              padding: 2rem 1.5rem;
-              font-size: 9px;
-          
-            }
-            
-            .holo-input {
-              backdrop-filter: blur(3px);
-              padding: 0.75rem 1rem;
-            }
-            
-            .nav-btn {
-              padding: 0.75rem 1.5rem;
-              min-height: 44px;
-              touch-action: manipulation;
-            }
-          }
-
-          /* Reduced motion accessibility */
-          @media (prefers-reduced-motion: reduce) {
-            .login-container::before {
-              animation: none;
-            }
-            
-            .nav-btn {
-              transition: none;
-            }
-          }
-
-          /* High contrast support */
-          @media (prefers-contrast: high) {
-            .login-container {
-              border-width: 3px;
-              border-color: #00ffff;
-              background: rgba(0, 0, 0, 0.9);
-            }
-            
-            .holo-input {
-              border-width: 2px;
-            }
-          }
-          
-          /* Enhanced focus states for accessibility */
-          .holo-input:focus {
-            transform: translateY(-1px);
-          }
-
-          /* Smooth transitions for all interactive elements */
-          .nav-btn, .holo-input {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          }
-        </style>
+        <!-- Phase 1 FOUC Fix Complete - Old styles removed and moved to head -->
     </body>
 </html>
 
