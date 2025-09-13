@@ -87,6 +87,9 @@
         <link rel="preload" href="{% static 'css/features/posts.css' %}" as="style" onload="this.onload=null;this.rel='stylesheet'">
         <noscript><link rel="stylesheet" href="{% static 'css/features/posts.css' %}"></noscript>
 
+        <link rel="preload" href="{% static 'css/features/profiles.css' %}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="{% static 'css/features/profiles.css' %}"></noscript>
+
     </head>
     <body 
       :class="(showModal || showTurboy) && 'overflow-hidden'"
