@@ -1,0 +1,501 @@
+/* ===================================
+   PROFILES FEATURE MODULE
+   Profile headers, follow buttons, media galleries, gaming elements
+   ================================= */
+
+/* ===================================
+   PROFILE HEADER SYSTEM
+   Main profile page styling from main.html
+   ================================= */
+
+/* Enhanced mobile blur effects fallback */
+@media (max-width: 640px) {
+  .backdrop-blur-15 {
+    backdrop-filter: blur(10px);
+  }
+
+  .backdrop-blur-20 {
+    backdrop-filter: blur(15px);
+  }
+
+  /* Simplified animations for mobile performance */
+  .breathing {
+    animation: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .post-card {
+    border-width: 2px;
+    border-color: #06b6d4;
+  }
+
+  .nav-btn {
+    border-width: 2px;
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+
+  .breathing,
+  .animate-bounce,
+  .animate-pulse,
+  .animate-ping {
+    animation: none;
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .nav-btn:hover {
+    background: initial;
+    border-color: initial;
+  }
+
+  .nav-btn:active {
+    transform: scale(0.95);
+  }
+}
+
+/* ===================================
+   FOLLOW BUTTON SYSTEM
+   Holographic follow/unfollow effects from follow_btn.html
+   ================================= */
+
+/* Holographic Pulse Effect */
+.holo-pulse {
+  animation: holoPulse 0.6s ease-out;
+}
+
+@keyframes holoPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.8);
+    transform: scale(1);
+  }
+
+  50% {
+    box-shadow: 0 0 0 10px rgba(16, 185, 129, 0.4);
+    transform: scale(1.05);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+    transform: scale(1);
+  }
+}
+
+/* ===================================
+   GAMING ELEMENTS - NEST/SANCTUARY
+   Avatar effects and gaming UI from nest.html
+   ================================= */
+
+/* Holo Avatar Effect - Uses existing CSS variables from layout.html */
+.holo-avatar {
+  filter: drop-shadow(0 0 8px rgba(6, 182, 212, 0.3));
+  image-rendering: pixelated;
+}
+
+.holo-avatar:hover {
+  filter: drop-shadow(0 0 15px rgba(6, 182, 212, 0.5));
+}
+
+/* Mobile optimization - Reduced effects for better performance */
+@media (max-width: 640px) {
+  .holo-avatar {
+    filter: drop-shadow(0 0 4px rgba(6, 182, 212, 0.3));
+  }
+
+  .mini-screen {
+    backdrop-filter: blur(10px);
+  }
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+
+  .animate-bounce,
+  .animate-ping,
+  .transition-all {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ===================================
+   MEDIA GALLERY & PHOTO SYSTEM
+   Holographic shell effects from photos.html
+   ================================= */
+
+/* Enhanced Holographic Shell Container with Floating Animation */
+.holo-shell-container::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(45deg,
+      rgba(6, 182, 212, 0.3) 0%,
+      rgba(16, 185, 129, 0.3) 25%,
+      rgba(251, 191, 36, 0.2) 50%,
+      rgba(16, 185, 129, 0.3) 75%,
+      rgba(6, 182, 212, 0.3) 100%);
+  border-radius: 14px;
+  animation: shell-glow 4s ease-in-out infinite;
+  z-index: -1;
+}
+
+@keyframes shell-glow {
+
+  0%,
+  100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+/* Subtle floating animation for the shell icon */
+.holo-shell-container {
+  animation: gentle-float 6s ease-in-out infinite;
+}
+
+@keyframes gentle-float {
+
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+
+  25% {
+    transform: translateY(-3px) rotate(1deg);
+  }
+
+  50% {
+    transform: translateY(-2px) rotate(0deg);
+  }
+
+  75% {
+    transform: translateY(-1px) rotate(-1deg);
+  }
+}
+
+/* Mobile Responsive Design */
+@media (max-width: 768px) {
+
+  /* Reduced blur for better mobile performance */
+  .backdrop-blur-20 {
+    backdrop-filter: blur(15px);
+  }
+
+  .backdrop-blur-15 {
+    backdrop-filter: blur(12px);
+  }
+
+  /* Optimize button sizes for touch */
+  .px-6 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .py-3 {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  /* Scale down shell container */
+  .holo-shell-container {
+    width: 3rem;
+    height: 3rem;
+  }
+
+  /* Adjust font sizes for mobile */
+  .text-2xl {
+    font-size: 1.25rem;
+  }
+
+  .text-3xl {
+    font-size: 1.5rem;
+  }
+
+  /* Stack header elements on small screens */
+  .lg\\:flex-row {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+}
+
+@media (max-width: 640px) {
+
+  /* Further reduce effects for mobile performance */
+  .shadow-2xl {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+
+  .shadow-xl {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .shadow-lg {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Disable animations for better performance */
+  .animate-bounce,
+  .animate-pulse,
+  .animate-ping {
+    animation: none;
+  }
+
+  /* Reduce padding and spacing */
+  .p-6 {
+    padding: 1rem;
+  }
+
+  .gap-6 {
+    gap: 1rem;
+  }
+
+  .mb-8 {
+    margin-bottom: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+
+  /* Minimal spacing for very small screens */
+  .px-4 {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  .py-6 {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+
+  /* Hide decorative particles on mobile */
+  .absolute.w-1 {
+    display: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .border-cyan-400\\/20 {
+    border-color: rgba(6, 182, 212, 0.8);
+  }
+
+  .border-emerald-400\\/30 {
+    border-color: rgba(16, 185, 129, 0.8);
+  }
+
+  .text-white\\/90 {
+    color: #ffffff;
+  }
+
+  .bg-white\\/5 {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .hover\\:-translate-y-1:hover {
+    transform: none;
+  }
+
+  .group-hover\\:animate-ping,
+  .group-hover\\:animate-pulse {
+    animation: none;
+  }
+}
+
+/* Focus states for accessibility */
+button:focus {
+  outline: 2px solid rgba(52, 211, 153, 0.8);
+  outline-offset: 2px;
+}
+
+/* ===================================
+   ABOUT TAB SYSTEM
+   Holographic effects and animations from about.html
+   ================================= */
+
+/* Text glow effect */
+.holo-glow-text {
+  text-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+}
+
+/* Tab shimmer effect */
+.holo-tab-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.6s;
+}
+
+.holo-tab-btn:hover::before {
+  transform: translateX(100%);
+}
+
+/* Stats scan line effect */
+.holo-stat-display::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(6, 182, 212, 0.8), transparent);
+  animation: scan-line 3s ease-in-out infinite;
+}
+
+@keyframes scan-line {
+
+  0%,
+  100% {
+    left: -100%;
+    opacity: 0;
+  }
+
+  50% {
+    left: 100%;
+    opacity: 1;
+  }
+}
+
+/* Avatar float animation */
+.holo-avatar {
+  animation: avatar-float 4s ease-in-out infinite;
+}
+
+@keyframes avatar-float {
+
+  0%,
+  100% {
+    transform: translateY(0px) scale(1);
+  }
+
+  50% {
+    transform: translateY(-3px) scale(1.02);
+  }
+}
+
+/* Container breathing animation */
+.holo-about-container {
+  animation: container-breathe 6s ease-in-out infinite;
+}
+
+@keyframes container-breathe {
+
+  0%,
+  100% {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  }
+
+  50% {
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2), 0 0 30px rgba(6, 182, 212, 0.1);
+  }
+}
+
+/* Mobile optimizations - disable animations for performance */
+@media (max-width: 640px) {
+
+  .holo-about-container,
+  .holo-avatar,
+  .holo-stat-display::before {
+    animation: none;
+  }
+
+  .holo-tab-btn:hover {
+    transform: none;
+  }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ===================================
+   FOLLOW TAB SYSTEM
+   Profile card effects from follow.html
+   ================================= */
+
+.holo-profile-card {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  box-shadow:
+    0 20px 40px rgba(0, 0, 0, 0.15),
+    inset 0 2px 4px rgba(255, 255, 255, 0.05);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.holo-profile-card:hover {
+  background: rgba(6, 182, 212, 0.1);
+  border-color: rgba(6, 182, 212, 0.3);
+  box-shadow:
+    0 30px 60px rgba(0, 0, 0, 0.2),
+    0 0 40px rgba(6, 182, 212, 0.3),
+    inset 0 2px 4px rgba(255, 255, 255, 0.1);
+  transform: translateY(-4px);
+}
+
+/* Avatar glow */
+.holo-avatar {
+  border: 2px solid rgba(6, 182, 212, 0.4);
+  box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
+  filter: drop-shadow(0 0 10px rgba(6, 182, 212, 0.2));
+  image-rendering: pixelated;
+  animation: avatar-float 4s ease-in-out infinite;
+}
+
+/* Avatar float animation */
+@keyframes avatar-float {
+
+  0%,
+  100% {
+    transform: translateY(0px) scale(1);
+  }
+
+  50% {
+    transform: translateY(-3px) scale(1.02);
+  }
+}
+
+/* Mobile optimizations */
+@media (max-width: 640px) {
+  .holo-profile-card {
+    backdrop-filter: blur(15px);
+  }
+
+  .holo-profile-card:hover {
+    transform: translateY(-2px);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+
+  .holo-profile-card,
+  .holo-profile-card:hover {
+    transition: none;
+    transform: none;
+  }
+}
