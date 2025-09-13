@@ -22,7 +22,7 @@
   font-weight: 600;
   text-decoration: none;
   display: inline-block;
-  
+
   /* Performance & Interaction */
   transition: var(--btn-transition);
   backdrop-filter: blur(10px);
@@ -38,13 +38,13 @@
   background: linear-gradient(135deg, #fcd34d 0%, #f59e0b 100%);
   color: #92400e;
   border: 1px solid rgba(245, 158, 11, 0.3);
-} 
+}
 
 .nav-btn-secondary {
   background: linear-gradient(135deg, rgba(22, 148, 102, 0.776) 0%, rgba(36, 179, 155, 0.736) 100%);
   color: #e3fff7;
   border: 1px solid rgba(52, 211, 153, 0.3);
-} 
+}
 
 .nav-btn-logout {
   background: rgba(255, 96, 96, 0.969);
@@ -68,7 +68,7 @@
 
 .nav-btn:hover {
   border-color: rgba(6, 182, 212, 0.4);
-  box-shadow: 
+  box-shadow:
     var(--btn-hover-glow),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
   transform: translateY(-2px);
@@ -114,7 +114,7 @@
 
 .nav-btn-mobile:hover {
   transform: translateY(-2px);
-  box-shadow: 
+  box-shadow:
     0 4px 8px rgba(0, 0, 0, 0.2),
     0 0 15px rgba(6, 182, 212, 0.3);
   background: rgba(6, 182, 212, 0.15);
@@ -131,13 +131,14 @@
 
 /* Touch Device Optimizations */
 @media (hover: none) and (pointer: coarse) {
+
   .nav-btn:hover,
   .nav-btn-mobile:hover {
     background: initial;
     transform: initial;
     box-shadow: initial;
   }
-  
+
   .nav-btn:active,
   .nav-btn-mobile:active {
     transform: scale(0.95);
@@ -147,6 +148,7 @@
 
 /* High Contrast Support */
 @media (prefers-contrast: high) {
+
   .nav-btn,
   .nav-btn-mobile {
     border-width: 2px;
@@ -156,11 +158,12 @@
 
 /* Reduced Motion Support */
 @media (prefers-reduced-motion: reduce) {
+
   .nav-btn,
   .nav-btn-mobile {
     transition: none;
   }
-  
+
   .nav-btn::before {
     transition: none;
   }
