@@ -82,6 +82,10 @@
         
         <link rel="preload" href="{% static 'css/components/animations.css' %}" as="style" onload="this.onload=null;this.rel='stylesheet'">
         <noscript><link rel="stylesheet" href="{% static 'css/components/animations.css' %}"></noscript>
+        
+        <!-- FEATURE MODULES - Load asynchronously -->
+        <link rel="preload" href="{% static 'css/features/posts.css' %}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="{% static 'css/features/posts.css' %}"></noscript>
 
     </head>
     <body 
