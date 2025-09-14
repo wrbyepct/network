@@ -157,29 +157,5 @@
 
 
 
-<style>
-/* Holographic Create Form Enhancements - Under 20 lines */
-.holo-title {
-  animation: title-pulse 3s ease-in-out infinite alternate;
-}
-
-@keyframes title-pulse {
-  0% { text-shadow: 0 0 10px rgba(6, 182, 212, 0.5); }
-  100% { text-shadow: 0 0 20px rgba(6, 182, 212, 0.8), 0 0 30px rgba(6, 182, 212, 0.4); }
-}
-
-/* Mobile Performance Optimization */
-@media (max-width: 640px) {
-  .holo-title { animation: none; }
-  .backdrop-blur-xl { backdrop-filter: blur(10px); }
-  .backdrop-blur-md { backdrop-filter: blur(8px); }
-}
-
-/* High contrast accessibility */
-@media (prefers-contrast: high) {
-  .bg-white\/\[0\.06\] { background: rgba(255, 255, 255, 0.15) !important; }
-  .border-cyan-400\/30 { border-color: #06b6d4 !important; }
-}
-</style>
 
 {% endblock %} 
