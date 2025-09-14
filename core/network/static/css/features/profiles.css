@@ -21,63 +21,9 @@
   --holo-yellow-secondary: rgba(251, 191, 36, 0.4);
   --holo-yellow-accent: rgba(251, 191, 36, 0.7);
 
-  /* Base Color System */
-  --white-glass-light: rgba(255, 255, 255, 0.05);
-  --white-glass-medium: rgba(255, 255, 255, 0.1);
-  --white-glass-heavy: rgba(255, 255, 255, 0.2);
-  --black-shadow-light: rgba(0, 0, 0, 0.1);
-  --black-shadow-medium: rgba(0, 0, 0, 0.15);
-  --black-shadow-heavy: rgba(0, 0, 0, 0.2);
-  --black-shadow-deep: rgba(0, 0, 0, 0.3);
-
-  /* Backdrop Blur Levels */
-  --blur-light: blur(10px);
-  --blur-medium: blur(15px);
-  --blur-heavy: blur(20px);
-  --blur-extreme: blur(30px);
-
   /* Animation Durations */
-  --transition-fast: 0.3s;
-  --transition-medium: 0.6s;
-  --transition-slow: 0.8s;
   --animation-float: 4s;
   --animation-glow: 6s;
-
-  /* Shadow Presets */
-  --shadow-glow-cyan: 0 0 20px var(--holo-cyan-primary);
-  --shadow-glow-emerald: 0 0 20px var(--holo-emerald-primary);
-  --shadow-glow-yellow: 0 0 20px var(--holo-yellow-primary);
-  --shadow-card-light: 0 20px 40px var(--black-shadow-medium);
-  --shadow-card-heavy: 0 30px 60px var(--black-shadow-heavy);
-  --shadow-inset-light: inset 0 2px 4px var(--white-glass-light);
-  --shadow-inset-medium: inset 0 2px 4px var(--white-glass-medium);
-
-  /* Border Styles */
-  --border-holo-cyan: 1px solid var(--holo-cyan-primary);
-  --border-holo-emerald: 1px solid var(--holo-emerald-primary);
-  --border-holo-yellow: 1px solid var(--holo-yellow-primary);
-  --border-glass-light: 1px solid var(--white-glass-light);
-  --border-glass-medium: 1px solid var(--white-glass-medium);
-
-  /* Spacing System */
-  --space-xs: 2px;
-  --space-sm: 4px;
-  --space-md: 10px;
-  --space-lg: 15px;
-  --space-xl: 25px;
-  --space-2xl: 30px;
-
-  /* Border Radius */
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 14px;
-  --radius-xl: 16px;
-
-  /* Transform Values */
-  --transform-hover-up: translateY(-4px);
-  --transform-hover-up-sm: translateY(-2px);
-  --transform-float: translateY(-3px) scale(1.02);
-  --transform-rotate-sm: rotate(1deg);
 }
 
 /* ===================================
@@ -87,14 +33,14 @@
 
 /* Base Avatar Component */
 .holo-avatar {
-  border: var(--space-xs) solid var(--holo-cyan-secondary);
-  box-shadow: var(--shadow-glow-cyan);
-  filter: drop-shadow(0 0 var(--space-md) var(--holo-cyan-primary));
-  transition: all var(--transition-fast) ease-out;
+  border: 2px solid var(--holo-cyan-secondary);
+  box-shadow: 0 0 20px var(--holo-cyan-primary);
+  filter: drop-shadow(0 0 10px var(--holo-cyan-primary));
+  transition: all 0.3s ease-out;
 }
 
 .holo-avatar:hover {
-  filter: drop-shadow(0 0 var(--space-lg) var(--holo-cyan-secondary));
+  filter: drop-shadow(0 0 15px var(--holo-cyan-secondary));
   transform: scale(1.05);
 }
 
@@ -111,7 +57,7 @@
 
 /* Holographic Pulse Effect for Follow Button */
 .holo-pulse {
-  animation: holoPulse var(--transition-medium) ease-out;
+  animation: holoPulse 0.6s ease-out;
 }
 
 /* ===================================
@@ -129,23 +75,18 @@
 
 /* Profile Card Variant */
 .holo-profile-card {
-  background: var(--white-glass-light);
-  border: var(--border-glass-medium);
-  backdrop-filter: var(--blur-heavy);
-  box-shadow:
-    var(--shadow-card-light),
-    var(--shadow-inset-light);
-  transition: all var(--transition-fast) cubic-bezier(0.4, 0, 0.2, 1);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), inset 0 2px 4px rgba(255, 255, 255, 0.05);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .holo-profile-card:hover {
   background: var(--holo-cyan-primary);
   border-color: var(--holo-cyan-primary);
-  box-shadow:
-    var(--shadow-card-heavy),
-    var(--shadow-glow-cyan),
-    var(--shadow-inset-medium);
-  transform: var(--transform-hover-up);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2), 0 0 40px var(--holo-cyan-primary), inset 0 2px 4px rgba(255, 255, 255, 0.1);
+  transform: translateY(-4px);
 }
 
 /* Shell Container for Media Gallery */
@@ -157,14 +98,14 @@
 .holo-shell-container::before {
   content: '';
   position: absolute;
-  inset: calc(-1 * var(--space-xs));
+  inset: -2px;
   background: linear-gradient(45deg,
       var(--holo-cyan-primary) 0%,
       var(--holo-emerald-primary) 25%,
       var(--holo-yellow-primary) 50%,
       var(--holo-emerald-primary) 75%,
       var(--holo-cyan-primary) 100%);
-  border-radius: var(--radius-lg);
+  border-radius: 14px;
   animation: shell-glow var(--animation-float) ease-in-out infinite;
   z-index: -1;
 }
@@ -201,7 +142,7 @@
   }
 
   50% {
-    transform: var(--transform-float);
+    transform: translateY(-3px) scale(1.02);
   }
 }
 
@@ -229,7 +170,7 @@
   }
 
   25% {
-    transform: translateY(-3px) var(--transform-rotate-sm);
+    transform: translateY(-3px) rotate(1deg);
   }
 
   50% {
@@ -237,7 +178,7 @@
   }
 
   75% {
-    transform: translateY(-1px) rotate(calc(-1 * var(--transform-rotate-sm)));
+    transform: translateY(-1px) rotate(-1deg);
   }
 }
 
@@ -246,11 +187,11 @@
 
   0%,
   100% {
-    box-shadow: var(--shadow-card-light);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
   }
 
   50% {
-    box-shadow: 0 var(--space-xl) 50px var(--black-shadow-heavy), var(--shadow-glow-cyan);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2), 0 0 30px var(--holo-cyan-primary);
   }
 }
 
@@ -276,7 +217,7 @@
 
 /* Text Glow Effects */
 .holo-glow-text {
-  text-shadow: var(--shadow-glow-cyan);
+  text-shadow: 0 0 10px var(--holo-cyan-secondary);
 }
 
 /* Tab Button Effects */
@@ -291,7 +232,7 @@
   inset: 0;
   background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.1), transparent);
   transform: translateX(-100%);
-  transition: transform var(--transition-medium);
+  transition: transform 0.6s;
 }
 
 .holo-tab-btn:hover::before {
@@ -316,30 +257,31 @@
 
 /* Profile Console Containers */
 .holo-about-container {
-  animation: container-breathe var(--animation-glow) ease-in-out infinite;
+  animation: container-breathe 6s ease-in-out infinite;
 }
 
 .holo-profile-console {
   background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: var(--blur-extreme);
-  box-shadow: var(--shadow-card-light), 0 0 0 var(--black-shadow-deep);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), inset 0 2px 4px rgba(255, 255, 255, 0.05);
 }
 
 /* Missing Legendary Hologram Effect */
 .legendary-hologram {
-  filter: drop-shadow(0 0 var(--space-lg) var(--holo-yellow-secondary));
-  border: var(--space-xs) solid var(--holo-yellow-primary);
-  box-shadow: var(--shadow-glow-yellow);
-  transition: all var(--transition-fast) ease-out;
+  filter: drop-shadow(0 0 16px var(--holo-yellow-secondary));
+  border: 2px solid var(--holo-yellow-primary);
+  box-shadow: 0 0 30px rgba(251, 191, 36, 0.4);
+  transition: all 0.2s ease-out;
 }
 
 .legendary-hologram:hover {
   transform: scale(1.1);
-  filter: drop-shadow(0 0 var(--space-xl) var(--holo-yellow-accent));
+  filter: drop-shadow(0 0 24px var(--holo-yellow-accent));
 }
 
+
 /* ===================================
-   7. RESPONSIVE UTILITIES
+   8. RESPONSIVE UTILITIES
    Mobile-first responsive design patterns
    ================================= */
 
@@ -348,11 +290,11 @@
 
   /* Reduced blur effects for mobile performance */
   .backdrop-blur-15 {
-    backdrop-filter: var(--blur-light);
+    backdrop-filter: blur(8px);
   }
 
   .backdrop-blur-20 {
-    backdrop-filter: var(--blur-medium);
+    backdrop-filter: blur(10px);
   }
 
   /* Simplified animations for mobile */
@@ -361,20 +303,20 @@
   }
 
   .holo-avatar {
-    filter: drop-shadow(0 0 var(--space-sm) var(--holo-cyan-primary));
+    filter: drop-shadow(0 0 8px var(--holo-cyan-primary));
   }
 
   /* Reduce shadow complexity */
   .shadow-2xl {
-    box-shadow: 0 var(--space-md) var(--space-xl) var(--black-shadow-light);
+    box-shadow: 0 16px 24px rgba(0, 0, 0, 0.15);
   }
 
   .shadow-xl {
-    box-shadow: 0 var(--space-sm) var(--space-lg) var(--black-shadow-light);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
   }
 
   .shadow-lg {
-    box-shadow: 0 var(--space-xs) var(--radius-sm) var(--black-shadow-light);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
   }
 
   /* Disable complex animations */
@@ -426,7 +368,7 @@
 /* Tablet Responsive Adjustments */
 @media (max-width: 768px) {
   .backdrop-blur-20 {
-    backdrop-filter: var(--blur-medium);
+    backdrop-filter: blur(10px);
   }
 
   .backdrop-blur-15 {
@@ -445,11 +387,11 @@
   }
 
   .holo-profile-card {
-    backdrop-filter: var(--blur-medium);
+    backdrop-filter: blur(10px);
   }
 
   .holo-profile-card:hover {
-    transform: var(--transform-hover-up-sm);
+    transform: translateY(-2px);
   }
 }
 
@@ -474,19 +416,24 @@
 }
 
 /* ===================================
-   8. ACCESSIBILITY FEATURES
+   9. ACCESSIBILITY FEATURES
    Enhanced accessibility and user preferences
    ================================= */
 
-/* High Contrast Mode Support */
+/* High Contrast Mode Support - Enhanced */
 @media (prefers-contrast: high) {
   .post-card {
     border-width: 2px;
-    border-color: #06b6d4;
+    border-color: var(--holo-cyan-accent);
   }
 
   .nav-btn {
     border-width: 2px;
+  }
+
+  .holo-profile-card {
+    border-width: 2px;
+    border-color: var(--holo-cyan-accent);
   }
 
   .border-cyan-400\\/20 {
@@ -502,31 +449,45 @@
   }
 
   .bg-white\\/5 {
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 255, 255, 0.15);
+  }
+
+  /* Enhanced focus visibility in high contrast */
+  button:focus-visible,
+  .nav-btn:focus-visible {
+    outline-width: 3px;
+    outline-color: var(--holo-cyan-accent);
   }
 }
 
-/* Reduced Motion Preferences */
+/* Reduced Motion Preferences - Enhanced Performance */
 @media (prefers-reduced-motion: reduce) {
 
-  /* Disable all animations */
+  /* Disable all animations and transitions for performance */
   *,
+  *::before,
+  *::after,
   .breathing,
   .animate-bounce,
   .animate-pulse,
   .animate-ping,
   .holo-about-container,
   .holo-avatar,
+  .holo-avatar--float,
   .holo-stat-display::before,
   .holo-shell-container,
   .holo-profile-card,
-  .holo-profile-card:hover {
+  .holo-profile-card:hover,
+  .holo-shimmer-effect::before,
+  .holo-tab-btn::before {
     animation: none !important;
     transition: none !important;
   }
 
-  /* Remove transform effects */
-  .hover\\:-translate-y-1:hover {
+  /* Remove transform effects that could cause motion */
+  .hover\\:-translate-y-1:hover,
+  .holo-profile-card:hover,
+  .legendary-hologram:hover {
     transform: none;
   }
 
@@ -535,8 +496,10 @@
     animation: none;
   }
 
-  .holo-profile-card:hover {
-    transform: none;
+  /* Disable will-change for performance */
+  .holo-will-change-transform,
+  .holo-will-change-opacity {
+    will-change: auto;
   }
 }
 
@@ -559,13 +522,13 @@
 /* Focus States for Accessibility */
 button:focus,
 .nav-btn:focus {
-  outline: var(--space-xs) solid var(--holo-emerald-secondary);
-  outline-offset: var(--space-xs);
+  outline: 2px solid var(--holo-emerald-secondary);
+  outline-offset: 2px;
 }
 
 /* Improved Focus Visibility */
 button:focus-visible {
-  outline: var(--space-xs) solid var(--holo-cyan-accent);
-  outline-offset: var(--space-xs);
-  box-shadow: 0 0 0 var(--space-sm) rgba(52, 211, 153, 0.2);
+  outline: 2px solid var(--holo-cyan-accent);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(52, 211, 153, 0.2);
 }
