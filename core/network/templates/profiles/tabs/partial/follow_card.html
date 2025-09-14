@@ -6,7 +6,7 @@
         x-show="followerHover{{ forloop.counter0 }}"
         x-cloak
     {% endif %}
-    class="holo-profile-card relative group cursor-pointer rounded-xl p-6 transition-all duration-500 text-[7px] xl:text-[10px]"
+    class="holo-profile-card relative group cursor-pointer rounded-xl p-6 transition-all duration-500 text-[7px] xl:text-[9px]"
     x-data="{ hasFollowed: {{ follower|has_followed:request.user|yesno:'true,false' }}}"
 
   >

@@ -21,25 +21,63 @@
   --holo-yellow-secondary: rgba(251, 191, 36, 0.4);
   --holo-yellow-accent: rgba(251, 191, 36, 0.7);
 
+  /* Base Color System */
+  --white-glass-light: rgba(255, 255, 255, 0.05);
+  --white-glass-medium: rgba(255, 255, 255, 0.1);
+  --white-glass-heavy: rgba(255, 255, 255, 0.2);
+  --black-shadow-light: rgba(0, 0, 0, 0.1);
+  --black-shadow-medium: rgba(0, 0, 0, 0.15);
+  --black-shadow-heavy: rgba(0, 0, 0, 0.2);
+  --black-shadow-deep: rgba(0, 0, 0, 0.3);
+
   /* Backdrop Blur Levels */
   --blur-light: blur(10px);
   --blur-medium: blur(15px);
   --blur-heavy: blur(20px);
+  --blur-extreme: blur(30px);
 
   /* Animation Durations */
   --transition-fast: 0.3s;
   --transition-medium: 0.6s;
   --transition-slow: 0.8s;
+  --animation-float: 4s;
+  --animation-glow: 6s;
 
   /* Shadow Presets */
   --shadow-glow-cyan: 0 0 20px var(--holo-cyan-primary);
   --shadow-glow-emerald: 0 0 20px var(--holo-emerald-primary);
   --shadow-glow-yellow: 0 0 20px var(--holo-yellow-primary);
+  --shadow-card-light: 0 20px 40px var(--black-shadow-medium);
+  --shadow-card-heavy: 0 30px 60px var(--black-shadow-heavy);
+  --shadow-inset-light: inset 0 2px 4px var(--white-glass-light);
+  --shadow-inset-medium: inset 0 2px 4px var(--white-glass-medium);
 
   /* Border Styles */
   --border-holo-cyan: 1px solid var(--holo-cyan-primary);
   --border-holo-emerald: 1px solid var(--holo-emerald-primary);
   --border-holo-yellow: 1px solid var(--holo-yellow-primary);
+  --border-glass-light: 1px solid var(--white-glass-light);
+  --border-glass-medium: 1px solid var(--white-glass-medium);
+
+  /* Spacing System */
+  --space-xs: 2px;
+  --space-sm: 4px;
+  --space-md: 10px;
+  --space-lg: 15px;
+  --space-xl: 25px;
+  --space-2xl: 30px;
+
+  /* Border Radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 14px;
+  --radius-xl: 16px;
+
+  /* Transform Values */
+  --transform-hover-up: translateY(-4px);
+  --transform-hover-up-sm: translateY(-2px);
+  --transform-float: translateY(-3px) scale(1.02);
+  --transform-rotate-sm: rotate(1deg);
 }
 
 /* ===================================
@@ -49,14 +87,14 @@
 
 /* Base Avatar Component */
 .holo-avatar {
-  border: 2px solid var(--holo-cyan-secondary);
+  border: var(--space-xs) solid var(--holo-cyan-secondary);
   box-shadow: var(--shadow-glow-cyan);
-  filter: drop-shadow(0 0 10px var(--holo-cyan-primary));
+  filter: drop-shadow(0 0 var(--space-md) var(--holo-cyan-primary));
   transition: all var(--transition-fast) ease-out;
 }
 
 .holo-avatar:hover {
-  filter: drop-shadow(0 0 15px var(--holo-cyan-secondary));
+  filter: drop-shadow(0 0 var(--space-lg) var(--holo-cyan-secondary));
   transform: scale(1.05);
 }
 
@@ -66,7 +104,7 @@
 }
 
 .holo-avatar--float {
-  animation: avatar-float 4s ease-in-out infinite;
+  animation: avatar-float var(--animation-float) ease-in-out infinite;
 }
 
 
@@ -91,12 +129,12 @@
 
 /* Profile Card Variant */
 .holo-profile-card {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--white-glass-light);
+  border: var(--border-glass-medium);
   backdrop-filter: var(--blur-heavy);
   box-shadow:
-    0 20px 40px rgba(0, 0, 0, 0.15),
-    inset 0 2px 4px rgba(255, 255, 255, 0.05);
+    var(--shadow-card-light),
+    var(--shadow-inset-light);
   transition: all var(--transition-fast) cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -104,30 +142,30 @@
   background: var(--holo-cyan-primary);
   border-color: var(--holo-cyan-primary);
   box-shadow:
-    0 30px 60px rgba(0, 0, 0, 0.2),
+    var(--shadow-card-heavy),
     var(--shadow-glow-cyan),
-    inset 0 2px 4px rgba(255, 255, 255, 0.1);
-  transform: translateY(-4px);
+    var(--shadow-inset-medium);
+  transform: var(--transform-hover-up);
 }
 
 /* Shell Container for Media Gallery */
 .holo-shell-container {
-  animation: gentle-float 6s ease-in-out infinite;
+  animation: gentle-float var(--animation-glow) ease-in-out infinite;
   position: relative;
 }
 
 .holo-shell-container::before {
   content: '';
   position: absolute;
-  inset: -2px;
+  inset: calc(-1 * var(--space-xs));
   background: linear-gradient(45deg,
       var(--holo-cyan-primary) 0%,
       var(--holo-emerald-primary) 25%,
       var(--holo-yellow-primary) 50%,
       var(--holo-emerald-primary) 75%,
       var(--holo-cyan-primary) 100%);
-  border-radius: 14px;
-  animation: shell-glow 4s ease-in-out infinite;
+  border-radius: var(--radius-lg);
+  animation: shell-glow var(--animation-float) ease-in-out infinite;
   z-index: -1;
 }
 
@@ -159,11 +197,11 @@
 
   0%,
   100% {
-    transform: translateY(0px) scale(1);
+    transform: translateY(0) scale(1);
   }
 
   50% {
-    transform: translateY(-3px) scale(1.02);
+    transform: var(--transform-float);
   }
 }
 
@@ -187,11 +225,11 @@
 
   0%,
   100% {
-    transform: translateY(0px) rotate(0deg);
+    transform: translateY(0) rotate(0deg);
   }
 
   25% {
-    transform: translateY(-3px) rotate(1deg);
+    transform: translateY(-3px) var(--transform-rotate-sm);
   }
 
   50% {
@@ -199,7 +237,7 @@
   }
 
   75% {
-    transform: translateY(-1px) rotate(-1deg);
+    transform: translateY(-1px) rotate(calc(-1 * var(--transform-rotate-sm)));
   }
 }
 
@@ -208,11 +246,11 @@
 
   0%,
   100% {
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--shadow-card-light);
   }
 
   50% {
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2), var(--shadow-glow-cyan);
+    box-shadow: 0 var(--space-xl) 50px var(--black-shadow-heavy), var(--shadow-glow-cyan);
   }
 }
 
@@ -278,26 +316,26 @@
 
 /* Profile Console Containers */
 .holo-about-container {
-  animation: container-breathe 6s ease-in-out infinite;
+  animation: container-breathe var(--animation-glow) ease-in-out infinite;
 }
 
 .holo-profile-console {
   background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(30px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  backdrop-filter: var(--blur-extreme);
+  box-shadow: var(--shadow-card-light), 0 0 0 var(--black-shadow-deep);
 }
 
 /* Missing Legendary Hologram Effect */
 .legendary-hologram {
-  filter: drop-shadow(0 0 15px var(--holo-yellow-secondary));
-  border: 2px solid var(--holo-yellow-primary);
+  filter: drop-shadow(0 0 var(--space-lg) var(--holo-yellow-secondary));
+  border: var(--space-xs) solid var(--holo-yellow-primary);
   box-shadow: var(--shadow-glow-yellow);
   transition: all var(--transition-fast) ease-out;
 }
 
 .legendary-hologram:hover {
   transform: scale(1.1);
-  filter: drop-shadow(0 0 25px var(--holo-yellow-accent));
+  filter: drop-shadow(0 0 var(--space-xl) var(--holo-yellow-accent));
 }
 
 /* ===================================
@@ -323,20 +361,20 @@
   }
 
   .holo-avatar {
-    filter: drop-shadow(0 0 4px var(--holo-cyan-primary));
+    filter: drop-shadow(0 0 var(--space-sm) var(--holo-cyan-primary));
   }
 
   /* Reduce shadow complexity */
   .shadow-2xl {
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 var(--space-md) var(--space-xl) var(--black-shadow-light);
   }
 
   .shadow-xl {
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 var(--space-sm) var(--space-lg) var(--black-shadow-light);
   }
 
   .shadow-lg {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 var(--space-xs) var(--radius-sm) var(--black-shadow-light);
   }
 
   /* Disable complex animations */
@@ -411,7 +449,7 @@
   }
 
   .holo-profile-card:hover {
-    transform: translateY(-2px);
+    transform: var(--transform-hover-up-sm);
   }
 }
 
@@ -521,13 +559,13 @@
 /* Focus States for Accessibility */
 button:focus,
 .nav-btn:focus {
-  outline: 2px solid var(--holo-emerald-secondary);
-  outline-offset: 2px;
+  outline: var(--space-xs) solid var(--holo-emerald-secondary);
+  outline-offset: var(--space-xs);
 }
 
 /* Improved Focus Visibility */
 button:focus-visible {
-  outline: 2px solid var(--holo-cyan-accent);
-  outline-offset: 2px;
-  box-shadow: 0 0 0 4px rgba(52, 211, 153, 0.2);
+  outline: var(--space-xs) solid var(--holo-cyan-accent);
+  outline-offset: var(--space-xs);
+  box-shadow: 0 0 0 var(--space-sm) rgba(52, 211, 153, 0.2);
 }
