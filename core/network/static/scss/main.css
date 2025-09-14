@@ -1,55 +1,5 @@
-.hover-bg-danger:hover {
-  background-color: #f8d7da !important;
-  /* Light red background */
-}
-
-.heart-transition {
-  transition: all 0.3s ease-in-out;
-}
-
 [x-cloak] {
   display: none !important;
-}
-
-
-
-/* Glow Animation */
-.pulsing-glow {
-  animation: pulseGlow 2s ease-in-out infinite;
-  background: transparent;
-  border: 4px solid rgba(255, 255, 255, 0.15);
-}
-
-@keyframes pulseGlow {
-
-  0%,
-  100% {
-    box-shadow:
-      0 0 20px 5px var(--c1),
-      0 0 40px 10px var(--c2),
-      0 0 60px 20px var(--c3),
-      0 0 80px 25px var(--c4),
-      0 0 100px 30px var(--c4),
-      0 0 120px 35px var(--c4),
-      0 0 140px 40px var(--c4),
-      0 0 160px 45px var(--c4),
-      0 0 180px 50px var(--c4),
-      0 0 200px 55px var(--c4);
-  }
-
-  50% {
-    box-shadow:
-      0 0 10px 2px var(--c1),
-      0 0 20px 5px var(--c2),
-      0 0 30px 10px var(--c3),
-      0 0 40px 15px var(--c4),
-      0 0 60px 20px var(--c4),
-      0 0 80px 25px var(--c4),
-      0 0 100px 30px var(--c4),
-      0 0 120px 35px var(--c4),
-      0 0 140px 40px var(--c4),
-      0 0 160px 45px var(--c4);
-  }
 }
 
 .glow-scheme-0 {
@@ -182,6 +132,46 @@
   /* Dark olive shadow */
 }
 
+
+/* Glow Animation */
+.pulsing-glow {
+  animation: pulseEggGlow 2s ease-in-out infinite;
+  background: transparent;
+  border: 4px solid rgba(255, 255, 255, 0.15);
+}
+
+@keyframes pulseEggGlow {
+
+  0%,
+  100% {
+    box-shadow:
+      0 0 20px 5px var(--c1),
+      0 0 40px 10px var(--c2),
+      0 0 60px 20px var(--c3),
+      0 0 80px 25px var(--c4),
+      0 0 100px 30px var(--c4),
+      0 0 120px 35px var(--c4),
+      0 0 140px 40px var(--c4),
+      0 0 160px 45px var(--c4),
+      0 0 180px 50px var(--c4),
+      0 0 200px 55px var(--c4);
+  }
+
+  50% {
+    box-shadow:
+      0 0 10px 2px var(--c1),
+      0 0 20px 5px var(--c2),
+      0 0 30px 10px var(--c3),
+      0 0 40px 15px var(--c4),
+      0 0 60px 20px var(--c4),
+      0 0 80px 25px var(--c4),
+      0 0 100px 30px var(--c4),
+      0 0 120px 35px var(--c4),
+      0 0 140px 40px var(--c4),
+      0 0 160px 45px var(--c4);
+  }
+}
+
 .post-pulsing-glow {
   animation: fadePulseGlow 5s ease-out forwards;
 }
@@ -283,15 +273,6 @@
   filter: drop-shadow(0 0 20px rgba(147, 51, 234, 0.7));
 }
 
-.legendary-hologram {
-  animation: legendary-float 4s ease-in-out infinite;
-  filter: drop-shadow(0 0 20px rgba(251, 191, 36, 0.6));
-}
-
-.garden-hologram {
-  animation: garden-float 4s ease-in-out infinite;
-  filter: drop-shadow(0 0 20px rgba(236, 72, 153, 0.6));
-}
 
 
 /* Egg Levitation Effect */
