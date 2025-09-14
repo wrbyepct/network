@@ -3,22 +3,14 @@
    Keyframes, transitions, and interactive effects
    ================================= */
 
-/* Animation Variables */
-:root {
-  --animation-speed-slow: 3s;
-  --animation-speed-normal: 2s;
-  --animation-speed-fast: 0.6s;
-  --pulse-opacity-min: 0.5;
-  --pulse-opacity-max: 0.8;
-  --glow-intensity: 0.4;
-}
+/* Animation variables imported from _variables.css */
 
 /* Tech Grid Animation */
 .holographic-ocean-bg::before {
   content: '';
   position: absolute;
   inset: 0;
-  background-image: 
+  background-image:
     linear-gradient(rgba(6, 182, 212, 0.03) 1px, transparent 1px),
     linear-gradient(90deg, rgba(6, 182, 212, 0.03) 1px, transparent 1px);
   background-size: 60px 60px;
@@ -27,8 +19,15 @@
 }
 
 @keyframes grid-pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
 }
 
 /* Logo Glow Animations */
@@ -41,20 +40,30 @@
 }
 
 @keyframes logo-pulse {
-  0%, 100% { 
-    opacity: var(--pulse-opacity-min); 
-    transform: scale(1); 
+
+  0%,
+  100% {
+    opacity: var(--pulse-opacity-min);
+    transform: scale(1);
   }
-  50% { 
-    opacity: var(--pulse-opacity-max); 
-    transform: scale(1.1); 
+
+  50% {
+    opacity: var(--pulse-opacity-max);
+    transform: scale(1.1);
   }
 }
 
 /* Border Glow Animation for Login Container */
 @keyframes border-glow {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 0.8; }
+
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+
+  50% {
+    opacity: 0.8;
+  }
 }
 
 /* Holographic Glow Effects */
@@ -79,19 +88,23 @@
 
 /* Shimmer Effects */
 @keyframes holo-shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 .shimmer::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, 
-    transparent, 
-    rgba(255, 255, 255, 0.1), 
-    transparent
-  );
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(255, 255, 255, 0.1),
+      transparent);
   background-size: 200% 100%;
   animation: holo-shimmer var(--animation-speed-slow) ease-in-out infinite;
   pointer-events: none;
@@ -104,8 +117,24 @@
 }
 
 @keyframes counter-glow {
-  0% { text-shadow: 0 0 8px currentColor; }
-  100% { text-shadow: 0 0 8px currentColor, 0 0 16px currentColor; }
+  0% {
+    text-shadow: 0 0 8px currentColor;
+  }
+
+  100% {
+    text-shadow: 0 0 8px currentColor, 0 0 16px currentColor;
+  }
+}
+
+/* Title Pulse Animation */
+@keyframes title-pulse {
+  0% {
+    text-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+  }
+
+  100% {
+    text-shadow: 0 0 20px rgba(6, 182, 212, 0.8), 0 0 30px rgba(6, 182, 212, 0.4);
+  }
 }
 
 /* Floating Animation */
@@ -114,9 +143,19 @@
 }
 
 @keyframes floating {
-  0%, 100% { transform: translateY(0); }
-  25% { transform: translateY(-5px); }
-  75% { transform: translateY(5px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  25% {
+    transform: translateY(-5px);
+  }
+
+  75% {
+    transform: translateY(5px);
+  }
 }
 
 /* Fade In Animations */
@@ -125,8 +164,15 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .fade-in-delayed {
@@ -134,9 +180,20 @@
 }
 
 @keyframes fadeInDelayed {
-  0% { opacity: 0; transform: translateY(30px); }
-  40% { opacity: 0; transform: translateY(30px); }
-  100% { opacity: 1; transform: translateY(0); }
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  40% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Slide Animations */
@@ -145,8 +202,15 @@
 }
 
 @keyframes slideInRight {
-  from { transform: translateX(100%); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 .slide-in-left {
@@ -154,8 +218,15 @@
 }
 
 @keyframes slideInLeft {
-  from { transform: translateX(-100%); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 /* Scale Animations */
@@ -164,8 +235,15 @@
 }
 
 @keyframes scaleIn {
-  from { transform: scale(0.8); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .scale-bounce {
@@ -173,9 +251,17 @@
 }
 
 @keyframes scaleBounce {
-  0% { transform: scale(0); }
-  50% { transform: scale(1.1); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(0);
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }
 
 /* Rotation Animations */
@@ -184,8 +270,13 @@
 }
 
 @keyframes rotateSlow {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .wiggle {
@@ -193,9 +284,19 @@
 }
 
 @keyframes wiggle {
-  0%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(-3deg); }
-  75% { transform: rotate(3deg); }
+
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(-3deg);
+  }
+
+  75% {
+    transform: rotate(3deg);
+  }
 }
 
 /* Pulse Animations */
@@ -204,8 +305,13 @@
 }
 
 @keyframes pulseGlow {
-  from { filter: drop-shadow(0 0 5px currentColor); }
-  to { filter: drop-shadow(0 0 20px currentColor); }
+  from {
+    filter: drop-shadow(0 0 5px currentColor);
+  }
+
+  to {
+    filter: drop-shadow(0 0 20px currentColor);
+  }
 }
 
 .pulse-scale {
@@ -213,8 +319,15 @@
 }
 
 @keyframes pulseScale {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+  }
 }
 
 /* Typewriter Effect */
@@ -222,19 +335,31 @@
   overflow: hidden;
   border-right: 2px solid var(--holo-glow);
   white-space: nowrap;
-  animation: 
+  animation:
     typewriter 4s steps(40, end),
     blink-caret 0.75s step-end infinite;
 }
 
 @keyframes typewriter {
-  from { width: 0; }
-  to { width: 100%; }
+  from {
+    width: 0;
+  }
+
+  to {
+    width: 100%;
+  }
 }
 
 @keyframes blink-caret {
-  from, to { border-color: transparent; }
-  50% { border-color: var(--holo-glow); }
+
+  from,
+  to {
+    border-color: transparent;
+  }
+
+  50% {
+    border-color: var(--holo-glow);
+  }
 }
 
 /* Loading Animations */
@@ -244,10 +369,24 @@
 }
 
 @keyframes loadingDots {
-  0%, 20% { content: ''; }
-  40% { content: '.'; }
-  60% { content: '..'; }
-  80%, 100% { content: '...'; }
+
+  0%,
+  20% {
+    content: '';
+  }
+
+  40% {
+    content: '.';
+  }
+
+  60% {
+    content: '..';
+  }
+
+  80%,
+  100% {
+    content: '...';
+  }
 }
 
 .loading-spinner {
@@ -255,8 +394,13 @@
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Hover Interaction Animations */
@@ -308,6 +452,7 @@
 
 /* Accessibility: Respect Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
+
   .holographic-ocean-bg::before,
   .nav-logo-glow,
   .holo-counter,
@@ -318,14 +463,14 @@
   .typewriter {
     animation: none;
   }
-  
+
   .hover-lift,
   .hover-glow,
   .hover-tilt,
   .click-ripple::before {
     transition: none;
   }
-  
+
   .shimmer::before {
     animation: none;
     opacity: 0;
@@ -342,4 +487,29 @@
   will-change: transform;
   backface-visibility: hidden;
   perspective: 1000;
+}
+
+/* Egg animation */
+@keyframes legendary-float {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes garden-float {
+
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-8px) rotate(2deg);
+  }
 }
