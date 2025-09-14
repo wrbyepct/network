@@ -3,7 +3,7 @@
    Gaming console, post creation, media handling
    ================================= */
 
-/* Posts Variables */
+/* Posts Variables - Consolidated with profiles */
 :root {
   --console-bg: rgba(0, 0, 0, 0.4);
   --console-border: rgba(6, 182, 212, 0.3);
@@ -281,14 +281,6 @@
    UNDERWATER ENVIRONMENT SYSTEM
    ================================= */
 
-/* Diver Avatar - Original Complex Animations */
-.diver-avatar {
-  position: absolute;
-  font-size: 20px;
-  z-index: 10;
-  transition: all 0.8s ease-in-out;
-  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
-}
 
 /* Floating Turtle Avatar */
 .diver-avatar.swimming {
@@ -624,6 +616,105 @@
    POST CREATION & FORMS
    ================================= */
 
+/* Holographic Create Form Enhancements */
+.holo-title {
+  animation: title-pulse 3s ease-in-out infinite alternate;
+}
+
+@keyframes title-pulse {
+  0% {
+    text-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+  }
+
+  100% {
+    text-shadow: 0 0 20px rgba(6, 182, 212, 0.8), 0 0 30px rgba(6, 182, 212, 0.4);
+  }
+}
+
+/* Post List Holographic Elements */
+.digit-display {
+  font-family: 'Courier New', monospace;
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  backdrop-filter: blur(10px);
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.1),
+    inset 0 1px 2px rgba(6, 182, 212, 0.2);
+  color: #06b6d4;
+  text-shadow: 0 0 8px currentColor;
+}
+
+.holo-pagination {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(6, 182, 212, 0.2) !important;
+  backdrop-filter: blur(15px);
+  box-shadow:
+    0 4px 8px rgba(0, 0, 0, 0.1),
+    inset 0 1px 2px rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+
+/* Holographic Form Elements */
+.holo-form {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  backdrop-filter: blur(15px);
+  box-shadow:
+    0 4px 8px rgba(0, 0, 0, 0.1),
+    inset 0 1px 2px rgba(255, 255, 255, 0.05);
+}
+
+.holo-textarea {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.holo-textarea::placeholder {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.holo-textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.3);
+}
+
+.holo-submit-btn {
+  color: rgba(255, 255, 255, 0.7);
+  transition: all 0.3s ease;
+}
+
+.holo-submit-btn:hover:not(:disabled) {
+  color: #06b6d4;
+  text-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+  transform: scale(1.1);
+}
+
+.holo-composer-container {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(6, 182, 212, 0.2);
+  backdrop-filter: blur(20px);
+  box-shadow:
+    0 8px 16px rgba(0, 0, 0, 0.1),
+    inset 0 1px 2px rgba(255, 255, 255, 0.05);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.holo-composer-container:hover {
+  background: rgba(6, 182, 212, 0.1);
+  border-color: rgba(6, 182, 212, 0.4);
+  box-shadow:
+    0 12px 24px rgba(0, 0, 0, 0.15),
+    0 0 30px rgba(6, 182, 212, 0.2),
+    inset 0 1px 2px rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+.holo-input-field {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  backdrop-filter: blur(10px);
+}
+
 .post-create-container {
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -861,6 +952,55 @@
   }
 }
 
+/* Mobile Performance Optimization */
+@media (max-width: 640px) {
+  .holo-title {
+    animation: none;
+  }
+
+  .backdrop-blur-xl {
+    backdrop-filter: blur(10px);
+  }
+
+  .backdrop-blur-md {
+    backdrop-filter: blur(8px);
+  }
+
+  .pixel-btn {
+    padding: 6px 12px;
+    font-size: 8px;
+    /* Reduced blur for mobile performance */
+    backdrop-filter: blur(10px);
+  }
+
+  .post-card {
+    /* Lighter glass effects for mobile */
+    backdrop-filter: blur(15px);
+    box-shadow:
+      0 10px 20px rgba(0, 0, 0, 0.1),
+      inset 0 1px 2px rgba(255, 255, 255, 0.05);
+  }
+
+  .post-card:hover {
+    /* Simplified mobile hover */
+    transform: translateY(-2px);
+    box-shadow:
+      0 15px 30px rgba(0, 0, 0, 0.15),
+      0 0 20px rgba(6, 182, 212, 0.1);
+  }
+
+  /* Reduced animation complexity on mobile */
+  .breathing {
+    animation: none;
+  }
+
+  .digit-display {
+    backdrop-filter: blur(8px);
+  }
+
+
+}
+
 @media (max-width: 480px) {
   .turboy-device {
     font-size: 6px;
@@ -884,44 +1024,6 @@
    MISSING ORIGINAL COMPONENTS - EXACT REPLICATION
    ================================= */
 
-/* Mini Screen Glass Morphism */
-.mini-screen {
-  background: linear-gradient(135deg,
-      rgba(255, 255, 255, 0.06) 0%,
-      rgba(255, 255, 255, 0.02) 100%);
-  border: 1px solid rgba(30, 58, 138, 0.3);
-  border-radius: 6px;
-  backdrop-filter: blur(15px);
-  box-shadow:
-    0 4px 8px rgba(0, 0, 0, 0.1),
-    inset 0 1px 2px rgba(255, 255, 255, 0.1);
-  position: relative;
-  overflow: hidden;
-}
-
-.mini-screen::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 2px;
-  background: linear-gradient(90deg,
-      transparent 0%,
-      rgba(6, 182, 212, 0.6) 50%,
-      transparent 100%);
-  animation: scanning-line 3s ease-in-out infinite;
-}
-
-@keyframes scanning-line {
-  0% {
-    left: -100%;
-  }
-
-  100% {
-    left: 100%;
-  }
-}
 
 /* Console Buttons with Holographic Effects */
 .console-btn {
@@ -1176,7 +1278,8 @@
   .btn-shine,
   .panel-glow,
   .status-indicator,
-  .progress-shine {
+  .progress-shine,
+  .title-pulse {
     animation: none;
   }
 
@@ -1185,8 +1288,12 @@
   .media-item,
   .post-action-btn,
   .console-btn,
-  .holo-glow {
+  .holo-glow,
+  .breathing,
+  .post-card,
+  .pixel-btn {
     transition: none;
+    animation: none;
   }
 }
 
@@ -1212,5 +1319,42 @@
   .holo-glow {
     border-color: #00ffff !important;
     box-shadow: 0 0 10px #00ffff !important;
+  }
+
+  /* High contrast accessibility from create.html */
+  .bg-white\/\[0\.06\] {
+    background: rgba(255, 255, 255, 0.15) !important;
+  }
+
+  .border-cyan-400\/30 {
+    border-color: #06b6d4 !important;
+  }
+
+
+  .holo-composer-container {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(6, 182, 212, 0.2);
+    backdrop-filter: blur(20px);
+    box-shadow:
+      0 8px 16px rgba(0, 0, 0, 0.1),
+      inset 0 1px 2px rgba(255, 255, 255, 0.05);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .holo-composer-container:hover {
+    background: rgba(6, 182, 212, 0.1);
+    border-color: rgba(6, 182, 212, 0.4);
+    box-shadow:
+      0 12px 24px rgba(0, 0, 0, 0.15),
+      0 0 30px rgba(6, 182, 212, 0.2),
+      inset 0 1px 2px rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+  }
+
+
+  .holo-input-field {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(6, 182, 212, 0.3);
+    backdrop-filter: blur(10px);
   }
 }
