@@ -3,15 +3,7 @@
    Non-critical navigation enhancements
    ================================= */
 
-/* Enhanced Navigation Variables */
-:root {
-  --glass-bg: rgba(255, 255, 255, 0.05);
-  --glass-border: rgba(255, 255, 255, 0.1);
-  --glass-glow: rgba(6, 182, 212, 0.2);
-  --shadow-glow: 0 0 20px rgba(52, 211, 153, 0.4);
-  --transition-normal: 0.3s;
-  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
-}
+/* Navigation variables imported from _variables.css */
 
 /* Enhanced Navigation Styling */
 .turtle-habitat-nav {
@@ -56,18 +48,13 @@
   text-shadow: 0 0 15px rgba(52, 211, 153, 0.8);
 }
 
-/* Logo Glow Animation */
+/* Logo Glow Animation - keyframes defined in animations.css */
 .nav-logo-glow {
   position: absolute;
   inset: -4px;
   background: radial-gradient(circle, rgba(52, 211, 153, 0.2) 0%, transparent 70%);
   border-radius: 50%;
   animation: logo-pulse 3s ease-in-out infinite;
-}
-
-@keyframes logo-pulse {
-  0%, 100% { opacity: 0.5; transform: scale(1); }
-  50% { opacity: 0.8; transform: scale(1.1); }
 }
 
 /* Mobile Menu Toggle */
@@ -124,52 +111,7 @@
     inset 0 1px 2px rgba(255, 255, 255, 0.05);
 }
 
-/* Mobile Navigation Buttons */
-.nav-btn-mobile {
-  background: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(6, 182, 212, 0.3);
-  border-radius: 8px;
-  padding: 12px 16px;
-  font-size: 10px;
-  font-weight: bold;
-  text-decoration: none;
-  text-align: center;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  text-shadow: 0 0 5px rgba(6, 182, 212, 0.3);
-}
-
-.nav-btn-mobile.nav-btn-primary {
-  background: rgba(251, 191, 36, 0.2);
-  border-color: rgba(251, 191, 36, 0.4);
-  color: #fbbf24;
-  text-shadow: 0 0 8px rgba(251, 191, 36, 0.5);
-}
-
-.nav-btn-mobile.nav-btn-secondary {
-  background: rgba(16, 185, 129, 0.2);
-  border-color: rgba(16, 185, 129, 0.4);
-  color: #10b981;
-  text-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
-}
-
-.nav-btn-mobile.nav-btn-logout {
-  background: rgba(239, 68, 68, 0.2);
-  border-color: rgba(239, 68, 68, 0.4);
-  color: #ef4444;
-  text-shadow: 0 0 8px rgba(239, 68, 68, 0.5);
-}
-
-.nav-btn-mobile:hover {
-  transform: translateY(-2px);
-  box-shadow: 
-    0 4px 8px rgba(0, 0, 0, 0.2),
-    0 0 15px rgba(6, 182, 212, 0.3);
-  background: rgba(6, 182, 212, 0.15);
-  border-color: rgba(6, 182, 212, 0.5);
-}
+/* Mobile button styles defined in buttons.css */
 
 /* Progressive Enhancement Fallbacks */
 .nav-mobile-toggle:not([x-data]) + .nav-menu-mobile {
