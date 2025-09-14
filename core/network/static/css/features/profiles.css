@@ -9,22 +9,7 @@
    CSS Custom Properties for consistent theming
    ================================= */
 
-:root {
-  /* Holographic Color Palette */
-  --holo-cyan-primary: rgba(6, 182, 212, 0.3);
-  --holo-cyan-secondary: rgba(6, 182, 212, 0.5);
-  --holo-cyan-accent: rgba(6, 182, 212, 0.8);
-  --holo-emerald-primary: rgba(16, 185, 129, 0.3);
-  --holo-emerald-secondary: rgba(16, 185, 129, 0.5);
-  --holo-emerald-accent: rgba(16, 185, 129, 0.8);
-  --holo-yellow-primary: rgba(251, 191, 36, 0.2);
-  --holo-yellow-secondary: rgba(251, 191, 36, 0.4);
-  --holo-yellow-accent: rgba(251, 191, 36, 0.7);
-
-  /* Animation Durations */
-  --animation-float: 4s;
-  --animation-glow: 6s;
-}
+/* All variables imported from _variables.css */
 
 /* ===================================
    2. AVATAR COMPONENTS
@@ -269,8 +254,7 @@
 /* Missing Legendary Hologram Effect */
 .legendary-hologram {
   filter: drop-shadow(0 0 16px var(--holo-yellow-secondary));
-  border: 2px solid var(--holo-yellow-primary);
-  box-shadow: 0 0 30px rgba(251, 191, 36, 0.4);
+  animation: legendary-float 4s ease-in-out infinite;
   transition: all 0.2s ease-out;
 }
 
@@ -279,245 +263,12 @@
   filter: drop-shadow(0 0 24px var(--holo-yellow-accent));
 }
 
-
-/* ===================================
-   8. RESPONSIVE UTILITIES
-   Mobile-first responsive design patterns
-   ================================= */
-
-/* Mobile Performance Optimizations */
-@media (max-width: 640px) {
-
-  /* Reduced blur effects for mobile performance */
-  .backdrop-blur-15 {
-    backdrop-filter: blur(8px);
-  }
-
-  .backdrop-blur-20 {
-    backdrop-filter: blur(10px);
-  }
-
-  /* Simplified animations for mobile */
-  .breathing {
-    animation: none;
-  }
-
-  .holo-avatar {
-    filter: drop-shadow(0 0 8px var(--holo-cyan-primary));
-  }
-
-  /* Reduce shadow complexity */
-  .shadow-2xl {
-    box-shadow: 0 16px 24px rgba(0, 0, 0, 0.15);
-  }
-
-  .shadow-xl {
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-  }
-
-  .shadow-lg {
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-  }
-
-  /* Disable complex animations */
-  .animate-bounce,
-  .animate-pulse,
-  .animate-ping,
-  .holo-about-container,
-  .holo-avatar,
-  .holo-stat-display::before {
-    animation: none;
-  }
-
-  /* Reduce spacing for mobile */
-  .p-6 {
-    padding: 1rem;
-  }
-
-  .gap-6 {
-    gap: 1rem;
-  }
-
-  .mb-8 {
-    margin-bottom: 1.5rem;
-  }
-
-  /* Shell container scaling */
-  .holo-shell-container {
-    width: 3rem;
-    height: 3rem;
-  }
-
-  /* Typography adjustments */
-  .text-2xl {
-    font-size: 1.25rem;
-  }
-
-  .text-3xl {
-    font-size: 1.5rem;
-  }
-
-  /* Stack header elements */
-  .lg\\:flex-row {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
+.garden-hologram {
+  animation: garden-float 4s ease-in-out infinite;
+  filter: drop-shadow(0 0 20px rgba(236, 72, 153, 0.6));
 }
 
-/* Tablet Responsive Adjustments */
-@media (max-width: 768px) {
-  .backdrop-blur-20 {
-    backdrop-filter: blur(10px);
-  }
-
-  .backdrop-blur-15 {
-    backdrop-filter: blur(12px);
-  }
-
-  /* Optimize button sizes for touch */
-  .px-6 {
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-
-  .py-3 {
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
-  }
-
-  .holo-profile-card {
-    backdrop-filter: blur(10px);
-  }
-
-  .holo-profile-card:hover {
-    transform: translateY(-2px);
-  }
-}
-
-/* Very Small Screens */
-@media (max-width: 480px) {
-
-  /* Minimal spacing */
-  .px-4 {
-    padding-left: 0.75rem;
-    padding-right: 0.75rem;
-  }
-
-  .py-6 {
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-  }
-
-  /* Hide decorative particles */
-  .absolute.w-1 {
-    display: none;
-  }
-}
-
-/* ===================================
-   9. ACCESSIBILITY FEATURES
-   Enhanced accessibility and user preferences
-   ================================= */
-
-/* High Contrast Mode Support - Enhanced */
-@media (prefers-contrast: high) {
-  .post-card {
-    border-width: 2px;
-    border-color: var(--holo-cyan-accent);
-  }
-
-  .nav-btn {
-    border-width: 2px;
-  }
-
-  .holo-profile-card {
-    border-width: 2px;
-    border-color: var(--holo-cyan-accent);
-  }
-
-  .border-cyan-400\\/20 {
-    border-color: var(--holo-cyan-accent);
-  }
-
-  .border-emerald-400\\/30 {
-    border-color: var(--holo-emerald-accent);
-  }
-
-  .text-white\\/90 {
-    color: #ffffff;
-  }
-
-  .bg-white\\/5 {
-    background-color: rgba(255, 255, 255, 0.15);
-  }
-
-  /* Enhanced focus visibility in high contrast */
-  button:focus-visible,
-  .nav-btn:focus-visible {
-    outline-width: 3px;
-    outline-color: var(--holo-cyan-accent);
-  }
-}
-
-/* Reduced Motion Preferences - Enhanced Performance */
-@media (prefers-reduced-motion: reduce) {
-
-  /* Disable all animations and transitions for performance */
-  *,
-  *::before,
-  *::after,
-  .breathing,
-  .animate-bounce,
-  .animate-pulse,
-  .animate-ping,
-  .holo-about-container,
-  .holo-avatar,
-  .holo-avatar--float,
-  .holo-stat-display::before,
-  .holo-shell-container,
-  .holo-profile-card,
-  .holo-profile-card:hover,
-  .holo-shimmer-effect::before,
-  .holo-tab-btn::before {
-    animation: none !important;
-    transition: none !important;
-  }
-
-  /* Remove transform effects that could cause motion */
-  .hover\\:-translate-y-1:hover,
-  .holo-profile-card:hover,
-  .legendary-hologram:hover {
-    transform: none;
-  }
-
-  .group-hover\\:animate-ping,
-  .group-hover\\:animate-pulse {
-    animation: none;
-  }
-
-  /* Disable will-change for performance */
-  .holo-will-change-transform,
-  .holo-will-change-opacity {
-    will-change: auto;
-  }
-}
-
-/* Touch Device Optimizations */
-@media (hover: none) and (pointer: coarse) {
-  .nav-btn:hover {
-    background: initial;
-    border-color: initial;
-  }
-
-  .nav-btn:active {
-    transform: scale(0.95);
-  }
-
-  .holo-tab-btn:hover {
-    transform: none;
-  }
-}
+/* Responsive utilities and accessibility features moved to _responsive.css */
 
 /* Focus States for Accessibility */
 button:focus,

@@ -3,13 +3,7 @@
    Cards, containers, and structural elements
    ================================= */
 
-/* Layout Variables */
-:root {
-  --card-bg: rgba(255, 255, 255, 0.06);
-  --card-border: rgba(255, 255, 255, 0.1);
-  --card-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), inset 0 2px 4px rgba(255, 255, 255, 0.05);
-  --container-padding: 16px;
-}
+/* Layout variables imported from _variables.css */
 
 /* Content Cards System */
 .post-card {
@@ -260,102 +254,4 @@
   letter-spacing: 1px;
 }
 
-/* Responsive Layout Adjustments */
-@media (max-width: 768px) {
-  .content-wrapper {
-    padding: 0 12px;
-  }
-  
-  .section-container {
-    padding: 16px;
-    margin: 12px 0;
-  }
-  
-  .post-card {
-    padding: 12px;
-    margin-bottom: 12px;
-  }
-  
-  .media-grid {
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 12px;
-  }
-  
-  .media-item img,
-  .media-item video {
-    height: 150px;
-  }
-  
-  .profile-header {
-    padding: 24px 16px;
-  }
-  
-  .profile-avatar {
-    width: 80px;
-    height: 80px;
-  }
-  
-  .stats-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-  }
-  
-  .stat-card {
-    padding: 16px;
-  }
-  
-  .stat-number {
-    font-size: 1.5rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .content-wrapper {
-    padding: 0 8px;
-  }
-  
-  .section-container,
-  .post-card {
-    padding: 12px;
-  }
-  
-  .media-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-  
-  .stats-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* High Contrast Support */
-@media (prefers-contrast: high) {
-  .post-card,
-  .section-container,
-  .media-item,
-  .stat-card {
-    border-width: 2px;
-    border-color: var(--holo-glow);
-  }
-  
-  .login-container {
-    border-width: 3px;
-    border-color: #00ffff;
-    background: rgba(0, 0, 0, 0.9);
-  }
-}
-
-/* Reduced Motion Support */
-@media (prefers-reduced-motion: reduce) {
-  .post-card,
-  .media-item,
-  .list-item,
-  .stat-card,
-  .holo-input {
-    transition: none;
-  }
-  
-  .login-container::before {
-    animation: none;
-  }
-}
+/* Responsive layout adjustments moved to _responsive.css */

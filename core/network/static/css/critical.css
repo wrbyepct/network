@@ -4,20 +4,8 @@
    Size Target: ~3KB
    ================================= */
 
-/* CSS Custom Properties - Essential */
-:root {
-  /* Core Color Palette */
-  --holo-deep: #0f172a;
-  --holo-mid: #1e293b;
-  --holo-light: #334155;
-  --holo-glow: #06b6d4;
-  --turtle-green: #10b981;
-  --turtle-glow: #34d399;
-  
-  /* Essential Layout */
-  --transition-fast: 0.2s;
-  --border-radius: 8px;
-}
+/* Import centralized variables */
+@import url('_variables.css');
 
 /* FOUC Prevention - Critical */
 [x-cloak] {
