@@ -35,7 +35,7 @@
 .login-container {
   background: rgba(15, 23, 42, 0.95);
   border: 2px solid rgba(6, 182, 212, 0.4);
-  box-shadow: 
+  box-shadow:
     0 0 40px rgba(6, 182, 212, 0.2),
     0 20px 40px rgba(0, 0, 0, 0.3),
     inset 0 2px 4px rgba(255, 255, 255, 0.05);
@@ -50,12 +50,11 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(45deg, 
-    rgba(6, 182, 212, 0.5) 0%,
-    transparent 25%,
-    transparent 75%,
-    rgba(16, 185, 129, 0.5) 100%
-  );
+  background: linear-gradient(45deg,
+      rgba(6, 182, 212, 0.5) 0%,
+      transparent 25%,
+      transparent 75%,
+      rgba(16, 185, 129, 0.5) 100%);
   border-radius: inherit;
   opacity: 0.6;
   animation: border-glow 3s ease-in-out infinite;
@@ -172,9 +171,9 @@
 
 /* Profile Layout Components */
 .profile-header {
-  background: linear-gradient(135deg, 
-    rgba(6, 182, 212, 0.1) 0%,
-    rgba(16, 185, 129, 0.1) 100%);
+  background: linear-gradient(135deg,
+      rgba(6, 182, 212, 0.1) 0%,
+      rgba(16, 185, 129, 0.1) 100%);
   border: 1px solid rgba(52, 211, 153, 0.3);
   backdrop-filter: blur(20px);
   border-radius: var(--border-radius);
@@ -188,7 +187,7 @@
   height: 120px;
   border: 3px solid var(--turtle-glow);
   border-radius: 50%;
-  box-shadow: 
+  box-shadow:
     0 0 30px rgba(52, 211, 153, 0.4),
     inset 0 2px 4px rgba(255, 255, 255, 0.1);
   margin: 0 auto 16px;
@@ -252,6 +251,155 @@
   font-size: 0.9rem;
   text-transform: uppercase;
   letter-spacing: 1px;
+}
+
+/* ===================================
+   HOLOGRAPHIC CONSOLE COMPONENTS
+   Reusable console and glass elements
+   ================================= */
+
+/* Console base styles for mini consoles and floating elements */
+.holo-console-base {
+  background: var(--console-bg);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--holo-cyan-primary);
+  box-shadow:
+    0 8px 25px rgba(0, 0, 0, 0.3),
+    inset 0 2px 4px rgba(255, 255, 255, 0.05),
+    0 0 30px var(--holo-cyan-primary);
+  transition: all var(--transition-normal) var(--ease-out-quart);
+}
+
+/* Mini console circle for floating elements */
+.holo-mini-console {
+  background: var(--console-bg);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--holo-cyan-primary);
+  box-shadow:
+    0 8px 25px rgba(0, 0, 0, 0.3),
+    inset 0 2px 4px rgba(255, 255, 255, 0.05),
+    0 0 30px var(--holo-cyan-primary);
+  transition: all var(--transition-normal) var(--ease-out-quart);
+  position: relative;
+  overflow: hidden;
+  animation: mini-turtle-float 6s ease-in-out infinite;
+}
+
+/* Holographic bezel glow effect */
+.holo-mini-console::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg,
+      var(--holo-cyan-secondary) 0%,
+      transparent 25%,
+      transparent 75%,
+      var(--holo-emerald-secondary) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: exclude;
+  animation: mini-bezel-glow 4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* Underwater screen environment for mini consoles */
+.holo-underwater-screen {
+  background:
+    radial-gradient(ellipse at center top, var(--holo-cyan-primary) 0%, transparent 50%),
+    radial-gradient(ellipse at center bottom, rgba(16, 185, 129, 0.05) 0%, transparent 50%),
+    rgba(0, 0, 0, 0.6);
+  border: 1px solid var(--holo-cyan-secondary);
+  border-radius: var(--border-radius-small);
+}
+
+/* Toolkit container for common toolkit overlays */
+.holo-toolkit-base {
+  background: var(--console-deep-bg);
+  border: 1px solid var(--holo-cyan-secondary);
+  box-shadow:
+    0 8px 16px rgba(0, 0, 0, 0.4),
+    inset 0 1px 2px var(--holo-cyan-secondary);
+  border-radius: var(--border-radius);
+  font-family: 'Press Start 2P', monospace;
+}
+
+/* Hover states for interactive console elements */
+.holo-console-interactive:hover {
+  border-color: var(--holo-cyan-secondary);
+  box-shadow:
+    0 12px 35px rgba(0, 0, 0, 0.4),
+    0 0 40px var(--holo-cyan-secondary),
+    inset 0 2px 4px rgba(255, 255, 255, 0.1);
+  transform: scale(1.05);
+}
+
+/* Dragging state for moveable consoles */
+.holo-console-dragging {
+  transform: scale(1.1) !important;
+  box-shadow:
+    0 15px 40px rgba(0, 0, 0, 0.5),
+    0 0 50px var(--holo-cyan-accent) !important;
+}
+
+/* Glow ring for floating animations */
+.holo-glow-ring {
+  background: radial-gradient(circle, var(--holo-cyan-primary) 0%, transparent 70%);
+  animation: mini-glow-pulse 3s ease-in-out infinite;
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+/* ===================================
+   KEYFRAME ANIMATIONS
+   ================================= */
+
+@keyframes mini-turtle-float {
+
+  0%,
+  100% {
+    transform: translate(0px, 0px) rotate(0deg);
+  }
+
+  25% {
+    transform: translate(2px, -3px) rotate(-1deg);
+  }
+
+  50% {
+    transform: translate(0px, -5px) rotate(0deg);
+  }
+
+  75% {
+    transform: translate(-2px, -2px) rotate(1deg);
+  }
+}
+
+@keyframes mini-bezel-glow {
+
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes mini-glow-pulse {
+
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.6;
+    transform: scale(1.1);
+  }
 }
 
 /* Responsive layout adjustments moved to _responsive.css */
