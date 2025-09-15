@@ -5,6 +5,37 @@
 
 /* Animation variables imported from _variables.css */
 
+/* ===================================
+   DROPDOWN ANIMATIONS
+   ================================= */
+
+/* Essential dropdown appearance animation only */
+.dropdown-menu.show {
+    animation: dropdown-appear 0.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes dropdown-appear {
+    from {
+        opacity: 0;
+        transform: translateY(-8px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Accessibility support for dropdown animations */
+@media (prefers-reduced-motion: reduce) {
+    .dropdown-menu.show {
+        animation: none;
+    }
+}
+
+/* ===================================
+   GRID ANIMATIONS
+   ================================= */
+
 /* Tech Grid Animation */
 .holographic-ocean-bg::before {
   content: '';
