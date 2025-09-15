@@ -105,29 +105,3 @@
 
 {% url 'albums_paginate' profile.username as fetch_url %}
 {% include 'common/next_media_batch.html' with fetch_url=fetch_url %}
-
-<style>
-/* Gentle floating animation for album cards */
-@keyframes gentle-album-float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-2px); }
-}
-.album-card { animation: gentle-album-float 4s ease-in-out infinite; }
-
-/* Mobile performance optimizations */
-@media (max-width: 640px) {
-  .backdrop-blur-20 { backdrop-filter: blur(15px); }
-  .animate-bounce { animation: none; }
-}
-
-/* Accessibility support */
-@media (prefers-reduced-motion: reduce) {
-  .album-card, .animate-bounce, .animate-pulse, .animate-ping { animation: none; }
-}
-
-/* Focus states for accessibility */
-.album-card:focus {
-  outline: 2px solid rgba(52, 211, 153, 0.8);
-  outline-offset: 2px;
-}
-</style>
