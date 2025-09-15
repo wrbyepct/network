@@ -9,7 +9,7 @@
 .turtle-habitat-nav {
   backdrop-filter: blur(20px);
   padding: 0;
-  box-shadow: 
+  box-shadow:
     0 8px 32px rgba(0, 0, 0, 0.3),
     inset 0 1px 0 rgba(6, 182, 212, 0.1);
   image-rendering: pixelated;
@@ -31,7 +31,7 @@
 }
 
 .nav-logo-link:hover .nav-logo-img {
-  box-shadow: 
+  box-shadow:
     0 0 30px rgba(52, 211, 153, 0.6),
     inset 0 2px 4px rgba(255, 255, 255, 0.2);
   transform: scale(1.05);
@@ -83,16 +83,27 @@
   box-shadow: 0 1px 0px #15803d;
 }
 
-.nav-hamburger:nth-child(1) { top: 0; }
-.nav-hamburger:nth-child(2) { top: 50%; transform: translateY(-50%); }
-.nav-hamburger:nth-child(3) { bottom: 0; }
+.nav-hamburger:nth-child(1) {
+  top: 0;
+}
+
+.nav-hamburger:nth-child(2) {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.nav-hamburger:nth-child(3) {
+  bottom: 0;
+}
 
 .nav-mobile-toggle.active .nav-hamburger:nth-child(1) {
   transform: rotate(45deg) translate(6px, 6px);
 }
+
 .nav-mobile-toggle.active .nav-hamburger:nth-child(2) {
   opacity: 0;
 }
+
 .nav-mobile-toggle.active .nav-hamburger:nth-child(3) {
   transform: rotate(-45deg) translate(7px, -7px);
 }
@@ -106,7 +117,7 @@
   border-top: 1px solid rgba(6, 182, 212, 0.3);
   padding: 16px;
   gap: 12px;
-  box-shadow: 
+  box-shadow:
     0 8px 16px rgba(0, 0, 0, 0.3),
     inset 0 1px 2px rgba(255, 255, 255, 0.05);
 }
@@ -114,7 +125,7 @@
 /* Mobile button styles defined in buttons.css */
 
 /* Progressive Enhancement Fallbacks */
-.nav-mobile-toggle:not([x-data]) + .nav-menu-mobile {
+.nav-mobile-toggle:not([x-data])+.nav-menu-mobile {
   display: none;
 }
 

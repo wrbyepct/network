@@ -22,6 +22,7 @@
 /* 5. FEATURES - Feature-specific styles */
 @import url('features/posts.css');
 @import url('features/profiles.css');
+@import url('features/albums.css');
 
 /* 6. LEGACY - Glow effects (can be refactored later) */
 @import url('scss/main.css');
