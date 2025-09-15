@@ -84,31 +84,3 @@
     </div>
   </div>
 {% endblock %}
-
-
-<style>
-  /* Album-specific holographic enhancements - Under 20 lines */
-  
-  /* Mobile performance optimization */
-  @media (max-width: 640px) {
-    .post-card, .mini-screen {
-      backdrop-filter: blur(10px);
-    }
-    
-    .pixel-btn {
-      backdrop-filter: blur(8px);
-    }
-    
-    h2 {
-      font-size: 1.25rem !important;
-    }
-  }
-  
-  /* Reduced motion accessibility */
-  @media (prefers-reduced-motion: reduce) {
-    * {
-      animation: none !important;
-      transition: none !important;
-    }
-  }
-</style>
