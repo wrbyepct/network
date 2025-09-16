@@ -70,7 +70,7 @@
                 <div
                   x-show="displayScreen"
                   >
-                    {% for follower in user.profile.followers.all|slice:":3" %}
+                    {% for follower in random_3_followers %}
                        {% include 'profiles/tabs/partial/follow_card.html' with in_turboy_screen=True  %}
                     {% endfor %}
                     {% for panel in egg_panels %}
