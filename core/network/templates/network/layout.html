@@ -171,13 +171,13 @@
               <!-- Desktop Menu -->
               <div class="nav-menu-desktop">
                 {% if request.user.is_authenticated %}
-                  <a href="{% url 'profile_about' request.user.profile.username %}" class="nav-btn nav-btn-primary flex items-center holo-glow">
+                  <a href="{% url 'profile_about' request.user.profile.username %}" class="nav-btn nav-btn-primary flex items-center">
                     <span> 🏠 My Shell</span>
                   </a>
-                  <a href="{% url 'profile_about' request.user.profile.username %}?sub_tab=follow" class="nav-btn nav-btn-secondary holo-glow">
+                  <a href="{% url 'profile_about' request.user.profile.username %}?sub_tab=follow" class="nav-btn nav-btn-secondary">
                     💧 Pond
                   </a>
-                  <a href="{% url 'account_logout' %}" class="nav-btn nav-btn-logout holo-glow">
+                  <a href="{% url 'account_logout' %}" class="nav-btn nav-btn-logout">
                     👋 Swim Away
                   </a>
                 {% else %}
@@ -188,7 +188,7 @@
                     hx-select="#auth-modal-content"
                     @htmx:after-request="if($event.detail.successful) showModal = true;"
                     href="{% url 'account_login' %}" 
-                    class="nav-btn nav-btn-secondary holo-glow">
+                    class="nav-btn nav-btn-secondary">
                     🐢 Dive In
                   </a>
                   <a 
@@ -198,7 +198,7 @@
                     hx-select="#auth-modal-content"
                     @htmx:after-request="if($event.detail.successful) showModal = true;"
                     href="{% url 'account_signup' %}" 
-                    class="nav-btn nav-btn-primary holo-glow"
+                    class="nav-btn nav-btn-primary"
                   >
                     🥚 Become a turtler!
                   </a>
@@ -228,19 +228,19 @@
 
               {% if request.user.is_authenticated %}
                 <a href="{% url 'profile_nest' request.user.profile.username %}" 
-                   class="nav-btn-mobile nav-btn-primary holo-glow" 
+                   class="nav-btn-mobile nav-btn-primary console-glow" 
                    @click="mobileMenuOpen = false">
                   🏠 My Nest
                 </a>
       
                 <a href="{% url 'profile_about' request.user.profile.username %}?sub_tab=follow" 
-                  class="nav-btn-mobile nav-btn-secondary holo-glow" 
+                  class="nav-btn-mobile nav-btn-secondary console-glow" 
                   @click="mobileMenuOpen = false">
                   🌊 Pond
                 </a>
 
                 <a href="{% url 'account_logout' %}" 
-                   class="nav-btn-mobile nav-btn-logout holo-glow" 
+                   class="nav-btn-mobile nav-btn-logout console-glow" 
                    @click="mobileMenuOpen = false">
                   👋 Swim Away
                 </a>
@@ -252,7 +252,7 @@
                   hx-select="#auth-modal-content"
                   @htmx:after-request="if($event.detail.successful) showModal = true;"
                   href="{% url 'account_login' %}" 
-                  class="nav-btn-mobile nav-btn-secondary holo-glow" 
+                  class="nav-btn-mobile nav-btn-secondary console-glow" 
                   @click="mobileMenuOpen = false">
                   🐢 Dive In
                 </a>
@@ -263,7 +263,7 @@
                   hx-select="#auth-modal-content"
                   @htmx:after-request="if($event.detail.successful) showModal = true;"
                   href="{% url 'account_signup' %}" 
-                  class="nav-btn-mobile nav-btn-primary holo-glow" 
+                  class="nav-btn-mobile nav-btn-primary console-glow" 
                   @click="mobileMenuOpen = false">
                   🥚 Become a turtler!
                 </a>
