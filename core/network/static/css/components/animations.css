@@ -98,25 +98,6 @@
   }
 }
 
-/* Holographic Glow Effects */
-.holo-glow {
-  position: relative;
-}
-
-.holo-glow::after {
-  content: '';
-  position: absolute;
-  inset: -2px;
-  background: radial-gradient(circle, var(--holo-glow) 0%, transparent 70%);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-  z-index: -1;
-}
-
-.holo-glow:hover::after {
-  opacity: 0.2;
-}
 
 /* Shimmer Effects */
 @keyframes holo-shimmer {
@@ -480,6 +461,14 @@
 .click-ripple:active::before {
   transform: scale(1);
   opacity: 1;
+}
+
+/* High Contrast Support */
+@media (prefers-contrast: high) {
+  .holo-glow {
+    border-color: var(--high-contrast-glow) !important;
+    box-shadow: 0 0 10px var(--high-contrast-glow) !important;
+  }
 }
 
 /* Accessibility: Respect Reduced Motion */

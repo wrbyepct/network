@@ -54,11 +54,6 @@
     border-color: var(--holo-emerald-accent) !important;
   }
 
-  /* Glow effects */
-  .holo-glow {
-    border-color: var(--high-contrast-glow) !important;
-    box-shadow: 0 0 10px var(--high-contrast-glow) !important;
-  }
 
   /* Enhanced focus visibility */
   button:focus-visible {

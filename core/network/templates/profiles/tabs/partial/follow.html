@@ -15,14 +15,14 @@
       <div class="flex flex-col sm:flex-row justify-center items-center space-y-2 sm:space-y-0 sm:space-x-4 mb-4">
         <div 
           id="followers-count" 
-          class="bg-white/8 border border-cyan-400/30 backdrop-blur-xl px-4 py-2 rounded-lg text-cyan-400 text-xs sm:text-sm font-bold shadow-lg shadow-cyan-500/20 holo-glow"
+          class="bg-white/8 border border-cyan-400/30 backdrop-blur-xl px-4 py-2 rounded-lg text-cyan-400 text-xs sm:text-sm font-bold shadow-lg shadow-cyan-500/20"
           x-init="followerCount = {{ profile.followers.count }}"
         >
         <span class="text-white/90">{{ profile.followers.count }}</span> FOLLOWERS
         </div>
         <div 
           id="following-count" 
-          class="bg-white/8 border border-emerald-400/30 backdrop-blur-xl px-4 py-2 rounded-lg text-emerald-400 text-xs sm:text-sm font-bold shadow-lg shadow-emerald-500/20 holo-glow"
+          class="bg-white/8 border border-emerald-400/30 backdrop-blur-xl px-4 py-2 rounded-lg text-emerald-400 text-xs sm:text-sm font-bold shadow-lg shadow-emerald-500/20"
           x-init="followingCount = {{ profile.following.count }}"
         >
         <span class="text-white/90">{{ profile.following.count }}</span> FOLLOWING
@@ -30,19 +30,19 @@
       </div>
       
       <!-- Holographic Tab Navigation Buttons -->
-      <div class="flex justify-center">
+      <div class="flex justify-center space-x-4">
         <img
           src="/media/defaults/turtle_followers.png"
           @click="activeTab = 'followers'"
-          :class="activeTab === 'followers' ? 'bg-cyan-500/20 border-cyan-400/60 shadow-cyan-400/40' : 'bg-white/10 border-white/20 hover:bg-cyan-500/15 hover:border-cyan-400/40'"
-          class="pixel-btn w-20 border backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-lg min-h-[44px] flex items-center justify-center holo-glow cursor-pointer"
+          :class="activeTab === 'followers' ? 'bg-cyan-500/50 border-cyan-400/60 shadow-cyan-400/40' : 'bg-white/10 border-white/20 hover:bg-cyan-500/15 hover:border-cyan-400/40'"
+          class="p-2 w-17 border backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-lg min-h-[44px] flex items-center justify-center console-glow cursor-pointer rounded-sm"
         >
         
         <img
           src="/media/defaults/turtle_following.png"
           @click="activeTab = 'following'"
-          :class="activeTab === 'following' ? 'bg-emerald-500/20 border-emerald-400/60 shadow-emerald-400/40' : 'bg-white/10 border-white/20 hover:bg-emerald-500/15 hover:border-emerald-400/40'"
-          class="pixel-btn w-20  border backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-lg min-h-[44px] flex items-center justify-center holo-glow cursor-pointer"
+          :class="activeTab === 'following' ? 'bg-emerald-500/50 border-emerald-400/60 shadow-emerald-400/40' : 'bg-white/10 border-white/20 hover:bg-emerald-500/15 hover:border-emerald-400/40'"
+          class="p-2 w-17  border backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-lg min-h-[44px] flex items-center justify-center console-glow cursor-pointer rounded-sm"
         >
         
       </div>
