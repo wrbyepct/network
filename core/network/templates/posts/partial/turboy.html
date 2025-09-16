@@ -195,7 +195,7 @@
               {% endif %}
                 x-show="action.name === 'POST' ? !isIncubating && !isHatching : true"
                 @htmx:after-request="if($event.detail.successful) showModal = true;"
-                class="text-decoration-none holo-glow flex-1 min-w-[60px] border-2 border-teal-500 rounded-lg px-1.5 py-2 no-underline flex flex-col items-center gap-0.5 transition-all duration-150 hover:-translate-y-0.5 hover:no-underline cursor-pointer"
+                class="text-decoration-none console-glow flex-1 min-w-[60px] border-2 border-teal-500 rounded-lg px-1.5 py-2 no-underline flex flex-col items-center gap-0.5 transition-all duration-150 hover:-translate-y-0.5 hover:no-underline cursor-pointer"
               >
               <span 
                 class="text-xs" 
