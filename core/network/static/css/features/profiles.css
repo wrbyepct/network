@@ -271,8 +271,7 @@
 /* Responsive utilities and accessibility features moved to _responsive.css */
 
 /* Focus States for Accessibility */
-button:focus,
-.nav-btn:focus {
+button:focus {
   outline: 2px solid var(--holo-emerald-secondary);
   outline-offset: 2px;
 }

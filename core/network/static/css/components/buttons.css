@@ -181,6 +181,7 @@
   .nav-btn:hover,
   .nav-btn-mobile:hover {
     background: initial;
+    border-color: initial;
     transform: initial;
     box-shadow: initial;
   }
@@ -199,6 +200,12 @@
   .nav-btn-mobile {
     border-width: 2px;
     border-color: var(--holo-glow);
+  }
+
+  /* Enhanced focus visibility */
+  .nav-btn:focus-visible {
+    outline-width: 3px;
+    outline-color: var(--high-contrast-border);
   }
 }
 

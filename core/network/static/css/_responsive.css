@@ -12,8 +12,6 @@
 
   /* Base components */
   .post-card,
-  .nav-btn,
-  .nav-btn-mobile,
   .holo-profile-card,
   .section-container,
   .media-item,
@@ -63,8 +61,7 @@
   }
 
   /* Enhanced focus visibility */
-  button:focus-visible,
-  .nav-btn:focus-visible {
+  button:focus-visible {
     outline-width: 3px;
     outline-color: var(--high-contrast-border);
   }
@@ -73,18 +70,10 @@
 /* Touch Device Optimizations */
 @media (hover: none) and (pointer: coarse) {
 
-  .nav-btn:hover,
-  .nav-btn-mobile:hover,
   .holo-tab-btn:hover {
     background: initial;
     border-color: initial;
     transform: initial;
-  }
-
-  .nav-btn:active,
-  .nav-btn-mobile:active {
-    transform: scale(0.95);
-    background: rgba(6, 182, 212, 0.2);
   }
 
   /* Disable hover animations on touch devices */
