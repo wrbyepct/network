@@ -6,7 +6,7 @@
     {% if provider.id == "google" %}
       <li>
         <a href="{% provider_login_url 'google' %}"
-          class="w-full nav-btn nav-btn-secondary holo-glow flex items-center justify-center gap-3 px-4 py-3 font-bold tracking-wider transition-all duration-300 hover:-translate-y-1 !no-underline">
+          class="w-full nav-btn nav-btn-secondaconsole-glow flex items-center justify-center gap-3 px-4 py-3 font-bold tracking-wider transition-all duration-300 hover:-translate-y-1 !no-underline">
 
           <div class="flex items-center">
             <svg class="h-8 w-8 rounded-full border-4 border-white bg-white" viewBox="0 0 533.5 544.3">
@@ -26,7 +26,7 @@
     {% elif provider.id == "facebook" %}
       <li>
         <a href="{% provider_login_url provider.id %}"
-           class="w-full nav-btn holo-glow flex items-center justify-center gap-3 px-4 py-3 font-bold tracking-wider transition-all duration-300 hover:-translate-y-1 !no-underline"
+           class="w-full nav-bconsole-glow flex items-center justify-center gap-3 px-4 py-3 font-bold tracking-wider transition-all duration-300 hover:-translate-y-1 !no-underline"
            style="background: linear-gradient(135deg, #1877F2 0%, #145bd1 100%); border-color: rgba(24, 119, 242, 0.3);">
 
             <div class="flex items-center">
@@ -46,7 +46,7 @@
     {% elif provider.id == "twitter" %}
       <li>
         <a href="{% provider_login_url provider.id %}"
-           class=" w-full nav-btn holo-glow flex items-center justify-center gap-3 px-4 py-3 font-bold tracking-wider transition-all duration-300 hover:-translate-y-1 !no-underline"
+           class=" w-full nav-btn console-glow flex items-center justify-center gap-3 px-4 py-3 font-bold tracking-wider transition-all duration-300 hover:-translate-y-1 !no-underline"
            style="background: linear-gradient(135deg, #000000 0%, #333333 100%); border-color: rgba(255, 255, 255, 0.2); color: white;">
             <div class="flex items-center"> 
               <svg class="h-8 w-8 rounded-full fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300">
