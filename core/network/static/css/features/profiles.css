@@ -19,8 +19,8 @@
 /* Base Avatar Component */
 .holo-avatar {
   border: 2px solid var(--holo-cyan-secondary);
-  box-shadow: 0 0 20px var(--holo-cyan-primary);
   filter: drop-shadow(0 0 10px var(--holo-cyan-primary));
+  box-shadow: 0 0 20px var(--holo-cyan-primary);
   transition: all 0.3s ease-out;
 }
 
