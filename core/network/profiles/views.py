@@ -31,7 +31,10 @@ class ProfileTabsBaseMixin:
         """Save requesting profile obj and HX-Request for later use."""
         # TODO refector this using django htmx later
         self.is_partial_request = bool(request.headers.get("HX-Request", False))
-        self.profile = get_object_or_404(Profile, username=kwargs.get("username"))
+        self.profile = get_object_or_404(
+            Profile.objects.select_related("user"),
+            username=kwargs.get("username"),
+        )
         return super().dispatch(request, *args, **kwargs)
 
     def get_template_names(self):
