@@ -1,6 +1,6 @@
 
 
-{% if request.user == profile.user %}
+{% if request.user.id == profile.user.id %}
   <!-- Create New Album Card -->
   <div class="col-span-1" x-data="{ isHovered: false }">
     {% url 'album_create' as create_media_url %}

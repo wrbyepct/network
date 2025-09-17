@@ -2,6 +2,7 @@
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
+from django.db.models import Count
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import (
@@ -28,12 +29,20 @@ class AlbumsPaginateView(ListView):
 
     def dispatch(self, request, *args, **kwargs):
         """Save profile for later use."""
-        self.profile = get_object_or_404(Profile, username=self.kwargs.get("username"))
+        self.profile = get_object_or_404(
+            Profile.objects.select_related("user"),
+            username=self.kwargs.get("username"),
+        )
         return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
         """Get albums owned by the profile."""
-        return Album.objects.prefetch_related("medias").filter(profile=self.profile)
+        return (
+            Album.objects.filter(profile=self.profile)
+            .select_related("profile", "profile__user")
+            .prefetch_related("medias")
+            .annotate(medias_count=Count("medias"))
+        )
 
     def get_context_data(self, **kwargs):
         """Inject profile into context."""
