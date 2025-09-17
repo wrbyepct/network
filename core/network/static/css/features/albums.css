@@ -11,8 +11,15 @@
 
 /* Gentle floating animation for album cards */
 @keyframes gentle-album-float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-2px); }
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-2px);
+  }
 }
 
 .album-card {
@@ -21,15 +28,18 @@
 
 /* Holographic glow animation for interactive elements */
 @keyframes holo-glow-pulse {
-  0%, 100% { box-shadow: 0 0 10px rgba(6, 182, 212, 0.3); }
-  50% { box-shadow: 0 0 20px rgba(6, 182, 212, 0.6); }
+
+  0%,
+  100% {
+    box-shadow: 0 0 10px rgba(6, 182, 212, 0.3);
+  }
+
+  50% {
+    box-shadow: 0 0 20px rgba(6, 182, 212, 0.6);
+  }
 }
 
-/* Glass shimmer effect animation */
-@keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
+
 
 /* ===================================
    2. HOLOGRAPHIC EFFECTS
@@ -40,21 +50,6 @@
   text-shadow: var(--text-glow-medium);
 }
 
-/* Glass shimmer effect for interactive elements */
-.glass-shimmer {
-  position: relative;
-  overflow: hidden;
-}
-
-.glass-shimmer::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-  background-size: 200% 100%;
-  animation: shimmer 3s ease-in-out infinite;
-  pointer-events: none;
-}
 
 /* Icon hover glow effect */
 .holo-icon:hover {
@@ -95,7 +90,6 @@
 
 /* GPU acceleration for smooth animations */
 .album-card,
-.glass-shimmer,
 .holo-icon {
   transform: translateZ(0);
   will-change: transform, opacity;
@@ -125,14 +119,12 @@
 
 /* Respect user's motion preferences */
 @media (prefers-reduced-motion: reduce) {
+
   .album-card,
   .holo-icon {
     animation: none !important;
   }
 
-  .glass-shimmer::before {
-    animation: none !important;
-  }
 }
 
 /* High contrast mode support */
