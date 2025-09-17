@@ -45,9 +45,6 @@
         drop-shadow(0 0 8px rgba(6, 182, 212, 0.2)) saturate(1.1);
 }
 
-.holo-avatar-link:hover .holo-comment-avatar {
-    animation: none;
-}
 
 /* ===================================
    HOLOGRAPHIC TYPOGRAPHY
@@ -146,7 +143,4 @@
         animation: none;
     }
 
-    .holo-avatar-link:hover .holo-comment-avatar {
-        transform: none;
-    }
 }
