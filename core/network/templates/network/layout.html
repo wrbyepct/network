@@ -23,9 +23,6 @@
         <link rel="preconnect" href="https://cdn.jsdelivr.net">
         
         <!-- Performance hints for the browser -->
-        {% if request.user.is_authenticated %}
-        <link rel="prefetch" href="{% url 'profile_about' request.user.profile.username %}" />
-        {% endif %}
 
         <!-- Preload critical web font (async loading) -->
         <link 
@@ -171,10 +168,10 @@
               <!-- Desktop Menu -->
               <div class="nav-menu-desktop">
                 {% if request.user.is_authenticated %}
-                  <a href="{% url 'profile_about' request.user.profile.username %}" class="nav-btn nav-btn-primary flex items-center">
-                    <span> 🏠 My Shell</span>
+                  <a href="{% url 'profile_about' profile.username %}" class="nav-btn nav-btn-primary flex items-center">
+                    <span> 🏠 My Nest</span>
                   </a>
-                  <a href="{% url 'profile_about' request.user.profile.username %}?sub_tab=follow" class="nav-btn nav-btn-secondary">
+                  <a href="{% url 'profile_about' profile.username %}?sub_tab=follow" class="nav-btn nav-btn-secondary">
                     💧 Pond
                   </a>
                   <a href="{% url 'account_logout' %}" class="nav-btn nav-btn-logout">
@@ -227,13 +224,13 @@
                  x-transition:leave-end="opacity-0 transform -translate-y-2">
 
               {% if request.user.is_authenticated %}
-                <a href="{% url 'profile_nest' request.user.profile.username %}" 
+                <a href="{% url 'profile_nest' profile.username %}" 
                    class="nav-btn-mobile nav-btn-primary console-glow" 
                    @click="mobileMenuOpen = false">
                   🏠 My Nest
                 </a>
       
-                <a href="{% url 'profile_about' request.user.profile.username %}?sub_tab=follow" 
+                <a href="{% url 'profile_about' profile.username %}?sub_tab=follow" 
                   class="nav-btn-mobile nav-btn-secondary console-glow" 
                   @click="mobileMenuOpen = false">
                   🌊 Pond

@@ -44,6 +44,7 @@ THIRD_PARTY_APPS = [
     "django_eventstream",
     # Dev
     "django_browser_reload",
+    "debug_toolbar",
     # Cleaup media
     "django_cleanup.apps.CleanupConfig",
 ]
@@ -51,9 +52,9 @@ THIRD_PARTY_APPS = [
 INSTALLED_APPS = BASE_APPS + MY_APPS + THIRD_PARTY_APPS
 
 MIDDLEWARE = [
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    # "network.middlewares.sessionswatch.SessionWatchMiddleware", # my middileware
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
