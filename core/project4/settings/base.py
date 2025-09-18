@@ -47,6 +47,8 @@ THIRD_PARTY_APPS = [
     "debug_toolbar",
     # Cleaup media
     "django_cleanup.apps.CleanupConfig",
+    # Cache
+    "cacheops",
 ]
 
 INSTALLED_APPS = BASE_APPS + MY_APPS + THIRD_PARTY_APPS
