@@ -127,8 +127,9 @@ class PostsView(ProfileTabsBaseMixin, ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        """Get prefetched post queryset."""
-        return Post.objects.for_list_data().by_user(user=self.profile.user)
+        """Get prefetched post queryset by the profile user."""
+        user = self.profile.user
+        return Post.objects.published(user).by_user(user=user)
 
 
 class NestView(ProfileTabsBaseMixin, TemplateView):

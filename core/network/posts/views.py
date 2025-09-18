@@ -41,7 +41,7 @@ class PostListView(ListView):
 
     def get_queryset(self):
         """Get optimized post queryset."""
-        return Post.objects.published()
+        return Post.objects.published(user=self.request.user)
 
     def get_turboy_context(self, context):
         """Get egg and profile context for turboy."""
@@ -57,22 +57,22 @@ class PostListView(ListView):
                 "label": "EASTER EGGS",
                 "color": "text-pink-300",
                 "shadow": "rgba(255, 255, 0, 0.5)",
-                "count": profile.easter_eggs_count,
-                "egg": random.choice(profile.easter_eggs) if easter_eggs else None,
+                "count": easter_eggs.count(),
+                "egg": random.choice(easter_eggs) if easter_eggs else None,
             },
             {
                 "label": "LEGENDARY",
                 "color": "text-orange-300",
                 "shadow": "rgba(0, 255, 255, 0.5)",
-                "count": profile.special_eggs_count,
-                "egg": random.choice(profile.special_eggs) if special_eggs else None,
+                "count": special_eggs.count(),
+                "egg": random.choice(special_eggs) if special_eggs else None,
             },
             {
                 "label": "CUTE",
                 "color": "text-green-400",
                 "shadow": "rgba(59, 130, 246, 0.5)",
-                "count": profile.regular_eggs_count,
-                "egg": random.choice(profile.regular_eggs) if regular_eggs else None,
+                "count": profile.regular_eggs.count(),
+                "egg": random.choice(regular_eggs) if regular_eggs else None,
             },
         ]
 
@@ -104,7 +104,7 @@ class PostModalView(DetailView):
     def get_object(self):
         """Get post by id."""
         return get_object_or_404(
-            Post.objects.published(), id=self.kwargs.get("post_id")
+            Post.objects.published(self.request.user), id=self.kwargs.get("post_id")
         )
 
 
