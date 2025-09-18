@@ -32,7 +32,7 @@ class ProfileTabsBaseMixin:
         # TODO refector this using django htmx later
         self.is_partial_request = bool(request.headers.get("HX-Request", False))
         self.profile = get_object_or_404(
-            Profile.objects.select_related("user"),
+            Profile.objects.select_related("user").prefetch_related("user__eggs"),
             username=kwargs.get("username"),
         )
         return super().dispatch(request, *args, **kwargs)
