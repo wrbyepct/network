@@ -25,6 +25,15 @@ CELERY_BROKER_URL = "redis://redis:6379/0"
 # TODO figure out why this is set to None
 CELERY_RESULT_BACKEND = None
 
+# CaccheOPs
+CACHEOPS_REDIS = "redis://redis:6379/1"
+CACHEOPS_ENABLED = True
+CACHEOPS_DEFAULTS = {"timeout": 60 * 60}
+CACHEOPS = {
+    "profiles.Egg": {"ops": "all", "timeout": 60 * 60},  # 1h TTL
+}
+
+
 # DEV TOOLBAR
 
 DEBUG_TOOLBAR_CONFIG = {}

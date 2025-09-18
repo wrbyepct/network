@@ -602,6 +602,22 @@ asgiref = ">=3.6"
 django = ">=4.2"
 
 [[package]]
+name = "django-cacheops"
+version = "7.2"
+description = "A slick ORM cache with automatic granular event-driven invalidation for Django."
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "django_cacheops-7.2-py2.py3-none-any.whl", hash = "sha256:c3b4399474919e62aa91bbd97e7b68cfc50e8cb4384d743bde686c37fe8c010b"},
+    {file = "django_cacheops-7.2.tar.gz", hash = "sha256:cbc11cc0321295a3644e27bcb26940f08cb9c2e71d3ee506cbcff0bdda1a9f33"},
+]
+
+[package.dependencies]
+django = ">=3.2"
+funcy = ">=1.8"
+redis = ">=3.0.0"
+
+[[package]]
 name = "django-cleanup"
 version = "9.0.0"
 description = "Deletes old files."
@@ -890,6 +906,17 @@ files = [
 
 [package.dependencies]
 python-dateutil = ">=2.7"
+
+[[package]]
+name = "funcy"
+version = "2.0"
+description = "A fancy and practical functional tools"
+optional = false
+python-versions = "*"
+files = [
+    {file = "funcy-2.0-py2.py3-none-any.whl", hash = "sha256:53df23c8bb1651b12f095df764bfb057935d49537a56de211b098f4c79614bb0"},
+    {file = "funcy-2.0.tar.gz", hash = "sha256:3963315d59d41c6f30c04bc910e10ab50a3ac4a225868bfa96feed133df075cb"},
+]
 
 [[package]]
 name = "gripcontrol"
@@ -1838,4 +1865,4 @@ watchdog = ["watchdog (>=2.3)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "6e231c4f6e789c40d25cc11d81eccc23e40e1d0d734303a6c719e5a461feaf16"
+content-hash = "30d6b361d16760229d02d9c163af9705caeb6df6240c9224c7b2bac1bd6550bb"
