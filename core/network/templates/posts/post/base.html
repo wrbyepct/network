@@ -3,7 +3,7 @@
 <div
   id="post-{{ post.id }}"
   class="flex flex-col post-card rounded-md p-4 transition-all ease-in-out w-full h-full"
-  {% with post_liked=post|liked_by_user:request.user %}
+  {% with post_liked=post.liked_by_user %}
     x-data="{
       {# Created #}
       justShowedUp: false,

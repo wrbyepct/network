@@ -40,10 +40,10 @@ class Post(LikeCountMixin, ProfileInfoMixin, TimestampedModel):
         """Return string <user-profile-username>'s post: <post-title>."""
         return f"Post by: {self.user.profile.username}"
 
-    @cached_property
+    @property
     def latest_two_comments(self):
         """Fetch first 2 top level comments."""
-        return self.comments.top_level_for(self)[:2]
+        return self.top_level_comments[:2]
 
     @cached_property
     def comment_count(self):
@@ -73,6 +73,11 @@ class Post(LikeCountMixin, ProfileInfoMixin, TimestampedModel):
             }
             for m in self.ordered_medias
         ]
+
+    @property
+    def liked_by_user(self):
+        """Return if True if the requesting user likes this post. Otherwise False."""
+        return bool(self.user_likes)  # if empty it would return false
 
     def delete(self, *args, **kwargs):
         """Override delete method to revoke publish task."""
