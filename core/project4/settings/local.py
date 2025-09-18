@@ -30,7 +30,12 @@ CACHEOPS_REDIS = "redis://redis:6379/1"
 CACHEOPS_ENABLED = True
 CACHEOPS_DEFAULTS = {"timeout": 60 * 60}
 CACHEOPS = {
-    "profiles.Egg": {"ops": "all", "timeout": 60 * 60},  # 1h TTL
+    "profiles.egg": {"ops": "all", "timeout": 60 * 60},  # 1h TTL
+    "profiles.profile": {"ops": "all", "timeout": 60 * 60},  # 1h TTL
+    "profiles.profile_followers": {"ops": "all", "timeout": 60 * 60},  # 1h TTL
+    "posts.post": {"ops": "all", "timeout": 60 * 60},  # 1h TTL
+    "albums.album": {"ops": "all", "timeout": 60 * 60},  # 1h TTL
+    "network.user": {"ops": "all", "timeout": 60 * 60},  # 1h TTL
 }
 
 

@@ -74,47 +74,31 @@ class Profile(TimestampedModel, FollowMixin):
     @property
     def special_eggs(self):
         """Return user's speical eggs."""
-        return Egg.objects.filter(egg_type="special", user=self.user).cache()
+        return Egg.objects.filter(egg_type="special", user=self.user)
 
     @property
     def regular_eggs(self):
         """Return user's regular eggs."""
-        return Egg.objects.filter(egg_type="regular", user=self.user).cache()
+        return Egg.objects.filter(egg_type="regular", user=self.user)
 
     @property
     def easter_eggs(self):
         """Return user's easter eggs."""
-        return Egg.objects.filter(egg_type="easter", user=self.user).cache()
-
-    @property
-    def special_eggs_count(self):
-        """Return total special eggs count."""
-        return self.special_eggs.count()
-
-    @property
-    def regular_eggs_count(self):
-        """Return total regular eggs count."""
-        eggs = self.user.eggs.all()
-        if eggs:
-            return sum(egg.quantity for egg in eggs if egg.egg_type == "regular")
-        return self.regular_eggs.count()
-
-    @property
-    def easter_eggs_count(self):
-        """Return total regular eggs count."""
-        return self.easter_eggs.count()
+        return Egg.objects.filter(egg_type="easter", user=self.user)
 
     @property
     def total_eggs_count(self):
         """Return total eggs count."""
         return (
-            self.easter_eggs_count + self.special_eggs_count + self.regular_eggs_count
+            self.easter_eggs.count()
+            + self.special_eggs.count()
+            + self.regular_eggs.count()
         )
 
-    @cached_property
-    def posts_count(self):
+    @property
+    def posts(self):
         """Return user's posts count."""
-        return self.user.posts.count()
+        return self.user.posts.all()
 
     @property
     def activity(self):
