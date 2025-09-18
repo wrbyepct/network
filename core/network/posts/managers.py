@@ -6,13 +6,26 @@ from django.db import models
 class PostQuerySet(models.QuerySet):
     """Customized Post queryset."""
 
-    def with_profile(self):
+    def for_list_data(self, user):
         """Select related profile."""
-        return self.select_related("user__profile")
+        from network.comments.models import Comment
 
-    def with_media(self):
-        """Prefetch with medias."""
-        return self.prefetch_related("medias")
+        from .models import PostLike
+
+        return self.select_related("user__profile").prefetch_related(
+            "likes",  # all likes
+            models.Prefetch(
+                "likes",
+                queryset=PostLike.objects.filter(user=user),
+                to_attr="user_likes",
+            ),  # liked by requesting user
+            "medias",
+            models.Prefetch(
+                "comments",
+                queryset=Comment.objects.filter(parent__isnull=True),
+                to_attr="top_level_comments",
+            ),  # top level comments
+        )
 
     def by_user(self, user):
         """Filter post by user."""
@@ -30,14 +43,6 @@ class PostManager(models.Manager):
         """Filter posts by user."""
         return PostQuerySet(model=self.model, using=self._db)
 
-    def with_media(self):
-        """Optimized post search query when querying with 'medias'."""
-        return self.get_queryset().with_media()
-
-    def for_list_data(self):
-        """Return optimized posts with medias, profile and comment data."""
-        return self.get_queryset().with_media().with_profile()
-
-    def published(self):
+    def published(self, user):
         """Return only published posts with necessary data."""
-        return self.for_list_data().published()
+        return self.get_queryset().for_list_data(user).published()

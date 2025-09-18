@@ -99,35 +99,35 @@
 
                 <!-- Digital Stats Grid -->
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-                    {% if profile.easter_eggs_count %}
+                    {% if profile.easter_eggs.count %}
                     <div class="holo-stat-display bg-black/75 backdrop-blur-xl 
                                 p-3 rounded-lg shadow-md relative overflow-hidden">
                         <div class="text-pink-400 text-xs mb-1 uppercase tracking-wider">Easter Eggs</div>
                         <div class="holo-counter font-mono text-cyan-400 text-sm font-bold text-center
                                     bg-cyan-500/10 px-2 py-1 rounded border border-cyan-500/20">
-                            {{ profile.easter_eggs_count|stringformat:"03d" }}
+                            {{ profile.easter_eggs.count|stringformat:"03d" }}
                         </div>
                     </div>
                     {% endif %}
                     
-                    {% if profile.special_eggs_count %}
+                    {% if profile.special_eggs.count %}
                     <div class="holo-stat-display bg-black/75 backdrop-blur-xl 
                                 p-3 rounded-lg shadow-md relative overflow-hidden">
                         <div class="text-yellow-400 text-xs mb-1 uppercase tracking-wider">Legendary</div>
                         <div class="holo-counter font-mono text-cyan-400 text-sm font-bold text-center
                                     bg-cyan-500/10 px-2 py-1 rounded border border-cyan-500/20">
-                            {{ profile.special_eggs_count|stringformat:"03d" }}
+                            {{ profile.special_eggs.count|stringformat:"03d" }}
                         </div>
                     </div>
                     {% endif %}
 
-                    {% if profile.regular_eggs_count %}
+                    {% if profile.regular_eggs.count %}
                     <div class="holo-stat-display bg-black/75 backdrop-blur-xl 
                                 p-3 rounded-lg shadow-md relative overflow-hidden">
                         <div class="text-green-400 text-xs mb-1 uppercase tracking-wider">Cute Eggs</div>
                         <div class="holo-counter font-mono text-cyan-400 text-sm font-bold text-center
                                     bg-cyan-500/10 px-2 py-1 rounded border border-cyan-500/20">
-                            {{ profile.regular_eggs_count|stringformat:"03d" }}
+                            {{ profile.regular_eggs.count|stringformat:"03d" }}
                         </div>
                     </div>
                     {% endif %}
@@ -137,7 +137,7 @@
                         <div class="text-cyan-400 text-xs mb-1 uppercase tracking-wider">Posts</div>
                         <div class="holo-counter font-mono text-cyan-400 text-sm font-bold text-center
                                     bg-cyan-500/10 px-2 py-1 rounded border border-cyan-500/20">
-                            {{ profile.posts_count|stringformat:"03d" }}
+                            {{ profile.posts.count|stringformat:"03d" }}
                         </div>
                     </div>
                 
