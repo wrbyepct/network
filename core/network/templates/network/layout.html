@@ -168,7 +168,7 @@
               <!-- Desktop Menu -->
               <div class="nav-menu-desktop">
                 {% if request.user.is_authenticated %}
-                  <a href="{% url 'profile_about' profile.username %}" class="nav-btn nav-btn-primary flex items-center">
+                  <a href="{% url 'profile_about' user.profile.username %}" class="nav-btn nav-btn-primary flex items-center">
                     <span> 🏠 My Nest</span>
                   </a>
                   <a href="{% url 'profile_about' profile.username %}?sub_tab=follow" class="nav-btn nav-btn-secondary">

@@ -45,24 +45,17 @@ class Post(LikeCountMixin, ProfileInfoMixin, TimestampedModel):
         """Fetch first 2 top level comments."""
         return self.top_level_comments[:2]
 
-    @cached_property
+    @property
     def comment_count(self):
         """Return comment count."""
-        from network.comments.models import Comment
-
-        return Comment.objects.filter(post=self).count()
+        return self.comments.count()
 
     @cached_property
     def medias_count(self):
         """Return medias count."""
         return self.medias.count()
 
-    @cached_property
-    def ordered_medias(self):
-        """Get acending medias of this post."""
-        return self.medias.all().order_by("order")
-
-    @cached_property
+    @property
     def media_objects(self):
         """Return media objects."""
         return [

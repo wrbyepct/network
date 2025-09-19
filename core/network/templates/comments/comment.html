@@ -9,7 +9,7 @@
         newComment: {{ is_new_comment|yesno:'true,false' }}, 
         isOwner: {% if request.user == comment.user%}true{% else %}false{%endif%},
         setReplyTo() { return this.isOwner ? '' : '@{{ comment.username }} ' },
-        liked: {{ comment|liked_by_user:request.user|yesno:'true,false' }},
+        liked: {{ comment.liked_by_user|yesno:'true,false' }},
         likeCount: {{ comment.like_count }},
 
         collapse: true,
@@ -143,7 +143,6 @@
         :id=" isPostDetail ? 'post-detail-replies-{{ comment.id }}' : 'post-list-replies-{{ comment.id }}'"
         ></div>
     </div>
-    <!-- TODO Make show more display dynamically using alpine js -->
     <!-- Show more reply button  -->
     {% if comment.children_count %}
     <div 

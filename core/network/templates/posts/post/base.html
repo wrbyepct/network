@@ -112,7 +112,6 @@
             {% endif %}
         </div>
         <!-- Display which egg this post was born from -->
-        {% if post.egg %}
         <div 
           class="flex items-center justify-center ms-auto" 
           style="font-family: 'Press Start 2P', monospace; font-size: 9px;">
@@ -131,7 +130,6 @@
             <img class="w-15 cursor-pointer" src="{{ post.egg.url }}" alt="The Egg image the post is born from">
           </div>
         </div>
-        {% endif %}
     </div>
     <!-- Content collapsable --> 
     <template x-if="!postEditMode">
