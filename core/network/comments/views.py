@@ -43,7 +43,10 @@ class CommentPaginatedView(ListView):
 
     def get_queryset(self):
         """Get top level comments."""
-        return Comment.objects.top_level_for(self._post)
+        return Comment.objects.top_level_comments(
+            post=self._post,
+            user=self.request.user,
+        )
 
 
 class CommentCreateView(
@@ -56,6 +59,10 @@ class CommentCreateView(
 
     context_object_name = "comment"
     form_class = CommentForm
+
+    def get_queryset(self):
+        """Use prefetched info qs as base queryset."""
+        return Comment.objects.prefetched_info_qs(user=self.request.user)
 
     def get_response(self):
         """Get partial response."""
@@ -90,6 +97,7 @@ class CommentCreateView(
             form.instance.parent = get_object_or_404(Comment, id=parent_id)
 
         self.object = form.save()
+        self.object.user_likes = False
 
         return self.get_response()
 
@@ -103,6 +111,10 @@ class CommentUpdateView(
     """Comment update view."""
 
     form_class = CommentForm
+
+    def get_queryset(self):
+        """Use prefetched info qs as base queryset."""
+        return Comment.objects.prefetched_info_qs(user=self.request.user)
 
     def form_valid(self, form):
         """Return partial comment as response."""
@@ -160,7 +172,10 @@ class CommentChildrenPaginatedView(ListView):
 
     def get_queryset(self):
         """Return comment's children as queryset."""
-        return Comment.objects.get_children(parent=self.parent_comment)
+        return Comment.objects.get_children(
+            parent=self.parent_comment,
+            user=self.request.user,
+        )
 
 
 class LikeCommentView(LoginRequiredMixin, View):
