@@ -12,7 +12,6 @@ class CommentQuerySet(models.QuerySet):
 
         return self.select_related("user__profile").prefetch_related(
             "children",
-            "likes",  # All likes
             models.Prefetch(
                 "likes",
                 queryset=CommentLike.objects.filter(user=user),
