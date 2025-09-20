@@ -292,11 +292,10 @@ class LikePost(LoginRequiredMixin, View):
 
         with transaction.atomic():
             like, created = PostLike.objects.get_or_create(post=post, user=user)
-            if created:
-                post.add_one_like_count()
-            else:
+            if not created:
                 like.delete()
-                post.subtract_one_like_count()
+
+            post.sync_like_count()
 
         like_stat = get_like_stat(post.like_count, liked=created)
 

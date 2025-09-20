@@ -15,7 +15,6 @@ class PostQuerySet(models.QuerySet):
         return (
             self.select_related("user__profile", "egg")
             .prefetch_related(
-                "likes",  # all likes
                 models.Prefetch(
                     "likes",
                     queryset=PostLike.objects.filter(user=user),
