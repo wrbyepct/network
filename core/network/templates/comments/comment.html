@@ -178,3 +178,9 @@
             @click="replying = false">Cancel</button>
     </form>
 </div>
+
+
+<!-- For piggy-pack data -->
+{% if is_new_comment %}
+    {% include 'posts/partial/comment_count.html' %}
+{% endif %}
