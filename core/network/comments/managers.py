@@ -12,12 +12,12 @@ class CommentQuerySet(models.QuerySet):
 
         return self.select_related("user__profile").prefetch_related(
             "children",
-            "likes",
+            "likes",  # All likes
             models.Prefetch(
                 "likes",
                 queryset=CommentLike.objects.filter(user=user),
                 to_attr="user_likes",
-            ),
+            ),  # likes by requesting user
         )
 
     def top_level_comment(self, post):

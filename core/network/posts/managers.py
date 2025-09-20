@@ -12,29 +12,29 @@ class PostQuerySet(models.QuerySet):
 
         from .models import PostLike, PostMedia
 
-        return self.select_related("user__profile", "egg").prefetch_related(
-            "likes",  # all likes
-            models.Prefetch(
-                "likes",
-                queryset=PostLike.objects.filter(user=user),
-                to_attr="user_likes",
-            ),  # liked by requesting user
-            models.Prefetch(
-                "medias",
-                queryset=PostMedia.objects.order_by("order"),
-                to_attr="ordered_medias",
-            ),
-            models.Prefetch(
-                "comments",  # all comments with prefetched info
-                queryset=Comment.objects.prefetched_info_qs(user),
-            ),
-            models.Prefetch(
-                "comments",
-                queryset=Comment.objects.prefetched_info_qs(user).filter(
-                    parent__isnull=True
+        return (
+            self.select_related("user__profile", "egg")
+            .prefetch_related(
+                "likes",  # all likes
+                models.Prefetch(
+                    "likes",
+                    queryset=PostLike.objects.filter(user=user),
+                    to_attr="user_likes",
+                ),  # liked by requesting user
+                models.Prefetch(
+                    "medias",
+                    queryset=PostMedia.objects.order_by("order"),
+                    to_attr="ordered_medias",
                 ),
-                to_attr="top_level_comments",
-            ),  # top level comments
+                models.Prefetch(
+                    "comments",
+                    queryset=Comment.objects.prefetched_info_qs(user).filter(
+                        parent__isnull=True
+                    ),
+                    to_attr="top_level_comments",
+                ),  # top level comments
+            )
+            .annotate(comment_count=models.Count("comments"))
         )
 
     def by_user(self, user):

@@ -46,8 +46,8 @@ class Post(LikeCountMixin, ProfileInfoMixin, TimestampedModel):
         return self.top_level_comments[:2]
 
     @property
-    def comment_count(self):
-        """Return comment count."""
+    def updated_comment_count(self):
+        """Return the update-to-date comment count."""
         return self.comments.count()
 
     @cached_property
