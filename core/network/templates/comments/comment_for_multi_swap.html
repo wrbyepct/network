@@ -5,9 +5,3 @@
 <div hx-swap-oob="beforeend:#post-list-comment-section-{{ post.id }}">
   {% include 'comments/comment.html' %}
 </div>
-
-
-<!-- For piggy-pack data -->
-{% if is_new_comment %}
-    {% include 'posts/partial/comment_count.html' %}
-{% endif %}
