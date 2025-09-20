@@ -4,7 +4,7 @@ from django.conf import settings
 from django.db import models
 from django.utils.functional import cached_property
 
-from network.common.mixins import LikeCountMixin, ProfileInfoMixin
+from network.common.mixins import CommentCountMixin, LikeCountMixin, ProfileInfoMixin
 from network.common.models import MediaBaseModel, TimestampedModel
 from network.profiles.models import Egg, Profile
 
@@ -14,7 +14,12 @@ from .validators import validate_publish_time
 
 
 # Create your models here.
-class Post(LikeCountMixin, ProfileInfoMixin, TimestampedModel):
+class Post(
+    LikeCountMixin,
+    CommentCountMixin,
+    ProfileInfoMixin,
+    TimestampedModel,
+):
     """Post model."""
 
     content = models.TextField(max_length=1280)
