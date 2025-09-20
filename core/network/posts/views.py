@@ -41,7 +41,9 @@ class PostListView(ListView):
 
     def get_queryset(self):
         """Get optimized post queryset."""
-        return Post.objects.published(user=self.request.user)
+        if self.request.user.is_authenticated:
+            return Post.objects.published(user=self.request.user)
+        return Post.objects.published()
 
     def get_turboy_context(self, context):
         """Get egg and profile context for turboy."""
