@@ -79,7 +79,7 @@ class LikeCountMixin(Model):
     Fields:
         - like_count: PostiveSmallIntergerField
     Methods:
-        - update_like_count: update like_count with db count.
+        - sync_like_count: update like_count with db count.
 
     """
 
@@ -93,12 +93,24 @@ class LikeCountMixin(Model):
         self.like_count = self.likes.count()
         self.save(update_fields=["like_count"])
 
-    def add_one_like_count(self):
-        """Add 1 like count."""
-        self.like_count = self.like_count + 1
-        self.save(update_fields=["like_count"])
 
-    def subtract_one_like_count(self):
-        """Subtract 1 like count."""
-        self.like_count = self.like_count - 1
-        self.save(update_fields=["like_count"])
+class CommentCountMixin(Model):
+    """
+    Mixin to track and update comment count.
+
+    Fields:
+        - comment_count: PostiveSmallIntergerField
+    Methods:
+        - sync_like_count: update like_count with db count.
+
+    """
+
+    comment_count = PositiveSmallIntegerField(default=0)
+
+    class Meta:
+        abstract = True
+
+    def sync_comment_count(self):
+        """Update like_count in object and save it."""
+        self.comment_count = self.comments.count()
+        self.save(update_fields=["comment_count"])

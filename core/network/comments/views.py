@@ -96,8 +96,13 @@ class CommentCreateView(
         if parent_id:
             form.instance.parent = get_object_or_404(Comment, id=parent_id)
 
-        self.object = form.save()
-        self.object.user_likes = False
+        with transaction.atomic():
+            self.object = form.save()
+            self.object.post.sync_comment_count()
+
+        self.object.user_likes = (
+            False  # Indicating new comment is not liked by any requesting user.
+        )
 
         return self.get_response()
 
@@ -136,7 +141,9 @@ class CommentDeleteView(
         comment = get_object_or_404(Comment, id=comment_id, user=request.user)
         post = comment.post
 
-        comment.delete()
+        with transaction.atomic():
+            comment.delete()
+            post.sync_comment_count()
 
         context = {"post": post}
 
