@@ -10,13 +10,16 @@ class CommentQuerySet(models.QuerySet):
         """Return all queryset with Prefetched profile data and children."""
         from .models import CommentLike
 
-        return self.select_related("user__profile").prefetch_related(
-            "children",
-            models.Prefetch(
-                "likes",
-                queryset=CommentLike.objects.filter(user=user),
-                to_attr="user_likes",
-            ),  # likes by requesting user
+        return (
+            self.select_related("user__profile")
+            .prefetch_related(
+                models.Prefetch(
+                    "likes",
+                    queryset=CommentLike.objects.filter(user=user),
+                    to_attr="user_likes",
+                ),  # likes by requesting user
+            )
+            .annotate(children_count=models.Count("children"))
         )
 
     def top_level_comment(self, post):
