@@ -47,6 +47,7 @@ class ProfileTabsBaseMixin:
         """Provide context data based on partial request."""
         context = super().get_context_data(**kwargs)
         if not self.request.htmx:
+            # Provide tabs info in full page request
             context["tabs"] = self.tabs
             context["current_tab"] = self.current_tab
 
