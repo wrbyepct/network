@@ -29,10 +29,8 @@ class ProfileTabsBaseMixin:
 
     def dispatch(self, request, *args, **kwargs):
         """Save requesting profile obj and HX-Request for later use."""
-        # TODO refector this using django htmx later
-        self.is_partial_request = bool(request.headers.get("HX-Request", False))
         self.profile = get_object_or_404(
-            Profile.objects.select_related("user").prefetch_related("user__eggs"),
+            Profile.objects.select_related("user"),
             username=kwargs.get("username"),
         )
         return super().dispatch(request, *args, **kwargs)
@@ -41,14 +39,14 @@ class ProfileTabsBaseMixin:
         """Provide partial or full template based on partial request or not."""
         _, tab = self.request.path.rstrip("/").rsplit("/", 1)
 
-        if self.is_partial_request:
+        if self.request.htmx:
             return [f"profiles/tabs/partial/{tab}.html"]
         return [f"profiles/tabs/full/{tab}.html"]
 
     def get_context_data(self, **kwargs):
         """Provide context data based on partial request."""
         context = super().get_context_data(**kwargs)
-        if not self.is_partial_request:
+        if not self.request.htmx:
             context["tabs"] = self.tabs
             context["current_tab"] = self.current_tab
 
