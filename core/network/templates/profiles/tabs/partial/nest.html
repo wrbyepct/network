@@ -225,81 +225,80 @@
         <div class="space-y-6">
           {% for egg_type in eggs %}
             <div class="egg-type-section">
-              {% if egg_type.eggs %}
-                <div class="flex items-center mb-4">
-                  {% if egg_type.name == 'special' %}
-                    <span class="text-lg lg:text-xl font-bold text-yellow-400"
-                        style="font-family: 'Press Start 2P', monospace; font-size: 14px; text-shadow: 0 0 15px rgba(251, 191, 36, 0.7);">
-                      LEGENDARY EGGS
-                    </span>
-                  {% elif egg_type.name == 'regular' %}
-                    <span class="text-lg lg:text-xl font-bold text-emerald-400"
-                          style="font-family: 'Press Start 2P', monospace; font-size: 14px; text-shadow: 0 0 15px rgba(52, 211, 153, 0.7);">
-                      CUTE EGGS
-                    </span>
-                  {% else %}
-                    <span class="text-lg lg:text-xl font-bold text-pink-400"
-                          style="font-family: 'Press Start 2P', monospace; font-size: 14px; text-shadow: 0 0 15px rgba(244, 114, 182, 0.7);">
-                      EASTER EGGS
-                    </span>
-                  {% endif %}
+              <div class="flex items-center mb-4">
+                {% if egg_type.name == 'special' %}
+                  <span class="text-lg lg:text-xl font-bold text-yellow-400"
+                      style="font-family: 'Press Start 2P', monospace; font-size: 14px; text-shadow: 0 0 15px rgba(251, 191, 36, 0.7);">
+                    LEGENDARY EGGS
+                  </span>
+                {% elif egg_type.name == 'regular' %}
+                  <span class="text-lg lg:text-xl font-bold text-emerald-400"
+                        style="font-family: 'Press Start 2P', monospace; font-size: 14px; text-shadow: 0 0 15px rgba(52, 211, 153, 0.7);">
+                    CUTE EGGS
+                  </span>
+                {% else %}
+                  <span class="text-lg lg:text-xl font-bold text-pink-400"
+                        style="font-family: 'Press Start 2P', monospace; font-size: 14px; text-shadow: 0 0 15px rgba(244, 114, 182, 0.7);">
+                    EASTER EGGS
+                  </span>
+                {% endif %}
               </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {% for egg in egg_type.eggs %}
-                    <div class=" rounded-lg p-4 hover:scale-105 transition-all duration-300 cursor-pointer group relative
-                                {% if egg_type.name == 'easter' %}
-                                  border-pink-400/50 hover:border-pink-400
-                                {% elif egg_type.name == 'special' %}
-                                  border-yellow-400/50 hover:border-yellow-400
+              
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {% for egg in egg_type.eggs %}
+                  <div class=" rounded-lg p-4 hover:scale-105 transition-all duration-300 cursor-pointer group relative
+                              {% if egg_type.name == 'easter' %}
+                                border-pink-400/50 hover:border-pink-400
+                              {% elif egg_type.name == 'special' %}
+                                border-yellow-400/50 hover:border-yellow-400
+                              {% else %}
+                                border-cyan-400/50 hover:border-cyan-400
+                              {% endif %}">
+                    
+                    <div class="relative flex items-center justify-between">
+                      <span class="font-medium text-white
+                        {% if egg_type.name == 'easter' %}
+                            group-hover:text-pink-300
+                        {% elif egg_type.name == 'special' %}
+                            group-hover:text-yellow-300
+                        {% else %}
+                            group-hover:text-cyan-300
+                        {% endif %} transition-colors duration-200">
+                        {{ egg.name|title }}
+                      </span>
+                      <div class="flex items-center">
+                        <div class="relative">
+                          <!-- Egg toolkit -->
+                          {% include 'posts/partial/egg_toolkit.html' with egg=egg display_egg_image=True display_collected_date=True display_born_from=True %}
+                          <img class="w-12 h-12 rounded-full border-2 
+                                {% if egg_type.name == 'special' %}
+                                  border-yellow-400/50 group-hover:border-yellow-400
+                                {% elif egg_type.name == 'easter' %}
+                                  border-pink-400/50 group-hover:border-pink-400
                                 {% else %}
-                                  border-cyan-400/50 hover:border-cyan-400
-                                {% endif %}">
-                      
-                      <div class="relative flex items-center justify-between">
-                        <span class="font-medium text-white
-                          {% if egg_type.name == 'easter' %}
-                              group-hover:text-pink-300
-                          {% elif egg_type.name == 'special' %}
-                              group-hover:text-yellow-300
-                          {% else %}
-                              group-hover:text-cyan-300
-                          {% endif %} transition-colors duration-200">
-                          {{ egg.name|title }}
-                        </span>
-                        <div class="flex items-center">
-                          <div class="relative">
-                            <!-- Egg toolkit -->
-                            {% include 'posts/partial/egg_toolkit.html' with egg=egg display_egg_image=True display_collected_date=True display_born_from=True %}
-                            <img class="w-12 h-12 rounded-full border-2 
-                                  {% if egg_type.name == 'special' %}
-                                    border-yellow-400/50 group-hover:border-yellow-400
-                                  {% elif egg_type.name == 'easter' %}
-                                    border-pink-400/50 group-hover:border-pink-400
-                                  {% else %}
-                                    border-emerald-400/50 group-hover:border-emerald-400
-                                  {% endif %}
-                                  transition-all duration-200 hover:scale-110" 
-                                  src="{{ egg.url }}" 
-                                  alt="{{ egg.name|title }}"
-                                  style="image-rendering: pixelated;">
-                          </div>
-                          <span class="px-2 py-1 rounded-full text-sm font-bold ml-2 
-                            {% if egg_type.name == 'special' %}
-                              bg-yellow-500/20 text-yellow-300 border border-yellow-400/30
-                            {% elif egg_type.name == 'easter' %}
-                              bg-pink-500/20 text-pink-300 border border-pink-400/30
-                            {% else %}
-                              bg-emerald-500/20 text-emerald-300 border border-emerald-400/30
-                            {% endif %} backdrop-blur-sm">
-                            × {{ egg.quantity }}
-                          </span>
+                                  border-emerald-400/50 group-hover:border-emerald-400
+                                {% endif %}
+                                transition-all duration-200 hover:scale-110" 
+                                src="{{ egg.url }}" 
+                                alt="{{ egg.name|title }}"
+                                style="image-rendering: pixelated;">
                         </div>
+                        <span class="px-2 py-1 rounded-full text-sm font-bold ml-2 
+                          {% if egg_type.name == 'special' %}
+                            bg-yellow-500/20 text-yellow-300 border border-yellow-400/30
+                          {% elif egg_type.name == 'easter' %}
+                            bg-pink-500/20 text-pink-300 border border-pink-400/30
+                          {% else %}
+                            bg-emerald-500/20 text-emerald-300 border border-emerald-400/30
+                          {% endif %} backdrop-blur-sm">
+                          × {{ egg.quantity }}
+                        </span>
                       </div>
                     </div>
-                  {% endfor %}
-                </div>
+                  </div>
+                {% endfor %}
+              </div>
 
-              {% endif %}
             </div>
           {% endfor %}
         </div>

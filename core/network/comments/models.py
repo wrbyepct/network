@@ -38,11 +38,6 @@ class Comment(ProfileInfoMixin, LikeCountMixin, TimestampedModel):
         return f"User: {self.user.id} comment on Post: {self.post.id}"
 
     @property
-    def children_count(self):
-        """Return children replies count."""
-        return self.children.count()
-
-    @property
     def liked_by_user(self):
         """Return True if the comment is liked by requesting user. Else return False."""
         return bool(self.user_likes)
