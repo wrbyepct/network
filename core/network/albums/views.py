@@ -79,9 +79,19 @@ class AlbumDetailView(LoginRequiredMixin, DetailView):
 
     def get_object(self, queryset=None):
         """Directly return the album obect."""
-        profile = get_object_or_404(Profile, username=self.kwargs.get("username"))
+        self.profile = get_object_or_404(
+            Profile.objects.select_related("user"), username=self.kwargs.get("username")
+        )
 
-        return get_object_or_404(Album, pk=self.kwargs.get("album_pk"), profile=profile)
+        return get_object_or_404(
+            Album, pk=self.kwargs.get("album_pk"), profile=self.profile
+        )
+
+    def get_context_data(self, **kwargs):
+        """Insert profile context."""
+        context = super().get_context_data(**kwargs)
+        context["profile"] = self.profile
+        return context
 
 
 class AlbumCreateView(SetOwnerProfileMixin, LoginRequiredMixin, CreateView):

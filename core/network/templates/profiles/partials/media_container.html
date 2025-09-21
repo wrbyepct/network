@@ -5,7 +5,7 @@
 	
 	{% if in_album_detail %}
 		<!-- Album add more photos button -->
-		{% if request.user == album.profile.user %}
+		{% if request.user == profile.user %}
 			{% url 'album_edit' album.pk as create_media_url %}
 			{% include 'albums/add_more_btn.html' %}
 
