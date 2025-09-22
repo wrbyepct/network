@@ -2,9 +2,11 @@
 
 from django.db.models import Max, Model, PositiveSmallIntegerField
 from django.forms import ValidationError
+from django.shortcuts import get_object_or_404
 from django.utils.functional import cached_property
 
 from network.common.models import MediaBaseModel
+from network.profiles.models import Profile
 
 
 class RefererRedirectMixin:
@@ -47,8 +49,25 @@ class SetOwnerProfileMixin:
 
     def dispatch(self, request, *args, **kwargs):
         """Set profile instance for later access."""
-        self._profile = self.request.user.profile
+        self.owner_profile = self.request.user.profile
         return super().dispatch(request, *args, **kwargs)
+
+
+class SetProfileContextMixin:
+    """Mixin to set profile at concern in context."""
+
+    def set_profile(self):
+        """Set prefetched user data profile."""
+        self.profile = get_object_or_404(
+            Profile.objects.select_related("user"),
+            username=self.kwargs.get("username"),
+        )
+
+    def get_context_data(self, **kwargs):
+        """Inject profile into context."""
+        context = super().get_context_data(**kwargs)
+        context["profile"] = self.profile
+        return context
 
 
 class ProfileInfoMixin:

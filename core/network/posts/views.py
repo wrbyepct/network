@@ -6,6 +6,7 @@ import random
 import redis
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
+from django.db.models.functions.math import Random
 from django.forms import ValidationError
 from django.http import Http404, HttpResponse, StreamingHttpResponse
 from django.shortcuts import get_object_or_404, render
@@ -49,34 +50,47 @@ class PostListView(ListView):
         """Get egg and profile context for turboy."""
         profile = self.request.user.profile
         context["profile"] = profile
-        context["random_3_followers"] = profile.followers.order_by("?")[:3]
+
+        followers = profile.followers.order_by(Random())
+
+        context["random_3_followers"] = followers[:3]
+        context["followers_count"] = followers.count()
 
         easter_eggs = profile.easter_eggs
         special_eggs = profile.special_eggs
         regular_eggs = profile.regular_eggs
+
+        regular_eggs_count = regular_eggs.count()
+        special_eggs_count = special_eggs.count()
+        easter_eggs_count = easter_eggs.count()
+
         context["egg_panels"] = [
             {
                 "label": "EASTER EGGS",
                 "color": "text-pink-300",
                 "shadow": "rgba(255, 255, 0, 0.5)",
-                "count": easter_eggs.count(),
+                "count": easter_eggs_count,
                 "egg": random.choice(easter_eggs) if easter_eggs else None,
             },
             {
                 "label": "LEGENDARY",
                 "color": "text-orange-300",
                 "shadow": "rgba(0, 255, 255, 0.5)",
-                "count": special_eggs.count(),
+                "count": special_eggs_count,
                 "egg": random.choice(special_eggs) if special_eggs else None,
             },
             {
                 "label": "CUTE",
                 "color": "text-green-400",
                 "shadow": "rgba(59, 130, 246, 0.5)",
-                "count": profile.regular_eggs.count(),
+                "count": regular_eggs_count,
                 "egg": random.choice(regular_eggs) if regular_eggs else None,
             },
         ]
+
+        context["total_eggs_count"] = (
+            regular_eggs_count + special_eggs_count + easter_eggs_count
+        )
 
         context["activity"] = ActivityManagerService.get_activity_obj(
             user=self.request.user

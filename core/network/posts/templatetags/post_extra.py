@@ -10,14 +10,6 @@ register = template.Library()
 
 
 @register.filter
-def liked_by_user(obj, user):
-    """Check if the instance is liked by a user."""
-    if not user.is_authenticated:
-        return False
-    return obj.likes.filter(user=user).exists()
-
-
-@register.filter
 def like_stat_str(like_count, liked):
     """Return dynamic like stat string."""
     return get_like_stat(like_count, liked)
