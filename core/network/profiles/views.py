@@ -4,6 +4,7 @@
 import json
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Exists, OuterRef
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
 from django.views.generic import (
@@ -188,12 +189,18 @@ class FollowPaginatorBaseView(ListView):
         """Get dynamic follow type related objects from a profile."""
         profile = get_object_or_404(Profile, username=self.kwargs.get("username"))
 
+        if self.follow_type == "followers":
+            return profile.followers.all().annotate(
+                mutual_followed=Exists(profile.following.filter(pk=OuterRef("pk")))
+            )
+
         return getattr(profile, f"{self.follow_type}").all()
 
     def get_context_data(self, **kwargs):
         """Inject requesting username to context."""
         context = super().get_context_data(**kwargs)
         context["username"] = self.kwargs.get("username")
+
         return context
 
 
