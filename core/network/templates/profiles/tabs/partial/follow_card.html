@@ -5,9 +5,10 @@
     {% if in_turboy_screen %}
         x-show="followerHover{{ forloop.counter0 }}"
         x-cloak
+    {% else %}
+        x-data="{ hasFollowed: {{ follower.mutual_followed|yesno:'true,false' }} }"
     {% endif %}
     class="holo-profile-card relative group cursor-pointer rounded-xl p-6 transition-all duration-500 text-[7px] xl:text-[9px]"
-    x-data="{ hasFollowed: {{ follower|has_followed:request.user|yesno:'true,false' }}}"
 
   >
     
@@ -53,7 +54,7 @@
         {% if request.user.profile.username == username and not in_turboy_screen %}
         <div class="text-center">
           <button
-            class="pixel-btn w-full bg-white/10 border border-emerald-400/30 backdrop-blur-xl px-4 py-2 rounded-lg  font-bold transition-all duration-300 hover:-translate-y-1 hover:shadow-lg text-emerald-300 hover:bg-emerald-500/20 hover:border-emerald-400/60"
+            class="w-full bg-white/10 border border-emerald-400/30 backdrop-blur-xl px-4 py-2 rounded-lg  font-bold transition-all duration-300 hover:-translate-y-1 hover:shadow-lg text-emerald-300 hover:bg-emerald-500/20 hover:border-emerald-400/60"
             x-show="!hasFollowed"
             x-cloak
             hx-post="{% url 'follow' follower.username %}"                            
