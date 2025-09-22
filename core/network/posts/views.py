@@ -66,7 +66,7 @@ class PostListView(ListView):
 
         context["egg_panels"] = [
             {
-                "label": "EASTER EGGS",
+                "label": "EASTER",
                 "color": "text-pink-300",
                 "shadow": "rgba(255, 255, 0, 0.5)",
                 "count": easter_eggs_count,
@@ -227,7 +227,12 @@ class PostEditView(LoginRequiredMixin, GetUserPostMixin, UpdateView):
             return resp
 
         template = self.get_template_names()
-        context = {"post": self.object, "insert_to_dom": True}
+        post = self.object
+        post.ordered_medias = post.medias.order_by("order")
+        context = {
+            "post": post,
+            "insert_to_dom": True,
+        }
         return render(self.request, template, context)
 
 
