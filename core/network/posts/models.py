@@ -75,7 +75,7 @@ class Post(
     @property
     def liked_by_user(self):
         """Return if True if the requesting user likes this post. Otherwise False."""
-        return bool(self.user_likes)  # if empty it would return false
+        return bool(self.user_likes) if hasattr(self, "user_likes") else False
 
     def delete(self, *args, **kwargs):
         """Override delete method to revoke publish task."""
