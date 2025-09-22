@@ -40,7 +40,7 @@ class Comment(ProfileInfoMixin, LikeCountMixin, TimestampedModel):
     @property
     def liked_by_user(self):
         """Return True if the comment is liked by requesting user. Else return False."""
-        return bool(self.user_likes)
+        return bool(self.user_likes) if hasattr(self, "user_likes") else False
 
 
 class CommentLike(TimestampedModel):
