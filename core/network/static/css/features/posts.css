@@ -1449,19 +1449,29 @@
 
 
 .post-showup-glow {
-  box-shadow: 0 0 2px #fff, 0 0 10px #fff, 0 0 20px #0ba9ca, 0 0 30px #0ba9ca,
-    0 0 40px #0ba9ca, 0 0 50px #0ba9ca;
   animation: blink 5s forwards ease-out;
 }
 
 @keyframes blink {
   0% {
-    box-shadow: 0 0 3px #fff, 0 0 10px #fff, 0 0 20px #fff, 0 0 40px #0ba9ca,
-      0 0 70px #0ba9ca, 0 0 80px #0ba9ca;
+    box-shadow:
+      0 0 3px #fff,
+      0 0 10px #fff,
+      0 0 20px #fff,
+      0 0 40px #0ba9ca,
+      0 0 70px #0ba9ca,
+      0 0 80px #0ba9ca;
   }
 
   100% {
-    box-shadow: 0;
+    box-shadow:
+      0 0 0px #fff,
+      0 0 0px #fff,
+      0 0 0px #fff,
+      0 0 0px #0ba9ca,
+      0 0 0px #0ba9ca,
+      0 0 0px #0ba9ca;
+
   }
 }
 
