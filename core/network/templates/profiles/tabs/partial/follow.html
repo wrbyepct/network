@@ -1,11 +1,12 @@
 
+{% with followers_count=profile.followers.count following_count=profile.following.count %}
 <div 
   class="holographic-ocean-bg min-h-screen"
   style="font-family: 'Press Start 2P', monospace;"
   x-data="{ 
     activeTab: 'followers',
-    followersCount: {{ profile.followers.count }},
-    followingCount: {{ profile.following.count }},
+    followersCount: {{ followers_count }},
+    followingCount: {{ following_count }},
   }"
 >
   <!-- Holographic Tab Navigation -->
@@ -16,16 +17,15 @@
         <div 
           id="followers-count" 
           class="bg-white/8 border border-cyan-400/30 backdrop-blur-xl px-4 py-2 rounded-lg text-cyan-400 text-xs sm:text-sm font-bold shadow-lg shadow-cyan-500/20"
-          x-init="followerCount = {{ profile.followers.count }}"
         >
-        <span class="text-white/90">{{ profile.followers.count }}</span> FOLLOWERS
+          <span class="text-white/90" x-text="followersCount"></span> FOLLOWERS
         </div>
         <div 
           id="following-count" 
           class="bg-white/8 border border-emerald-400/30 backdrop-blur-xl px-4 py-2 rounded-lg text-emerald-400 text-xs sm:text-sm font-bold shadow-lg shadow-emerald-500/20"
-          x-init="followingCount = {{ profile.following.count }}"
+          x-init="followingCount = {{ following_count }}"
         >
-        <span class="text-white/90">{{ profile.following.count }}</span> FOLLOWING
+          <span class="text-white/90" x-text="followingCount"></span> FOLLOWING
         </div>
       </div>
       
@@ -76,3 +76,4 @@
     </template>
   </div>
 </div>
+{% endwith %}
