@@ -51,11 +51,12 @@ class PostListView(ListView):
         profile = self.request.user.profile
         context["profile"] = profile
 
+        # Followers data
         followers = profile.followers.order_by(Random())
-
         context["random_3_followers"] = followers[:3]
         context["followers_count"] = followers.count()
 
+        # Eggs data
         easter_eggs = profile.easter_eggs
         special_eggs = profile.special_eggs
         regular_eggs = profile.regular_eggs
@@ -70,21 +71,27 @@ class PostListView(ListView):
                 "color": "text-pink-300",
                 "shadow": "rgba(255, 255, 0, 0.5)",
                 "count": easter_eggs_count,
-                "egg": random.choice(easter_eggs) if easter_eggs else None,
+                "egg": easter_eggs[random.randint(0, easter_eggs_count - 1)]
+                if easter_eggs_count
+                else None,
             },
             {
                 "label": "LEGENDARY",
                 "color": "text-orange-300",
                 "shadow": "rgba(0, 255, 255, 0.5)",
                 "count": special_eggs_count,
-                "egg": random.choice(special_eggs) if special_eggs else None,
+                "egg": special_eggs[random.randint(0, special_eggs_count - 1)]
+                if special_eggs_count
+                else None,
             },
             {
                 "label": "CUTE",
                 "color": "text-green-400",
                 "shadow": "rgba(59, 130, 246, 0.5)",
                 "count": regular_eggs_count,
-                "egg": random.choice(regular_eggs) if regular_eggs else None,
+                "egg": regular_eggs[random.randint(0, regular_eggs_count - 1)]
+                if regular_eggs_count
+                else None,
             },
         ]
 
@@ -92,6 +99,7 @@ class PostListView(ListView):
             regular_eggs_count + special_eggs_count + easter_eggs_count
         )
 
+        # Activity Data
         context["activity"] = ActivityManagerService.get_activity_obj(
             user=self.request.user
         )

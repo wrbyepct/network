@@ -7,17 +7,17 @@ class CommentQuerySet(models.QuerySet):
     """Comment custom queryset."""
 
     def prefetched_info_qs(self, user=None):
-        """Return all queryset with Prefetched profile data and children."""
+        """Return all queryset with prefetched profile, children count and if it's liked by the requesting user."""
         from .models import CommentLike
 
         return (
             self.select_related("user__profile")
-            .prefetch_related(
-                models.Prefetch(
-                    "likes",
-                    queryset=CommentLike.objects.filter(user=user),
-                    to_attr="user_likes",
-                ),  # likes by requesting user
+            .annotate(
+                liked_by_user=models.Exists(
+                    CommentLike.objects.filter(
+                        user=user, comment_id=models.OuterRef("pk")
+                    )
+                )
             )
             .annotate(children_count=models.Count("children"))
         )
