@@ -7,7 +7,7 @@
         replying: false,
         commentBody: '{{ comment.content|escapejs }}',
         newComment: {{ is_new_comment|yesno:'true,false' }}, 
-        isOwner: {% if request.user == comment.user%}true{% else %}false{%endif%},
+        isOwner: {% if user == comment.user%}true{% else %}false{%endif%},
         setReplyTo() { return this.isOwner ? '' : '@{{ comment.username }} ' },
         liked: {{ comment.liked_by_user|yesno:'true,false' }},
         likeCount: {{ comment.like_count }},
@@ -128,10 +128,8 @@
             x-cloak
             @htmx:before-request="preventEmptySubmit($event)"
             >
-                {% include 'comments/submit.html' with for_comment_submit=True %}
-            <a 
-                class="btn link-primary link-opacity-50-hover text-decoration-none font-bold mt-2 ms-2" 
-                @click="editing = false">Cancel</a>
+              {% include 'comments/submit.html' with for_comment_submit=True %}
+              {% include 'comments/cancel_btn.html' %}
 
         </form>
     </div>
@@ -164,7 +162,7 @@
         x-effect="if(replying) {commentBody = setReplyTo(); $focus.first() }"
         @htmx:before-request="preventEmptySubmit($event)"
         @htmx:after-request="if($event.detail.successful) clearUpForm($el)"
-        hx-post="{% url 'comment_create' comment.post.id %}"
+        hx-post="{% url 'comment_create' post.id %}"
         hx-vals='{ "is_reply": true }'
         hx-swap="beforeend"
         :hx-target="isPostDetail ? '#post-detail-replies-{{ comment.id }}' : '#post-list-replies-{{ comment.id }}'"
@@ -173,9 +171,7 @@
         {% include 'comments/submit.html' %}
         <!-- Parent comment input -->
         <input type="hidden" name="parent_id" value="{{ comment.id }}">
-        <button 
-            class="!rounded-md m-2 p-2 bg-white/30 !text-rose-500 hover:!font-bold hover:!text:red-300" 
-            @click="replying = false">Cancel</button>
+        {% include 'comments/cancel_btn.html' with in_reply_form=True %}
     </form>
 </div>
 

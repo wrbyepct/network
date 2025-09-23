@@ -37,10 +37,9 @@ class Comment(ProfileInfoMixin, LikeCountMixin, TimestampedModel):
         """Return string: 'User: {self.user.id} comment on Post: {self.post.id}'."""
         return f"User: {self.user.id} comment on Post: {self.post.id}"
 
-    @property
-    def liked_by_user(self):
-        """Return True if the comment is liked by requesting user. Else return False."""
-        return bool(self.user_likes) if hasattr(self, "user_likes") else False
+    def set_liked_by_user(self, user):
+        """Set update-to-date liked by user for comment."""
+        self.liked_by_user = self.likes.filter(user=user).exists()
 
 
 class CommentLike(TimestampedModel):
