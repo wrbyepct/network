@@ -1,0 +1,5 @@
+<button
+    type="button"
+    class="!rounded-md m-2 p-2 bg-white/30 !text-rose-500 hover:!font-bold hover:!text:red-300" 
+    {% if in_reply_form %} @click="replying = false" {% else %} @click="editing = false" {% endif %}
+  >Cancel</button>

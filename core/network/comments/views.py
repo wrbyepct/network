@@ -2,9 +2,7 @@
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
-from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
-from django.template.loader import render_to_string
 from django.views.generic import CreateView, ListView, UpdateView, View
 
 from network.posts.models import Post
@@ -17,12 +15,26 @@ from .mixins import (
 )
 from .models import Comment, CommentLike
 
-# TODO user see immediate comments update to comment section
 
-# TODO later change comment create view to partial html
+class SetAssociatedPostContextMixin:
+    """Mixin for setting associated post instance."""
+
+    def set_post(self):
+        """Set post instance in property. associated with the comment."""
+        post_id = self.kwargs.get("post_id")
+        if post_id:
+            self.post = get_object_or_404(Post, id=self.kwargs.get("post_id"))
+        else:
+            self.post = self.object.post
+
+    def get_context_data(self, **kwargs):
+        """Insert post instance in context."""
+        context = super().get_context_data(**kwargs)
+        context["post"] = self.post
+        return context
 
 
-class CommentPaginatedView(ListView):
+class CommentPaginatedView(SetAssociatedPostContextMixin, ListView):
     """Comment Paginated list View."""
 
     context_object_name = "comments"
@@ -31,15 +43,8 @@ class CommentPaginatedView(ListView):
 
     def dispatch(self, request, *args, **kwargs):
         """Save post for later use."""
-        self._post = get_object_or_404(Post, id=self.kwargs.get("post_id"))
+        self.set_post()
         return super().dispatch(request, *args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        """Provide request in context for partial template."""
-        context = super().get_context_data(**kwargs)
-        context["request"] = self.request
-        context["post"] = self._post
-        return context
 
     def get_queryset(self):
         """Get top level comments."""
@@ -51,6 +56,7 @@ class CommentPaginatedView(ListView):
 
 class CommentCreateView(
     LoginRequiredMixin,
+    SetAssociatedPostContextMixin,
     FormInvalidReturnErrorHXTriggerMixin,
     CommentCountUpdatedMixin,
     CreateView,
@@ -73,14 +79,16 @@ class CommentCreateView(
             else "comments/comment_for_multi_swap.html"
         )
 
-        post = self.object.post
+        context = self.get_context_data()
 
-        context = {
-            "comment": self.object,
-            "is_new_comment": True,
-            "is_reply": is_reply,
-            "post": post,
-        }
+        self.object.liked_by_user = False  # new comment won't be liked by any user.
+        context.update(
+            {
+                "comment": self.object,
+                "is_new_comment": True,
+                "is_reply": is_reply,
+            }
+        )
         return render(self.request, template, context)
 
     def form_valid(self, form):
@@ -89,7 +97,9 @@ class CommentCreateView(
 
         And provide partial comment html.
         """
-        form.instance.post = get_object_or_404(Post, id=self.kwargs.get("post_id"))
+        self.set_post()
+
+        form.instance.post = self.post
         form.instance.user = self.request.user
 
         parent_id = self.request.POST.get("parent_id")
@@ -101,15 +111,12 @@ class CommentCreateView(
             self.object = form.save()
             self.object.post.sync_comment_count()
 
-        self.object.user_likes = (
-            False  # Indicating new comment is not liked by any requesting user.
-        )
-
         return self.get_response()
 
 
 class CommentUpdateView(
     LoginRequiredMixin,
+    SetAssociatedPostContextMixin,
     FormInvalidReturnErrorHXTriggerMixin,
     CommentObjectOwnedMixin,
     UpdateView,
@@ -118,16 +125,17 @@ class CommentUpdateView(
 
     form_class = CommentForm
 
-    def get_queryset(self):
-        """Use prefetched info qs as base queryset."""
-        return Comment.objects.prefetched_info_qs(user=self.request.user)
-
     def form_valid(self, form):
         """Return partial comment as response."""
         form.save()
-        context = {"comment": self.object, "request": self.request}
-        html = render_to_string("comments/comment.html", context)
-        return HttpResponse(html)
+
+        self.object.set_liked_by_user(user=self.request.user)
+        self.set_post()
+
+        context = self.get_context_data()
+        context.update({"comment": self.object})
+
+        return render(self.request, "comments/comment.html", context)
 
 
 class CommentDeleteView(
@@ -157,7 +165,7 @@ class CommentDeleteView(
 
 
 # TODO: make sure this query is optimized
-class CommentChildrenPaginatedView(ListView):
+class CommentChildrenPaginatedView(SetAssociatedPostContextMixin, ListView):
     """Comment Children Partial response view."""
 
     context_object_name = "replies"
@@ -166,22 +174,23 @@ class CommentChildrenPaginatedView(ListView):
 
     def dispatch(self, request, *args, **kwargs):
         """Override to set parent comemnt instance in dispatch."""
-        self.parent_comment = get_object_or_404(
+        self.object = get_object_or_404(
             Comment, id=self.kwargs.get("parent_id")
-        )
+        )  # parent comment
+        self.set_post()
+
         return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         """Provide request in context for partial template."""
         context = super().get_context_data(**kwargs)
-        context["request"] = self.request
-        context["comment"] = self.parent_comment
+        context["comment"] = self.object  # parent comment
         return context
 
     def get_queryset(self):
         """Return comment's children as queryset."""
         return Comment.objects.get_children(
-            parent=self.parent_comment,
+            parent=self.object,
             user=self.request.user,
         )
 
