@@ -165,6 +165,7 @@
       <form 
         {% if request.user.is_authenticated %}
           hx-post="{% url 'comment_create' post.id %}"
+          hx-swap="none" {# prevent submit form being swapped by empty content #}
           @htmx:before-request="preventEmptySubmit($event)"
           @htmx:after-request="if($event.detail.successful) clearUpForm($el)"
         {% else %}
