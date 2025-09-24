@@ -145,9 +145,9 @@ class CommentDeleteView(
 ):
     """Delete a comment owned by user."""
 
-    def delete(self, request, comment_id, **kwargs):
+    def delete(self, request, **kwargs):
         """Do the default and override response."""
-        comment = get_object_or_404(Comment, id=comment_id, user=request.user)
+        comment = self.get_object()
         post = comment.post
 
         with transaction.atomic():
@@ -157,7 +157,7 @@ class CommentDeleteView(
         context = {"post": post}
 
         return render(
-            self.request,
+            request,
             "posts/partial/comment_count.html",
             context,
             status=200,
