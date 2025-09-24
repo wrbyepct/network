@@ -96,6 +96,12 @@ class AlbumCreateView(SetOwnerProfileMixin, LoginRequiredMixin, CreateView):
         """Get profile album url."""
         return reverse_lazy("profile_photos_albums", args=[self.owner_profile.username])
 
+    def get_context_data(self, **kwargs):
+        """Insert owner profile to context."""
+        context = super().get_context_data(**kwargs)
+        context["profile"] = self.owner_profile
+        return context
+
 
 class AlbumUpdate(SetOwnerProfileMixin, LoginRequiredMixin, UpdateView):
     """View to update user's own album."""
@@ -122,6 +128,7 @@ class AlbumUpdate(SetOwnerProfileMixin, LoginRequiredMixin, UpdateView):
         context = super().get_context_data(**kwargs)
         album = self.object
         context["medias"] = album.medias.all()
+        context["profile"] = self.owner_profile
         return context
 
     def form_valid(self, form):
