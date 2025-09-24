@@ -189,12 +189,13 @@ class FollowPaginatorBaseView(ListView):
         """Get dynamic follow type related objects from a profile."""
         profile = get_object_or_404(Profile, username=self.kwargs.get("username"))
 
+        # Follower/following profile need user id to retrieve activity data
         if self.follow_type == "followers":
-            return profile.followers.all().annotate(
+            return profile.followers.select_related("user").annotate(
                 mutual_followed=Exists(profile.following.filter(pk=OuterRef("pk")))
             )
 
-        return getattr(profile, f"{self.follow_type}").all()
+        return profile.following.select_related("user")
 
     def get_context_data(self, **kwargs):
         """Inject requesting username to context."""
