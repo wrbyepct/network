@@ -102,7 +102,7 @@ class PhotosUploadsView(
 
     def get_queryset(self):
         """Get uploads media owned by the profile."""
-        return PostMedia.objects.filter(profile=self.profile)
+        return PostMedia.objects.filter(profile=self.profile).select_related("post")
 
 
 class PhotosAlbumsView(
