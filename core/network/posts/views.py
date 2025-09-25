@@ -52,7 +52,7 @@ class PostListView(ListView):
         context["profile"] = profile
 
         # Followers data
-        followers = profile.followers.order_by(Random())
+        followers = profile.followers.select_related("user").order_by(Random())
         context["random_3_followers"] = followers[:3]
         context["followers_count"] = followers.count()
 
@@ -238,13 +238,16 @@ class PostEditView(LoginRequiredMixin, GetUserPostMixin, UpdateView):
             )
             return resp
 
-        template = self.get_template_names()
+        # Post data needed for template
         post = self.object
         post.ordered_medias = post.medias.order_by("order")
+
         context = {
             "post": post,
             "insert_to_dom": True,
         }
+        template = self.get_template_names()
+
         return render(self.request, template, context)
 
 
@@ -252,6 +255,16 @@ class PostDeleteView(RefererRedirectMixin, GetUserPostMixin, DeleteView):
     """Post Delete View."""
 
     fallback_url = reverse_lazy("index")
+
+    def delete(self, request, **kwargs):
+        """Add htmx request handle to send delete message."""
+        if request.htmx:
+            resp = HttpResponse(status=200)
+            message = "Your turtie has been deleted."
+            resp["HX-Trigger"] = json.dumps({"delete-success": {"message": message}})
+            return resp
+
+        return super().delete(request, **kwargs)
 
 
 class IncubatingEggView(LoginRequiredMixin, View):
@@ -288,6 +301,13 @@ class HatchedPostView(LoginRequiredMixin, DetailView):
         return get_object_or_404(
             Post.objects.published(), id=self.kwargs.get("post_id")
         )
+
+    def get_context_data(self, **kwargs):
+        """Insert egg toolkit display direction into context."""
+        context = super().get_context_data(**kwargs)
+
+        context["toolkit_display_direction"] = "left"
+        return context
 
 
 class PostHatchCheckView(LoginRequiredMixin, View):

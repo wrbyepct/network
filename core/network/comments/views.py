@@ -49,7 +49,7 @@ class CommentPaginatedView(SetAssociatedPostContextMixin, ListView):
     def get_queryset(self):
         """Get top level comments."""
         return Comment.objects.top_level_comments(
-            post=self._post,
+            post=self.post,
             user=self.request.user,
         )
 
