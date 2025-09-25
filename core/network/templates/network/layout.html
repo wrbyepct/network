@@ -42,6 +42,7 @@
         <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
         <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"></noscript>
         
+        
         <!-- Flowbite - Enhancement -->
         <link rel="preload" href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
         <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css"></noscript>
@@ -360,4 +361,14 @@ document.addEventListener('alpine:init', () => {
     },
   })
 })
+
+  document.addEventListener("DOMContentLoaded", () => {
+    flatpickr('.flatpickr', {
+      wrap: true,
+      dateFormat: 'Y-m-d',
+      position: 'auto right',
+      maxDate: 'today',
+      minDate: '1900-01-01',
+    });
+  });
 </script>

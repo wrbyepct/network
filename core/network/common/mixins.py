@@ -3,7 +3,6 @@
 from django.db.models import Max, Model, PositiveSmallIntegerField
 from django.forms import ValidationError
 from django.shortcuts import get_object_or_404
-from django.utils.functional import cached_property
 
 from network.common.models import MediaBaseModel
 from network.profiles.models import Profile
@@ -80,12 +79,12 @@ class ProfileInfoMixin:
 
     """
 
-    @cached_property
+    @property
     def profile_picture_url(self):
         """Return profile picture url."""
         return self.user.profile.profile_picture.url
 
-    @cached_property
+    @property
     def username(self):
         """Return profile username."""
         return self.user.profile.username
