@@ -368,27 +368,6 @@
     </div>
     <div class="text-green-300 text-xs mt-2 opacity-80">✨ Changes saved</div>
   </div>
-  <script>
-  flatpickr('.flatpickr', {
-        wrap: true,                // ← critical
-        dateFormat: 'Y-m-d',
-        position: 'auto right',
-        maxDate: 'today',             // Birth date can't be in future
-        minDate: '1900-01-01',        // Reasonable minimum
-      });
-  document.addEventListener('DOMContentLoaded', () => {
-    
-    // Add pixelated rendering style (utility)
-    const style = document.createElement('style');
-    style.textContent = `
-      .pixelated {
-        image-rendering: -moz-crisp-edges;
-        image-rendering: -webkit-crisp-edges;
-        image-rendering: pixelated;
-        image-rendering: crisp-edges;
-      }
-    `;
-    document.head.appendChild(style);
-  });
-</script>
+
+
 {% endblock %}
