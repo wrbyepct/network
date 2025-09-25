@@ -48,6 +48,10 @@ class Post(
     @property
     def latest_two_comments(self):
         """Fetch first 2 top level comments."""
+        if not hasattr(self, "top_level_comments"):
+            return self.comments.prefetched_info_qs(self.user).filter(
+                parent__isnull=True
+            )[:2]
         return self.top_level_comments[:2]
 
     @property
