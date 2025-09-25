@@ -178,7 +178,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
             form.instance.user = user
             form.instance.egg = egg
 
-            super().form_valid(form)
+            self.object = form.save()
             form.save_media(self.object)
 
         IncubationService.incubate_post(self.object, egg_gif_url)
@@ -198,9 +198,13 @@ class GetUserPostMixin:
     """Mixin to override get_object to retrieve user owned post."""
 
     def get_object(self, queryset=None):
-        """Return the requesting post object."""
+        """Return the requesting user's own post object."""
         post_id = self.kwargs.get("post_id")
-        return get_object_or_404(Post, id=post_id, user=self.request.user)
+        return get_object_or_404(
+            Post.objects.select_related("user__profile"),
+            id=post_id,
+            user=self.request.user,
+        )
 
 
 class PostEditView(LoginRequiredMixin, GetUserPostMixin, UpdateView):
@@ -223,8 +227,8 @@ class PostEditView(LoginRequiredMixin, GetUserPostMixin, UpdateView):
         try:
             with transaction.atomic():
                 PostMedia.objects.filter(id__in=delete_ids).delete()
-                form.validate_allowed_media_num()  # This must wait for deletion completed first
-                super().form_valid(form)
+                form.validate_allowed_media_num()  # This must wait for deletion completed first to evaluate allowed media num
+                form.save()
                 form.save_media(post=self.object)
         except ValidationError as e:
             # Catch error from validating
