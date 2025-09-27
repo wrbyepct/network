@@ -134,7 +134,7 @@ class PostModalView(DetailView):
     def get_context_data(self, **kwargs):
         """Insert in detail card flag for dynamic media layout display."""
         context = super().get_context_data(**kwargs)
-        context["in_detail_card"] = True
+        context["in_modal_card"] = True
         return context
 
 
@@ -220,12 +220,8 @@ class PostEditView(LoginRequiredMixin, GetUserPostMixin, UpdateView):
     success_url = reverse_lazy("index")
 
     def get_template_names(self):
-        """Get tempalte name based from requesting post type."""
-        post_type = self.request.POST.get("post_type")
-
-        if post_type == "list_card":
-            return ["posts/post/list_card.html"]
-        return ["posts/post/detail_card.html"]
+        """Return post list card as updated post."""
+        return ["posts/post/list_card.html"]
 
     def form_valid(self, form):
         """Handle deleting old files and add new files."""
@@ -254,7 +250,11 @@ class PostEditView(LoginRequiredMixin, GetUserPostMixin, UpdateView):
         }
         template = self.get_template_names()
 
-        return render(self.request, template, context)
+        resp = render(self.request, template, context)
+        resp["HX-Trigger"] = json.dumps(
+            {"post-update-success": {"message": "Your turtie has been updated!"}}
+        )
+        return resp
 
 
 class PostDeleteView(RefererRedirectMixin, GetUserPostMixin, DeleteView):
