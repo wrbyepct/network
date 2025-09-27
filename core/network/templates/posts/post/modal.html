@@ -2,6 +2,7 @@
 
   <!-- Post Modal content -->
   <div 
+    id="post-modal-{{ post.id }}"
     class="w-full h-[100vh]" 
     x-data="{ close() { showModal = false; $el.remove(); } }"
     x-init="isPostDetail = true"
