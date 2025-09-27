@@ -51,6 +51,7 @@
   <div 
     {% if request.user == post.user %}
     class="relative cursor-grab"
+    :class="postEditMode && 'h-full'"
     x-data="{
       showEditAction: false,
       pressTimer: null,
@@ -145,6 +146,7 @@
         {% include 'posts/partial/post_edit.html' %}
       </template>
     {% endif %}
+    
     <div x-show="!postEditMode">
       <!-- Post medias -->
       {% block media_gallery %}
