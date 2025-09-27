@@ -131,6 +131,12 @@ class PostModalView(DetailView):
             Post.objects.published(self.request.user), id=self.kwargs.get("post_id")
         )
 
+    def get_context_data(self, **kwargs):
+        """Insert in detail card flag for dynamic media layout display."""
+        context = super().get_context_data(**kwargs)
+        context["in_detail_card"] = True
+        return context
+
 
 class PostCreateView(LoginRequiredMixin, CreateView):
     """Post Creation View."""
