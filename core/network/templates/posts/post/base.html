@@ -17,7 +17,7 @@
       {# Comment #}
       commentBody: '', 
       replying: false,
-      commentCount: {{ post.comment_count  }},
+      commentCount: 0,
       commentCountTracker() {
         console.log('Comment count tracker triggered');
         const commentSection = $refs.commentSection;
@@ -40,10 +40,12 @@
           setTimeout(() => $el.classList.remove('golden-shimmer'), 2100);
         }
       },
+      
     }"
   {% endwith %}
-  {# Add indicator light after directed from incubation nest  #}
-    x-init="addIndicatorLight(); addEditedGlow();"
+    {# Add indicator light after directed from incubation nest  #}
+    {# For some reason, if directly assign at the render time will have some lag time and causes comment count not reading properly #}
+    x-init="addIndicatorLight(); addEditedGlow(); setTimeout(() => commentCount = {{ post.comment_count }}, 20);"
     :class="justShowedUp && 'post-showup-glow'"
   >
   <div 
