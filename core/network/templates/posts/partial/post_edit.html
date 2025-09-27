@@ -65,13 +65,13 @@
   class="flex flex-col h-[90%]"
   x-init="initEditForm()"
   hx-post="{% url 'post_edit' post.id %}"
-  hx-vals='{"post_type": "list_card"}'
-  hx-trigger="mediaReadyToUpload"
   hx-target="#post-{{ post.id }}"
+  hx-trigger="mediaReadyToUpload"
   hx-swap="outerHTML"
   hx-encoding="multipart/form-data"
   enctype="multipart/form-data"
   @post-submit-error="displayAlertMessage($event)" 
+  @post-update-success="displayAlertMessage($event); showModal = false;"
 >
   {{ post.media_objects|json_script:"post-medias-data" }}
 
@@ -127,7 +127,7 @@
                 {# if 3 items, the first should takes up 2 cols space #}
                   'col-span-2': m.images.length === 3 && index === 0,
                 }">
-                <img class="w-full h-full {% if in_detail_card %} xl:h-[16rem]{% endif %} object-cover" :src="media.url" alt="Image uploaded ">
+                <img class="w-full h-full {% if in_modal_card %} xl:h-[16rem]{% endif %} object-cover" :src="media.url" alt="Image uploaded ">
                 {% include 'posts/partial/media_cancel_btn.html' %}
               </div>
             </template>
