@@ -1,5 +1,7 @@
 """Custom common mixins for views."""
 
+import json
+
 from django.db.models import Max, Model, PositiveSmallIntegerField
 from django.forms import ValidationError
 from django.shortcuts import get_object_or_404
@@ -132,3 +134,12 @@ class CommentCountMixin(Model):
         """Update like_count in object and save it."""
         self.comment_count = self.comments.count()
         self.save(update_fields=["comment_count"])
+
+
+class SetHtmxAlertTriggerMixin:
+    """Set HTMX event trigger for custom frontend alert."""
+
+    def set_htmx_trigger(self, resp, event_name, message):
+        """Create json event object with message and set it HX-Trigger header in http response."""
+        resp["HX-Trigger"] = json.dumps({event_name: {"message": message}})
+        return resp
