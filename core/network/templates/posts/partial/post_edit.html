@@ -127,7 +127,7 @@
                 {# if 3 items, the first should takes up 2 cols space #}
                   'col-span-2': m.images.length === 3 && index === 0,
                 }">
-                <img class="w-full h-full {% if in_modal_card %} xl:h-[16rem]{% endif %} object-cover" :src="media.url" alt="Image uploaded ">
+                <img class="w-full h-full object-cover" :src="media.url" alt="Image uploaded ">
                 {% include 'posts/partial/media_cancel_btn.html' %}
               </div>
             </template>

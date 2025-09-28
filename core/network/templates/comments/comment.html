@@ -45,7 +45,7 @@
             <div
                 x-effect="if(newComment) $nextTick(() => newComment = false)"
                 :class="newComment ? 'holo-comment-new' : 'holo-comment-shell'"
-                class="rounded-lg px-4 py-3 transition-all duration-5000 relative overflow-hidden"
+                class="rounded-lg px-4 py-3 relative holo-comment-shell xl:max-w-[250px] 2xl:max-w-[340px]"
                 @mouseover="$el.classList.add('holo-comment-hover')"
                 @mouseleave="$el.classList.remove('holo-comment-hover')">
                 <strong class="holo-username">{{ comment.username }}</strong>
