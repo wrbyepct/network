@@ -1,7 +1,10 @@
 {% extends "network/layout.html" %}
 {% block body %}
   <div class="w-full min-h-screen holographic-ocean-bg flex justify-center items-center px-4 py-8">
-    <div 
+    <div
+      x-data="{
+        verifying: false
+      }" 
       id="auth-modal-content" 
       @click.outside="showModal = false; $refs.modalContainer.innerHTML = '';"
       class="login-container w-full max-w-md px-6 py-3 rounded-none sm:rounded-xl shadow-2xl text-white"

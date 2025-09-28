@@ -1,12 +1,12 @@
   {% if form.errors %}
-    <div class="bg-red-900/30 border border-red-400/50 text-red-300 px-4 py-3 rounded-lg text-xs backdrop-blur-sm mb-4 shadow-[0_0_15px_rgba(239,68,68,0.2)]">
+    <div x-show="!verifying" class="bg-red-900/30 border border-red-400/50 text-red-300 px-4 py-3 rounded-lg text-xs backdrop-blur-sm mb-4 shadow-[0_0_15px_rgba(239,68,68,0.2)]">
       <div class="flex items-center mb-2">
         <span class="text-red-400 mr-2">⚠️</span>
         <span class="font-bold text-red-400 tracking-wide">SHELL ERROR DETECTED</span>
       </div>
       {% for field in form %}
         {% for error in field.errors %}
-          <p class="text-red-200/90">• {{ error }}</p>
+          <div class="text-red-200/90">• {{ error }}</div>
         {% endfor %}
       {% endfor %}
       {% for error in form.non_field_errors %}
