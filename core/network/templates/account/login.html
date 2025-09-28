@@ -3,12 +3,14 @@
 
 {% block auth_content %}
   <!-- Turtle Login Header -->
-  <div class="text-center mb-8">
+  <div
+
+    class="text-center mb-8">
     <div class="flex justify-center mb-4">
       <img src="/media/defaults/turtle.png" alt="Turtle Login" class="w-16 h-16 rounded-full border-2 border-cyan-400 shadow-[0_0_20px_rgba(6,182,212,0.4)]" style="image-rendering: pixelated;">
     </div>
     <h6 class="font-bold text-cyan-400 tracking-wider mb-2">DIVE INTO THE POND</h6>
-    <p class="text-xs text-cyan-200/70 tracking-wide">Connect your shell to access Turtly Fine</p>
+    <p x-show="verifying" class="text-xs text-orange-400 tracking-wide">Verifying...</p>
   </div>
 
   <!-- Traditional Login Form -->
@@ -17,7 +19,7 @@
   <!-- Social Login Divider -->
   {% get_providers as socialaccount_providers %}
   {% if socialaccount_providers %}
-    <div class="relative my-8">
+    <div class="relative my-4">
       <div class="absolute inset-0 flex items-center">
         <div class="w-full border-t border-cyan-400/30"></div>
       </div>

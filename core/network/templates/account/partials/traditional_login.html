@@ -1,6 +1,7 @@
 <form 
- 
+  x-ref="loginForm"
   hx-post="{% url 'account_login' %}"
+  hx-sync="this:abort"
   hx-target-400="#modal-container"
   hx-select="#auth-modal-content"
   class="space-y-6">
@@ -37,7 +38,13 @@
     />
   </div>
 
-  <button type="submit" class="w-full nav-btn nav-btn-secondary console-glow py-3 px-6 text-center font-bold tracking-wider transition-all duration-300 hover:-translate-y-1">
+  <button @click="
+      if ($refs.loginForm.checkValidity()) {
+        verifying = true
+      } else {
+        $refs.loginForm.reportValidity()
+      }
+    " type="submit" class="w-full nav-btn nav-btn-secondary console-glow py-3 px-6 text-center font-bold tracking-wider transition-all duration-300 hover:-translate-y-1">
     DIVE IN
   </button>
 </form>
