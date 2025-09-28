@@ -1,5 +1,5 @@
 <form 
- 
+  x-ref="signupForm"
   hx-post="{% url 'account_signup' %}"
   hx-target-400="#modal-container"
   hx-select="#auth-modal-content"
@@ -55,7 +55,7 @@
   </div>
 
   <!-- Submit Button -->
-  <button type="submit" class="w-full nav-btn nav-btn-primary console-glow py-3 px-6 text-center font-bold tracking-wider transition-all duration-300 hover:-translate-y-1">
+  <button @click="validateForm($refs.signupForm)" type="submit" class="w-full nav-btn nav-btn-primary console-glow py-3 px-6 text-center font-bold tracking-wider transition-all duration-300 hover:-translate-y-1">
     🥚 BECOME A TURTLER!
   </button>
 
