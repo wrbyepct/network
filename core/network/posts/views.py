@@ -134,7 +134,7 @@ class PostModalView(DetailView):
     def get_context_data(self, **kwargs):
         """Insert in detail card flag for dynamic media layout display."""
         context = super().get_context_data(**kwargs)
-        context["in_modal_card"] = True
+        context["in_modal"] = True
         return context
 
 
