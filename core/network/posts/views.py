@@ -20,7 +20,7 @@ from django.views.generic import (
     View,
 )
 
-from network.common.mixins import RefererRedirectMixin
+from network.common.mixins import RefererRedirectMixin, SetHtmxAlertTriggerMixin
 from network.profiles.services import ActivityManagerService
 
 from .forms import PostForm
@@ -213,7 +213,9 @@ class GetUserPostMixin:
         )
 
 
-class PostEditView(LoginRequiredMixin, GetUserPostMixin, UpdateView):
+class PostEditView(
+    LoginRequiredMixin, SetHtmxAlertTriggerMixin, GetUserPostMixin, UpdateView
+):
     """Post update view."""
 
     form_class = PostForm
@@ -235,10 +237,13 @@ class PostEditView(LoginRequiredMixin, GetUserPostMixin, UpdateView):
         except ValidationError as e:
             # Catch error from validating
             resp = HttpResponse(status=400)
-            resp["HX-Trigger"] = json.dumps(
-                {"post-submit-error": {"message": " ".join(e.messages)}}
+            message = " ".join(e.messages)
+
+            return self.set_htmx_trigger(
+                resp=resp,
+                event_name="post-submit-error",
+                message=message,
             )
-            return resp
 
         # Post data needed for template
         post = self.object
@@ -251,13 +256,17 @@ class PostEditView(LoginRequiredMixin, GetUserPostMixin, UpdateView):
         template = self.get_template_names()
 
         resp = render(self.request, template, context)
-        resp["HX-Trigger"] = json.dumps(
-            {"post-update-success": {"message": "Your turtie has been updated!"}}
+        message = "Your turtie has been updated!"
+        return self.set_htmx_trigger(
+            resp=resp,
+            event_name="post-update-success",
+            message=message,
         )
-        return resp
 
 
-class PostDeleteView(RefererRedirectMixin, GetUserPostMixin, DeleteView):
+class PostDeleteView(
+    RefererRedirectMixin, SetHtmxAlertTriggerMixin, GetUserPostMixin, DeleteView
+):
     """Post Delete View."""
 
     fallback_url = reverse_lazy("index")
@@ -267,8 +276,12 @@ class PostDeleteView(RefererRedirectMixin, GetUserPostMixin, DeleteView):
         if request.htmx:
             resp = HttpResponse(status=200)
             message = "Your turtie has been deleted."
-            resp["HX-Trigger"] = json.dumps({"delete-success": {"message": message}})
-            return resp
+
+            return self.set_htmx_trigger(
+                resp=resp,
+                event_name="delete-success",
+                message=message,
+            )
 
         return super().delete(request, **kwargs)
 

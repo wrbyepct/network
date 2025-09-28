@@ -1,8 +1,6 @@
 # Create your views here.
 """Profile views."""
 
-import json
-
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Exists, OuterRef
 from django.shortcuts import get_object_or_404, render
@@ -14,6 +12,7 @@ from django.views.generic import (
     View,
 )
 
+from network.common.mixins import SetHtmxAlertTriggerMixin
 from network.posts.models import Post, PostMedia
 from network.posts.services import IncubationService
 
@@ -218,18 +217,8 @@ class FollowingPaginatorView(FollowPaginatorBaseView):
 
 
 # Follow/Unfollow
-class FollowView(View):
+class FollowView(SetHtmxAlertTriggerMixin, View):
     """View to follow/unfollow a user's profile."""
-
-    def perform_follow(self, profile, to_follow_profile):
-        """Peform follow and return message."""
-        profile.follow(to_follow_profile)
-        return f"You followed {to_follow_profile.username}!"
-
-    def perform_unfollow(self, profile, to_unfollow_profile):
-        """Peform unfollow and return message."""
-        profile.unfollow(to_unfollow_profile)
-        return f"Unfollowed {to_unfollow_profile.username}"
 
     def post(self, request, *args, **kwargs):
         """Follow a profile and return success message."""
@@ -239,17 +228,22 @@ class FollowView(View):
         has_followed = profile.has_followed(to_profile)
 
         if not has_followed:
-            message = self.perform_follow(profile, to_profile)
+            profile.follow(to_profile)
+            message = f"You followed {to_profile.username}!"
 
         else:
-            message = self.perform_unfollow(profile, to_profile)
+            profile.unfollow(to_profile)
+            message = f"Unfollowed {to_profile.username}."
 
         resp = render(
             self.request, "profiles/tabs/partial/follow.html", {"profile": profile}
         )
 
-        resp["HX-Trigger"] = json.dumps({"follow-success": {"message": message}})
-        return resp
+        return self.set_htmx_trigger(
+            resp=resp,
+            event_name="follow-success",
+            message=message,
+        )
 
 
 class ProfileEditView(LoginRequiredMixin, UpdateView):
@@ -266,5 +260,5 @@ class ProfileEditView(LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         """Inject exited success to true when the edit is successful."""
         super().form_valid(form)
-        context = {"edited_success": True, "form": form}
+        context = {"profile_updated": True, "form": form}
         return render(self.request, self.template_name, context)
