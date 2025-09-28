@@ -49,7 +49,7 @@
     :class="justShowedUp && 'post-showup-glow'"
   >
   <div 
-    {% if request.user == post.user %}
+    {% if request.user == post.user and not in_modal %}
     class="relative cursor-grab"
     :class="postEditMode && 'h-full'"
     x-data="{
@@ -162,24 +162,24 @@
 
   </div>
   <!-- Comments - load first batch after load-->
-  <div x-show="!postEditMode" class="h-full flex flex-col justify-between">
+  <div x-show="!postEditMode" class="overflow-y-auto">
     {% block comment_section %}
     {% endblock %}
-
-    <!-- Comment submit form -->
-    <div class="mt-4">
-      <form 
-        {% if request.user.is_authenticated %}
-          hx-post="{% url 'comment_create' post.id %}"
-          hx-swap="none" {# prevent submit form being swapped by empty content #}
-          @htmx:before-request="preventEmptySubmit($event)"
-          @htmx:after-request="if($event.detail.successful) clearUpForm($el)"
-        {% else %}
-          @submit.prevent
-        {% endif %}
-      >
-        {% include 'comments/submit.html' %}
-      </form>
-    </div>
   </div>
+  
+    <!-- Comment submit form -->
+  <div class="mt-4">
+    <form 
+      {% if request.user.is_authenticated %}
+        hx-post="{% url 'comment_create' post.id %}"
+        hx-swap="none" {# prevent submit form being swapped by empty content #}
+        @htmx:before-request="preventEmptySubmit($event)"
+        @htmx:after-request="if($event.detail.successful) clearUpForm($el)"
+      {% else %}
+        @submit.prevent
+      {% endif %}
+    >
+      {% include 'comments/submit.html' %}
+    </form>
+  </div>     <!-- End of Comment submit form -->
 </div>
