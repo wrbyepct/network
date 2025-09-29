@@ -1,6 +1,7 @@
 """Profile urls."""
 
 from django.urls import path
+from django.views.decorators.cache import cache_page
 
 from . import views
 
@@ -9,7 +10,7 @@ urlpatterns = [
     # Tab views
     path(
         "<str:username>/about/",
-        views.AboutView.as_view(),
+        cache_page(60 * 15)(views.AboutView.as_view()),
         name="profile_about",
     ),
     path(
@@ -19,7 +20,7 @@ urlpatterns = [
     ),
     path(
         "<str:username>/tab/follow/",
-        views.FollowTabView.as_view(),
+        cache_page(60 * 15)(views.FollowTabView.as_view()),
         name="profile_follow",
     ),
     path(
@@ -29,17 +30,17 @@ urlpatterns = [
     ),
     path(
         "<str:username>/photos/",
-        views.PhotosView.as_view(),
+        cache_page(60 * 15)(views.PhotosView.as_view()),
         name="profile_shells",
     ),
     path(
         "<str:username>/photos/uploads/",
-        views.PhotosUploadsView.as_view(),
+        cache_page(60 * 15)(views.PhotosUploadsView.as_view()),
         name="profile_photos_uploads",
     ),
     path(
         "<str:username>/photos/albums/",
-        views.PhotosAlbumsView.as_view(),
+        cache_page(60 * 15)(views.PhotosAlbumsView.as_view()),
         name="profile_photos_albums",
     ),
     # Follow
@@ -50,12 +51,12 @@ urlpatterns = [
     ),
     path(
         "<str:username>/followers/",
-        views.FollowersPaginatorView.as_view(),
+        cache_page(60 * 15)(views.FollowersPaginatorView.as_view()),
         name="followers_paginator",
     ),
     path(
         "<str:username>/following/",
-        views.FollowingPaginatorView.as_view(),
+        cache_page(60 * 15)(views.FollowingPaginatorView.as_view()),
         name="following_paginator",
     ),
 ]
