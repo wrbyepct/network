@@ -252,6 +252,7 @@ class PostEditView(
         context = {
             "post": post,
             "insert_to_dom": True,
+            "toolkit_display_direction": "left",
         }
         template = self.get_template_names()
 
