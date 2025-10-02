@@ -43,6 +43,8 @@
           this.updateExtensionFields();
           this.updateMediaCountFields();
 
+          this.updateFileInputs();
+
       },
       updateExtensionFields() {
           // gather extensions separately
@@ -72,7 +74,7 @@
 
       },
       updateMediaInputs(event){
-          this.handleMediaUpload(event)
+          this.handleMediaUpload(event);
 
           this.updateExtensionFields();
           this.updateMediaCountFields();
@@ -152,7 +154,6 @@
       hx-select="#egg-modal-content"
       hx-swap="innerHTML"
       hx-trigger="submit" 
-      @submit.prevent="updateFileInputs()" {# htmx will wait for this to complete before issue a post reqiest #}
       @post-submit-error="displayAlertMessage($event)"
   >
       {# Media number inputs #}
