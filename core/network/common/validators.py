@@ -1,5 +1,6 @@
 """Custom validators."""
 
+import json
 from functools import partial
 
 from django.core.exceptions import ValidationError
@@ -19,14 +20,26 @@ def _validate_extension(file, allowed_exts=None):
         raise ValidationError(e)  # noqa: B904
 
 
-validate_image_extension = partial(
-    _validate_extension, allowed_exts=ALLOWED_POST_IMAGE_EXT
-)
-validate_video_extension = partial(
-    _validate_extension, allowed_exts=ALLOWED_POST_VIDEO_EXT
-)
+def validate_image_extension(ext_str):
+    """Valiate images extension."""
+    image_exts = json.loads(ext_str)
+
+    for ext in image_exts:
+        if ext not in ALLOWED_POST_IMAGE_EXT:
+            msg = f"Uploaded image is not in allowed types: {ALLOWED_POST_IMAGE_EXT}"
+            raise ValidationError(msg)
+
+
+def validate_video_extension(ext_str):
+    """Validate video extension."""
+    video_exts = json.loads(ext_str)
+
+    for ext in video_exts:
+        if ext not in ALLOWED_POST_VIDEO_EXT:
+            msg = f"Uploaded video is not in allowed types: {ALLOWED_POST_IMAGE_EXT}"
+            raise ValidationError(msg)
 
 
 validate_media_extension = partial(
     _validate_extension, allowed_exts=(ALLOWED_POST_VIDEO_EXT + ALLOWED_POST_IMAGE_EXT)
-)
+)  # used by album media upload
