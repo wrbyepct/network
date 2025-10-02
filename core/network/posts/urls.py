@@ -11,6 +11,11 @@ urlpatterns = [
         name="post_create",
     ),
     path(
+        "medias/save",
+        views.MediaSaveView.as_view(),
+        name="post_media_save",
+    ),
+    path(
         "<uuid:post_id>/modal/",
         views.PostModalView.as_view(),
         name="post_modal",
