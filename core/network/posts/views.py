@@ -25,7 +25,7 @@ from network.profiles.services import ActivityManagerService
 
 from .forms import PostForm
 from .models import Post, PostLike, PostMedia
-from .services import EggManageService, IncubationService
+from .services import EggManageService, IncubationService, PostMediaService
 from .utils import get_like_stat
 
 # Initialize Redis client
@@ -176,16 +176,14 @@ class PostCreateView(LoginRequiredMixin, CreateView):
         user = self.request.user
 
         with transaction.atomic():
+            # Handle egg create
             egg_gif_url = IncubationService.get_random_egg_url()
             egg_static_url = EggManageService.get_static_egg_img_url(egg_gif_url)
-            egg = EggManageService.create_egg_or_update_qnt(
-                self.request.user, egg_static_url
-            )
+            egg = EggManageService.create_egg_or_update_qnt(user, egg_static_url)
             form.instance.user = user
             form.instance.egg = egg
 
             self.object = form.save()
-            form.save_media(self.object)
 
         IncubationService.incubate_post(self.object, egg_gif_url)
         # Render Resposne
@@ -196,8 +194,25 @@ class PostCreateView(LoginRequiredMixin, CreateView):
             "egg_name": egg.name,
         }
         resp = render(self.request, egg_template, context)
-        resp["HX-Trigger"] = "post-created"
+        resp["HX-Trigger"] = json.dumps(
+            {"post-created": {"postId": str(self.object.pkid)}}
+        )
         return resp
+
+
+class MediaSaveView(LoginRequiredMixin, View):
+    """View to save post media."""
+
+    def post(self, request, **kwargs):
+        """Save uploaded media to associated post."""
+        post_id = request.POST.get("post_id")
+        post = get_object_or_404(Post, pkid=post_id)
+
+        images = request.FILES.getlist("images")
+        video = request.FILES.get("video")
+
+        PostMediaService.save_media(post=post, video=video, images=images)
+        return HttpResponse(status=201)
 
 
 class GetUserPostMixin:
@@ -233,7 +248,8 @@ class PostEditView(
                 PostMedia.objects.filter(id__in=delete_ids).delete()
                 form.validate_allowed_media_num()  # This must wait for deletion completed first to evaluate allowed media num
                 form.save()
-                form.save_media(post=self.object)
+
+            form.save_media(self.object.id)
         except ValidationError as e:
             # Catch error from validating
             resp = HttpResponse(status=400)

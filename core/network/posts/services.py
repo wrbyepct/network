@@ -34,7 +34,7 @@ class PostMediaService:
         if video:
             media_instances.append(
                 PostMediaService.create_media(
-                    post, video[0], PostMedia.MediaType.VIDEO, order=-1
+                    post, video, PostMedia.MediaType.VIDEO, order=-1
                 )
             )
 
