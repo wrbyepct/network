@@ -229,7 +229,10 @@ class GetUserPostMixin:
 
 
 class PostEditView(
-    LoginRequiredMixin, SetHtmxAlertTriggerMixin, GetUserPostMixin, UpdateView
+    LoginRequiredMixin,
+    SetHtmxAlertTriggerMixin,
+    GetUserPostMixin,
+    UpdateView,
 ):
     """Post update view."""
 
@@ -249,7 +252,14 @@ class PostEditView(
                 form.validate_allowed_media_num()  # This must wait for deletion completed first to evaluate allowed media num
                 form.save()
 
-            form.save_media(self.object.id)
+                images = form.cleaned_data.get("images")
+                videos = form.cleaned_data.get("video")
+
+                if images or videos:
+                    PostMediaService.save_media(
+                        post=self.object, images=images, video=videos
+                    )
+
         except ValidationError as e:
             # Catch error from validating
             resp = HttpResponse(status=400)

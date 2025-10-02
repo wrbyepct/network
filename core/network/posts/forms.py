@@ -3,6 +3,7 @@
 from django import forms
 
 from network.common.constants import ALLOWED_POST_IMAGE_NUM, ALLOWED_POST_VIDEO_NUM
+from network.common.fields import MultipleFileField
 from network.common.models import MediaBaseModel
 from network.common.validators import validate_image_extension, validate_video_extension
 
@@ -12,10 +13,12 @@ from .models import Post, PostMedia
 class PostForm(forms.ModelForm):
     """Form for create/edit form."""
 
+    images = MultipleFileField(required=False)
+    video = forms.FileField(required=False)
     image_exts = forms.CharField(required=False, validators=[validate_image_extension])
     video_exts = forms.CharField(required=False, validators=[validate_video_extension])
-    images_count = forms.IntegerField()
-    videos_count = forms.IntegerField()
+    images_count = forms.IntegerField(required=False)
+    videos_count = forms.IntegerField(required=False)
 
     class Meta:
         model = Post
@@ -35,12 +38,16 @@ class PostForm(forms.ModelForm):
         """Validate allowed media amount."""
         cleaned_data = super().clean()
         self._validate_allowed_media_num(
-            uploaded_num=cleaned_data.get("images_count"),
+            uploaded_num=cleaned_data.get("images_count")
+            or len(cleaned_data.get("images")),
             media_type=MediaBaseModel.MediaType.IMAGE,
             limit_num=ALLOWED_POST_IMAGE_NUM,
         )
+
+        videos = cleaned_data.get("video")
         self._validate_allowed_media_num(
-            uploaded_num=cleaned_data.get("videos_count"),
+            uploaded_num=cleaned_data.get("videos_count")
+            or len([videos] if videos else []),
             media_type=MediaBaseModel.MediaType.VIDEO,
             limit_num=ALLOWED_POST_VIDEO_NUM,
         )
