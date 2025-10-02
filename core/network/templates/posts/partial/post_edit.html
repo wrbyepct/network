@@ -32,15 +32,20 @@
     // This is to clean up memory
     URL.revokeObjectURL(this.toUploadMedia[type][index].url); 
     this.toUploadMedia[type].splice(index, 1);
+
+    this.updateFileInputs();
   },
-  handleMediaUpload(event) {
+  updateMediaInputs(event) {
     const files = Array.from(event.target.files);
     files.forEach(file => {
         if (file.type.startsWith('image/')) this.addMedia(file, 'images');
         if (file.type.startsWith('video/')) this.addMedia(file, 'videos');
     });
+
+    this.updateFileInputs();
   },
-  prepareMediaThenSubmit() {
+
+  updateFileInputs() {
     // Put the newest list in media input before submit
     const imageTransfer = new DataTransfer();
     this.toUploadMedia.images.forEach( image => imageTransfer.items.add(image.file));
@@ -50,8 +55,8 @@
     this.toUploadMedia.videos.forEach( video => videoTransfer.items.add(video.file));
     this.$refs.videoInput.files = videoTransfer.files;
 
-    $dispatch('mediaReadyToUpload');
   },
+
   toDeleteIds: [],
   initEditForm() {
     htmx.process($el);
@@ -66,7 +71,7 @@
   x-init="initEditForm()"
   hx-post="{% url 'post_edit' post.id %}"
   hx-target="#post-{{ post.id }}"
-  hx-trigger="mediaReadyToUpload"
+  hx-trigger="submit"
   hx-swap="outerHTML"
   hx-encoding="multipart/form-data"
   enctype="multipart/form-data"
