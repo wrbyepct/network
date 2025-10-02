@@ -5,6 +5,7 @@ import logging
 
 import redis
 from celery import shared_task
+from django.core.files.storage import default_storage
 from django.utils.timezone import now
 from project4.celery import app
 
@@ -57,3 +58,22 @@ def assign_publish_task(post):
 def delete_task(task_id):
     """Delete task by id."""
     app.control.revoke(task_id)
+
+
+@shared_task
+def save_post_media_task(post_id, image_paths, video_paths):
+    """Task to save post uploade media."""
+    from .models import Post
+    from .services import PostMediaService
+
+    post = Post.objects.get(id=post_id)
+
+    # Reopen files from storage
+    images = [default_storage.open(path, "rb") for path in image_paths]
+    videos = [default_storage.open(path, "rb") for path in video_paths]
+
+    PostMediaService.save_media(post, images, videos)
+
+    # Optional: clean up temp files if you don't need them anymore
+    for path in image_paths + video_paths:
+        default_storage.delete(path)
