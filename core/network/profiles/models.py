@@ -85,9 +85,17 @@ class Profile(TimestampedModel, FollowMixin):
         """Return user's easter eggs."""
         return Egg.objects.filter(egg_type="easter", user=self.user)
 
+    def get_eggs_qunt(self):
+        """Get all 3 types of eggs quantity of the profile."""
+        return {
+            "regular_eggs_count": sum(egg.quantity for egg in self.regular_eggs),
+            "special_eggs_count": sum(egg.quantity for egg in self.special_eggs),
+            "easter_eggs_count": sum(egg.quantity for egg in self.easter_eggs),
+        }
+
     @property
     def total_eggs_count(self):
-        """Return total eggs count."""
+        """Return total eggs type count."""
         return (
             self.easter_eggs.count()
             + self.special_eggs.count()

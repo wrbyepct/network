@@ -65,12 +65,14 @@ class PostListView(ListView):
         special_eggs_count = special_eggs.count()
         easter_eggs_count = easter_eggs.count()
 
+        eggs_qunt = profile.get_eggs_qunt()
+
         context["egg_panels"] = [
             {
                 "label": "EASTER",
                 "color": "text-pink-300",
                 "shadow": "rgba(255, 255, 0, 0.5)",
-                "count": easter_eggs_count,
+                "count": eggs_qunt["easter_eggs_count"],
                 "egg": easter_eggs[random.randint(0, easter_eggs_count - 1)]
                 if easter_eggs_count
                 else None,
@@ -79,7 +81,7 @@ class PostListView(ListView):
                 "label": "LEGENDARY",
                 "color": "text-orange-300",
                 "shadow": "rgba(0, 255, 255, 0.5)",
-                "count": special_eggs_count,
+                "count": eggs_qunt["special_eggs_count"],
                 "egg": special_eggs[random.randint(0, special_eggs_count - 1)]
                 if special_eggs_count
                 else None,
@@ -88,7 +90,7 @@ class PostListView(ListView):
                 "label": "CUTE",
                 "color": "text-green-400",
                 "shadow": "rgba(59, 130, 246, 0.5)",
-                "count": regular_eggs_count,
+                "count": eggs_qunt["regular_eggs_count"],
                 "egg": regular_eggs[random.randint(0, regular_eggs_count - 1)]
                 if regular_eggs_count
                 else None,
