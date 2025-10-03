@@ -1,5 +1,6 @@
 <form 
   x-data="{
+  submitting: false, 
   toUploadMedia: { 
     images: [],
     videos: [],
@@ -75,7 +76,7 @@
   hx-swap="outerHTML"
   hx-encoding="multipart/form-data"
   enctype="multipart/form-data"
-  @post-submit-error="displayAlertMessage($event)" 
+  @post-submit-error="displayAlertMessage($event); submitting = false;" 
   @post-update-success="displayAlertMessage($event); showModal = false;"
 >
   {{ post.media_objects|json_script:"post-medias-data" }}
@@ -145,7 +146,14 @@
     <input hidden name="delete_media" :value="JSON.stringify(toDeleteIds)" >
 
     <!-- Done & cancel button -->
-    {% include 'posts/partial/post_edit_actions.html' %}
+    <div x-show="!submitting">
+      {% include 'posts/partial/post_edit_actions.html' %}
+    </div>
+
+    <!-- Submit indicator -->
+    <div x-show="submitting">
+      <button class="mx-auto block bg-amber-400 font-bold text-white font-pixel !text-lg px-6 py-3 tracking-wide border-0 shadow-[inset_-2px_-2px_0px_0px_#d97706,inset_2px_2px_0px_0px_#fbbf24,0px_0px_0px_2px_#b45309] relative before:content-[''] before:absolute before:inset-0 before:bg-[repeating-linear-gradient(0deg,transparent,transparent_1px,rgba(255,255,255,0.1)_2px,rgba(255,255,255,0.1)_3px)] before:pointer-events-none">Submitting...</button>
+    </div>
   </div>   <!-- End of non-text section -->
 
 </form>
