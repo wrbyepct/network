@@ -98,8 +98,7 @@
                <p class="text-cyan-400 text-lg mb-4 font-bold tracking-wider holo-glow-text">Stats:</p>
 
                 <!-- Digital Stats Grid -->
-                {% with regular_eggs_count=profile.regular_eggs.count special_eggs_count=profile.special_eggs.count easter_eggs_count=profile.easter_eggs.count %}
-
+      
                   <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
                     {% if easter_eggs_count %}
                       <div class="holo-stat-display bg-black/75 backdrop-blur-xl 
@@ -133,7 +132,6 @@
                           </div>
                         </div>
                       {% endif %}
-                  {% endwith %}
 
                     <div class="holo-stat-display bg-black/75 backdrop-blur-xl 
                                 p-3 rounded-lg shadow-md relative overflow-hidden">
