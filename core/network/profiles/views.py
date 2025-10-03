@@ -5,6 +5,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Exists, OuterRef
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+from django.views.decorators.vary import vary_on_headers
 from django.views.generic import (
     ListView,
     TemplateView,
@@ -33,6 +36,7 @@ class ProfileTabsBaseMixin:
             Profile.objects.select_related("user"),
             username=kwargs.get("username"),
         )
+
         return super().dispatch(request, *args, **kwargs)
 
     def get_template_names(self):
@@ -74,6 +78,8 @@ class PhotoTabsBaseMixin:
         return context
 
 
+@method_decorator(cache_page(900), name="dispatch")
+@method_decorator(vary_on_headers("HX-Request"), name="dispatch")
 class PhotosView(
     PhotoTabsBaseMixin,
     ProfileTabsBaseMixin,
@@ -88,6 +94,8 @@ class PhotosView(
     current_photo_tab = "uploads"
 
 
+@method_decorator(cache_page(900), name="dispatch")
+@method_decorator(vary_on_headers("HX-Request"), name="dispatch")
 class PhotosUploadsView(
     PhotoTabsBaseMixin,
     ProfileTabsBaseMixin,
@@ -104,6 +112,8 @@ class PhotosUploadsView(
         return PostMedia.objects.filter(profile=self.profile).select_related("post")
 
 
+@method_decorator(cache_page(900), name="dispatch")
+@method_decorator(vary_on_headers("HX-Request"), name="dispatch")
 class PhotosAlbumsView(
     PhotoTabsBaseMixin,
     ProfileTabsBaseMixin,
@@ -118,6 +128,8 @@ class PhotosAlbumsView(
     current_photo_tab = "albums"
 
 
+@method_decorator(cache_page(900), name="dispatch")
+@method_decorator(vary_on_headers("HX-Request"), name="dispatch")
 class PostsView(ProfileTabsBaseMixin, ListView):
     """Profile Posts view that handles partial and full request."""
 
@@ -132,6 +144,8 @@ class PostsView(ProfileTabsBaseMixin, ListView):
         return Post.objects.published(requesting_user).by_user(user=profile_user)
 
 
+@method_decorator(cache_page(900), name="dispatch")
+@method_decorator(vary_on_headers("HX-Request"), name="dispatch")
 class NestView(ProfileTabsBaseMixin, TemplateView):
     """Profile nest view that handles partial and full request."""
 
@@ -151,6 +165,8 @@ class NestView(ProfileTabsBaseMixin, TemplateView):
         return context
 
 
+@method_decorator(cache_page(900), name="dispatch")
+@method_decorator(vary_on_headers("HX-Request"), name="dispatch")
 class AboutView(LoginRequiredMixin, ProfileTabsBaseMixin, TemplateView):
     """Profile about view that handles partial and full request."""
 
