@@ -161,6 +161,10 @@ class AboutView(LoginRequiredMixin, ProfileTabsBaseMixin, TemplateView):
         context = super().get_context_data(**kwargs)
 
         context["sub_tab"] = self.request.GET.get("sub_tab", "story")
+        profile = self.profile
+        eggs_count = profile.get_eggs_qunt()
+
+        context.update(eggs_count)
 
         return context
 
