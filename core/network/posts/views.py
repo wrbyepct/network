@@ -324,19 +324,20 @@ class IncubatingEggView(LoginRequiredMixin, View):
         user_id = request.GET.get("user_id", request.user.id)
         post_id = IncubationService.get_incubating_post_id(user_id)
         egg_url = IncubationService.get_incubating_egg_url(user_id)
+        if not post_id or not egg_url:
+            msg = "The post has hatched. No egg to return."
+            raise Http404(msg)
+
         egg_type = EggManageService.get_egg_type(egg_url)
-        if post_id:
-            return render(
-                request,
-                "posts/partial/incubating_egg.html",
-                {
-                    "post_id": post_id,
-                    "egg_url": egg_url,
-                    "egg_type": egg_type,
-                },
-            )
-        msg = "The post has hatched. No egg to return."
-        raise Http404(msg)
+        return render(
+            request,
+            "posts/partial/incubating_egg.html",
+            {
+                "post_id": post_id,
+                "egg_url": egg_url,
+                "egg_type": egg_type,
+            },
+        )
 
 
 class HatchedPostView(LoginRequiredMixin, DetailView):
