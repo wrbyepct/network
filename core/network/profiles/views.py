@@ -128,14 +128,22 @@ class PhotosAlbumsView(
     current_photo_tab = "albums"
 
 
-@method_decorator(cache_page(900), name="dispatch")
-@method_decorator(vary_on_headers("HX-Request"), name="dispatch")
 class PostsView(ProfileTabsBaseMixin, ListView):
     """Profile Posts view that handles partial and full request."""
 
     current_tab = "turties"
     context_object_name = "posts"
     paginate_by = 10
+
+    @method_decorator(vary_on_headers("HX-Request"))
+    def dispatch(self, request, *args, **kwargs):
+        """Cache dispatch with username as key."""
+        user_pkid = request.user.pkid
+        key_prefix = f"profile_posts_{user_pkid}"
+
+        return cache_page(900, key_prefix=key_prefix)(super().dispatch)(
+            request, *args, **kwargs
+        )
 
     def get_queryset(self):
         """Get prefetched post queryset by the profile user."""
