@@ -302,6 +302,7 @@ class PostDeleteView(
 
     def delete(self, request, **kwargs):
         """Add htmx request handle to send delete message."""
+        resp = super().delete(request, **kwargs)
         if request.htmx:
             resp = HttpResponse(status=200)
             message = "Your turtie has been deleted."
@@ -312,7 +313,7 @@ class PostDeleteView(
                 message=message,
             )
 
-        return super().delete(request, **kwargs)
+        return resp
 
 
 class IncubatingEggView(LoginRequiredMixin, View):
