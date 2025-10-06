@@ -30,14 +30,21 @@ class ProfileTabsBaseMixin:
 
     tabs = PROFILE_TABS
 
+    @method_decorator(vary_on_headers("HX-Request"))
     def dispatch(self, request, *args, **kwargs):
-        """Save requesting profile obj and HX-Request for later use."""
+        """Cache dispatch with user pkid as key."""
         self.profile = get_object_or_404(
             Profile.objects.select_related("user"),
             username=kwargs.get("username"),
         )
+        profile_user_pkid = self.profile.user.pkid
+        key_prefix = (
+            f"profile_{self.current_tab}_{profile_user_pkid}_{request.user.pkid}"
+        )
 
-        return super().dispatch(request, *args, **kwargs)
+        return cache_page(900, key_prefix=key_prefix)(super().dispatch)(
+            request, *args, **kwargs
+        )
 
     def get_template_names(self):
         """Provide partial or full template based on partial request or not."""
@@ -78,8 +85,6 @@ class PhotoTabsBaseMixin:
         return context
 
 
-@method_decorator(cache_page(900), name="dispatch")
-@method_decorator(vary_on_headers("HX-Request"), name="dispatch")
 class PhotosView(
     PhotoTabsBaseMixin,
     ProfileTabsBaseMixin,
@@ -94,8 +99,6 @@ class PhotosView(
     current_photo_tab = "uploads"
 
 
-@method_decorator(cache_page(900), name="dispatch")
-@method_decorator(vary_on_headers("HX-Request"), name="dispatch")
 class PhotosUploadsView(
     PhotoTabsBaseMixin,
     ProfileTabsBaseMixin,
@@ -112,8 +115,6 @@ class PhotosUploadsView(
         return PostMedia.objects.filter(profile=self.profile).select_related("post")
 
 
-@method_decorator(cache_page(900), name="dispatch")
-@method_decorator(vary_on_headers("HX-Request"), name="dispatch")
 class PhotosAlbumsView(
     PhotoTabsBaseMixin,
     ProfileTabsBaseMixin,
@@ -135,16 +136,6 @@ class PostsView(ProfileTabsBaseMixin, ListView):
     context_object_name = "posts"
     paginate_by = 10
 
-    @method_decorator(vary_on_headers("HX-Request"))
-    def dispatch(self, request, *args, **kwargs):
-        """Cache dispatch with username as key."""
-        user_pkid = request.user.pkid
-        key_prefix = f"profile_posts_{user_pkid}"
-
-        return cache_page(900, key_prefix=key_prefix)(super().dispatch)(
-            request, *args, **kwargs
-        )
-
     def get_queryset(self):
         """Get prefetched post queryset by the profile user."""
         profile_user = self.profile.user
@@ -152,8 +143,6 @@ class PostsView(ProfileTabsBaseMixin, ListView):
         return Post.objects.published(requesting_user).by_user(user=profile_user)
 
 
-@method_decorator(cache_page(900), name="dispatch")
-@method_decorator(vary_on_headers("HX-Request"), name="dispatch")
 class NestView(ProfileTabsBaseMixin, TemplateView):
     """Profile nest view that handles partial and full request."""
 

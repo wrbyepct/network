@@ -129,6 +129,7 @@
         {# Egg Management #}
         hatchedPostId: $persist(null),
 
+        {# Egg onwer will see their egg hatched contrats util they click check #}
         {% if profile.user == request.user  %}
         eggHatched: $persist(false),
         {% else %}
