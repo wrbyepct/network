@@ -24,7 +24,7 @@ from network.common.mixins import RefererRedirectMixin, SetHtmxAlertTriggerMixin
 from network.profiles.services import ActivityManagerService
 
 from .forms import PostForm
-from .models import Post, PostLike, PostMedia
+from .models import Post, PostLike
 from .services import EggManageService, IncubationService, PostMediaService
 from .utils import get_like_stat
 
@@ -248,9 +248,10 @@ class PostEditView(
     def form_valid(self, form):
         """Handle deleting old files and add new files."""
         delete_ids = json.loads(self.request.POST.get("delete_media", "[]"))
+        post = self.object
         try:
             with transaction.atomic():
-                PostMedia.objects.filter(id__in=delete_ids).delete()
+                PostMediaService.delete_media(delete_ids=delete_ids, post=post)
                 form.validate_allowed_media_num()  # This must wait for deletion completed first to evaluate allowed media num
                 form.save()
 

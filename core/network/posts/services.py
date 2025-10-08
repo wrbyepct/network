@@ -6,6 +6,7 @@ from pathlib import Path
 from django.core.cache import cache
 from django.db import transaction
 from django.db.models import F, Max
+from django.db.models.signals import post_delete, post_save
 
 from network.profiles.models import Egg
 
@@ -19,7 +20,7 @@ class PostMediaService:
 
     @staticmethod
     def save_media(post, images=None, video=None):
-        """Save images and/or video as PostMedia linked to a post."""
+        """Save images and/or video as PostMedia linked to a post and emit save signal."""
         media_instances = []
 
         if images:
@@ -38,7 +39,9 @@ class PostMediaService:
                 )
             )
 
-        PostMedia.objects.bulk_create(media_instances)
+        medias = PostMedia.objects.bulk_create(media_instances)
+
+        PostMediaService.emit_save_signal(medias[0])
 
     @staticmethod
     def create_media(post, file, media_type, order):
@@ -52,11 +55,39 @@ class PostMediaService:
         )
 
     @staticmethod
+    def delete_media(delete_ids, post):
+        """Delete PostMedia instances associated with a post and emit delete signals."""
+        PostMedia.objects.filter(id__in=delete_ids, post=post).delete()
+
+    @staticmethod
     def get_max_order(post) -> int:
         """Get highest media order for a post, or 0 if none exists."""
         return (
             PostMedia.objects.filter(post=post).aggregate(Max("order"))["order__max"]
             or 0
+        )
+
+    @staticmethod
+    def emit_save_signal(post):
+        """Emit signal after medias being saved."""
+        post_save.send(
+            sender=PostMedia,
+            instance=post,
+            created=True,
+            using="default",
+            raw=False,
+            update_fields=None,
+        )
+
+    @staticmethod
+    def emit_delete_signal(post):
+        """Emit signal after medias being saved."""
+        import logging
+
+        logger = logging.getLogger(__name__)
+        logger.info(type(post))
+        post_delete.send(
+            sender=PostMedia, instance=post, created=False, using="default"
         )
 
 
