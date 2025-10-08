@@ -78,6 +78,9 @@
 
           this.updateExtensionFields();
           this.updateMediaCountFields();
+      },
+      prepareToSaveMedia(evt) {
+        this.$refs.postId.value = evt.detail.postId; $dispatch('save-media');
       }
   }"
 >
@@ -104,7 +107,8 @@
     hx-trigger="save-media"
     hx-encoding="multipart/form-data"
     enctype="multipart/form-data"
-    @post-created.window="$refs.postId.value = $event.detail.postId; $dispatch('save-media');" 
+    @htmx:response-error.window="creating = false"
+    @post-created.window="prepareToSaveMedia($event)" 
   >
       {% include 'posts/partial/media_upload_btn.html' %}
       <input name="post_id" x-ref="postId">

@@ -33,7 +33,7 @@ CACHEOPS = {
     # "profiles.egg": {"ops": "all", "timeout": 60 * 60},  # 1h TTL
     # "profiles.profile": {"ops": "all", "timeout": 60 * 60},  # 1h TTL
     # "profiles.profile_followers": {"ops": "all", "timeout": 60 * 60},  # 1h TTL
-    # "posts.post": {"ops": "all", "timeout": 60 * 60},  # 1h TTL
+    # "posts.post": {"ops": "all", "timeout": 60 * 60},
     # "albums.album": {"ops": "all", "timeout": 60 * 60},  # 1h TTL
     # "network.user": {"ops": "all", "timeout": 60 * 60},  # 1h TTL
 }
