@@ -5,9 +5,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Exists, OuterRef
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
-from django.views.decorators.vary import vary_on_headers
 from django.views.generic import (
     ListView,
     TemplateView,
@@ -30,21 +27,14 @@ class ProfileTabsBaseMixin:
 
     tabs = PROFILE_TABS
 
-    @method_decorator(vary_on_headers("HX-Request"))
     def dispatch(self, request, *args, **kwargs):
         """Cache dispatch with user pkid as key."""
         self.profile = get_object_or_404(
             Profile.objects.select_related("user"),
             username=kwargs.get("username"),
         )
-        profile_user_pkid = self.profile.user.pkid
-        key_prefix = (
-            f"profile_{self.current_tab}_{profile_user_pkid}_{request.user.pkid}"
-        )
 
-        return cache_page(900, key_prefix=key_prefix)(super().dispatch)(
-            request, *args, **kwargs
-        )
+        return super().dispatch(request, *args, **kwargs)
 
     def get_template_names(self):
         """Provide partial or full template based on partial request or not."""
@@ -162,8 +152,6 @@ class NestView(ProfileTabsBaseMixin, TemplateView):
         return context
 
 
-@method_decorator(cache_page(900), name="dispatch")
-@method_decorator(vary_on_headers("HX-Request"), name="dispatch")
 class AboutView(LoginRequiredMixin, ProfileTabsBaseMixin, TemplateView):
     """Profile about view that handles partial and full request."""
 
