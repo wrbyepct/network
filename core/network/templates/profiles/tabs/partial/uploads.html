@@ -1,4 +1,7 @@
 <!-- TODO Refactor media grid into usable piece -->
+{% load cache %}
+
+{% cache 900 profile_uploads profile.username %}
 {% for media in medias %}
   <div 
     class="col-span-1" 
@@ -44,3 +47,5 @@
 
 {% url 'profile_photos_uploads' profile.username as fetch_url %}
 {% include 'common/next_media_batch.html' with fetch_url=fetch_url %}
+
+{% endcache %}

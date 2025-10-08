@@ -1,5 +1,7 @@
 
+{% load cache %}
 
+{% cache 900 profile_posts profile.username %}
 <div 
   x-data="{ isPostDetail: false }" 
   class="col-lg-8 mx-auto">
@@ -20,3 +22,4 @@
 		hx-swap="beforeend"></div>
 	{% endif %}
 </div>
+{% endcache %}

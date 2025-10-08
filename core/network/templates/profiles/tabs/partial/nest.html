@@ -1,3 +1,5 @@
+{% load cache %}
+
 <!-- Holographic Turtle Nest Collection -->
 <div class="min-h-screen p-3 lg:p-6" >
   <div class="max-w-6xl mx-auto">
@@ -33,6 +35,7 @@
       x-data="{ 
         onListPage: false,
         displayScreen: false,
+        isIncubating: {{ is_incubating|yesno:'true,false' }},
       }"
       >
         <!-- Nest Title -->
@@ -49,7 +52,7 @@
         <div class="flex flex-col items-center justify-center">
           <!-- Incubating State -->
           <div 
-            x-show="!eggHatched"
+            x-show="!eggHatched || isIncubating || isHatching"
             x-cloak
             x-transition:enter="transition ease-out duration-500"
             x-transition:enter-start="opacity-0 scale-95"
@@ -83,8 +86,7 @@
                   <div 
                       id="egg-nest"
                       class="absolute w-full transform translate-y-8 text-center animate-bounce"
-                      x-effect="if(isIncubating) { console.log(isIncubating); $nextTick(() => $dispatch('egg-fetch-ready')) }"
-                      x-init="htmx.process($el)"
+                      x-init="htmx.process($el); if(isIncubating) $dispatch('egg-fetch-ready');"
                       hx-get="{% url 'egg' %}"
                       hx-vals='{"user_id": "{{ profile.user.id }}"}'
                       hx-trigger="egg-fetch-ready"
@@ -118,7 +120,7 @@
 
         <!-- Egg Hatched Congrats-->
         <div 
-          x-show="eggHatched && !isHatching"
+          x-show="eggHatched && !isHatching && !isIncubating"
           x-cloak
           x-transition:enter="transition ease-out duration-800 transform"
           x-transition:enter-start="opacity-0 scale-90 rotate-12"
@@ -187,10 +189,9 @@
 
       </div>
 
-      
-
     </div>  <!-- End of nest section -->
     
+{% cache 900 profile_nest profile.username %}
     <!-- Egg Collection Museum -->
     <div class="flex-1 post-card rounded-xl p-4 lg:p-6">
       <div class="flex items-center justify-center mb-6">
@@ -303,7 +304,5 @@
       {% endif %}
     </div>     <!-- End of egg collection  -->
 
-
-
- 
 </div>
+{% endcache %}
