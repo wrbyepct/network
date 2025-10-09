@@ -40,6 +40,7 @@
     </div>
     
     <!-- Upload Button with Ocean Glass Morphism -->
+    {% if request.user == profile.user %}
     <div class="relative">
       <div
         {% if request.user.is_authenticated %}
@@ -90,6 +91,7 @@
                     transition-transform duration-700 ease-in-out rounded-xl"></div>
       </div>
     </div>
+    {% endif %}
   </div>
 
   <!-- Holographic Tabs Section -->

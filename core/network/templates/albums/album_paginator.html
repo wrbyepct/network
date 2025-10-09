@@ -1,4 +1,6 @@
 
+{% load cache %}
+{% cache 900 profile_albums_paginator profile.username page_obj.number %}
 {% for album in albums %}
 <div class="col-span-1" x-data="{ isHovered: false }">
   <div 
@@ -105,3 +107,4 @@
 
 {% url 'albums_paginate' profile.username as fetch_url %}
 {% include 'common/next_media_batch.html' with fetch_url=fetch_url %}
+{% endcache %}
