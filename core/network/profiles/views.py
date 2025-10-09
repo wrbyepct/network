@@ -27,12 +27,16 @@ class ProfileTabsBaseMixin:
 
     tabs = PROFILE_TABS
 
-    def dispatch(self, request, *args, **kwargs):
-        """Cache dispatch with user pkid as key."""
+    def set_profile(self, username):
+        """Set profile for later user."""
         self.profile = get_object_or_404(
             Profile.objects.select_related("user"),
-            username=kwargs.get("username"),
+            username=username,
         )
+
+    def dispatch(self, request, *args, **kwargs):
+        """Cache dispatch with user pkid as key."""
+        self.set_profile(kwargs.get("username"))
 
         return super().dispatch(request, *args, **kwargs)
 
@@ -179,7 +183,7 @@ class FollowTabView(LoginRequiredMixin, ProfileTabsBaseMixin, TemplateView):
 class FollowPaginatorBaseView(ListView):
     """Follow Paginator Base View."""
 
-    paginate_by = 3
+    paginate_by = 10
 
     def get_template_names(self):
         """Get dynamic follow type tempalte name."""
