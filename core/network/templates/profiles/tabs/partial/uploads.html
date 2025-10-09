@@ -1,7 +1,7 @@
 <!-- TODO Refactor media grid into usable piece -->
 {% load cache %}
 
-{% cache 900 profile_uploads profile.username %}
+{% cache 900 profile_uploads profile.username page_obj.number %}
 {% for media in medias %}
   <div 
     class="col-span-1" 
