@@ -6,7 +6,7 @@ from pathlib import Path
 from django.core.cache import cache
 from django.db import transaction
 from django.db.models import F, Max
-from django.db.models.signals import post_delete, post_save
+from django.db.models.signals import post_save
 
 from network.profiles.models import Egg
 
@@ -68,26 +68,15 @@ class PostMediaService:
         )
 
     @staticmethod
-    def emit_save_signal(post):
+    def emit_save_signal(instance):
         """Emit signal after medias being saved."""
         post_save.send(
             sender=PostMedia,
-            instance=post,
+            instance=instance,
             created=True,
             using="default",
             raw=False,
             update_fields=None,
-        )
-
-    @staticmethod
-    def emit_delete_signal(post):
-        """Emit signal after medias being saved."""
-        import logging
-
-        logger = logging.getLogger(__name__)
-        logger.info(type(post))
-        post_delete.send(
-            sender=PostMedia, instance=post, created=False, using="default"
         )
 
 

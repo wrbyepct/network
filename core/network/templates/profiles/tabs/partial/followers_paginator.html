@@ -1,6 +1,9 @@
+{% load cache %}
+{% cache 900 profile_followers_paginator username page_obj.number %}
 {% for follower in followers %}
   {% include 'profiles/tabs/partial/follow_card.html' %}
 {% endfor %}
 
 {% url 'followers_paginator' username as fetch_url %}
 {% include 'profiles/tabs/partial/next_follow_batch.html' with fetch_url=fetch_url %}
+{% endcache %}
