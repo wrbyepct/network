@@ -39,9 +39,9 @@ class PostMediaService:
                 )
             )
 
-        medias = PostMedia.objects.bulk_create(media_instances)
-
-        PostMediaService.emit_save_signal(medias[0])
+        if media_instances:
+            medias = PostMedia.objects.bulk_create(media_instances)
+            PostMediaService.emit_save_signal(medias[0])
 
     @staticmethod
     def create_media(post, file, media_type, order):
