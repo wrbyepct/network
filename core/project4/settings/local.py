@@ -27,15 +27,15 @@ CELERY_RESULT_BACKEND = None
 
 # CaccheOPs
 CACHEOPS_REDIS = "redis://redis:6379/1"
-CACHEOPS_ENABLED = False
+CACHEOPS_ENABLED = True
 CACHEOPS_DEFAULTS = {"timeout": 60 * 60}
 CACHEOPS = {
-    # "profiles.egg": {"ops": "all", "timeout": 60 * 60},  # 1h TTL
-    # "profiles.profile": {"ops": "all", "timeout": 60 * 60},  # 1h TTL
+    "profiles.egg": {"ops": "all", "timeout": 60 * 60},  # 1h TTL
+    "profiles.profile": {"ops": "all", "timeout": 60 * 60},  # 1h TTL
+    "posts.post": {"ops": "all", "timeout": 60 * 60},
     # "profiles.profile_followers": {"ops": "all", "timeout": 60 * 60},  # 1h TTL
-    # "posts.post": {"ops": "all", "timeout": 60 * 60},
     # "albums.album": {"ops": "all", "timeout": 60 * 60},  # 1h TTL
-    # "network.user": {"ops": "all", "timeout": 60 * 60},  # 1h TTL
+    "network.user": {"ops": "all", "timeout": 60 * 60},  # 1h TTL
 }
 
 
