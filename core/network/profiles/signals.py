@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 
 @receiver([post_save, post_delete], sender=Post)
-def invalidate_profile_posts_cache(sender, instance, **kwargs):
+def invalidate_profile_posts_cache(sender, instance, created=None, **kwargs):
     logger.info("Post is changing...")
     user = instance.user
     pages = get_page_num(user.posts.all())
@@ -26,6 +26,10 @@ def invalidate_profile_posts_cache(sender, instance, **kwargs):
         key = make_template_fragment_key("profile_posts", [username, page_num])
         cache.delete(key)
 
+    signal = kwargs.get("signal")
+    if (signal == post_save and created) or signal == post_delete:
+        invalidate_profile_stats(username)  # post count changed, invalidate the cache
+
 
 @receiver([post_save, post_delete], sender=Egg)
 def invalidate_profile_nest_cache(sender, instance, **kwargs):
@@ -34,6 +38,8 @@ def invalidate_profile_nest_cache(sender, instance, **kwargs):
     key = make_template_fragment_key("profile_nest", [username])
 
     cache.delete(key)
+
+    invalidate_profile_stats(username)  # egg count changed, invalidate the cache
 
 
 @receiver([post_save, post_delete], sender=PostMedia)
@@ -47,7 +53,7 @@ def invalidate_profile_media_cache(sender, instance, **kwargs):
 
 
 @receiver([post_save, post_delete], sender=Album)
-def invalidate_profile_album_cache(sender, instance, **kwargs):
+def invalidate_profile_album_cache(sender, instance, created=None, **kwargs):
     profile = instance.profile
     username = profile.username
     pages = get_page_num(instances=profile.albums.all())
@@ -56,6 +62,11 @@ def invalidate_profile_album_cache(sender, instance, **kwargs):
             "profile_albums_paginator", [username, page_num]
         )
         cache.delete(albums_paginator_key)
+
+    signal = kwargs.get("signal")
+
+    if (signal == post_save and created) or signal == post_delete:
+        invalidate_profile_stats(username)  # album count changed, invalidate the cache
 
 
 @receiver([post_save, post_delete], sender=AlbumMedia)
@@ -81,8 +92,6 @@ def invalidate_followers_paginator_cache(
         # B followers haved changed, invalidate for B followers page
         followers_changed_profile = Profile.objects.filter(pk__in=pk_set).first()
 
-        logger.info("Profile follower changed")
-        logger.info(f"The profile changed is {followers_changed_profile.username}")
         pages = get_page_num(followers_changed_profile.followers.all())
         for page_num in range(1, pages + 1):
             key = make_template_fragment_key(
@@ -100,6 +109,21 @@ def invalidate_followers_paginator_cache(
                 [following_changed_profile.username, page_num],
             )
             cache.delete(key)
+
+        invalidate_profile_stats(followers_changed_profile.username)
+        invalidate_profile_stats(following_changed_profile.username)
+
+
+@receiver([post_save], sender=Profile)
+def invalidate_profile_info_cache(sender, instance, **kwargs):
+    username = instance.username
+    key = make_template_fragment_key("profile_info", username)
+    cache.delete(key)
+
+
+def invalidate_profile_stats(username):
+    key = make_template_fragment_key("profile_stats", [username])
+    cache.delete(key)
 
 
 def get_page_num(instances):
