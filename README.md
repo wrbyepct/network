@@ -5,13 +5,13 @@ I’ve waited for years, but social media only ran faster in the opposite direct
 
 Here’s what I wish for instead:
 
-A place where people think before posting — not compete for visibility.
+A place where people ***think before posting*** — not compete for visibility.
 
-A place that’s slow by design, where anticipation is part of the fun.
+A place that’s ***slow by design***, where anticipation is part of the fun.
 
-A place that feels calm and patient, where anticipation replaces arguments and keyboard wars.
+A place that feels ***calm and patient***, where anticipation replaces arguments and keyboard wars.
 
-A place that reminds me of old games — simple, clunky, yet deeply joyful — while blending in what's new in modern time.
+A place that reminds me of ***old games*** — simple, clunky, yet deeply joyful — while blending in what's new in modern time.
 
 So I’m building it.
 I don’t know if it will be “better,” but I know it’s the kind of social media I’ve always wanted to exist.
@@ -20,6 +20,7 @@ I don’t know if it will be “better,” but I know it’s the kind of social 
 # 🐢 Core Features
 ## Turtie (Post)
 Like any social media, you can create, edit, or delete your posts — but here, we call them "turties". Each turtie represents a thought you’ve chosen to share with patience and care.
+![post edit compressed](https://github.com/user-attachments/assets/79fda65c-c0b9-484d-b768-e36cce77fc3b)
 
 ## Egg System (Post Incubation)
 When you create a turtie, it doesn’t appear instantly. Instead, you receive an egg — a symbol of anticipation. Your egg will hatch anywhere between 20 minutes to 24 hours, revealing your turtie when it’s ready. Since each time you might receive a different egg, so you might receive a very special egg out of luck!
@@ -29,9 +30,8 @@ You can create, edit, delete, and like comments on both turties and other commen
 
 ## Tur-Boy (Sidebar Console)
 Inspired by the Game Boy, Tur-Boy serves as your interactive sidebar console. It lets you check your profile stats, including followers, egg collections, activity, and incubation progress — all wrapped in nostalgic pixel-art charm.
-![turboy1](https://github.com/user-attachments/assets/a4ce2511-b35c-450b-9072-502777f40627)
-![turboy2](https://github.com/user-attachments/assets/c4fa4113-9cb7-4906-9cb2-d2bd7c7ad26e)
-
+![Egg Design (1)](https://github.com/user-attachments/assets/608070f9-cc8c-4ab6-aac4-08c9cc4ea01c)
+![Egg Design (2)](https://github.com/user-attachments/assets/971ebce6-f9f7-4206-ac2d-0b61642f28c5)
 
 ## Authentication
 Sign up via your favorite social accounts or register with your email and password. Once you join, you officially become a Turtler! Password recovery and updates are supported for a smooth experience.
