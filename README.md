@@ -18,31 +18,34 @@ I don’t know if it will be “better,” but I know it’s the kind of social 
 
 
 # 🐢 Core Features
-### Turtie (Post)
+## Turtie (Post)
 Like any social media, you can create, edit, or delete your posts — but here, we call them "turties". Each turtie represents a thought you’ve chosen to share with patience and care.
 
-### Egg System (Post Incubation)
+## Egg System (Post Incubation)
 When you create a turtie, it doesn’t appear instantly. Instead, you receive an egg — a symbol of anticipation. Your egg will hatch anywhere between 20 minutes to 24 hours, revealing your turtie when it’s ready. Since each time you might receive a different egg, so you might receive a very special egg out of luck!
 
-### Comments
+## Comments
 You can create, edit, delete, and like comments on both turties and other comments — simple interactions that help you connect with other turtler.
 
-### Tur-Boy (Sidebar Console)
+## Tur-Boy (Sidebar Console)
 Inspired by the Game Boy, Tur-Boy serves as your interactive sidebar console. It lets you check your profile stats, including followers, egg collections, activity, and incubation progress — all wrapped in nostalgic pixel-art charm.
+![turboy1](https://github.com/user-attachments/assets/a4ce2511-b35c-450b-9072-502777f40627)
+![turboy2](https://github.com/user-attachments/assets/c4fa4113-9cb7-4906-9cb2-d2bd7c7ad26e)
 
-### Authentication
+
+## Authentication
 Sign up via your favorite social accounts or register with your email and password. Once you join, you officially become a Turtler! Password recovery and updates are supported for a smooth experience.
 
-### Profile
+## Profile
 Your profile showcases who you are. In the "About" tab, you’ll find your personal info and stats — and you can edit them anytime.
 
-### Nest
+## Nest
 Located on your profile page, the "Nest" tab is where all your eggs live. Check your egg collection, track the one that is currently incubating, and celebrate each new hatch.
 
-### Pond
+## Pond
 The "Pond" tab is your social space — see your followers and the Turtlers you follow. It’s calm, clear, and free from the noise of typical feeds.
 
-### Shells (Media Library)
+## Shells (Media Library)
 - In the Shells tab, the "Uploads" subtab is where you can see your media uploaded via turties.
 - In "Album" subtab you can view, create, edit, or delete your media albums — your personal gallery of shared memories and creations.
 - 
