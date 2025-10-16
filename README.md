@@ -41,6 +41,8 @@ Sign up via your favorite social accounts or register with your email and passwo
 ## Profile
 Your profile showcases who you are. In the ***About*** tab, you’ll find your personal info and stats — and you can edit them anytime.
 
+![profile (1)](https://github.com/user-attachments/assets/464b2a93-8597-46db-bd7c-fab2c50b12ec)
+
 ## Nest
 Located on your profile page, the ***Nest*** tab is where all your eggs live. Check your egg collection, track the one that is currently incubating, and celebrate each new hatch.
 
@@ -49,10 +51,16 @@ Located on your profile page, the ***Nest*** tab is where all your eggs live. Ch
 ## Pond
 The ***Pond*** tab is your social space — see your followers and the Turtlers you follow. It’s calm, clear, and free from the noise of typical feeds.
 
+![follow (1)](https://github.com/user-attachments/assets/df63fa8b-4afb-4ada-aa47-74ceac4d3327)
+
+
 ## Shells (Media Library)
 - In the Shells tab, the ***Uploads*** subtab is where you can see your media uploaded via turties.
 - In ***Album*** subtab you can view, create, edit, or delete your media albums — your personal gallery of shared memories and creations.
-- 
+
+![album (2)](https://github.com/user-attachments/assets/f25d6924-1dad-42fe-a2b8-41344d07f87b)
+
+  
 # Why This Design?
 ## Turtle Theme
 The turtle represents what this app stands for — a slow-paced, relaxing kind of social media. It’s not about racing to catch up; it’s about slowing down, taking your time, and enjoying the journey.
