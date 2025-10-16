@@ -30,6 +30,8 @@ When you create a ***turtie***, it doesn’t appear instantly. Instead, you rece
 ## Comments
 You can create, edit, delete, and like comments on both turties and other comments — simple interactions that help you connect with other turtler.
 
+![comment](https://github.com/user-attachments/assets/653275eb-5ced-4a71-bc58-694e92c4a84b)
+
 ## Tur-Boy (Sidebar Console)
 Inspired by the Game Boy, Tur-Boy serves as your interactive sidebar console. It lets you check your profile stats, including followers, egg collections, activity, and incubation progress — all wrapped in nostalgic pixel-art charm.
 ![Egg Design (1)](https://github.com/user-attachments/assets/608070f9-cc8c-4ab6-aac4-08c9cc4ea01c)
