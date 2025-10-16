@@ -17,13 +17,22 @@
       <!-- Holographic Album Cover Display -->
       <div class="relative bg-gradient-to-br from-slate-800/20 to-slate-900/40 border border-cyan-400/30 
                   backdrop-blur-15 rounded-xl overflow-hidden" style="height: 160px;">
-        {% if album.medias.first %}
+        {% with cover_media=album.medias.first %}
+        {% if cover_media %}
           <!-- Album Cover Image -->
-          <img 
-            src="{{ album.medias.first.file.url }}" 
+          {% if cover_media.is_image %}
+            <img 
+              src="{{ cover_media.file.url }}" 
+              class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
+              alt="Album cover"
+            >
+          {% else %}
+            <video 
             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
-            alt="Album cover"
-          >
+             src="{{ cover_media.file.url }}"
+             preload="metadata"
+            ></video>
+          {% endif %}
           <!-- Holographic Overlay Effect -->
           <div class="absolute inset-0 bg-gradient-to-br from-cyan-400/10 via-transparent to-emerald-400/10 
                       opacity-20 group-hover:opacity-40 transition-opacity duration-300"></div>
@@ -60,7 +69,7 @@
                         bg-black rounded-full shadow-sm shadow-cyan-400/50"></div>
           </div>
         {% endif %}
-        
+        {% endwith %}
         <!-- Holographic Photo Count Badge -->
         <div class="absolute top-2 right-2 bg-black/80 border border-cyan-400/40 text-cyan-400 
                     text-xs font-bold px-2 py-1 rounded backdrop-blur-10
