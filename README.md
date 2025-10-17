@@ -1,23 +1,31 @@
-# 🌿 Goal of the App
+# 🐢 What is this app?
+**Turtly Fine** is a turtle-themed social media platform that celebrates slowing down.
+
+Inspired by the charm of retro *Game Boy* and *Mario* aesthetics, it blends classic pixel-art nostalgia with modern tech vibes.
+It’s designed as a calm, cozy space—an antidote to today’s fast-scrolling feeds.
+
+Here, posts (“Turties”) don’t appear instantly—they hatch from eggs over time—encouraging anticipation, patience, and joy in the wait. Every pixel, color, and animation is crafted to evoke the cozy spirit of old-school gaming while building genuine, unhurried connections.
+
+# 🎯 Goal of the App
 Social media today feels like a race — algorithm-driven, fast-fed, and filled with noise. It rewards speed over thought, reactions over reflection. I’ve long wished for a different kind of space — one that brings back the quiet excitement of waiting for something new, where posts are made with intention, and simplicity feels satisfying again.
 
 I’ve waited for years, but social media only ran faster in the opposite direction.
 
 Here’s what I wish for instead:
 
-A place where people ***think before posting*** — not compete for visibility.
+- A place where people ***think before posting*** — not compete for visibility.
 
-A place that’s ***slow by design***, where anticipation is part of the fun.
+- A place that’s ***slow by design***, where anticipation is part of the fun.
 
-A place that feels ***calm and patient***, where anticipation replaces arguments and keyboard wars.
+- A place that feels ***calm and patient***, where anticipation replaces arguments and keyboard wars.
 
-A place that reminds me of ***old games*** — simple, clunky, yet deeply joyful — while blending in what's new in modern time.
+- A place that reminds me of ***old games*** — simple, clunky, yet deeply joyful — while blending in what's new in modern time.
 
 So I’m building it.
 I don’t know if it will be “better,” but I know it’s the kind of social media I’ve always wanted to exist.
 
 
-# 🐢 Core Features
+# ⭐ Core Features
 ## Turtie (Post)
 Like any social media, you can create, edit, or delete your posts — but here, we call them "***turties***". Each turtie represents a thought you’ve chosen to share with patience and care.
 ![post edit compressed](https://github.com/user-attachments/assets/79fda65c-c0b9-484d-b768-e36cce77fc3b)
@@ -39,6 +47,10 @@ Inspired by the Game Boy, Tur-Boy serves as your interactive sidebar console. It
 
 ## Authentication
 Sign up via your favorite social accounts or register with your email and password. Once you join, you officially become a ***Turtler***! Password recovery and updates are supported for a smooth experience.
+
+![auth1](https://github.com/user-attachments/assets/7d228e5d-314e-41fc-ae75-3a0ea0c95eac)
+![auth2](https://github.com/user-attachments/assets/554ebf64-c730-4617-9948-07905ac71e1f)
+
 
 ## Profile
 Your profile showcases who you are. In the ***About*** tab, you’ll find your personal info and stats — and you can edit them anytime.
@@ -65,15 +77,24 @@ The ***Pond*** tab is your social space — see your followers and the Turtlers 
   
 # Why This Design?
 ## Turtle Theme
-The turtle represents what this app stands for — a slow-paced, relaxing kind of social media. It’s not about racing to catch up; it’s about slowing down, taking your time, and enjoying the journey.
+The turtle represents what this app stands for — a slow-paced, relaxing kind of social media.  
+It’s not about racing to catch up; it’s about slowing down, taking your time, and enjoying the journey.
 
 ## Egg System
 
-🥚 ***Incubation***: Waiting becomes part of the fun. Just like a turtle egg, posts and interactions take time to “hatch,” turning patience into playful anticipation.
+- 🥚 ***Incubation***: Waiting becomes part of the fun. Just like a turtle egg, posts and interactions take time to “hatch,” turning patience into playful anticipation.
 
-🎁 ***Collection***: There are many types of eggs to discover — each one a small surprise for those who take things slow.
+- 🎁 ***Collection***: There are many types of eggs to discover — each one a small surprise for those who take things slow.
 
-🌊 ***Turtle Events***: In the future, collected eggs can be used for trading, decorating profiles, or joining community events.
+- 🌊 ***Turtle Events***: In the future, collected eggs can be used for trading, decorating profiles, or joining community events.
 
 ## Tur-Boy
-Inspired by the nostalgic ***Game Boy***, Tur-Boy replaces the traditional sidebar with a retro-styled console. It lets you check your stats and explore features — while keeping that warm, pixel-era charm that reminds you of simpler, happier times.
+Inspired by the nostalgic ***Game Boy***, Tur-Boy replaces the traditional sidebar with a retro-styled console.  
+It lets you check your stats and explore features — while keeping that warm, pixel-era charm that reminds you of simpler, happier times.
+
+# 🧰 Tech Stack
+**Backend**: Django • Celery • Redis • Cacheops  
+**Authentication**: Django Allauth / Social Auth  
+**Frontend**: HTMX • Alpine.js • Tailwind CSS  
+**Database**: PostgreSQL  
+**Infrastructure**: Docker • Gunicorn  
