@@ -173,9 +173,9 @@
                 url: {% if user.is_authenticated %}'{% url 'profile_nest' user.profile.username %}'{% else %}null{% endif %}
               },
               {
-                emoji: '🖍️', 
-                name: 'POST', 
-                url: {% if user.is_authenticated %}'{% url 'post_create' %}'{% else %}null{% endif %}
+                emoji: '📸', 
+                name: 'SHELLS', 
+                url: {% if user.is_authenticated %}'{% url 'profile_shells' user.profile.username %}'{% else %}null{% endif %}
               },
             ]
           }"
@@ -183,22 +183,17 @@
           <template x-for="(action, index) in actions" :key="index">     
             <a 
               {% if user.is_authenticated %}
-                :hx-get="action.name === 'POST' && action.url"
-                :hx-select="action.name === 'POST' && '#post-create-container'"
-                :hx-target="action.name === 'POST' && '#modal-container'"
-                :href="action.name !== 'POST' && action.url "
+                :href="action.url"
               {% else %}
                 href="{% url 'account_login' %}"  
                 hx-get="{% url 'account_login' %}"
                 hx-select="#auth-modal-content"
                 hx-target="#modal-container"
               {% endif %}
-                x-show="action.name === 'POST' ? !isIncubating && !isHatching : true"
-                @htmx:after-request="if($event.detail.successful) showModal = true;"
                 class="text-decoration-none console-glow flex-1 min-w-[60px] border-2 border-teal-500 rounded-lg px-1.5 py-2 no-underline flex flex-col items-center gap-0.5 transition-all duration-150 hover:-translate-y-0.5 hover:no-underline cursor-pointer"
               >
               <span 
-                class="text-xs" 
+                class="text-sm" 
                 style="filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.5));" 
                 x-text="action.emoji"></span>
               <span 
