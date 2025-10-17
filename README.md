@@ -1,4 +1,4 @@
-# 🐢 What is this app?
+# 🐢 What Is This App?
 **Turtly Fine** is a turtle-themed social media platform that celebrates slowing down.
 
 Inspired by the charm of retro *Game Boy* and *Mario* aesthetics, it blends classic pixel-art nostalgia with modern tech vibes.
