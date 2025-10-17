@@ -90,7 +90,7 @@ Turtly Fine 是一個以烏龜為主題、主打「慢節奏」的社群平台�
 ![follow (1)](https://github.com/user-attachments/assets/df63fa8b-4afb-4ada-aa47-74ceac4d3327)
 
 
-## 🐚 貝殼（媒體庫）
+## 🐚 龜殼（媒體庫）
 
 在「Uploads」子分頁中，你可以看到自己上傳的所有媒體。  
 在「Album」子分頁中，可以建立、編輯或刪除相簿，打造專屬的回憶牆。
