@@ -69,7 +69,7 @@ The ***Pond*** tab is your social space — see your followers and the Turtlers 
 
 
 ## Shells (Media Library)
-- In the Shells tab, the ***Uploads*** subtab is where you can see your media uploaded via turties.
+- In the Shells tab, the ***Uploads*** subtab is where you can see your media uploaded via turties.  
 - In ***Album*** subtab you can view, create, edit, or delete your media albums — your personal gallery of shared memories and creations.
 
 ![album (2)](https://github.com/user-attachments/assets/f25d6924-1dad-42fe-a2b8-41344d07f87b)
