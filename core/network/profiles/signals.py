@@ -117,7 +117,7 @@ def invalidate_followers_paginator_cache(
 @receiver([post_save], sender=Profile)
 def invalidate_profile_info_cache(sender, instance, **kwargs):
     username = instance.username
-    key = make_template_fragment_key("profile_info", username)
+    key = make_template_fragment_key("profile_info", [username])
     cache.delete(key)
 
 
