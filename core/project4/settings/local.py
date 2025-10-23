@@ -41,7 +41,7 @@ CACHEOPS = {
 
 # DEV TOOLBAR
 DEBUG_TOOLBAR_CONFIG = {
-    "SHOW_TOOLBAR_CALLBACK": lambda _: True,  # always show
+    "SHOW_TOOLBAR_CALLBACK": lambda _: False,  # always show
 }
 
 INTERNAL_IPS = ["127.0.0.1"]

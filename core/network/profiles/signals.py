@@ -100,15 +100,23 @@ def invalidate_followers_paginator_cache(
             )
             cache.delete(key)
 
-        # A following has chaged, invalidate for A's following page
+        # A following has chaged, invalidate for A's following page & followers page
         following_changed_profile = instance
         pages = get_page_num(following_changed_profile.following.all())
         for page_num in range(1, pages + 1):
-            key = make_template_fragment_key(
+            following_key = make_template_fragment_key(
                 "profile_following_paginator",
                 [following_changed_profile.username, page_num],
             )
-            cache.delete(key)
+            cache.delete(following_key)
+
+        pages = get_page_num(following_changed_profile.followers.all())
+        for page_num in range(1, pages + 1):
+            followers_key = make_template_fragment_key(
+                "profile_followers_paginator",
+                [following_changed_profile.username, page_num],
+            )
+            cache.delete(followers_key)
 
         invalidate_profile_stats(followers_changed_profile.username)
         invalidate_profile_stats(following_changed_profile.username)
