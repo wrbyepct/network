@@ -19,40 +19,41 @@
 
 /* Body Background - Prevents White Flash */
 body {
-  background: 
+  background:
     radial-gradient(circle at 20% 80%, rgba(6, 182, 212, 0.03) 0%, transparent 50%),
     radial-gradient(circle at 80% 20%, rgba(16, 185, 129, 0.02) 0%, transparent 50%),
     radial-gradient(circle at 40% 40%, rgba(251, 191, 36, 0.01) 0%, transparent 50%),
-    linear-gradient(135deg, 
+    linear-gradient(135deg,
       var(--holo-deep) 0%,
-      var(--holo-mid) 25%,
-      var(--holo-light) 75%,
-      #475569 100%
-    );
+      var(--holo-deep) 25%,
+      var(--holo-mid) 75%,
+      var(--holo-mid) 100%);
   margin: 0;
   min-height: 100vh;
+  position: relative;
 }
 
 /* Main Container - Critical Layout */
-.holographic-ocean-bg {
-  background: 
+/* .holographic-ocean-bg {
+  background:
     radial-gradient(circle at 20% 80%, rgba(6, 182, 212, 0.03) 0%, transparent 50%),
     radial-gradient(circle at 80% 20%, rgba(16, 185, 129, 0.02) 0%, transparent 50%),
     radial-gradient(circle at 40% 40%, rgba(251, 191, 36, 0.01) 0%, transparent 50%),
-    linear-gradient(135deg, 
+    linear-gradient(135deg,
       var(--holo-deep) 0%,
-      var(--holo-mid) 25%,
-      var(--holo-light) 75%,
-      #475569 100%
-    );
+      var(--holo-deep) 25%,
+      var(--holo-mid) 75%,
+      var(--holo-mid) 100%);
+  margin: 0;
+  min-height: 100vh;
   position: relative;
-}
+} */
 
 /* Navigation Structure - Critical */
 .turtle-habitat-nav {
   background: rgba(0, 0, 0, 0.9);
   border-bottom: 1px solid rgba(6, 182, 212, 0.3);
-  font-family: 'Press Start 2P', monospace; 
+  font-family: 'Press Start 2P', monospace;
   font-size: 10px;
   position: relative;
 }
@@ -107,11 +108,11 @@ body {
   .nav-menu-desktop {
     display: none;
   }
-  
+
   .nav-logo-text {
     font-size: 8px;
   }
-  
+
   .nav-logo-img {
     width: 32px;
     height: 32px;
