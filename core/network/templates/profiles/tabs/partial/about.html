@@ -108,9 +108,9 @@
                   <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
                     {% if easter_eggs_count %}
                       <div class="holo-stat-display bg-black/75 backdrop-blur-xl 
-                                  p-3 rounded-lg shadow-md relative overflow-hidden">
+                                  p-3 rounded-lg shadow-md relative overflow-hidden text-center">
                         <div class="text-pink-400 text-xs mb-1 uppercase tracking-wider">Easter Eggs</div>
-                        <div class="holo-counter font-mono text-cyan-400 text-sm font-bold text-center
+                        <div class="holo-counter font-mono text-cyan-400 text-sm font-bold
                                     bg-cyan-500/10 px-2 py-1 rounded border border-cyan-500/20">
                             {{ easter_eggs_count|stringformat:"03d" }}
                         </div>
@@ -119,9 +119,9 @@
                       
                       {% if special_eggs_count %}
                         <div class="holo-stat-display bg-black/75 backdrop-blur-xl 
-                                    p-3 rounded-lg shadow-md relative overflow-hidden">
+                                    p-3 rounded-lg shadow-md relative overflow-hidden text-center">
                             <div class="text-yellow-400 text-xs mb-1 uppercase tracking-wider">Legendary</div>
-                            <div class="holo-counter font-mono text-cyan-400 text-sm font-bold text-center
+                            <div class="holo-counter font-mono text-cyan-400 text-sm font-bold
                                         bg-cyan-500/10 px-2 py-1 rounded border border-cyan-500/20">
                                 {{ special_eggs_count|stringformat:"03d" }}
                             </div>
@@ -130,9 +130,9 @@
 
                       {% if regular_eggs_count %}
                         <div class="holo-stat-display bg-black/75 backdrop-blur-xl 
-                                    p-3 rounded-lg shadow-md relative overflow-hidden">
+                                    p-3 rounded-lg shadow-md relative overflow-hidden text-center">
                           <div class="text-green-400 text-xs mb-1 uppercase tracking-wider">Cute Eggs</div>
-                          <div class="holo-counter font-mono text-cyan-400 text-sm font-bold text-center
+                          <div class="holo-counter font-mono text-cyan-400 text-sm font-bold
                                       bg-cyan-500/10 px-2 py-1 rounded border border-cyan-500/20">
                               {{ regular_eggs_count|stringformat:"03d" }}
                           </div>
@@ -140,45 +140,45 @@
                       {% endif %}
 
                     <div class="holo-stat-display bg-black/75 backdrop-blur-xl 
-                                p-3 rounded-lg shadow-md relative overflow-hidden">
+                                p-3 rounded-lg shadow-md relative overflow-hidden text-center">
                         <div class="text-cyan-400 text-xs mb-1 uppercase tracking-wider">Posts</div>
-                        <div class="holo-counter font-mono text-cyan-400 text-sm font-bold text-center
+                        <div class="holo-counter font-mono text-cyan-400 text-sm font-bold
                                     bg-cyan-500/10 px-2 py-1 rounded border border-cyan-500/20">
                             {{ profile.posts.count|stringformat:"03d" }}
                         </div>
                     </div>
                 
                     <div class="holo-stat-display bg-black/75 backdrop-blur-xl 
-                                p-3 rounded-lg shadow-md relative overflow-hidden">
+                                p-3 rounded-lg shadow-md relative overflow-hidden text-center">
                         <div class="text-blue-400 text-xs mb-1 uppercase tracking-wider">Followers</div>
-                        <div class="holo-counter font-mono text-cyan-400 text-sm font-bold text-center
+                        <div class="holo-counter font-mono text-cyan-400 text-sm font-bold
                                     bg-cyan-500/10 px-2 py-1 rounded border border-cyan-500/20">
                             {{ profile.followers.count|stringformat:"03d" }}
                         </div>
                     </div>
                 
                     <div class="holo-stat-display bg-black/75 backdrop-blur-xl 
-                                p-3 rounded-lg shadow-md relative overflow-hidden">
+                                p-3 rounded-lg shadow-md relative overflow-hidden text-center">
                         <div class="text-purple-400 text-xs mb-1 uppercase tracking-wider">Following</div>
-                        <div class="holo-counter font-mono text-cyan-400 text-sm font-bold text-center
+                        <div class="holo-counter font-mono text-cyan-400 text-sm font-bold
                                     bg-cyan-500/10 px-2 py-1 rounded border border-cyan-500/20">
                             {{ profile.following.count|stringformat:"03d" }}
                         </div>
                     </div>
                 
                     <div class="holo-stat-display bg-black/75 backdrop-blur-xl 
-                                p-3 rounded-lg shadow-md relative overflow-hidden">
+                                p-3 rounded-lg shadow-md relative overflow-hidden text-center">
                         <div class="text-orange-400 text-xs mb-1 uppercase tracking-wider">Albums</div>
-                        <div class="holo-counter font-mono text-cyan-400 text-sm font-bold text-center
+                        <div class="holo-counter font-mono text-cyan-400 text-sm font-bold
                                     bg-cyan-500/10 px-2 py-1 rounded border border-cyan-500/20">
                             {{ profile.albums_count|stringformat:"03d" }}
                         </div>
                     </div>
                 
                     <div class="holo-stat-display bg-black/75 backdrop-blur-xl 
-                                p-3 rounded-lg shadow-md relative overflow-hidden col-span-2 md:col-span-1">
+                                p-3 rounded-lg shadow-md relative overflow-hidden col-span-2 md:col-span-1 text-center">
                         <div class="text-teal-400 text-xs mb-1 uppercase tracking-wider">Turtler Since</div>
-                        <div class="holo-counter font-mono text-cyan-400 text-xs font-bold text-center
+                        <div class="holo-counter font-mono text-cyan-400 text-xs font-bold
                                     bg-cyan-500/10 px-2 py-1 rounded border border-cyan-500/20">
                             {{ profile.created_at|date:"Y-m-d" }}
                         </div>

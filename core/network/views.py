@@ -44,7 +44,7 @@ class CustomSignupView(HtmxAuthMixin, SignupView):
             self.request, user, app_settings.EMAIL_VERIFICATION, self.get_success_url()
         )
 
-        self.get_htmx_response()
+        return self.get_htmx_response()
 
 
 class CustomLoginView(HtmxAuthMixin, LoginView):
