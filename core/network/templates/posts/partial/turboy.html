@@ -187,8 +187,9 @@
               {% else %}
                 href="{% url 'account_login' %}"  
                 hx-get="{% url 'account_login' %}"
-                hx-select="#auth-modal-content"
                 hx-target="#modal-container"
+                hx-select="#auth-modal-content"
+                @htmx:after-request="if($event.detail.successful) showModal = true;"
               {% endif %}
                 class="text-decoration-none console-glow flex-1 min-w-[60px] border-2 border-teal-500 rounded-lg px-1.5 py-2 no-underline flex flex-col items-center gap-0.5 transition-all duration-150 hover:-translate-y-0.5 hover:no-underline cursor-pointer"
               >

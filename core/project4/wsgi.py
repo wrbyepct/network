@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/3.0/howto/deployment/wsgi/
 
 import os
 
+# For serving video stream.
 from dj_static import Cling, MediaCling
 from django.core.wsgi import get_wsgi_application
 from static_ranges import Ranges
