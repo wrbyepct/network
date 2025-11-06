@@ -128,7 +128,7 @@ class IncubationService:
 
     @staticmethod
     def _get_random_egg_type():
-        """Return random egg img url."""
+        """Return random egg type."""
         return random.choices(
             IncubationService.EGG_TYPES,
             weights=IncubationService.WEIGHTS,
