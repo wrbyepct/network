@@ -17,8 +17,9 @@ class PostMediaInline(admin.TabularInline):  # or StackedInline
 class PostAdmin(admin.ModelAdmin):
     """Custome Post admin."""
 
-    list_display = ["id", "username"]
+    list_display = ["id", "username", "content"]
     list_display_links = ["id"]
+    ordering = ["-created_at"]
     inlines = [PostMediaInline]
 
     def username(self, obj):

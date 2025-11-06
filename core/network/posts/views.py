@@ -223,10 +223,11 @@ class GetUserPostMixin:
     def get_object(self, queryset=None):
         """Return the requesting user's own post object."""
         post_id = self.kwargs.get("post_id")
+        user = self.request.user
         return get_object_or_404(
-            Post.objects.select_related("user__profile"),
+            Post.objects.published(user),
             id=post_id,
-            user=self.request.user,
+            user=user,
         )
 
 
