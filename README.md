@@ -40,8 +40,8 @@ You can create, edit, delete, and like comments on both turties and other commen
 
 ![comment](https://github.com/user-attachments/assets/653275eb-5ced-4a71-bc58-694e92c4a84b)
 
-## Tur-Boy (Sidebar Console)
-Inspired by the Game Boy, Tur-Boy serves as your interactive sidebar console. It lets you check your profile stats, including followers, egg collections, activity, and incubation progress — all wrapped in nostalgic pixel-art charm.
+## Tur-Boy (Sidebar Console / FAB)
+Inspired by ***Game Boy***, ***Tur-Boy*** serves as your interactive sidebar console or floating button (in small screen mode). It lets you check your profile stats, including followers, egg collections, activity, and incubation progress — all wrapped in nostalgic pixel-art charm.
 ![Egg Design (1)](https://github.com/user-attachments/assets/608070f9-cc8c-4ab6-aac4-08c9cc4ea01c)
 ![Egg Design (2)](https://github.com/user-attachments/assets/971ebce6-f9f7-4206-ac2d-0b61642f28c5)
 
