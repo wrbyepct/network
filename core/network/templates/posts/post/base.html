@@ -19,7 +19,6 @@
       replying: false,
       commentCount: 0,
       commentCountTracker() {
-        console.log('Comment count tracker triggered');
         const commentSection = $refs.commentSection;
         this.commentCount = commentSection.childElementCount;
       },
@@ -49,7 +48,8 @@
     :class="justShowedUp && 'post-showup-glow'"
   >
   <div 
-    {% if request.user == post.user and not in_modal %}
+    {# Rules to display edit mode #}
+    {% if user == post.user and not in_modal %}
     class="relative cursor-grab"
     :class="postEditMode && 'h-full'"
     x-data="{
@@ -106,7 +106,7 @@
     {% endif %}
     <!-- Header -->
     <div class="card-body flex items-center font-mono">
-        <a href="{% url 'profile_about' post.username  %}">
+        <a href="{% url 'profile_turties' post.username  %}">
           <img src="{{ post.profile_picture_url }}" class="rounded-full w-15 h-15 object-cover me-3 border-4 border-emerald-500">
         </a>
         <div>
