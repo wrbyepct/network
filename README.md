@@ -31,7 +31,7 @@ Like any social media, you can create, edit, or delete your posts — but here, 
 ![post edit compressed](https://github.com/user-attachments/assets/79fda65c-c0b9-484d-b768-e36cce77fc3b)
 
 ## Egg System (Post Incubation)
-When you create a ***turtie***, it doesn’t appear instantly. Instead, you receive an ***egg*** — a symbol of anticipation. Your egg will hatch anywhere between 20 minutes to 24 hours(for demo purpose, it's just a few seconds), revealing your turtie when it’s ready. Since each time you might receive a different egg, so you might receive a very special egg out of luck!
+When you create a ***turtie***, it doesn’t appear instantly. Instead, you receive an ***egg*** — a symbol of anticipation. Your egg will hatch anywhere between 20 minutes to 24 hours(for demo purpose, it's just a few seconds), revealing your turtie when it’s ready. Since each time you might receive a different egg, so you might receive a ***very special*** egg out of luck!
 ![egg1](https://github.com/user-attachments/assets/73438658-8748-4415-8587-33928b0af825)
 
 
