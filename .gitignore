@@ -194,3 +194,8 @@ agent_doc
 .gemini*
 docs
 TODO*
+backup.md
+CLAUDE.md
+GEMINI.md
+.gitignore
+run
