@@ -2,8 +2,9 @@
 """Profile views."""
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Exists, OuterRef
 from django.shortcuts import get_object_or_404, render
-from django.urls import reverse
+from django.urls import reverse_lazy
 from django.views.generic import (
     ListView,
     TemplateView,
@@ -11,12 +12,13 @@ from django.views.generic import (
     View,
 )
 
+from network.common.mixins import SetHtmxAlertTriggerMixin
 from network.posts.models import Post, PostMedia
+from network.posts.services import IncubationService
 
 from .constants import PHOTO_TABS, PROFILE_TABS
 from .forms import ProfileForm
 from .models import Profile
-from .services import ActivityManagerService
 
 
 # Photo uploads view
@@ -25,28 +27,39 @@ class ProfileTabsBaseMixin:
 
     tabs = PROFILE_TABS
 
+    def set_profile(self, username):
+        """Set profile for later user."""
+        self.profile = get_object_or_404(
+            Profile.objects.select_related("user"),
+            username=username,
+        )
+
     def dispatch(self, request, *args, **kwargs):
-        """Save requesting profile obj and HX-Request for later use."""
-        self.is_partial_request = bool(request.headers.get("HX-Request", False))
-        self.profile = get_object_or_404(Profile, username=kwargs.get("username"))
+        """Cache dispatch with user pkid as key."""
+        self.set_profile(kwargs.get("username"))
+
         return super().dispatch(request, *args, **kwargs)
 
     def get_template_names(self):
         """Provide partial or full template based on partial request or not."""
         _, tab = self.request.path.rstrip("/").rsplit("/", 1)
 
-        if self.is_partial_request:
+        if self.request.htmx:
             return [f"profiles/tabs/partial/{tab}.html"]
         return [f"profiles/tabs/full/{tab}.html"]
 
     def get_context_data(self, **kwargs):
         """Provide context data based on partial request."""
         context = super().get_context_data(**kwargs)
-        if not self.is_partial_request:
+        if not self.request.htmx:
+            # Provide tabs info in full page request
             context["tabs"] = self.tabs
             context["current_tab"] = self.current_tab
 
         context["profile"] = self.profile
+        context["is_incubating"] = bool(
+            IncubationService.get_incubating_post_id(self.profile.user.id)
+        )
 
         return context
 
@@ -54,7 +67,7 @@ class ProfileTabsBaseMixin:
 class PhotoTabsBaseMixin:
     """Mixin to provide context needed for photo tab view."""
 
-    current_tab = "photos"
+    current_tab = "shells"
     photo_tabs = PHOTO_TABS
 
     def get_context_data(self, **kwargs):
@@ -93,7 +106,7 @@ class PhotosUploadsView(
 
     def get_queryset(self):
         """Get uploads media owned by the profile."""
-        return PostMedia.objects.filter(profile=self.profile)
+        return PostMedia.objects.filter(profile=self.profile).select_related("post")
 
 
 class PhotosAlbumsView(
@@ -113,16 +126,37 @@ class PhotosAlbumsView(
 class PostsView(ProfileTabsBaseMixin, ListView):
     """Profile Posts view that handles partial and full request."""
 
-    current_tab = "posts"
+    current_tab = "turties"
     context_object_name = "posts"
     paginate_by = 10
 
     def get_queryset(self):
-        """Get prefetched post queryset."""
-        return Post.objects.for_list_data().by_user(user=self.profile.user)
+        """Get prefetched post queryset by the profile user."""
+        profile_user = self.profile.user
+        requesting_user = self.request.user
+        return Post.objects.published(requesting_user).by_user(user=profile_user)
 
 
-class AboutView(ProfileTabsBaseMixin, TemplateView):
+class NestView(ProfileTabsBaseMixin, TemplateView):
+    """Profile nest view that handles partial and full request."""
+
+    current_tab = "nest"
+
+    def get_context_data(self, **kwargs):
+        """Inject user eggs into context."""
+        context = super().get_context_data(**kwargs)
+
+        eggs = [
+            {"name": "special", "eggs": self.profile.special_eggs},
+            {"name": "regular", "eggs": self.profile.regular_eggs},
+            {"name": "easter", "eggs": self.profile.easter_eggs},
+        ]
+        context["eggs"] = eggs
+
+        return context
+
+
+class AboutView(LoginRequiredMixin, ProfileTabsBaseMixin, TemplateView):
     """Profile about view that handles partial and full request."""
 
     current_tab = "about"
@@ -130,62 +164,70 @@ class AboutView(ProfileTabsBaseMixin, TemplateView):
     def get_context_data(self, **kwargs):
         """Inject user activity status in context."""
         context = super().get_context_data(**kwargs)
-        context["activity"] = ActivityManagerService.get_activity_obj(
-            user=self.profile.user
-        )
+
+        context["sub_tab"] = self.request.GET.get("sub_tab", "story")
+        profile = self.profile
+        eggs_count = profile.get_eggs_qunt()
+
+        context.update(eggs_count)
+
         return context
 
 
-class FollowersView(ProfileTabsBaseMixin, TemplateView):
+class FollowTabView(LoginRequiredMixin, ProfileTabsBaseMixin, TemplateView):
     """Profile Followers view that handles partial and full request."""
 
-    current_tab = "followers"
+    current_tab = "follow"
 
 
-class ProfileEditView(LoginRequiredMixin, UpdateView):
-    """Profile creation view."""
+class FollowPaginatorBaseView(ListView):
+    """Follow Paginator Base View."""
 
-    template_name = "profiles/edit.html"
-    form_class = ProfileForm
+    paginate_by = 10
 
-    def get_object(self, queryset=None):
-        """Return the requesting user's Profile."""
-        return self.request.user.profile
+    def get_template_names(self):
+        """Get dynamic follow type tempalte name."""
+        return [f"profiles/tabs/partial/{self.follow_type}_paginator.html"]
 
-    def get_success_url(self):
-        """Get back to user profile about page ."""
-        profile = self.request.user
-        return reverse("profile_about", args=[profile.username])
-
-
-# Following list view
-class FollowingView(ListView):
-    """Return user's all following profiles."""
-
-    template_name = "profiles/following.html"
-    context_object_name = "following"
+    def get_context_object_name(self, object_list):
+        """Get dynamic follow type context object name."""
+        return self.follow_type
 
     def get_queryset(self):
-        """Return user's all following profiles."""
-        profile = self.request.user.profile
-        return profile.following.all()
+        """Get dynamic follow type related objects from a profile."""
+        profile = get_object_or_404(Profile, username=self.kwargs.get("username"))
+
+        # Follower/following profile need user id to retrieve activity data
+        if self.follow_type == "followers":
+            return profile.followers.select_related("user").annotate(
+                mutual_followed=Exists(profile.following.filter(pk=OuterRef("pk")))
+            )
+
+        return profile.following.select_related("user")
+
+    def get_context_data(self, **kwargs):
+        """Inject requesting username to context."""
+        context = super().get_context_data(**kwargs)
+        context["username"] = self.kwargs.get("username")
+
+        return context
+
+
+class FollowersPaginatorView(FollowPaginatorBaseView):
+    """Following Paginator View."""
+
+    follow_type = "followers"
+
+
+class FollowingPaginatorView(FollowPaginatorBaseView):
+    """Following Paginator View."""
+
+    follow_type = "following"
 
 
 # Follow/Unfollow
-class FollowView(View):
+class FollowView(SetHtmxAlertTriggerMixin, View):
     """View to follow/unfollow a user's profile."""
-
-    def perform_follow(self, profile, to_follow_profile):
-        """Peform follow and return message context."""
-        profile.follow(to_follow_profile)
-        msg = f"You followed {to_follow_profile.username}!"
-        return {"follow_message": msg}
-
-    def perform_unfollow(self, profile, to_unfollow_profile):
-        """Peform unfollow and return message context."""
-        profile.unfollow(to_unfollow_profile)
-        msg = f"Unfollowed {to_unfollow_profile.username}."
-        return {"follow_message": msg}
 
     def post(self, request, *args, **kwargs):
         """Follow a profile and return success message."""
@@ -195,9 +237,37 @@ class FollowView(View):
         has_followed = profile.has_followed(to_profile)
 
         if not has_followed:
-            context = self.perform_follow(profile, to_profile)
+            profile.follow(to_profile)
+            message = f"You followed {to_profile.username}!"
 
         else:
-            context = self.perform_unfollow(profile, to_profile)
+            profile.unfollow(to_profile)
+            message = f"Unfollowed {to_profile.username}."
 
-        return render(request, "profiles/partials/messages.html", context)
+        resp = render(
+            self.request, "profiles/tabs/partial/follow.html", {"profile": profile}
+        )
+
+        return self.set_htmx_trigger(
+            resp=resp,
+            event_name="follow-success",
+            message=message,
+        )
+
+
+class ProfileEditView(LoginRequiredMixin, UpdateView):
+    """Profile creation view."""
+
+    template_name = "profiles/edit.html"
+    form_class = ProfileForm
+    success_url = reverse_lazy("profile_edit")
+
+    def get_object(self, queryset=None):
+        """Return the requesting user's Profile."""
+        return self.request.user.profile
+
+    def form_valid(self, form):
+        """Inject exited success to true when the edit is successful."""
+        super().form_valid(form)
+        context = {"profile_updated": True, "form": form}
+        return render(self.request, self.template_name, context)

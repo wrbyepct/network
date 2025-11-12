@@ -13,19 +13,24 @@ urlpatterns = [
         name="profile_about",
     ),
     path(
-        "<str:username>/followers/",
-        views.FollowersView.as_view(),
-        name="profile_followers",
+        "<str:username>/nest/",
+        views.NestView.as_view(),
+        name="profile_nest",
+    ),
+    path(
+        "<str:username>/tab/follow/",
+        views.FollowTabView.as_view(),
+        name="profile_follow",
     ),
     path(
         "<str:username>/posts/",
         views.PostsView.as_view(),
-        name="profile_posts",
+        name="profile_turties",
     ),
     path(
         "<str:username>/photos/",
         views.PhotosView.as_view(),
-        name="profile_photos",
+        name="profile_shells",
     ),
     path(
         "<str:username>/photos/uploads/",
@@ -38,7 +43,19 @@ urlpatterns = [
         name="profile_photos_albums",
     ),
     # Follow
-    path("<str:username>/follow/", views.FollowView.as_view(), name="follow"),
-    # Following
-    path("<str:username>/following/", views.FollowingView.as_view(), name="following"),
+    path(
+        "<str:username>/follow/",
+        views.FollowView.as_view(),
+        name="follow",
+    ),
+    path(
+        "<str:username>/followers/",
+        views.FollowersPaginatorView.as_view(),
+        name="followers_paginator",
+    ),
+    path(
+        "<str:username>/following/",
+        views.FollowingPaginatorView.as_view(),
+        name="following_paginator",
+    ),
 ]

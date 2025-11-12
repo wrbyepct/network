@@ -1,6 +1,8 @@
 """Settings: Base."""
+
 # ruff: noqa: F821
 # Application definition
+import dj_database_url
 
 MY_APPS = [
     "network",
@@ -44,16 +46,19 @@ THIRD_PARTY_APPS = [
     "django_eventstream",
     # Dev
     "django_browser_reload",
+    "debug_toolbar",
     # Cleaup media
     "django_cleanup.apps.CleanupConfig",
+    # Cache
+    "cacheops",
 ]
 
 INSTALLED_APPS = BASE_APPS + MY_APPS + THIRD_PARTY_APPS
 
 MIDDLEWARE = [
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    # "network.middlewares.sessionswatch.SessionWatchMiddleware", # my middileware
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -90,11 +95,13 @@ WSGI_APPLICATION = "project4.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
+
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": Path(BASE_DIR) / "db.sqlite3",
-    }
+    "default": dj_database_url.config(
+        default="sqlite:///db.sqlite3",  # fallback if DATABASE_URL is missing
+        conn_max_age=600,  # keeps connections alive for perf
+        ssl_require=False,  # set True if using SSL
+    )
 }
 
 

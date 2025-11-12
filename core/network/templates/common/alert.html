@@ -1,0 +1,27 @@
+<!-- Turtle Alert -->
+<div 
+    x-show="alertVisible"
+    x-effect="if(alertVisible) setTimeout(() => alertVisible = false, 3000)"
+    x-cloak
+    x-transition
+    class="fixed top-4 left-1/2 -translate-x-1/2 z-50 
+           flex items-center space-x-3 max-w-md mx-4
+           bg-emerald-900/90 backdrop-blur-sm
+           border border-emerald-400/50
+           rounded-lg px-4 py-3"
+    style="font-family: 'Press Start 2P', monospace; font-size: 10px;"
+>
+  <!-- Turtle Icon -->
+  <img class="w-8" src="/media/defaults/turtle_resting.gif" alt="Turtle thank you nodding head image.">
+  <!-- Message -->
+  <div class="text-emerald-100" x-text="alertMessage"></div>
+
+  <!-- Close Button -->
+  <button 
+    @click="alertVisible = false"
+    type="button"
+    class="text-emerald-300 hover:text-emerald-100 ml-2"
+  >
+    ✕
+  </button>
+</div>

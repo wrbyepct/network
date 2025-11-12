@@ -1,57 +1,105 @@
 {% extends 'network/layout.html' %} 
 {% load post_extra %}
 {% block body %}
-  <div x-data="{ 
-    isPostDetail: false, 
-    showCreatePostModal: false,
-    isIncubating: {{ is_incubating|yesno:'true,false' }},
-  }" > 
- 
-    <div class="container mt-4 ">
-      <div class="row ">
-        <div class="col-lg-8 mx-auto ">
+  <div 
+    x-data="{ 
+      isPostDetail: false, 
+      isIncubating: {{ is_incubating|yesno:'true,false' }},
+      onListPage: true
+    }" 
+    class="relative z-10"
+  > 
+    <div class="w-full xl:w-[98vw] lg:container-2xl pt-4 mx-auto px-2 lg:px-0">
+      <div class="grid grid-cols-12 space-x-2 lg:space-x-4">
 
-          <div 
-            id="incubating-egg-container"
-            x-ref="eggDiv"
-            @post-created.window="isIncubating = true"
-            x-effect="if(isIncubating) $nextTick(() => $dispatch('egg-fetch-ready'))"
-
-            hx-get="{% url 'egg' %}"
-            hx-trigger="egg-fetch-ready"
-            hx-swap="innerHTML"
-            {# Error means the post has hatched, just refresh the page #}
-            @htmx:response-error="window.location.href = '/'"
-          ></div>
-
-          <div x-show="!isIncubating" class="mb-4">
+        <!-- Left sidebar -->
+       {% include 'posts/partial/turboy.html' %}
+        <!-- Main Content Area -->
+        <div class="col-span-12 lg:col-span-8">
+          <div x-show="!isIncubating && !isHatching" x-cloak class="mb-4">
              {% include 'posts/partial/post_composer.html' %}
           </div>
           
-          <div id="published-posts" class="grid grid-cols-1 gap-4">
-
+          <div 
+            id="published-posts" 
+            class="grid grid-cols-1 gap-4"
+          >
             {% for post in posts %}
+              {% with toolkit_display_direction="left" %}
                 {% include 'posts/post/list_card.html' %}
+              {% endwith %}
             {% empty %}
-              <p class="text-center text-muted">No posts yet. Let's hatch One!</p>
+              <p class="text-center text-muted">No turties yet... Let's hatch One!</p>
             {% endfor %}
           </div>
         </div>
+
+        <!-- Right Sidebar (Future expansion) -->
+
       </div>
+
       <!-- Pagination -->
-        <div class="d-flex justify-content-around">
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">Next</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
-        {% elif page_obj.has_previous %}
-            <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
-            <a href="?page={{ page_obj.paginator.start_index }}"> &laquo; First</a>
+      <div class="flex justify-center items-center space-x-3 py-6"
+          style="font-family: 'Press Start 2P', monospace; font-size: 10px;">
+
+        {% if page_obj.has_previous %}
+          <a href="?page={{ page_obj.previous_page_number }}"
+            class="text-decoration-none text-bold bg-green-400 border-4 border-green-800 
+                    !text-emerald-900 px-4 py-2 
+                    rounded-xl hover:bg-green-300 hover:-translate-y-1 hover:shadow-[6px_6px_0px_#3B3B3B]
+                    active:translate-y-0 transition-all duration-150">
+            ◀ PREV
+          </a>
         {% endif %}
+
+        <!-- Page Counter -->
+        <div class="holo-pagination  flex items-center gap-2 px-4 py-2">
+
+          <span class="text-stone-200 text-bold">PAGE</span>
+
+          <!-- Current Page (editable egg) -->
+          <div x-data="{ 
+                  page: {{ page_obj.number|stringformat:'03d' }},
+                  get pageUrl() { return `?page=${this.page}` }
+              }"
+              class="digit-display bg-green-200 border-4 border-green-700 
+                      w-16 h-8 flex items-center justify-center text-green-900 rounded-sm font-bold relative">
+
+            <input class="absolute inset-0 bg-transparent text-center border-none font-bold rounded-sm"
+                  type="text"
+                  :value="page"
+                  x-model="page"
+                  @keydown.enter="window.location.href = pageUrl">
+          </div>
+
+          <span class="text-stone-200">/</span>
+
+          <!-- Total Pages (stone egg) -->
+          <div class="digit-display bg-amber-200 border-4 border-amber-500 rounded-sm
+                      w-16 h-8 flex items-center justify-center text-stone-800 font-semibold">
+            {{ page_obj.paginator.num_pages }}
+          </div>
         </div>
-    
+
+        {% if page_obj.has_next %}
+          <a href="?page={{ page_obj.next_page_number }}"
+            class="text-decoration-none text-bold bg-green-400 border-4 border-green-800 !text-emerald-900 px-4 py-2
+                    rounded-xl hover:bg-green-300 hover:-translate-y-1 hover:shadow-[6px_6px_0px_#3B3B3B]
+                    active:translate-y-0 transition-all duration-150">
+            NEXT ▶
+          </a>
+        {% endif %}
+      </div>
     </div>
+
+
+    <!-- Floating Mini Turboy Console (Mobile/Tablet) -->
+    {% if request.user.is_authenticated %}
+      {% include 'common/floating_mini_turboy.html' %}
+    {% endif %}
 
   </div>
 
 
-{% endblock %} 
+
+{% endblock %}

@@ -1,0 +1,159 @@
+<form 
+  x-data="{
+  submitting: false, 
+  toUploadMedia: { 
+    images: [],
+    videos: [],
+  },
+  existingMedia: { 
+    images: [],
+    videos: [],
+  },
+  get allMedias () {
+    return [this.toUploadMedia, this.existingMedia]
+  },
+  popualateExistingMedia(medias) {
+    medias.forEach(media => {
+      if(media.type === 'image') this.existingMedia.images.push(media)
+      if(media.type === 'video') this.existingMedia.videos.push(media)
+    })
+  },
+  addMedia(file, type) {
+    this.toUploadMedia[type].push({ 
+      file: file, 
+      url: URL.createObjectURL(file),
+      type: type
+    });
+  },
+  removeOldMedia(index, media) {
+    this.toDeleteIds.push(media.id);
+    this.existingMedia[`${media.type}s`].splice(index, 1);
+  },
+  removeMedia(index, type) {
+    // This is to clean up memory
+    URL.revokeObjectURL(this.toUploadMedia[type][index].url); 
+    this.toUploadMedia[type].splice(index, 1);
+
+    this.updateFileInputs();
+  },
+  updateMediaInputs(event) {
+    const files = Array.from(event.target.files);
+    files.forEach(file => {
+        if (file.type.startsWith('image/')) this.addMedia(file, 'images');
+        if (file.type.startsWith('video/')) this.addMedia(file, 'videos');
+    });
+
+    this.updateFileInputs();
+  },
+
+  updateFileInputs() {
+    // Put the newest list in media input before submit
+    const imageTransfer = new DataTransfer();
+    this.toUploadMedia.images.forEach( image => imageTransfer.items.add(image.file));
+    this.$refs.imageInput.files = imageTransfer.files;
+   
+    const videoTransfer = new DataTransfer();
+    this.toUploadMedia.videos.forEach( video => videoTransfer.items.add(video.file));
+    this.$refs.videoInput.files = videoTransfer.files;
+
+  },
+
+  toDeleteIds: [],
+  initEditForm() {
+    htmx.process($el);
+
+    const mediaObjects = document.getElementById('post-medias-data').textContent;
+    const medias = JSON.parse(mediaObjects);
+    this.popualateExistingMedia(medias)
+
+  }
+}"
+  class="flex flex-col h-[90%]"
+  x-init="initEditForm()"
+  hx-post="{% url 'post_edit' post.id %}"
+  hx-target="#post-{{ post.id }}"
+  hx-trigger="submit"
+  hx-swap="outerHTML"
+  hx-encoding="multipart/form-data"
+  enctype="multipart/form-data"
+  @post-submit-error="displayAlertMessage($event); submitting = false;" 
+  @post-update-success="displayAlertMessage($event); showModal = false;"
+>
+  {{ post.media_objects|json_script:"post-medias-data" }}
+
+
+  <!-- Post content edit field -->
+  <div class="flex-1 my-2 overflow-y-auto min-h-[150px] max-h-[440px]">
+    <textarea
+      name="content"
+      x-effect="if(postEditMode) {
+        focusPostEditForm($el);
+        resize($el);
+      }"
+      class="w-full border-none focus:border-none focus:ring-0 !resize-none py-4"
+      @input="resize($el)"
+    >{{ post.content }}</textarea>
+  </div>
+
+  <!-- Non-text section -->
+  <div>
+    <!-- Upload buttons -->
+    <div class="flex space-x-4 justify-around mb-4">
+      {% include 'posts/partial/media_upload_btn.html' %}
+    </div>
+
+    <template x-for="m in allMedias">
+        <!-- Display of new uploaded media -->
+      <div 
+        x-show="m.videos.length + m.images.length > 0" 
+        x-cloak
+        class="border-2 border-stone-300 rounded-md p-1 my-2">
+        <!-- Video -->
+        <template x-if="m.videos.length > 0" > 
+          <template x-for="(media, index) in m.videos"> 
+            <div class="grid grid-cols-1 relative" >
+              <video class="w-full h-full object-cover" :src="m.videos[0].url"  preload="metadata" ></video>
+              {% include 'posts/partial/media_cancel_btn.html' %}
+            </div>
+          </template>
+        </template>
+        <!-- Images -->
+        <template x-if="m.images.length > 0">
+          <div 
+            class="grid" 
+            :class="{
+              'grid-cols-1': m.images.length === 1,
+              'grid-cols-2': m.images.length > 1
+            }"
+          >
+            <template x-for="(media, index) in m.images"> 
+              <div
+                class="relative"
+                :class="{
+                {# if 3 items, the first should takes up 2 cols space #}
+                  'col-span-2': m.images.length === 3 && index === 0,
+                }">
+                <img class="w-full h-full object-cover" :src="media.url" alt="Image uploaded ">
+                {% include 'posts/partial/media_cancel_btn.html' %}
+              </div>
+            </template>
+          </div>
+        </template>
+      </div>
+    </template>
+
+    <!-- To-delete media field -->
+    <input hidden name="delete_media" :value="JSON.stringify(toDeleteIds)" >
+
+    <!-- Done & cancel button -->
+    <div x-show="!submitting">
+      {% include 'posts/partial/post_edit_actions.html' %}
+    </div>
+
+    <!-- Submit indicator -->
+    <div x-show="submitting">
+      <button class="mx-auto block bg-amber-400 font-bold text-white font-pixel !text-lg px-6 py-3 tracking-wide border-0 shadow-[inset_-2px_-2px_0px_0px_#d97706,inset_2px_2px_0px_0px_#fbbf24,0px_0px_0px_2px_#b45309] relative before:content-[''] before:absolute before:inset-0 before:bg-[repeating-linear-gradient(0deg,transparent,transparent_1px,rgba(255,255,255,0.1)_2px,rgba(255,255,255,0.1)_3px)] before:pointer-events-none">Submitting...</button>
+    </div>
+  </div>   <!-- End of non-text section -->
+
+</form>

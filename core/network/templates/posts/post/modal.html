@@ -2,16 +2,20 @@
 
   <!-- Post Modal content -->
   <div 
-    class="w-4/5 h-9/10" 
+    id="post-modal-{{ post.id }}"
+    class="w-full h-[100vh]" 
     x-data="{ close() { showModal = false; $el.remove(); } }"
     x-init="isPostDetail = true"
+    x-ref="commentSection"
     @keydown.escape.window="close()"
     @click.outside="close()"
   >
-    {% if post.medias_count %}
-      {% include 'posts/post/with_media_slider.html' %}
-    {% else %}
-      {% include 'posts/post/detail_card.html'  %}
-    {% endif %}
+    {% with toolkit_display_direction="down-left" %}
+      {% if post.medias_count %}
+        {% include 'posts/post/with_media_slider.html' %}
+      {% else %}
+        {% include 'posts/post/detail_card.html' %}
+      {% endif %}
+    {% endwith %}
   </div>
   

@@ -1,24 +1,53 @@
-{# Incubation Confirmation Modal #}
+{# TUR-BOY Egg Incubation Console Modal #}
 
-
-    {# Modal Content #}
+    {# TUR-BOY Device Console #}
     <div 
         id="egg-modal-content"
-        class="relative bg-amber-50 border-4 border-emerald-800 rounded-lg p-8 pb-0 shadow-[8px_8px_0px_#25422a] max-w-sm w-full text-center">
-        <div class="mb-10">
-            <h3 class="text-2xl font-bold text-emerald-900 mb-4 font-mono">Egg Placed in Hatchery!</h3>
-            <p class="text-emerald-800 mb-6">Your egg has been placed in the Hatchery. It will hatch sometime within the next 24 hours.</p>
+        class="relative bg-black/90 border-[6px] border-slate-700 rounded-xl max-w-md w-full turboy-device"
+        style="font-family: 'Press Start 2P', monospace; font-size: 8px;">
+        <!-- Console Header -->
+        <div class="console-header flex justify-between items-center relative px-3 py-2 border-b-4 border-blue-900">
+            <div class="text-xl italic font-bold tracking-wide turboy-title" style="text-shadow: 0 0 4px rgba(255, 255, 0, 0.4), 1px 1px 0px rgba(0, 0, 0, 0.8);">TUR-BOY</div>
+            <div class="text-neutral-400 opacity-80" style="font-size: 6px; text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.5);">EGG v1.2</div>
         </div>
-    
-        {# Placeholder for pixel animation #}
-       
-        <img src="{{ egg_url }}" alt="Pixel Egg Animation" class="w-60 h-auto mx-auto animate-bounce"> {# Simple bounce animation for now #}
-    
-        {# Cancel button #}
-        <button
-            class="w-full bg-amber-600 text-white font-bold py-4 px-6 mb-5 rounded-lg hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-300 transition duration-150 ease-in-out shadow-[4px_4px_0px_#25422a]"
-            @click="showModal = false"
-        >
-            Got it!
-        </button>
+        
+        <!-- Console Screen -->
+        <div class="console-screen mx-3 my-4 border-4 border-blue-800 rounded-lg relative overflow-hidden p-4 text-center" style="min-height: 200px;">
+            <div class="screen-content">
+                <div class="mb-4">
+                    <div class="text-yellow-400 font-bold tracking-wider mb-2" style="font-size: 10px; text-shadow: 0 0 5px rgba(255, 255, 0, 0.5);">EGG INCUBATION SUCCESS!</div>
+                    <div class="text-cyan-400 mb-3" style="font-size: 9px;">Your turtie egg has been placed in the hatchery, it will hatch in 24 hours</div>
+                    
+                    <div class="text-green-400 mb-4" style="font-size: 9px;">You can see them in your TUR-BOY or nest</div>
+                </div>
+                
+                <!-- Egg Display Area -->
+                <div class="egg-display-container mb-4 p-3 border-2 border-blue-700 rounded-md bg-blue-950/30">
+                    <img src="{{ egg_url }}" alt="Incubating Egg" class="w-50 h-auto mx-auto pixel-egg treasure-glow" style="image-rendering: pixelated;">
+                </div>
+                
+                <!-- Status Indicators -->
+                <div class="status-grid grid grid-cols-2 gap-2 mb-4">
+                    <div class="status-item text-center">
+                        <div class="text-cyan-400 font-bold mb-4" style="font-size: 8px;">STATUS</div>
+                        <div class="text-green-400" style="font-size: 12px;">INCUBATING</div>
+                    </div>
+                    <div class="status-item text-center">
+                        <div class="text-cyan-400 font-bold mb-4" style="font-size: 8px;">TEMP</div>
+                        <div class="text-orange-400" style="font-size: 12px;">WARM</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Console Action Button -->
+        <div class="p-3">
+            <button
+                class="w-full bg-gradient-to-b from-yellow-200 via-yellow-300 to-yellow-500 border-2 border-slate-700 text-slate-700 font-bold py-3 px-4 rounded-md console-btn-action hover:from-yellow-300 hover:to-yellow-600 hover:shadow-[3px_3px_0px_rgba(0,0,0,0.4)] transition-all duration-150"
+                style="font-size: 10px; text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.3);"
+                @click="closeModal()"
+            >
+                Got it!
+            </button>
+        </div>
     </div>

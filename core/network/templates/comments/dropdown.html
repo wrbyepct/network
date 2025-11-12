@@ -1,6 +1,15 @@
 <div class="btn-group my-auto mx-2">
   <button 
-      class="btn dropdown-toggle rounded-circle border-0" 
+      class="dropdown-toggle
+             bg-white/10 text-white/90 border-0 !rounded-md
+             p-2 min-w-[36px] min-h-[36px] flex items-center justify-center
+             backdrop-blur-lg shadow-sm transition-all duration-200 ease-out
+             hover:bg-cyan-400/15 hover:border-cyan-400/40 hover:text-white
+             hover:shadow-[0_8px_25px_rgba(6,182,212,0.2),inset_0_1px_0_rgba(255,255,255,0.2)]
+             hover:-translate-y-px
+             active:translate-y-0 active:bg-cyan-400/20
+             focus:outline-2 focus:outline-emerald-400/50 focus:outline-offset-2
+             sm:min-w-[44px] sm:min-h-[44px] sm:p-3" 
       type="button" 
       data-bs-toggle="dropdown" 
       aria-expanded="false"
@@ -8,21 +17,45 @@
       x-show="!editing">
         <i class="bi bi-three-dots"></i>
   </button>
-  <ul class="dropdown-menu p-0">
+  <!-- Holographic Glass Dropdown Menu -->
+  <ul class="dropdown-menu p-0 translate-y-[2rem]
+             !bg-black/60 !border !border-cyan-400/30 backdrop-blur-2xl 
+             shadow-[0_8px_32px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(6,182,212,0.1)] 
+             rounded-lg min-w-[160px]
+             sm:backdrop-blur-xl sm:shadow-[0_4px_20px_rgba(0,0,0,0.25),inset_0_1px_0_rgba(6,182,212,0.08)]">
     <li><a 
-          class="dropdown-item py-1"
-          @click="editing = true">Edit</a></li>
-    <li><hr class="dropdown-divider m-0"></li>
+          class="dropdown-item  no-underline
+                 !bg-transparent border-none w-full text-left text-sm text-white font-medium
+                 transition-all duration-200 ease-out cursor-pointer
+                 hover:!bg-cyan-400/12 hover:!text-cyan-400 hover:shadow-[0_0_8px_rgba(6,182,212,0.4)]
+                 active:!bg-cyan-400/20 active:scale-[0.98]
+                 
+                 first:rounded-t-lg
+                 sm:px-[18px] sm:py-[14px] sm:text-base sm:min-h-[44px]"
+          @click="editing = true">
+          <div class="mt-2">
+            <i class="bi bi-pencil-square me-2 hover:text-cyan-400 hover:drop-shadow-[0_0_4px_rgba(6,182,212,0.5)]"></i> <span>Edit</span>
+          </div>
+            
+        </a></li>
+    <li><hr class="border-none h-px bg-gradient-to-r from-transparent via-cyan-400/30 to-transparent 
+                   my-1 shadow-[0_1px_0_rgba(6,182,212,0.1)]"></li>
     <li>  
       <form 
         hx-delete="{% url 'comment_delete' comment.id %}"
         hx-target="#comment-{{ comment.id }}"
-        hx-swap="outerHTML"
+        hx-swap="delete"
+        @htmx:after-request="if($event.detail.successful) deleteComment();"
         >
         <button 
           type="submit" 
-          class="dropdown-item py-1 text-danger hover-bg-danger border-0 bg-transparent w-100 text-start">
-            Delete
+          class="dropdown-item  text-red-400/90
+                 !bg-transparent border-none w-full text-left text-sm text-white font-medium
+                 transition-all duration-200 ease-out cursor-pointer
+                 hover:!bg-rose-400/10 hover:!text-red-500 hover:shadow-[0_0_8px_rgba(239,68,68,0.4)]
+                 active:!bg-red-400/20 active:scale-[0.98]
+                 sm:px-[18px] sm:py-[14px] sm:text-base sm:min-h-[44px]">
+            <i class="bi bi-trash3 me-2 hover:text-red-400 hover:drop-shadow-[0_0_4px_rgba(239,68,68,0.5)]"></i> <span>Delete</span>
         </button>
       </form></li>
   </ul>

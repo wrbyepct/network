@@ -1,11 +1,14 @@
 """Post views."""
 
 import json
+import random
 
 import redis
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
-from django.http import Http404, StreamingHttpResponse
+from django.db.models.functions.math import Random
+from django.forms import ValidationError
+from django.http import Http404, HttpResponse, StreamingHttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
 from django.views.generic import (
@@ -17,18 +20,18 @@ from django.views.generic import (
     View,
 )
 
-from network.common.mixins import RefererRedirectMixin
+from network.common.mixins import RefererRedirectMixin, SetHtmxAlertTriggerMixin
+from network.profiles.services import ActivityManagerService
 
 from .forms import PostForm
-from .models import Post, PostLike, PostMedia
-from .services import IncubationService
+from .models import Post, PostLike
+from .services import EggManageService, IncubationService, PostMediaService
 from .utils import get_like_stat
 
 # Initialize Redis client
 redis_client = redis.StrictRedis(host="redis", port=6379, db=0)
 
 
-# TODO (extra) cache the posts result
 class PostListView(ListView):
     """Post List View."""
 
@@ -38,7 +41,70 @@ class PostListView(ListView):
 
     def get_queryset(self):
         """Get optimized post queryset."""
+        if self.request.user.is_authenticated:
+            return Post.objects.published(user=self.request.user)
         return Post.objects.published()
+
+    def get_turboy_context(self, context):
+        """Get egg and profile context for turboy."""
+        profile = self.request.user.profile
+        context["profile"] = profile
+
+        # Followers data
+        followers = profile.followers.select_related("user").order_by(Random())
+        context["random_3_followers"] = followers[:3]
+        context["followers_count"] = followers.count()
+
+        # Eggs data
+        easter_eggs = profile.easter_eggs
+        special_eggs = profile.special_eggs
+        regular_eggs = profile.regular_eggs
+
+        regular_eggs_count = regular_eggs.count()
+        special_eggs_count = special_eggs.count()
+        easter_eggs_count = easter_eggs.count()
+
+        eggs_qunt = profile.get_eggs_qunt()
+
+        context["egg_panels"] = [
+            {
+                "label": "EASTER",
+                "color": "text-pink-300",
+                "shadow": "rgba(255, 255, 0, 0.5)",
+                "count": eggs_qunt["easter_eggs_count"],
+                "egg": easter_eggs[random.randint(0, easter_eggs_count - 1)]
+                if easter_eggs_count
+                else None,
+            },
+            {
+                "label": "LEGENDARY",
+                "color": "text-orange-300",
+                "shadow": "rgba(0, 255, 255, 0.5)",
+                "count": eggs_qunt["special_eggs_count"],
+                "egg": special_eggs[random.randint(0, special_eggs_count - 1)]
+                if special_eggs_count
+                else None,
+            },
+            {
+                "label": "CUTE",
+                "color": "text-green-400",
+                "shadow": "rgba(59, 130, 246, 0.5)",
+                "count": eggs_qunt["regular_eggs_count"],
+                "egg": regular_eggs[random.randint(0, regular_eggs_count - 1)]
+                if regular_eggs_count
+                else None,
+            },
+        ]
+
+        context["total_eggs_count"] = (
+            regular_eggs_count + special_eggs_count + easter_eggs_count
+        )
+
+        # Activity Data
+        context["activity"] = ActivityManagerService.get_activity_obj(
+            user=self.request.user
+        )
+        return context
 
     def get_context_data(self, **kwargs):
         """Insert incubating post id into context."""
@@ -46,6 +112,11 @@ class PostListView(ListView):
         context["is_incubating"] = bool(
             IncubationService.get_incubating_post_id(self.request.user.id)
         )
+
+        context["on_list_page"] = True
+
+        if self.request.user.is_authenticated:
+            context = self.get_turboy_context(context)
         return context
 
 
@@ -58,8 +129,14 @@ class PostModalView(DetailView):
     def get_object(self):
         """Get post by id."""
         return get_object_or_404(
-            Post.objects.published(), id=self.kwargs.get("post_id")
+            Post.objects.published(self.request.user), id=self.kwargs.get("post_id")
         )
+
+    def get_context_data(self, **kwargs):
+        """Insert in detail card flag for dynamic media layout display."""
+        context = super().get_context_data(**kwargs)
+        context["in_modal"] = True
+        return context
 
 
 class PostCreateView(LoginRequiredMixin, CreateView):
@@ -69,54 +146,175 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     form_class = PostForm
     success_url = reverse_lazy("index")
 
+    def get_form_kwargs(self):
+        """Insert in PostCreateView info for dynamic form validation."""
+        kwargs = super().get_form_kwargs()
+        kwargs["in_post_create_view"] = True
+        return kwargs
+
+    def get_response_template(self, egg_type):
+        """Return template based on if the egg is special or not."""
+        return (
+            "posts/partial/special_egg_modal.html"
+            if egg_type != "regular"
+            else "posts/partial/egg_modal.html"
+        )
+
+    def form_invalid(self, form):
+        """Return form errro message through HTMX trigger."""
+        error_messages = [
+            f"{error}" for field, errors in form.errors.items() for error in errors
+        ]
+
+        resp = HttpResponse(status=400)
+        resp["HX-Trigger"] = json.dumps(
+            {"post-submit-error": {"message": " ".join(error_messages)}}
+        )
+        return resp
+
     def form_valid(self, form):
         """Save images and videos to PostMedia if they are valid."""
         user = self.request.user
-        with transaction.atomic():
-            form.instance.user = user
-            # Set a random publish_at time between 20 minutes and 24 hours from now
-            super().form_valid(form)
-            form.save_media(self.object)
 
-        egg_url = IncubationService.get_random_egg_url()
-        IncubationService.incubate_post(self.object, egg_url)
-        context = {"egg_url": egg_url}
-        resp = render(self.request, "posts/partial/egg_modal.html", context)
-        resp["HX-Trigger"] = "post-created"
+        with transaction.atomic():
+            # Handle egg create
+            egg_gif_url = IncubationService.get_random_egg_url()
+            egg_static_url = EggManageService.get_static_egg_img_url(egg_gif_url)
+            egg = EggManageService.create_egg_or_update_qnt(user, egg_static_url)
+            form.instance.user = user
+            form.instance.egg = egg
+
+            self.object = form.save()
+
+        IncubationService.incubate_post(self.object, egg_gif_url)
+        # Render Resposne
+        egg_template = self.get_response_template(egg.egg_type)
+        context = {
+            "egg_url": egg_gif_url,
+            "egg_type": egg.egg_type,
+            "egg_name": egg.name,
+        }
+        resp = render(self.request, egg_template, context)
+        resp["HX-Trigger"] = json.dumps(
+            {"post-created": {"postId": str(self.object.pkid)}}
+        )
         return resp
+
+
+class MediaSaveView(LoginRequiredMixin, View):
+    """View to save post media."""
+
+    def post(self, request, **kwargs):
+        """Save uploaded media to associated post."""
+        post_id = request.POST.get("post_id")
+        post = get_object_or_404(Post, pkid=post_id)
+
+        images = request.FILES.getlist("images")
+        video = request.FILES.get("video")
+
+        PostMediaService.save_media(post=post, video=video, images=images)
+        return HttpResponse(status=201)
 
 
 class GetUserPostMixin:
     """Mixin to override get_object to retrieve user owned post."""
 
     def get_object(self, queryset=None):
-        """Return the requesting post object."""
+        """Return the requesting user's own post object."""
         post_id = self.kwargs.get("post_id")
-        return get_object_or_404(Post, id=post_id, user=self.request.user)
+        user = self.request.user
+        return get_object_or_404(
+            Post.objects.published(user),
+            id=post_id,
+            user=user,
+        )
 
 
-class PostEditView(LoginRequiredMixin, GetUserPostMixin, UpdateView):
+class PostEditView(
+    LoginRequiredMixin,
+    SetHtmxAlertTriggerMixin,
+    GetUserPostMixin,
+    UpdateView,
+):
     """Post update view."""
 
-    template_name = "posts/edit.html"
     form_class = PostForm
     success_url = reverse_lazy("index")
 
+    def get_template_names(self):
+        """Return post list card as updated post."""
+        return ["posts/post/list_card.html"]
+
     def form_valid(self, form):
         """Handle deleting old files and add new files."""
-        delete_ids = self.request.POST.getlist("delete_media")
+        delete_ids = json.loads(self.request.POST.get("delete_media", "[]"))
+        post = self.object
+        try:
+            with transaction.atomic():
+                PostMediaService.delete_media(delete_ids=delete_ids, post=post)
+                form.validate_allowed_media_num()  # This must wait for deletion completed first to evaluate allowed media num
+                form.save()
 
-        with transaction.atomic():
-            PostMedia.objects.filter(id__in=delete_ids).delete()
-            resp = super().form_valid(form)
-            form.save_media(post=self.object)
-        return resp
+                images = form.cleaned_data.get("images")
+                videos = form.cleaned_data.get("video")
+
+                if images or videos:
+                    PostMediaService.save_media(
+                        post=self.object, images=images, video=videos
+                    )
+
+        except ValidationError as e:
+            # Catch error from validating
+            resp = HttpResponse(status=400)
+            message = " ".join(e.messages)
+
+            return self.set_htmx_trigger(
+                resp=resp,
+                event_name="post-submit-error",
+                message=message,
+            )
+
+        # Post data needed for template
+        post = self.object
+        post.ordered_medias = post.medias.order_by("order")
+
+        context = {
+            "post": post,
+            "insert_to_dom": True,
+            "toolkit_display_direction": "left",
+        }
+        template = self.get_template_names()
+
+        resp = render(self.request, template, context)
+        message = "Your turtie has been updated!"
+        return self.set_htmx_trigger(
+            resp=resp,
+            event_name="post-update-success",
+            message=message,
+        )
 
 
-class PostDeleteView(RefererRedirectMixin, GetUserPostMixin, DeleteView):
+class PostDeleteView(
+    RefererRedirectMixin, SetHtmxAlertTriggerMixin, GetUserPostMixin, DeleteView
+):
     """Post Delete View."""
 
     fallback_url = reverse_lazy("index")
+
+    def delete(self, request, **kwargs):
+        """Add htmx request handle to send delete message."""
+        resp = super().delete(request, **kwargs)
+        if request.htmx:
+            resp = HttpResponse(status=200)
+            message = "Your turtie has been deleted."
+
+            return self.set_htmx_trigger(
+                resp=resp,
+                event_name="delete-success",
+                message=message,
+            )
+
+        return resp
 
 
 class IncubatingEggView(LoginRequiredMixin, View):
@@ -124,16 +322,23 @@ class IncubatingEggView(LoginRequiredMixin, View):
 
     def get(self, request, **kwargs):
         """Return incubating egg template."""
-        post_id = IncubationService.get_incubating_post_id(request.user.id)
-        egg_url = IncubationService.get_incubating_egg_url(request.user.id)
-        if post_id:
-            return render(
-                request,
-                "posts/partial/incubating_egg.html",
-                {"post_id": post_id, "egg_url": egg_url},
-            )
-        msg = "The post has hatched. No egg to return."
-        raise Http404(msg)
+        user_id = request.GET.get("user_id", request.user.id)
+        post_id = IncubationService.get_incubating_post_id(user_id)
+        egg_url = IncubationService.get_incubating_egg_url(user_id)
+        if not post_id or not egg_url:
+            msg = "The post has hatched. No egg to return."
+            raise Http404(msg)
+
+        egg_type = EggManageService.get_egg_type(egg_url)
+        return render(
+            request,
+            "posts/partial/incubating_egg.html",
+            {
+                "post_id": post_id,
+                "egg_url": egg_url,
+                "egg_type": egg_type,
+            },
+        )
 
 
 class HatchedPostView(LoginRequiredMixin, DetailView):
@@ -147,6 +352,13 @@ class HatchedPostView(LoginRequiredMixin, DetailView):
         return get_object_or_404(
             Post.objects.published(), id=self.kwargs.get("post_id")
         )
+
+    def get_context_data(self, **kwargs):
+        """Insert egg toolkit display direction into context."""
+        context = super().get_context_data(**kwargs)
+
+        context["toolkit_display_direction"] = "left"
+        return context
 
 
 class PostHatchCheckView(LoginRequiredMixin, View):
@@ -182,11 +394,10 @@ class LikePost(LoginRequiredMixin, View):
 
         with transaction.atomic():
             like, created = PostLike.objects.get_or_create(post=post, user=user)
-            if created:
-                post.add_one_like_count()
-            else:
+            if not created:
                 like.delete()
-                post.subtract_one_like_count()
+
+            post.sync_like_count()
 
         like_stat = get_like_stat(post.like_count, liked=created)
 

@@ -1,0 +1,61 @@
+
+<a 
+  href="{{ create_media_url }}" 
+  class="h-full block group cursor-pointer transform transition-all duration-300 !no-underline hover:scale-105"
+  x-data="{ isHovered: false }"
+  @mouseenter="isHovered = true" 
+  @mouseleave="isHovered = false">
+
+      <!-- Holographic Create Card -->
+      <div class="h-full flex flex-col bg-white/5 border border-dashed border-cyan-400/40 backdrop-blur-20 rounded-2xl p-3 
+                  shadow-xl shadow-cyan-500/10 transition-all duration-300 ease-out
+                  hover:-translate-y-1 hover:shadow-2xl hover:shadow-cyan-400/20 hover:bg-white/8 hover:border-cyan-400/60">
+        
+        <!-- Holographic Creation Portal -->
+        <div class="relative flex-grow bg-gradient-to-br from-slate-800/20 to-slate-900/40 
+                    border border-dashed border-cyan-400/50 backdrop-blur-15 rounded-xl 
+                    overflow-hidden flex items-center justify-center" style="height: 160px;">
+          
+          <!-- Holographic Plus Icon -->
+          <div class="text-center relative z-10">
+            <div class="text-6xl text-white/80 font-bold transition-all duration-300 
+                        group-hover:scale-110 group-hover:text-cyan-300" 
+                 :class="isHovered ? 'animate-bounce' : ''"
+                 style="text-shadow: 0 0 20px rgba(6, 182, 212, 0.6), 0 0 40px rgba(52, 211, 153, 0.3);">
+              ＋
+            </div>
+            <div class="mt-2 text-white/80"
+                 style="font-family: 'Press Start 2P', monospace; font-size: 8px;
+                        text-shadow: 0 0 10px rgba(6, 182, 212, 0.5);">
+              NEW SHELL
+            </div>
+          </div>
+          
+          <!-- Holographic Particles -->
+          <div class="absolute top-4 left-4 w-2 h-2 bg-gradient-to-br from-cyan-300 to-emerald-300 
+                      rounded-full shadow-sm shadow-cyan-400/50 transition-all duration-500" 
+               :class="isHovered ? 'animate-ping' : ''"></div>
+          <div class="absolute bottom-4 right-4 w-2 h-2 bg-gradient-to-br from-emerald-300 to-yellow-300 
+                      rounded-full shadow-sm shadow-yellow-400/50 transition-all duration-700" 
+               :class="isHovered ? 'animate-ping' : ''"></div>
+          <div class="absolute top-6 right-6 w-1 h-1 bg-cyan-400/60 rounded-full animate-pulse"></div>
+          <div class="absolute bottom-8 left-6 w-1 h-1 bg-emerald-400/60 rounded-full animate-ping" style="animation-delay: 0.5s;"></div>
+          
+          <!-- Holographic Energy Field -->
+          <div class="absolute inset-0 bg-gradient-to-br from-cyan-400/10 to-emerald-400/10 
+                      opacity-0 group-hover:opacity-40 transition-all duration-300 rounded-xl"></div>
+        </div>
+        
+        <!-- Holographic Album Info -->
+        <div class="mt-4 text-center">
+          <div class="bg-white/8 border border-dashed border-white/30 backdrop-blur-15 rounded-xl px-4 py-3 
+                      shadow-lg transition-all duration-300 hover:bg-white/12 hover:border-cyan-400/50">
+            <div class="text-white/80 font-bold flex flex-col"
+                 style="font-family: 'Press Start 2P', monospace; font-size: 9px;
+                        text-shadow: 0 0 10px rgba(6, 182, 212, 0.4);">
+              <span>START</span> <span class="break-all">COLLECTING!</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </a>

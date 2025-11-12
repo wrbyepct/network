@@ -1,10 +1,14 @@
 """Post Serives."""
 
 import random
+from pathlib import Path
 
 from django.core.cache import cache
 from django.db import transaction
-from django.db.models import Max
+from django.db.models import F, Max
+from django.db.models.signals import post_save
+
+from network.profiles.models import Egg
 
 from .models import PostMedia
 from .tasks import assign_publish_task
@@ -16,7 +20,7 @@ class PostMediaService:
 
     @staticmethod
     def save_media(post, images=None, video=None):
-        """Save images and/or video as PostMedia linked to a post."""
+        """Save images and/or video as PostMedia linked to a post and emit save signal."""
         media_instances = []
 
         if images:
@@ -31,11 +35,13 @@ class PostMediaService:
         if video:
             media_instances.append(
                 PostMediaService.create_media(
-                    post, video[0], PostMedia.MediaType.VIDEO, order=-1
+                    post, video, PostMedia.MediaType.VIDEO, order=-1
                 )
             )
 
-        PostMedia.objects.bulk_create(media_instances)
+        if media_instances:
+            medias = PostMedia.objects.bulk_create(media_instances)
+            PostMediaService.emit_save_signal(medias[0])
 
     @staticmethod
     def create_media(post, file, media_type, order):
@@ -49,6 +55,11 @@ class PostMediaService:
         )
 
     @staticmethod
+    def delete_media(delete_ids, post):
+        """Delete PostMedia instances associated with a post and emit delete signals."""
+        PostMedia.objects.filter(id__in=delete_ids, post=post).delete()
+
+    @staticmethod
     def get_max_order(post) -> int:
         """Get highest media order for a post, or 0 if none exists."""
         return (
@@ -56,22 +67,68 @@ class PostMediaService:
             or 0
         )
 
+    @staticmethod
+    def emit_save_signal(instance):
+        """Emit signal after medias being saved."""
+        post_save.send(
+            sender=PostMedia,
+            instance=instance,
+            created=True,
+            using="default",
+            raw=False,
+            update_fields=None,
+        )
+
 
 class IncubationService:
     """Service for incubate a post."""
 
-    default_egg_url = "media/defaults/regular_eggs/egg5.gif"
-    EGG_TYPES = ["regular_eggs", "special_eggs"]
-    WEIGHTS = [0.9, 0.1]
+    default_egg_url = "/media/defaults/regular_eggs/green.gif"
+    EGG_TYPES = ["regular_eggs", "special_eggs", "easter_eggs"]
+    WEIGHTS = [0.7, 0.2, 0.1]
+    SPECIAL_EGGS = [
+        "volcano",
+        "rainbow",
+        "devil",
+        "angel",
+        "skull",
+        "swamp",
+        "golden",
+        "silver",
+        "thunder",
+        "bubble",
+        "lucky",
+        "candy",
+        "star",
+        "sakura",
+        "cyber",
+        "universe",
+        "rubik's cube",
+    ]
+    REGULAR_EGGS = [
+        "teal",
+        "orange",
+        "yellow",
+        "red",
+        "green",
+        "blue",
+        "purple",
+        "chicken",
+    ]
+    EASTER_EGGS = ["glichy", "buggy", "easter"]
 
     @staticmethod
-    def get_random_egg_img_index():
+    def _get_random_egg_name(egg_type):
         """Return random egg img url."""
-        return random.randint(0, 8)
+        if egg_type == "special_eggs":
+            return random.choice(IncubationService.SPECIAL_EGGS)
+        if egg_type == "regular_eggs":
+            return random.choice(IncubationService.REGULAR_EGGS)
+        return random.choice(IncubationService.EASTER_EGGS)
 
     @staticmethod
-    def get_random_egg_type():
-        """Return random egg img url."""
+    def _get_random_egg_type():
+        """Return random egg type."""
         return random.choices(
             IncubationService.EGG_TYPES,
             weights=IncubationService.WEIGHTS,
@@ -81,9 +138,9 @@ class IncubationService:
     @staticmethod
     def get_random_egg_url():
         """Return a random egg url."""
-        egg_num = IncubationService.get_random_egg_img_index()
-        egg_type = IncubationService.get_random_egg_type()
-        return f"media/defaults/{egg_type}/egg{egg_num}.gif"
+        egg_type = IncubationService._get_random_egg_type()
+        egg_name = IncubationService._get_random_egg_name(egg_type)
+        return f"/media/defaults/{egg_type}/{egg_name}.gif"
 
     @staticmethod
     def incubate_post(post, egg_url):
@@ -130,3 +187,44 @@ class IncubationService:
     def cache_key(user_id, suffix):
         """Incubation cache key."""
         return f"incubating:{suffix}:{user_id}"
+
+
+class EggManageService:
+    """Egg Create or update service."""
+
+    @staticmethod
+    def get_egg_type(egg_url):
+        """Return the egg type string."""
+        if "special" in egg_url:
+            return "special"
+        if "regular" in egg_url:
+            return "regular"
+        return "easter"
+
+    @staticmethod
+    def create_egg_or_update_qnt(user, egg_url):
+        """Create egg associated with user or update the egg quantity."""
+        egg_type = EggManageService.get_egg_type(egg_url)
+        egg, created = Egg.objects.get_or_create(
+            user=user,
+            url=egg_url,
+            egg_type=egg_type,
+        )
+        if not created:
+            egg.quantity = F("quantity") + 1
+            egg.save()
+
+        return egg
+
+    @staticmethod
+    def get_static_egg_img_url(egg_url):
+        """Change Egg extenstion to .png."""
+        file = Path(egg_url)
+
+        return str(file.with_suffix(".png"))
+
+    @staticmethod
+    def get_egg_name(egg_url):
+        """Return egg name."""
+        path = Path(egg_url)
+        return path.stem

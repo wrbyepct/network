@@ -1,5 +1,7 @@
 """Custom profile template filter."""
 
+import random
+
 from django import template
 
 register = template.Library()
@@ -12,3 +14,9 @@ def has_followed(profile, user):
         return False
     user_profile = user.profile
     return user_profile.has_followed(profile)
+
+
+@register.filter
+def random_egg(eggs):
+    """Return user's random speical egg."""
+    return random.choice(eggs)

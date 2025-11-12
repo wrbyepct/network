@@ -1,0 +1,325 @@
+{% load profile_extra %}
+ <!-- Diving Device Console (Left Sidebar) -->
+  <div
+  x-data="{
+    displayScreen: false,
+    eggHover0: false,
+    eggHover1: false,
+    eggHover2: false,
+    followerHover0: false,
+    followerHover1: false,
+    followerHover2: false,
+    
+  }"
+    x-cloak
+    {% if in_modal %}  {# If it's displayed by floating button #}
+    @click.outside="closeFullTurboy"
+    {% endif %}
+    class="{% if in_modal %}block{% else %}hidden{% endif%} lg:block lg:col-span-4 lg:sticky lg:top-2 self-start"
+    
+  >
+    <div 
+      class="diving-console rounded-xl border-[6px] border-slate-700" style="font-family: 'Press Start 2P', monospace; font-size: 8px;">
+      <!-- Console Header -->
+      <div class="console-header flex justify-between items-center relative px-3 py-2 border-b-4 border-blue-900">
+        <div class="text-xl italic font-bold tracking-wide title" style="text-shadow: 0 0 4px rgba(255, 255, 0, 0.4), 1px 1px 0px rgba(0, 0, 0, 0.8);">TUR-BOY</div>
+        <div class="text-neutral-400 opacity-80" style="font-size: 6px; text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.5);">v2.0</div>
+    </div>  <!-- End of Console Header -->
+
+             
+        <!-- Main Underwater Screen -->
+        <div 
+          class="underwater-screen mx-3 my-4 border-4 border-blue-800 rounded-lg relative overflow-hidden" style="height: 350px;">
+          <div class="screen-bezel h-full border-2 rounded border-blue-400/30">
+            <div class="underwater-environment h-full relative rounded">
+              <!-- List page diving container -->
+              {% if user.is_authenticated %}
+
+                <div 
+                  id="incubating-egg-container"
+                  hx-get="{% url 'egg' %}"
+                  hx-vals='{"user_id": "{{ user.id }}"}'
+                  hx-trigger="egg-fetch-ready"
+                  hx-swap="innerHTML"
+                  x-ref="eggDiv"
+                  x-effect="if(isIncubating) $nextTick(() => $dispatch('egg-fetch-ready'))"
+                  @post-created.window="isIncubating = true"
+                  {# Error means the post has hatched, just refresh the page #}
+                  @htmx:response-error="window.location.href = '/'"
+                ></div>
+
+                <!-- Rest state screen animation -->
+                <div
+                  x-show="!isIncubating && !isHatching && !displayScreen"
+                  >
+                  <!-- Animated Diver Avatar -->
+                  <img src="/media/defaults/turtle_sunbathing.gif" class="w-8 floating-turtle">
+                  
+                  <!-- Underwater Elements -->
+                  <div class="underwater-element coral coral-1">🪸</div>
+                  <div class="underwater-element coral coral-2">🪸</div>
+                  <div class="underwater-element kelp kelp-1">🌿</div>
+                  <div class="underwater-element kelp kelp-2">🌿</div>
+              
+                  <!-- Water Bubbles -->
+                  <div class="water-bubble bubble-1"></div>
+                  <div class="water-bubble bubble-2"></div>
+                </div>
+
+                <!-- Toolkit info display -->
+                <div
+                  x-show="displayScreen"
+                  >
+                    {% for follower in random_3_followers %}
+                       {% include 'profiles/tabs/partial/follow_card.html' with in_turboy_screen=True  %}
+                    {% endfor %}
+                    {% for panel in egg_panels %}
+                        {% include 'posts/partial/egg_screen_display.html'  with egg=panel.egg display_collected_date=True display_egg_image=True display_born_from=True %}
+                    {% endfor %}
+                </div>
+
+              {% else %}
+                <div class="flex justify-center items-center h-full">
+                  <span class="text-xl text-red-500" >Not connected</span>
+                  <img class="mb-3" src="/media/defaults/red_dots.gif" alt="Red dots">
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>         <!-- End of Main Underwater Screen -->
+
+
+        <!-- Mini Console Screens -->
+        <div class="flex gap-2 mx-3 flex-wrap">
+          {% if user.is_authenticated %}
+            <div class="mini-screen flex-1 min-w-[70px] border-3 border-blue-950 rounded-md p-1.5">
+              <div class="text-yellow-400 text-center mb-1 break-all tracking-wider" style="font-size: 9px; text-shadow: 0 0 2px rgba(255, 255, 0, 0.5);">CREW</div>
+              <div class="text-center">
+                <div 
+                  class="holo-counter bg-black text-sky-500 font-mono text-xs font-bold px-1 py-0.5 rounded-sm mb-1 border border-blue-900" 
+                  style="text-shadow: 0 0 4px currentColor;">{{ followers_count|stringformat:"03d" }}
+                </div>
+                <div class="flex gap-0.5 justify-center flex-wrap ">
+                  {% for follower in random_3_followers %}
+                  
+                    <a href="{% url 'profile_about' follower.username %}" class="rounded-full border border-yellow-400 cursor-pointer relative group" style="box-shadow: 0 0 2px rgba(255, 255, 0, 0.3);">
+            
+                      <img
+                        @mouseover="followerHover{{ forloop.counter0 }} = true; displayScreen = true" 
+                        @mouseleave="followerHover{{ forloop.counter0 }} = false; displayScreen = false" 
+                        class="w-7 h-7 rounded-full object-cover" 
+                        src="{{ follower.profile_picture.url }}" alt="{{ follower.username }}" class="w-full h-full object-cover" style="image-rendering: pixelated;">
+                    </a>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+
+            <div class="mini-screen flex-1 min-w-[70px] border-3 border-blue-950 rounded-md p-1.5">
+              <div class="text-yellow-400 text-center mb-1 tracking-wider" style="font-size: 9px; text-shadow: 0 0 2px rgba(255, 255, 0, 0.5);">NEST</div>
+              <div class="text-center mt-4">
+                <div x-cloak class="flex items-center justify-center gap-1">
+                  <span 
+                    :class="isIncubating || isHatching 
+                              ? 'text-orange-400' 
+                              : 'text-cyan-400'"
+                    class="break-all font-bold"
+                    style="font-size: 10px; text-shadow: 0 0 2px rgba(255,255,255,0.5);"
+                  >
+                    <span x-text="(isIncubating || isHatching) ? 'HATCHING...' : 'READY'"></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+            
+          {% endif %}
+
+          <div class="mini-screen flex-1 min-w-[70px] border-3 border-blue-950 rounded-md p-1.5">
+            <div class="text-yellow-400 text-center mb-1 tracking-wider" style="font-size: 9px; text-shadow: 0 0 2px rgba(255, 255, 0, 0.5);">STATUS</div>
+            {% if user.is_authenticated %}
+              <div class="text-center">
+                <img class="w-8 mx-auto" src="{{ activity.image }}" alt="User activity diving image">
+              </div>
+              <div class="text-center mt-3">
+                <span class="{{ activity.color }} break-all font-bold" style="font-size: 10px; text-shadow: 0 0 2px rgba(0, 255, 255, 0.5);">{{ activity.status }}</span>
+              </div>
+            {% else %}
+              <div 
+                class="text-center cursor-pointer"
+                hx-get="{% url 'account_login' %}"
+                hx-target="#modal-container"
+                hx-select="#auth-modal-content"
+                @htmx:after-request="if($event.detail.successful) showModal = true;"
+              >
+                <span class="text-sky-400 status-text text-xs">Log in to show!</span>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      
+        <!-- Console Action Buttons (Authenticated User) -->
+        <div 
+          class="flex gap-1.5 p-3 flex-wrap"
+          x-data="{
+            actions: [
+              {
+                emoji: '💧', 
+                name: 'POND',
+                url: {% if user.is_authenticated %}'{% url 'profile_about' user.profile.username %}?sub_tab=follow' {% else %}null {% endif %}
+              },
+              {
+                emoji: '🪺', 
+                name: 'NEST', 
+                url: {% if user.is_authenticated %}'{% url 'profile_nest' user.profile.username %}'{% else %}null{% endif %}
+              },
+              {
+                emoji: '📸', 
+                name: 'SHELLS', 
+                url: {% if user.is_authenticated %}'{% url 'profile_shells' user.profile.username %}'{% else %}null{% endif %}
+              },
+            ]
+          }"
+        >
+          <template x-for="(action, index) in actions" :key="index">     
+            <a 
+              {% if user.is_authenticated %}
+                :href="action.url"
+              {% else %}
+                href="{% url 'account_login' %}"  
+                hx-get="{% url 'account_login' %}"
+                hx-target="#modal-container"
+                hx-select="#auth-modal-content"
+                @htmx:after-request="if($event.detail.successful) showModal = true;"
+              {% endif %}
+                class="text-decoration-none console-glow flex-1 min-w-[60px] border-2 border-teal-500 rounded-lg px-1.5 py-2 no-underline flex flex-col items-center gap-0.5 transition-all duration-150 hover:-translate-y-0.5 hover:no-underline cursor-pointer"
+              >
+              <span 
+                class="text-sm" 
+                style="filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.5));" 
+                x-text="action.emoji"></span>
+              <span 
+                class="text-slate-100 font-bold tracking-wider" 
+                style="font-size: 12px; text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.8);" 
+                x-text="action.name"></span>
+            </a>
+          </template>
+        </div>  <!-- End of Console Action Buttons (Authenticated User) -->
+
+
+        <!-- Console Slider Control -->
+        <div class="slider-control-section border-t-2 border-blue-800"
+              x-data="{ panelOpen: $persist(false) }">
+          <div class="max-w-[4rem] mx-auto flex items-center justify-between gap-2 py-3">
+     
+            <!-- Retro Slider Button -->
+            <button 
+              {% if user.is_authenticated %}
+                @click="panelOpen = !panelOpen"
+              {% else %}
+                hx-get="{% url 'account_login' %}"
+                hx-target="#modal-container"
+                hx-select="#auth-modal-content"
+                @htmx:after-request="if($event.detail.successful) showModal = true;"
+              {% endif %}
+              class="slider-button flex-1 h-4 relative cursor-pointer transition-all duration-200"
+              :class="{ 'slider-active': panelOpen }">
+              
+              <!-- Slider Track -->
+              <div class="slider-track h-full bg-black border border-blue-800 rounded-sm relative">
+                <div class="slider-track-fill h-full transition-all duration-300" 
+                      :style="{ width: panelOpen ? '100%' : '20%' }"
+                      style="background: linear-gradient(90deg, #0ea5e9 0%, #0284c7 100%); box-shadow: 0 0 4px rgba(14, 165, 233, 0.3);"></div>
+              </div>
+              
+              <!-- Slider Knob -->
+              <div class="slider-knob absolute top-0 h-full w-6 transition-all duration-300 ease-out"
+                    :style="{ left: panelOpen ? 'calc(100% - 24px)' : '0px' }">
+                <div class="knob-visual h-full w-full bg-gradient-to-b from-yellow-200 via-yellow-300 to-yellow-500 
+                            border-2 border-slate-700 rounded-sm
+                            shadow-[2px_2px_0px_rgba(0,0,0,0.4)] hover:shadow-[3px_3px_0px_rgba(0,0,0,0.4)]"
+                      style="text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.3);">
+                  <div class="w-full h-full flex items-center justify-center text-slate-800 font-bold" style="font-size: 8px;">
+                    <span x-text="panelOpen ? '▲' : '▼'"></span>
+                  </div>
+                </div>
+              </div>
+            </button>
+            
+          </div>
+          
+          <!-- EGG Expandable Panel -->
+          {% if user.is_authenticated %}
+            <div 
+              x-show="panelOpen"
+              x-cloak
+              x-collapse.duration.300ms
+              class="expanded-panel"
+              style="transform-origin: top;">
+              
+              <div class="panel-content"
+                    style="font-family: 'Press Start 2P', monospace; font-size: 8px; image-rendering: pixelated;">
+                
+                <!-- Panel Header -->
+                <div class="panel-header flex justify-between items-center relative px-3 py-2 border-b-4 border-blue-900">
+                  <div class="text-lg italic text-slate-100 font-bold tracking-wide" style="text-shadow: 0 0 4px rgba(255, 255, 0, 0.4), 1px 1px 0px rgba(0, 0, 0, 0.8);">EGGS COLLECTED</div>
+                </div>
+
+          
+                <div class="p-3 flex gap-1.5">
+                {% for panel in egg_panels %}
+                  {% if panel.count %}
+                    <div class="flex-1 mini-screen border-3 border-blue-950 rounded-md p-2 relative">
+                      <!-- glass layer -->
+                      <div class="pointer-events-none absolute inset-0 rounded-md z-10"
+                          style="backdrop-filter: blur(15px);"></div>
+
+                      <!-- real content above glass -->
+                      <div class="relative z-10">
+                        <!-- Label -->
+                        <div  class="text-center mb-2 tracking-wider {{ panel.color }}" 
+                            
+                            style="font-size: 9px; text-shadow: 0 0 2px {{ panel.shadow }};">
+                          <span >{{ panel.label }}</span>
+                        </div>
+                        
+                        <!-- Count -->
+                        <div class="text-center">
+                          <div class="holo-counter bg-black text-sky-500 font-mono text-xs font-bold 
+                                      px-1 py-0.5 rounded-sm mb-1 border border-blue-900"
+                              style="text-shadow: 0 0 4px currentColor;">{{ panel.count|stringformat:"03d" }}</div>
+                        </div>
+                      </div>
+                      <!-- Eggs -->
+                        <div class="flex gap-0.5 justify-center flex-wrap z-10">
+                          <div class="relative group">
+                            {% with egg=panel.egg %}
+                              
+                              <div class="{{ panel.color}} text-center text-[11px] pt-2 break-all">{{ egg.name|title }}</div>
+                              <img 
+                                class="w-15 treasure-glow cursor-pointer mx-auto"
+                                @mouseover="eggHover{{ forloop.counter0 }} = true; displayScreen = true;"
+                                @mouseleave="eggHover{{ forloop.counter0 }} = false; displayScreen= false;"
+                                src="{{ egg.url }}" 
+                                alt="User's {{ panel.label }} {{ egg.name }} treasure">
+                            {% endwith %}
+                          </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+
+                  {% if not total_eggs_count %}
+                    <div class="flex flex-1 justify-center">
+                      <span class="text-[12px] text-yellow-400 ">LAY YOUR FIRST EGG!</span>
+                    </div>
+                  {% endif %}
+                
+                </div>
+
+              </div>
+            </div>
+        
+          {% endif %}
+        </div> <!-- End of Console Slider Control -->
+    </div>
+  </div>

@@ -189,3 +189,13 @@ SECURITY_ISSUES.md
 agent_doc
 .cursor
 .windsurfrules
+.bmad*
+.claude*
+.gemini*
+docs
+TODO*
+backup.md
+CLAUDE.md
+GEMINI.md
+.gitignore
+run

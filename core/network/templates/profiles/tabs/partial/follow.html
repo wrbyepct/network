@@ -1,0 +1,79 @@
+
+{% with followers_count=profile.followers.count following_count=profile.following.count %}
+<div 
+  class="holographic-ocean-bg min-h-screen"
+  style="font-family: 'Press Start 2P', monospace;"
+  x-data="{ 
+    activeTab: 'followers',
+    followersCount: {{ followers_count }},
+    followingCount: {{ following_count }},
+  }"
+>
+  <!-- Holographic Tab Navigation -->
+  <div class="sticky top-0 bg-black/90 backdrop-blur-xl border-b border-cyan-400/30 z-10 shadow-lg shadow-cyan-500/10">
+    <div class="container-sm px-2 sm:px-4 py-3">
+      <!-- Holographic Stats Summary -->
+      <div class="flex flex-col sm:flex-row justify-center items-center space-y-2 sm:space-y-0 sm:space-x-4 mb-4">
+        <div 
+          id="followers-count" 
+          class="bg-white/8 border border-cyan-400/30 backdrop-blur-xl px-4 py-2 rounded-lg text-cyan-400 text-xs sm:text-sm font-bold shadow-lg shadow-cyan-500/20"
+        >
+          <span class="text-white/90" x-text="followersCount"></span> FOLLOWERS
+        </div>
+        <div 
+          id="following-count" 
+          class="bg-white/8 border border-emerald-400/30 backdrop-blur-xl px-4 py-2 rounded-lg text-emerald-400 text-xs sm:text-sm font-bold shadow-lg shadow-emerald-500/20"
+          x-init="followingCount = {{ following_count }}"
+        >
+          <span class="text-white/90" x-text="followingCount"></span> FOLLOWING
+        </div>
+      </div>
+      
+      <!-- Holographic Tab Navigation Buttons -->
+      <div class="flex justify-center space-x-4">
+        <img
+          src="/media/defaults/turtle_followers.png"
+          @click="activeTab = 'followers'"
+          :class="activeTab === 'followers' ? 'bg-cyan-500/50 border-cyan-400/60 shadow-cyan-400/40' : 'bg-white/10 border-white/20 hover:bg-cyan-500/15 hover:border-cyan-400/40'"
+          class="p-2 w-17 border backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-lg min-h-[44px] flex items-center justify-center console-glow cursor-pointer rounded-sm"
+        >
+        
+        <img
+          src="/media/defaults/turtle_following.png"
+          @click="activeTab = 'following'"
+          :class="activeTab === 'following' ? 'bg-emerald-500/50 border-emerald-400/60 shadow-emerald-400/40' : 'bg-white/10 border-white/20 hover:bg-emerald-500/15 hover:border-emerald-400/40'"
+          class="p-2 w-17  border backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-lg min-h-[44px] flex items-center justify-center console-glow cursor-pointer rounded-sm"
+        >
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab Content -->
+  <div class="tab-content">
+    <!-- Followers Tab -->
+    <template x-if="activeTab === 'followers'">
+      <div 
+        x-init="htmx.process($el)"
+        x-show="activeTab === 'followers'" 
+        x-transition:enter="transition ease-out duration-300" 
+        x-transition:enter-start="opacity-0 transform translate-y-4" 
+        x-transition:enter-end="opacity-100 transform translate-y-0">
+        {% include 'profiles/tabs/partial/followers.html' with profile=profile request=request %}
+      </div>
+    </template>
+      
+    <template x-if="activeTab === 'following'">
+      <!-- Following Tab -->
+      <div 
+        x-init="htmx.process($el)"
+        x-show="activeTab === 'following'" 
+        x-transition:enter="transition ease-out duration-300" 
+        x-transition:enter-start="opacity-0 transform translate-y-4" 
+        x-transition:enter-end="opacity-100 transform translate-y-0">
+        {% include 'profiles/tabs/partial/following.html' with profile=profile request=request %}
+      </div>
+    </template>
+  </div>
+</div>
+{% endwith %}

@@ -1,0 +1,126 @@
+/* ===================================
+   CRITICAL CSS - Keep Inline Only
+   Essential styles for first paint
+   Size Target: ~3KB
+   ================================= */
+
+/* Import centralized variables */
+@import url('_variables.css');
+
+/* FOUC Prevention - Critical */
+[x-cloak] {
+  display: none !important;
+}
+
+/* Global Reset - Critical */
+* {
+  box-sizing: border-box;
+}
+
+/* Body Background - Prevents White Flash */
+body {
+  background:
+    radial-gradient(circle at 20% 80%, rgba(6, 182, 212, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(16, 185, 129, 0.02) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(251, 191, 36, 0.01) 0%, transparent 50%),
+    linear-gradient(135deg,
+      var(--holo-deep) 0%,
+      var(--holo-deep) 25%,
+      var(--holo-mid) 75%,
+      var(--holo-mid) 100%);
+  margin: 0;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Main Container - Critical Layout */
+/* .holographic-ocean-bg {
+  background:
+    radial-gradient(circle at 20% 80%, rgba(6, 182, 212, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(16, 185, 129, 0.02) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(251, 191, 36, 0.01) 0%, transparent 50%),
+    linear-gradient(135deg,
+      var(--holo-deep) 0%,
+      var(--holo-deep) 25%,
+      var(--holo-mid) 75%,
+      var(--holo-mid) 100%);
+  margin: 0;
+  min-height: 100vh;
+  position: relative;
+} */
+
+/* Navigation Structure - Critical */
+.turtle-habitat-nav {
+  background: rgba(0, 0, 0, 0.9);
+  border-bottom: 1px solid rgba(6, 182, 212, 0.3);
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  position: relative;
+}
+
+.nav-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  position: relative;
+  z-index: 10;
+}
+
+.nav-logo-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.nav-logo-container {
+  position: relative;
+  width: 40px;
+  height: 40px;
+}
+
+.nav-logo-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 2px solid var(--turtle-glow);
+  image-rendering: pixelated;
+  position: relative;
+  z-index: 2;
+}
+
+.nav-logo-text {
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.nav-menu-desktop {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Basic Responsive - Critical */
+@media (max-width: 768px) {
+  .nav-menu-desktop {
+    display: none;
+  }
+
+  .nav-logo-text {
+    font-size: 8px;
+  }
+
+  .nav-logo-img {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-logo-text {
+    display: none;
+  }
+}

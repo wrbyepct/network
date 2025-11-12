@@ -1,84 +1,185 @@
 {% load post_extra %}
 <!-- Post -->
 <div
-  id="{{ post.id }}"
-  class="bg-stone-100 rounded-md border-4 border-stone-600 shadow-[4px_4px_0px_#a8a29e] p-4 transition-transform duration-200 ease-in-out hover:-translate-y-1"
-  {% with post_liked=post|liked_by_user:request.user %}
+  id="post-{{ post.id }}"
+  class="flex flex-col post-card rounded-md p-4 transition-all ease-in-out w-full h-full"
+  {% with post_liked=post.liked_by_user %}
     x-data="{
+      {# Created #}
+      justShowedUp: false,
+      edited: {{ insert_to_dom|yesno:'true,false' }},
+      addIndicatorLight() {
+        if (window.location.hash === '#{{ post.id }}') {
+          this.justShowedUp = true;
+          $el.scrollIntoView({ behavior: 'smooth' });
+        }
+      },
+      {# Comment #}
       commentBody: '', 
       replying: false,
-      commentCount: {{ post.comment_count }},
+      commentCount: 0,
+      commentCountTracker() {
+        const commentSection = $refs.commentSection;
+        this.commentCount = commentSection.childElementCount;
+      },
+      {# Like #}
       postLiked: {{ post_liked|yesno:'true,false' }},
       postLikeCount: {{ post.like_count }},
       postLikeStat: '{{ post.like_count|like_stat_str:post_liked }}',
+      {# Edit #}
+      postEditMode: false,
+      focusPostEditForm(el) {
+        el.focus();
+        const len = el.value.length;
+        el.setSelectionRange(len, len);
+      },
+      addEditedGlow() {
+        if(this.edited) {
+          setTimeout(() => $el.classList.add('golden-shimmer'), 50);
+          setTimeout(() => $el.classList.remove('golden-shimmer'), 2100);
+        }
+      },
+      
     }"
   {% endwith %}
+    {# Add indicator light after directed from incubation nest  #}
+    {# For some reason, if directly assign at the render time will have some lag time and causes comment count not reading properly #}
+    x-init="addIndicatorLight(); addEditedGlow(); setTimeout(() => commentCount = {{ post.comment_count }}, 20);"
+    :class="justShowedUp && 'post-showup-glow'"
   >
-  <!-- Header -->
-  <div class="card-body d-flex align-items-center">
-      <a href="{% url 'profile_about' post.username  %}">
-        <img src="{{ post.profile_picture_url }}" class="rounded-full w-15 h-15 object-cover me-3 border-4 border-emerald-500">
-      </a>
-      <div>
-          <h6 class="mb-0 font-mono text-lg text-stone-800">{{ post.username }}</h6>
-          <small class="text-muted">{{ post.created_at|timesince_simple }}</small>
-      </div>
-      {% if request.user.id == post.user.id %}
-          {% include 'posts/partial/dropdown.html' %}
-      {% endif %}
-  </div>
-  <!-- Content collapsable --> 
   <div 
+    {# Rules to display edit mode #}
+    {% if user == post.user and not in_modal %}
+    class="relative cursor-grab"
+    :class="postEditMode && 'h-full'"
     x-data="{
-      collapse: true,
-      showMore: false,
-      init() {
-          $nextTick(() => this.checkClamp());
+      showEditAction: false,
+      pressTimer: null,
+      startPress() {
+        this.cancelPress();  // clear any existing timers
+        this.pressTimer = setTimeout(() => {
+          this.showEditAction = true;
+        }, 1500);  // 1.5 seconds
       },
-      checkClamp() {
-          const content = this.$refs.content;
-          this.showMore = content.scrollHeight > content.clientHeight;
-      },
+      cancelPress() {
+        clearTimeout(this.pressTimer);
+        this.pressTimer = null;
+      }
     }"
-    class="card-body">
-      <p 
-        class="mb-3"
-        x-ref="content"
-        :class="collapse && 'line-clamp-3'"
-        > {{ post.content|linebreaksbr }}</p>
-      
-        {% include 'common/collapse.html' %}
+    @mousedown="startPress" 
+    @touchstart="startPress"
+    @mouseup="cancelPress" 
+    @mouseleave="cancelPress"
+    @touchend="cancelPress"
+    {% endif  %}
+  >
+    {% if request.user == post.user %}
+    <!-- Edit/Delete Action backdrop -->
+    <div
+      x-show="showEditAction"
+      x-transition
+      x-cloak
+      class="absolute inset-0 backdrop-blur-sm bg-white/10 flex items-center justify-center cursor-grab z-100">
+      <div class="flex space-x-4 bg-white/30 border-4 border-black rounded-md p-4 shadow-[4px_4px_0px_#000]">
+        <!-- Cancel Button (Top-Right) -->
+        <button 
+          class="absolute top-4 right-4 px-3 py-1 bg-yellow-400 text-black font-bold border-2 border-black rounded shadow-[2px_2px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] transition-transform"
+          @click="showEditAction = false"
+        >
+          X
+        </button>
+        <button
+          @click="postEditMode = true; showEditAction = false;"
+          class="px-4 py-2 bg-emerald-500 text-white font-bold border-2 border-black rounded-md shadow-[2px_2px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] transition-transform"
+          >Edit</button>
+          <form 
+            hx-delete="{% url 'post_delete' post.id %}"
+            hx-target="#post-{{ post.id }}"
+            hx-swap="delete"
+            @delete-success="displayAlertMessage($event)"
+
+            >
+            <button @click="showEditAction = false" class="px-4 py-2 bg-red-500 text-white font-bold border-2 border-black rounded-md shadow-[2px_2px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] transition-transform">Delete</button>
+          </form>  
+      </div>
+    </div>
+    {% endif %}
+    <!-- Header -->
+    <div class="card-body flex items-center font-mono">
+        <a href="{% url 'profile_turties' post.username  %}">
+          <img src="{{ post.profile_picture_url }}" class="rounded-full w-15 h-15 object-cover me-3 border-4 border-emerald-500">
+        </a>
+        <div>
+            <h6 class="mb-0 text-lg text-stone-800">{{ post.username }}</h6>
+            <small class="text-muted">{{ post.created_at|timesince_simple }}</small>
+            {% if post.updated_at|date:"U" != post.created_at|date:"U" %}
+              <span class="font-light text-emerald-600">polished</span>
+            {% endif %}
+        </div>
+        <!-- Display which egg this post was born from -->
+        <div 
+          class="flex items-center justify-center ms-auto" 
+          style="font-family: 'Press Start 2P', monospace; font-size: 9px;">
+          <span 
+            class="
+            {% if post.egg.egg_type == "special" %} 
+              text-yellow-500 
+            {% elif post.egg.egg_type == 'easter' %}
+              text-pink-300
+            {% else%} 
+            text-emerald-500 {% endif%}">hatched from</span>
+
+          <!-- Egg toolkit -->
+          <div class="relative group">
+            {% include 'posts/partial/egg_toolkit.html' with egg=post.egg display_egg_image=True display_born_from=True toolkit_display_direction=toolkit_display_direction %}
+            <img class="w-15 cursor-pointer" src="{{ post.egg.url }}" alt="The Egg image the post is born from">
+          </div>
+        </div>
+    </div>
+    <!-- Content collapsable --> 
+    <template x-if="!postEditMode">
+      {% include 'posts/partial/content_collapsable.html' %}
+    </template>
+     {% if request.user == post.user %}
+     <!-- In place edit form -->
+      <template x-if="postEditMode">
+        {% include 'posts/partial/post_edit.html' %}
+      </template>
+    {% endif %}
+    
+    <div x-show="!postEditMode">
+      <!-- Post medias -->
+      {% block media_gallery %}
+      {% endblock %}
+      <!-- Like and comment stats -->
+
+      {% block post_stats %}
+      {% endblock %}
+      <!-- Like/Comment/Share -->
+      {% block actions_bar %}
+      {% endblock %}
+    </div>
 
   </div>
-  <!-- Post medias -->
-  {% block media_gallery %}
-  {% endblock %}
-  <!-- Like and comment stats -->
-  {% block post_stats %}
-  {% endblock %}
-  <!-- Like/Comment/Share -->
-  {% block actions_bar %}
-  {% endblock %}
-
   <!-- Comments - load first batch after load-->
-  {% block comment_section %}
-  {% endblock %}
-
-  <!-- Comment submit form -->
-  <div class="mt-4 pt-4">
+  <div x-show="!postEditMode" class="overflow-y-auto h-full">
+    {% block comment_section %}
+    {% endblock %}
+  </div>
+  
+    <!-- Comment submit form -->
+  <div class="mt-4">
     <form 
       {% if request.user.is_authenticated %}
         hx-post="{% url 'comment_create' post.id %}"
-        :hx-target="isPostDetail ? '#post-detail-comment-section-{{ post.id }}' : '#post-list-comment-section-{{ post.id }}'"
-        :hx-swap="isPostDetail ? 'afterbegin scroll:#comments:top' : 'beforeend'"
+        hx-swap="none" {# prevent submit form being swapped by empty content #}
         @htmx:before-request="preventEmptySubmit($event)"
-        @htmx:after-request="if($event.detail.successful) clearUpForm($event)"
+        @htmx:after-request="if($event.detail.successful) clearUpForm($el)"
       {% else %}
         @submit.prevent
       {% endif %}
     >
       {% include 'comments/submit.html' %}
     </form>
-  </div>
-
+  </div>     <!-- End of Comment submit form -->
 </div>

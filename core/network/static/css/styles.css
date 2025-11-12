@@ -1,0 +1,28 @@
+/* ===================================
+   MAIN CSS ARCHITECTURE
+   Consolidated and optimized CSS structure
+   ================================= */
+
+/* 1. CRITICAL - Variables first (loaded by critical.css separately) */
+/* Variables are imported in critical.css for first paint performance */
+
+/* 2. BASE - Critical layout and structure */
+@import url('critical.css');
+
+/* 3. UTILITIES - Centralized utilities */
+@import url('_variables.css');
+@import url('_responsive.css');
+
+/* 4. COMPONENTS - UI Components */
+@import url('components/animations.css');
+@import url('components/buttons.css');
+@import url('components/layout.css');
+@import url('components/navigation.css');
+
+/* 5. FEATURES - Feature-specific styles */
+@import url('features/posts.css');
+@import url('features/profiles.css');
+@import url('features/albums.css');
+
+/* 6. LEGACY - Glow effects (can be refactored later) */
+@import url('scss/main.css');

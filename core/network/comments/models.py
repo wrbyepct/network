@@ -3,7 +3,6 @@
 from django.conf import settings
 from django.core.validators import MinLengthValidator
 from django.db import models
-from django.utils.functional import cached_property
 
 from network.common.mixins import LikeCountMixin, ProfileInfoMixin
 from network.common.models import TimestampedModel
@@ -38,10 +37,9 @@ class Comment(ProfileInfoMixin, LikeCountMixin, TimestampedModel):
         """Return string: 'User: {self.user.id} comment on Post: {self.post.id}'."""
         return f"User: {self.user.id} comment on Post: {self.post.id}"
 
-    @cached_property
-    def children_count(self):
-        """Return children replies count."""
-        return self.children.count()
+    def set_liked_by_user(self, user):
+        """Set update-to-date liked by user for comment."""
+        self.liked_by_user = self.likes.filter(user=user).exists()
 
 
 class CommentLike(TimestampedModel):

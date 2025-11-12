@@ -4,7 +4,7 @@
 {% if medias.0.is_video %}
 <!-- For layout containing video -->
 <!-- First place the video then the image gallery -->
-<div class="grid grid-cols-1">
+<div class="grid grid-cols-1 relative">
   {% include "posts/partial/media_item.html" with media=medias.0 %}
 </div>
 
@@ -24,6 +24,8 @@
     >
       {% for media in medias %}
         <div 
+        x-ref="oldMedia{{ forloop.counter }}"
+        class="relative"
         :class="{
           'col-span-2': mediasCount === 3 && {{ forloop.first|yesno:'true,false' }},
         }">

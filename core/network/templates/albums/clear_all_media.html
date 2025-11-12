@@ -1,0 +1,13 @@
+<div 
+  x-show="$store.fileUploadManager.newUploadMedias.length > 0"
+  x-cloak 
+  class="my-4 flex justify-between items-center">
+  <div class="text-green-400 font-mono text-sm">
+      <span x-text="$store.fileUploadManager.newUploadMedias.length"></span> of 12 max photos
+  </div>
+  <button type="button"
+  @click="$store.fileUploadManager.clearAllFiles()"
+  class="bg-[#FF9800] hover:bg-[#FFB74D] border-2 border-[#5D4037] text-[#2E7D32] font-mono text-xs py-1 px-3 rounded transition-colors">
+  🗑️ Clear All
+  </button>
+</div>

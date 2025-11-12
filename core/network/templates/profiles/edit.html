@@ -1,83 +1,363 @@
 {% extends "network/layout.html" %}
-{% load static %}
 {% load form_filters %}
 
 {% block body %}
-<div class="container mt-5">
-    <div class="card shadow-sm">
-      <div class="card-body">
-        <h2 class="card-title mb-4">Edit Your Profile</h2>
-  
-        <form method="post" action={% url 'profile_edit' %} enctype="multipart/form-data" novalidate>
-          {% csrf_token %}
 
-          <div class="mb-4">
-            <label class="form-label">Profile Picture</label>
-          
-            {% if user.profile.profile_picture %}
-              <div class="mb-2">
-                <img src="{{ user.profile.profile_picture.url }}"
-                     alt="Current Profile Picture"
-                     class="img-thumbnail"
-                     style="max-height: 150px;">
-              </div>
-            {% endif %}
-          
-            <input type="file" accept="image/*" name="profile_picture" class="form-control" id="id_profile_picture">
-            {{ form.profile_picture.errors }}
+<div 
+  class="w-full min-h-screen holographic-ocean-bg relative z-10 px-4 py-8"
+  x-data="{
+        isDragging: false,
+        previewImage: null,
+        bio: '{{ form.bio.value|default_if_none:""|escapejs }}',
+        bioLength: '{{ form.bio.value|default_if_none:""|length }}',
+        errors: {},
+        isSubmitting: false,
+        handleFileSelect(event) {
+          const file = event.target.files[0];
+          this.previewFile(file);
+        },
+
+        handleFileDrop(event) {
+          this.isDragging = false;
+          const file = event.dataTransfer.files[0];
+          this.previewFile(file);
+        },
+
+        previewFile(file) {
+          if (file && file.type && file.type.startsWith('image/')) {
+            this.previewImage = { 
+                file: file, 
+                url: URL.createObjectURL(file),
+            }
+          }
+        },
+        prepareUploadFile(form) {
+          if (this.previewImage && this.$refs.fileInput) {
+            const dt = new DataTransfer();
+            dt.items.add(this.previewImage.file);
+            this.$refs.fileInput.files = dt.files;
+          } 
+          form.submit();
+        },
+        displayUpdatedAlert() {
+          this.alertVisible = true;
+          this.alertMessage = 'Your profile updated!';
+        },
+        init() {
+          // Initialize bio length (ensure number)
+          this.bioLength = parseInt('{{ form.bio.value|default_if_none:""|length }}') || 0;
+          {% if profile_updated %}
+            this.displayUpdatedAlert();
+          {% endif %}
+        }
+      }"
+    >  
+  <!-- Holographic Console Header -->
+  <div class="max-w-4xl mx-auto mb-6 sm:mb-8">
+    <div class="post-card holo-composer-container rounded-xl p-4 sm:p-6 text-center relative overflow-hidden text-[8px] sm:text-[10px]"
+         style="font-family: 'Press Start 2P', monospace; image-rendering: pixelated;">
+      
+      <!-- Console Header Gradient -->
+      <div class="console-header rounded-lg p-3 sm:p-4 mb-4">
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4">
+          <img src="/media/defaults/turtle.png" alt="Profile Editor" 
+               class="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-cyan-400 holo-avatar"
+               style="image-rendering: pixelated;">
+          <div class="text-sm sm:text-xl font-bold text-cyan-400 title tracking-wider text-center">
+            PROFILE EDITOR
           </div>
-  
-          <!-- Username -->
-          <div class="mb-3">
-            <label for="id_username" class="form-label">Username</label>
-            <input type="text" name="username" class="form-control"
-                   id="id_username" value="{{ form.username.value|default_if_none:'' }}">
-            {{ form.username.errors }}
-          </div>
-  
-          <!-- First Name -->
-          <div class="mb-3">
-            <label for="id_first_name" class="form-label">First Name</label>
-            <input type="text" name="first_name" class="form-control"
-                   id="id_first_name" value="{{ form.first_name.value|default_if_none:'' }}">
-            {{ form.first_name.errors }}
-          </div>
-  
-          <!-- Last Name -->
-          <div class="mb-3">
-            <label for="id_last_name" class="form-label">Last Name</label>
-            <input type="text" name="last_name" class="form-control"
-                   id="id_last_name" value="{{ form.last_name.value|default_if_none:'' }}">
-            {{ form.last_name.errors }}
-          </div>
-  
-          <!-- Phone Number -->
-          <div class="mb-3">
-            <label for="id_phonenumber" class="form-label">Phone Number</label>
-            {{ form.phonenumber|add_class:"form-control" }}
-            {{ form.phonenumber.errors }}
-          </div>
-  
-          <!-- Birth Date -->
-          <div class="mb-3">
-            <label for="id_birth_date" class="form-label">Birth Date</label>
-            {{ form.birth_date|add_class:"form-control" }}
-            {{ form.birth_date.errors }}
-          </div>
-  
-          <!-- Bio -->
-          <div class="mb-3">
-            <label for="id_bio" class="form-label">Bio</label>
-            <textarea name="bio" class="form-control" id="id_bio"
-                      rows="3">{{ form.bio.value|default_if_none:'' }}</textarea>
-            {{ form.bio.errors }}
-          </div>
-  
-          <button type="submit" class="btn btn-primary">Save Profile</button>
-        </form>
+        </div>
+        <div class="text-neutral-400 opacity-80 mt-2 text-center text-[6px] sm:text-[8px]">
+          v3.0 - Holographic System
+        </div>
+      </div>
+      
+      <!-- Status Indicators -->
+      <div class="flex flex-col sm:flex-row justify-center gap-2 sm:gap-4">
+        <div class="flex items-center justify-center gap-2">
+          <div class="w-2 h-2 sm:w-3 sm:h-3 bg-cyan-400 rounded-full animate-pulse"></div>
+          <span class="text-cyan-300 text-xs">ACTIVE</span>
+        </div>
+        <div class="flex items-center justify-center gap-2">
+          <div class="w-2 h-2 sm:w-3 sm:h-3 bg-green-400 rounded-full"></div>
+          <span class="text-green-300 text-xs">READY</span>
+        </div>
       </div>
     </div>
   </div>
+
+  <!-- Main Form Container -->
+  <div class="max-w-4xl mx-auto">
+    <form method="post" 
+          action="{% url 'profile_edit' %}" 
+          enctype="multipart/form-data"
+          @submit.prevent="prepareUploadFile($el)" 
+          class="post-card holo-composer-container rounded-xl p-4 sm:p-6 lg:p-8 shadow-xl backdrop-blur-xl text-[8px] sm:text-[10px]"
+          style="font-family: 'Press Start 2P', monospace; image-rendering: pixelated;"
+        >
+      {% csrf_token %}
+
+      <!-- Profile Picture Section -->
+      <div class="mb-8">
+        <div class="rounded-lg p-6 mb-6">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-4 h-4 bg-cyan-400 rounded-full animate-pulse"></div>
+            <label class="text-lg font-bold text-cyan-300 tracking-wide">AVATAR CONFIGURATION</label>
+          </div>
+          
+          <!-- Current Picture Display -->
+          {% if user.profile.profile_picture %}
+          <div class="mb-6 text-center">
+            <div class="inline-block post-card rounded-lg p-4">
+              <img src="{{ user.profile.profile_picture.url }}"
+                   alt="Current Avatar"
+                   class="w-24 h-24 object-cover border-2 border-cyan-400 rounded-lg holo-avatar mx-auto"
+                   style="image-rendering: pixelated;">
+            </div>
+            <p class="text-cyan-200 text-xs mt-3">CURRENT PROFILE IMAGE</p>
+          </div>
+          {% endif %}
+
+          <!-- Holographic Upload Area -->
+          <div class="relative">
+            <div class="border-2 border-dashed border-cyan-400/50 rounded-xl p-8 text-center 
+                        post-card backdrop-blur-lg hover:border-cyan-400 transition-all duration-300 cursor-pointer
+                        hover:shadow-lg hover:shadow-cyan-400/20"
+                 @click="$refs.fileInput.click()"
+                 @dragover.prevent="isDragging = true"
+                 @dragleave="isDragging = false"
+                 @drop.prevent="handleFileDrop($event)"
+                 :class="isDragging ? 'border-cyan-300 bg-cyan-400/10' : ''"
+                 x-ref="dropZone">
+
+              <div x-show="!previewImage" class="space-y-4">
+                <div class="flex justify-center">
+                  <img src="/media/defaults/turtle_proud.png" 
+                       class="w-16 h-16 rounded-full border-2 border-cyan-400 holo-avatar" 
+                       style="image-rendering: pixelated;">
+                </div>
+
+                <div class="text-cyan-300 font-bold text-sm tracking-wide">
+                  UPLOAD AVATAR IMAGE
+                </div>
+                <div class="text-cyan-400/80 text-xs">
+                  Drag & drop or click to browse
+                </div>
+              </div>
+                
+              <!-- Preview Image -->
+              <div x-show="previewImage" class="space-y-4">
+                <img :src="previewImage && previewImage.url"  
+                     class="w-32 h-32 object-cover border-2 border-cyan-400 rounded-xl mx-auto holo-avatar"
+                     style="image-rendering: pixelated;">
+                <p class="text-cyan-300 text-xs font-bold">PREVIEW READY</p>
+              </div>
+              
+              <input type="file" 
+                     accept="image/*" 
+                     name="profile_picture" 
+                     class="hidden"
+                     id="id_profile_picture"
+                     @change="handleFileSelect($event)"
+                     x-ref="fileInput">
+            </div>
+            
+            <!-- Holographic Upload Button -->
+            <div class="mt-6 text-center">
+              <button type="button"
+                      @click="$refs.fileInput.click()"
+                      class="console-btn nav-btn nav-btn-secondary px-6 py-3 rounded-lg font-bold text-xs tracking-wider">
+                📁 SELECT IMAGE FILE
+              </button>
+            </div>
+          </div>
+          
+          <!-- Error Display -->
+          <div class="mt-4 text-red-300 text-xs" x-show="Object.keys(errors).length > 0">
+            {{ form.profile_picture.errors }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Personal Info Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-8">
+        
+        <!-- First Name Field -->
+        <div class="rounded-lg p-4">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-3 h-3 bg-green-400 rounded-full"></div>
+            <label for="id_first_name" class="text-green-300 font-bold text-sm tracking-wide">FIRST NAME</label>
+          </div>
+          <div class="relative">
+            <input type="text" 
+                   name="first_name" 
+                   class="w-full bg-black/30 border border-cyan-400/30 backdrop-blur-lg rounded-lg px-4 py-3 
+                          text-cyan-100 text-xs placeholder-cyan-400/60 focus:border-cyan-400 focus:outline-none 
+                          focus:ring-2 focus:ring-cyan-400/30 transition-all duration-300"
+                   id="id_first_name" 
+                   value="{{ form.first_name.value|default_if_none:'' }}"
+                   placeholder="First name...">
+          </div>
+          <div class="text-red-300 text-xs mt-2">{{ form.first_name.errors }}</div>
+        </div>
+
+        <!-- Username Field -->
+        <div class="rounded-lg p-4">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-3 h-3 bg-cyan-400 rounded-full"></div>
+            <label for="id_username" class="text-cyan-300 font-bold text-sm tracking-wide">USERNAME</label>
+          </div>
+          <div class="relative">
+            <input type="text" 
+                   name="username" 
+                   class="w-full bg-black/30 border border-cyan-400/30 backdrop-blur-lg rounded-lg px-4 py-3 
+                          text-cyan-100 text-xs placeholder-cyan-400/60 focus:border-cyan-400 focus:outline-none 
+                          focus:ring-2 focus:ring-cyan-400/30 transition-all duration-300"
+                   id="id_username" 
+                   value="{{ form.username.value|default_if_none:'' }}"
+                   placeholder="Enter username...">
+          </div>
+          <div class="text-red-300 text-xs mt-2">{{ form.username.errors }}</div>
+        </div>
+
+        <!-- Last Name Field -->
+        <div class="rounded-lg p-4">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-3 h-3 bg-green-400 rounded-full"></div>
+            <label for="id_last_name" class="text-green-300 font-bold text-sm tracking-wide">LAST NAME</label>
+          </div>
+          <div class="relative">
+            <input type="text" 
+                   name="last_name" 
+                   class="w-full bg-black/30 border border-cyan-400/30 backdrop-blur-lg rounded-lg px-4 py-3 
+                          text-cyan-100 text-xs placeholder-cyan-400/60 focus:border-cyan-400 focus:outline-none 
+                          focus:ring-2 focus:ring-cyan-400/30 transition-all duration-300"
+                   id="id_last_name" 
+                   value="{{ form.last_name.value|default_if_none:'' }}"
+                   placeholder="Last name...">
+          </div>
+          <div class="text-red-300 text-xs mt-2">{{ form.last_name.errors }}</div>
+        </div>
+
+        <!-- Phone Number Field -->
+        <div class="rounded-lg p-4">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-3 h-3 bg-yellow-400 rounded-full"></div>
+            <label for="id_phonenumber" class="text-yellow-300 font-bold text-sm tracking-wide">PHONE</label>
+          </div>
+          <div class="relative">
+            {{ form.phonenumber|add_class:"w-full bg-black/30 border border-cyan-400/30 backdrop-blur-lg rounded-lg px-4 py-3 text-cyan-100 text-xs placeholder-cyan-400/60 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/30 transition-all duration-300" }}
+          </div>
+          <div class="text-red-300 text-xs mt-2">{{ form.phonenumber.errors }}</div>
+        </div>
+      </div>
+
+      <!-- Birth Date -->
+      <div class="mb-8">
+        <div class="rounded-lg p-6">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-3 h-3 bg-purple-400 rounded-full"></div>
+            <label for="id_birth_date" class="text-purple-300 font-bold text-sm tracking-wide">BIRTH DATE</label>
+          </div>
+
+          <!-- Flatpickr wrapper -->
+          <div class="relative flatpickr" data-wrap="true">
+            <!-- Input (alt input gets styled nicely) -->
+            <input 
+              type="text" 
+              name="birth_date" 
+              id="id_birth_date" 
+              data-input
+              class="w-full bg-black/30 border border-cyan-400/30 backdrop-blur-lg rounded-lg px-4 py-3 
+                    text-cyan-100 text-xs focus:border-cyan-400 focus:outline-none 
+                    focus:ring-2 focus:ring-cyan-400/30 transition-all duration-300"
+              value="{{ form.birth_date.value|default_if_none:'' }}"
+              {% if form.birth_date.field.required %}required{% endif %}>
+            
+            <!-- Calendar icon trigger -->
+            <button type="button" data-toggle 
+                    class="absolute right-3 top-1/2 -translate-y-1/2 text-cyan-300 hover:text-cyan-100">
+              📅
+            </button>
+          </div>
+
+          <div class="text-red-300 text-xs mt-2">{{ form.birth_date.errors }}</div>
+        </div>
+      </div>
+
+      <!-- Bio Section -->
+      <div class="mb-8">
+        <div class="rounded-lg p-6">
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-3">
+              <div class="w-3 h-3 bg-blue-400 rounded-full"></div>
+              <label for="id_bio" class="text-blue-300 font-bold text-sm tracking-wide">BIO / PROFILE DESCRIPTION</label>
+            </div>
+            <div class="text-blue-400/80 text-xs" x-text="bioLength + '/280'"></div>
+          </div>
+          
+          <div class="relative">
+            <textarea name="bio" 
+                      class="w-full bg-black/30 border border-cyan-400/30 backdrop-blur-lg rounded-lg px-4 py-3 
+                             text-cyan-100 text-xs placeholder-cyan-400/60 focus:border-cyan-400 focus:outline-none 
+                             focus:ring-2 focus:ring-cyan-400/30 transition-all duration-300 resize-none"
+                      id="id_bio"
+                      rows="5"
+                      maxlength="280"
+                      placeholder="Share your story with the community..."
+                      x-model="bio"
+                      @input="bioLength = $event.target.value.length">{{ form.bio.value|default_if_none:'' }}</textarea>
+            
+            <!-- Holographic Character Counter -->
+            <div class="mt-4 space-y-2">
+              <div class="flex justify-between items-center">
+                <span class="text-blue-300/60 text-xs">CHARACTER USAGE</span>
+                <span class="text-xs" 
+                     :class="bioLength > 250 ? 'text-red-400' : bioLength > 200 ? 'text-yellow-400' : 'text-cyan-400'">
+                  <span x-text="bioLength"></span> / 280
+                </span>
+              </div>
+              
+              <!-- Digital Progress Bar -->
+              <div class="h-2 bg-black/50 rounded-lg border border-cyan-400/30 overflow-hidden">
+                <div class="h-full transition-all duration-300 relative"
+                     :style="{ width: (bioLength / 280) * 100 + '%' }"
+                     :class="bioLength > 250 ? 'bg-gradient-to-r from-red-400 to-red-600' : 
+                             bioLength > 200 ? 'bg-gradient-to-r from-yellow-400 to-orange-500' : 
+                             'bg-gradient-to-r from-cyan-400 to-blue-500'">
+                  <div class="absolute inset-0 bg-white/20 animate-pulse"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="text-red-300 text-xs mt-2">{{ form.bio.errors }}</div>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="text-center">
+        <button type="submit" 
+                class="console-btn nav-btn nav-btn-primary px-12 py-4 rounded-xl text-sm font-bold 
+                       tracking-wider transform hover:scale-105 active:scale-95 transition-all duration-300
+                       hover:shadow-lg hover:shadow-cyan-400/30 disabled:opacity-50 disabled:cursor-not-allowed"
+                :disabled="isSubmitting"
+                x-text="isSubmitting ? '⚡ UPDATING PROFILE...' : '💾 SAVE CONFIGURATION'">
+        </button>
+        
+        <div class="mt-6 space-y-2">
+          <p class="text-cyan-300/80 text-xs tracking-wide">
+            ✨ PROFILE CHANGES WILL BE APPLIED IMMEDIATELY
+          </p>
+          <div class="flex justify-center items-center gap-2">
+            <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+            <span class="text-green-300 text-xs">SYSTEM READY</span>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
   
+
 
 {% endblock %}

@@ -1,0 +1,411 @@
+/* ===================================
+   CENTRALIZED RESPONSIVE UTILITIES
+   Shared responsive patterns and media queries
+   ================================= */
+
+/* ===================================
+   ACCESSIBILITY MEDIA QUERIES
+   ================================= */
+
+/* High Contrast Support */
+@media (prefers-contrast: high) {
+
+  /* Base components */
+  .post-card,
+  .holo-profile-card,
+  .section-container,
+  .media-item,
+  .stat-card,
+  .diving-console,
+  .turboy-device,
+  .post-action-btn,
+  .console-btn,
+  .mini-screen {
+    border-width: 2px;
+    border-color: var(--high-contrast-border) !important;
+  }
+
+  .login-container {
+    border-width: 3px;
+    border-color: var(--high-contrast-border);
+    background: rgba(0, 0, 0, 0.9);
+  }
+
+  /* Text colors */
+  .text-white\/90,
+  .console-header .title,
+  .turboy-title {
+    color: var(--high-contrast-text);
+  }
+
+  /* Background adjustments */
+  .bg-white\/5,
+  .bg-white\/\[0\.06\] {
+    background-color: rgba(255, 255, 255, 0.15) !important;
+  }
+
+  /* Border colors */
+  .border-cyan-400\/20,
+  .border-cyan-400\/30 {
+    border-color: var(--high-contrast-border) !important;
+  }
+
+  .border-emerald-400\/30 {
+    border-color: var(--holo-emerald-accent) !important;
+  }
+
+
+  /* Enhanced focus visibility */
+  button:focus-visible {
+    outline-width: 3px;
+    outline-color: var(--high-contrast-border);
+  }
+}
+
+/* Touch Device Optimizations */
+@media (hover: none) and (pointer: coarse) {
+
+  .holo-tab-btn:hover {
+    background: initial;
+    border-color: initial;
+    transform: initial;
+  }
+
+  /* Disable hover animations on touch devices */
+  .hover-lift:hover,
+  .hover-glow:hover,
+  .hover-tilt:hover {
+    transform: none;
+    filter: none;
+  }
+}
+
+/* ===================================
+   MOBILE-FIRST RESPONSIVE DESIGN
+   ================================= */
+
+/* Extra Small Devices (phones, 480px and down) */
+@media (max-width: 480px) {
+
+  /* Layout adjustments */
+  .content-wrapper {
+    padding: 0 8px;
+  }
+
+  .section-container,
+  .post-card {
+    padding: 12px;
+  }
+
+  /* Typography scaling */
+  .text-2xl {
+    font-size: 1.25rem;
+  }
+
+  .text-3xl {
+    font-size: 1.5rem;
+  }
+
+  /* Grid simplification */
+  .media-grid.multi-items,
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .media-grid.dual-items {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  /* Component scaling */
+  .turboy-device {
+    font-size: 6px;
+  }
+
+  .slider-knob {
+    width: 20px;
+  }
+
+  /* Form adjustments */
+  .post-composer-textarea {
+    min-height: 100px;
+    padding: 12px;
+  }
+
+  /* Navigation */
+  .nav-logo-text {
+    display: none;
+  }
+
+  /* Hide decorative elements */
+  .absolute.w-1 {
+    display: none;
+  }
+}
+
+/* Small Devices (landscape phones, tablets, 640px and down) */
+@media (max-width: 640px) {
+
+  /* Performance optimizations - reduced blur effects */
+  .backdrop-blur-xl {
+    backdrop-filter: blur(10px);
+  }
+
+  .backdrop-blur-md {
+    backdrop-filter: blur(8px);
+  }
+
+  .backdrop-blur-15 {
+    backdrop-filter: blur(8px);
+  }
+
+  .backdrop-blur-20 {
+    backdrop-filter: blur(10px);
+  }
+
+  /* Simplified shadows */
+  .shadow-2xl {
+    box-shadow: 0 16px 24px rgba(0, 0, 0, 0.15);
+  }
+
+  .shadow-xl {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  }
+
+  .shadow-lg {
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Disable performance-heavy animations */
+  .holo-title,
+  .breathing,
+  .animate-bounce,
+  .animate-pulse,
+  .animate-ping,
+  .holo-about-container,
+  .holo-avatar,
+  .holo-stat-display::before {
+    animation: none;
+  }
+
+  /* Component adjustments */
+  .pixel-btn {
+    padding: 6px 12px;
+    font-size: 8px;
+    backdrop-filter: blur(10px);
+  }
+
+  .post-card {
+    backdrop-filter: blur(15px);
+    box-shadow:
+      0 10px 20px rgba(0, 0, 0, 0.1),
+      inset 0 1px 2px rgba(255, 255, 255, 0.05);
+  }
+
+  .post-card:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 15px 30px rgba(0, 0, 0, 0.15),
+      0 0 20px rgba(6, 182, 212, 0.1);
+  }
+
+  .digit-display {
+    backdrop-filter: blur(8px);
+  }
+
+  /* Spacing reductions */
+  .p-6 {
+    padding: 1rem;
+  }
+
+  .gap-6 {
+    gap: 1rem;
+  }
+
+  .mb-8 {
+    margin-bottom: 1.5rem;
+  }
+
+  /* Shell container scaling */
+  .holo-shell-container {
+    width: 3rem;
+    height: 3rem;
+  }
+}
+
+/* Medium Devices (tablets, 768px and down) */
+@media (max-width: 768px) {
+  .content-wrapper {
+    padding: 0 12px;
+  }
+
+  .section-container {
+    padding: 16px;
+    margin: 12px 0;
+  }
+
+  .post-card {
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+
+  /* Grid adjustments */
+  .media-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+  }
+
+  .media-grid.dual-items {
+    grid-template-columns: 1fr;
+  }
+
+  .media-gallery.multi-items {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  /* Media sizing */
+  .media-item img,
+  .media-item video {
+    height: 150px;
+  }
+
+  /* Profile adjustments */
+  .profile-header {
+    padding: 24px 16px;
+  }
+
+  .profile-avatar {
+    width: 80px;
+    height: 80px;
+  }
+
+  .stat-card {
+    padding: 16px;
+  }
+
+  .stat-number {
+    font-size: 1.5rem;
+  }
+
+  /* Navigation */
+  .nav-mobile-toggle {
+    display: flex;
+  }
+
+  .nav-menu-mobile {
+    display: flex;
+  }
+
+  .nav-container {
+    padding: 10px 12px;
+  }
+
+  .nav-logo-text {
+    font-size: 8px;
+  }
+
+  .nav-logo-img {
+    width: 32px;
+    height: 32px;
+  }
+
+  /* Console and gaming elements */
+  .diving-console {
+    font-size: 7px;
+  }
+
+  .console-header .title,
+  .turboy-title {
+    font-size: 14px;
+  }
+
+  .underwater-screen {
+    height: 250px;
+  }
+
+  /* Post actions */
+  .post-actions-bar {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .post-action-btn {
+    font-size: 10px;
+    padding: 4px 8px;
+  }
+
+  /* Button touch optimization */
+  .px-6 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .py-3 {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .holo-profile-card {
+    backdrop-filter: blur(10px);
+  }
+
+  .holo-profile-card:hover {
+    transform: translateY(-2px);
+  }
+
+  /* Stack header elements */
+  .lg\\:flex-row {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+}
+
+/* Performance optimization for mobile */
+@media (max-width: 640px) {
+  .holo-avatar {
+    filter: drop-shadow(0 0 8px var(--holo-cyan-primary));
+  }
+
+  /* Reduce spacing for mobile */
+  .px-4 {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  .py-6 {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+}
+
+
+/* Mobile-optimized toolkit styles */
+@media (max-width: 640px) {
+  .holo-toolkit-base {
+    font-size: 10px !important;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .holo-toolkit-base {
+    transition: none !important;
+  }
+
+  .holo-toolkit-base .animate-pulse {
+    animation: none !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .holo-toolkit-base {
+    border-width: 2px !important;
+    border-color: var(--high-contrast-border) !important;
+  }
+}

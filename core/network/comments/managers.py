@@ -6,9 +6,21 @@ from django.db import models
 class CommentQuerySet(models.QuerySet):
     """Comment custom queryset."""
 
-    def fetch_profile_data(self):
-        """Fetch profile data by join profile table."""
-        return self.select_related("user__profile")
+    def prefetched_info_qs(self, user=None):
+        """Return all queryset with prefetched profile, children count and if it's liked by the requesting user."""
+        from .models import CommentLike
+
+        return (
+            self.select_related("user__profile")
+            .annotate(
+                liked_by_user=models.Exists(
+                    CommentLike.objects.filter(
+                        user=user, comment_id=models.OuterRef("pk")
+                    )
+                )
+            )
+            .annotate(children_count=models.Count("children"))
+        )
 
     def top_level_comment(self, post):
         """Fetch top level comments only."""
@@ -22,10 +34,14 @@ class CommentManager(models.Manager):
         """Return basic queryset."""
         return CommentQuerySet(model=self.model, using=self._db)
 
-    def top_level_for(self, post):
-        """Return top level comment set with prefetched profile data."""
-        return self.get_queryset().fetch_profile_data().top_level_comment(post)
+    def prefetched_info_qs(self, user=None):
+        """Return all queryset with Prefetched profile data and children."""
+        return self.get_queryset().prefetched_info_qs(user)
 
-    def get_children(self, parent):
+    def top_level_comments(self, post, user=None):
+        """Return top level comment set with prefetched profile data."""
+        return self.get_queryset().prefetched_info_qs(user).top_level_comment(post)
+
+    def get_children(self, parent, user=None):
         """Get parent comments."""
-        return self.get_queryset().fetch_profile_data().filter(parent=parent)
+        return self.get_queryset().prefetched_info_qs(user).filter(parent=parent)

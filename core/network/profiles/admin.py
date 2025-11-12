@@ -2,9 +2,14 @@
 
 from django.contrib import admin
 
-from .models import Profile
+from .models import Egg, Profile
 
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
-    """Custome Profile admin."""
+    """Custom Profile admin."""
+
+
+@admin.register(Egg)
+class EggAdmin(admin.ModelAdmin):
+    """Custom Profile admin."""

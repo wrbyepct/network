@@ -1,151 +1,376 @@
 {% load static %}
-{% load sass_tags %}
 {% load post_extra %}
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <title>{% block title %}Social Network{% endblock %}</title>
-        <!-- Bootstrap Main -->
+        
+        <!-- PHASE 3: Performance Monitoring & Meta Optimization -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="theme-color" content="#0f172a">
+        
+        <!-- PHASE 2: Resource Hints for Parallel Loading -->
+        <!-- DNS Prefetch for CDN domains -->
+        <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
+        <link rel="dns-prefetch" href="//fonts.googleapis.com">
+        <link rel="dns-prefetch" href="//fonts.gstatic.com">
+        <link rel="dns-prefetch" href="//unpkg.com">
+        
+        <!-- Preconnect for critical resources -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="preconnect" href="https://cdn.jsdelivr.net">
+        
+        <!-- Performance hints for the browser -->
+
+        <!-- Preload critical web font (async loading) -->
+        <link 
+          rel="preload" 
+          href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" 
+          as="style" 
+          onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"></noscript>
+        
+        <!-- CRITICAL CSS - Load synchronously -->
+        <!-- Bootstrap Main - Critical for layout -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
-        <!-- Bootstrap Icon -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-        <!-- Tailwin Flowbite -->
-        <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
-        <link href="{% sass_src 'scss/main.scss' %}" rel="stylesheet">
-        <!-- Pixel font -->
-        <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-        <!-- Alpine JS -->
+        <!-- SASS styles - Critical for theme -->
+
+        <!-- NON-CRITICAL CSS - Load asynchronously -->
+        <!-- Bootstrap Icons - Enhancement -->
+        <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"></noscript>
+        
+        
+        <!-- Flowbite - Enhancement -->
+        <link rel="preload" href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css"></noscript>
+
+        <!-- OPTIMIZED JavaScript Loading Order -->
+        <!-- Alpine JS - Load early for critical interactivity -->
+        <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/persist@3.x.x/dist/cdn.min.js"></script>
+        <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
         <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/focus@3.x.x/dist/cdn.min.js"></script>
         <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    </head>
-    <body>
-      <!-- Nav bar -->
-     <nav class="bg-[#A8D5A0] border-b-4 border-[#D2A679] px-4 py-2 font-mono"
-            style="font-family: 'Press Start 2P', monospace; font-size: 10px; image-rendering: pixelated;">
+        
+        <!-- Tailwind Browser & Other utilities -->
+        <script defer src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+        
+        <!-- Non-critical CSS and JS -->
+        <!-- Flatpickr theme - Enhancement -->
+        <link rel="preload" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css"></noscript>
+        <script defer src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        
+        <!-- CRITICAL CSS - Inline for First Paint -->
+        <link href="{% static 'css/critical.css' %}" rel="stylesheet">
+        
+        <!-- MODULAR CSS - Load asynchronously for better caching -->
+        <link rel="preload" href="{% static 'css/components/navigation.css' %}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="{% static 'css/components/navigation.css' %}"></noscript>
+        
+        <link rel="preload" href="{% static 'css/components/buttons.css' %}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="{% static 'css/components/buttons.css' %}"></noscript>
+        
+        <link rel="preload" href="{% static 'css/components/layout.css' %}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="{% static 'css/components/layout.css' %}"></noscript>
+        
+        <link rel="preload" href="{% static 'css/components/animations.css' %}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="{% static 'css/components/animations.css' %}"></noscript>
+        
+        <!-- FEATURE MODULES - Load asynchronously -->
+        <link rel="preload" href="{% static 'css/features/posts.css' %}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="{% static 'css/features/posts.css' %}"></noscript>
 
-            <div class="flex items-center justify-between">
+        <link rel="preload" href="{% static 'css/features/profiles.css' %}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="{% static 'css/features/profiles.css' %}"></noscript>
+
+        <link rel="preload" href="{% static 'css/features/comments.css' %}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="{% static 'css/features/comments.css' %}"></noscript>
+
+    </head>
+    <body 
+      :class="(showModal || showTurboy) && 'overflow-hidden'"
+      hx-headers='{"x-csrftoken": "{{ csrf_token }}"}'
+      hx-ext="response-targets"
+      x-data="{ 
+        showTurboy: false,
+        showMiniTurboy: true,
+
+        {# Modal management #}
+        showModal: false,
+        closeModal() {
+          this.showModal = false;
+          {% if not on_list_page and profile %}
+            window.location.href = '{% url 'profile_nest' profile.username %}';
+          {% endif %}
+        }, 
+        {# Media management #}
+        selectedMedia: null, 
+        clickedMedia: null,
+
+        {# Post/Comment Submit Form Management #}
+        resize(textarea) { 
+          textarea.style.height = 'auto'; 
+          textarea.style.height = textarea.scrollHeight + 'px'; 
+        },
+        preventEmptySubmit(e) {
+          if (this.$refs.textarea.value.trim() === '') {
+            e.preventDefault();
+            return;
+          };
+
+        },
+        clearUpForm(form) {
+          form.reset();
+          this.resize(this.$refs.textarea);
+        },
+        {# Egg Management #}
+        hatchedPostId: $persist(null),
+
+        {# Egg onwer will see their egg hatched contrats util they click check #}
+        {% if profile.user == request.user  %}
+        eggHatched: $persist(false),
+        {% else %}
+        eggHatched: false,
+        {% endif %}
+        eggHatchedUrl: $persist(null),
+        isHatching: false, {# Control egg hatching effect showing #}
+
+        {# Alert Management#}
+        alertVisible: false, 
+        alertMessage: '' ,
+        displayAlertMessage(evt) {
+          this.alertVisible = true;
+          this.alertMessage = evt.detail.message;
+        }
+      }"
+      @form-error.window="() => { alert($event.detail.value); }"
+      @beforeunload.window="if(isHatching) eggHatched = true;"  {# persis eggHatched state for user to check later#}
+      @post-created.window="eggHatched = false" {# New egg is created, so hatch state should be false  #}
+    >
+      <!-- Alert -->
+      {% include 'common/alert.html' %}
+      <!-- Enhanced Turtle Habitat Navigation -->
+      <nav class="turtle-habitat-nav" 
+           x-data="{ mobileMenuOpen: false }">
+
+            <div class="nav-container">
 
               <!-- Left: Logo and App Name -->
-              <a href="/" class="flex items-center space-x-2 no-underline group">
-                  <img src="/media/defaults/turtle.png" alt="Turtly Fine"
-                      class="w-10 h-10">
-                  <span class="text-[#3B3B3B] uppercase tracking-widest cursor-pointer
-                              transform transition-transform duration-200 ease-in-out
-                              group-hover:scale-110">
-                      Turtly Fine
-                  </span>
+              <a href="/" class="nav-logo-link">
+                  <div class="nav-logo-container">
+                    <img src="/media/defaults/turtle.png" alt="Turtly Fine" class="nav-logo-img">
+                    <div class="nav-logo-glow"></div>
+                  </div>
+                  <span class="nav-logo-text">Turtly Fine</span>
               </a>
 
-                <!-- Right: Menu Items -->
-                <ul class="flex space-x-2">
+              <!-- Desktop Menu -->
+              <div class="nav-menu-desktop">
+                {% if request.user.is_authenticated %}
+                  <a href="{% url 'profile_about' user.profile.username %}" class="nav-btn nav-btn-primary flex items-center">
+                    <span> 🏠 My Nest</span>
+                  </a>
+                  <a href="{% url 'profile_about' user.profile.username %}?sub_tab=follow" class="nav-btn nav-btn-secondary">
+                    💧 Pond
+                  </a>
+                  <a href="{% url 'account_logout' %}" class="nav-btn nav-btn-logout">
+                    👋 Swim Away
+                  </a>
+                {% else %}
+                  <a 
+                    hx-boost
+                    hx-get="{% url 'account_login' %}"
+                    hx-target="#modal-container"
+                    hx-select="#auth-modal-content"
+                    @htmx:after-request="if($event.detail.successful) showModal = true;"
+                    href="{% url 'account_login' %}" 
+                    class="nav-btn nav-btn-secondary">
+                    🐢 Dive In
+                  </a>
+                  <a 
+                    hx-boost
+                    hx-get="{% url 'account_signup' %}"
+                    hx-target="#modal-container"
+                    hx-select="#auth-modal-content"
+                    @htmx:after-request="if($event.detail.successful) showModal = true;"
+                    href="{% url 'account_signup' %}" 
+                    class="nav-btn nav-btn-primary"
+                  >
+                    🥚 Become a turtler!
+                  </a>
+                {% endif %}
+              </div>
 
-                  {% if user.is_authenticated %}
-                    <li>
-                      <a href="{% url 'profile_about' user.profile.username %}"
-                        class="bg-[#FFD66F] text-black border-4 border-[#D2A679] px-2 py-1 shadow-[4px_4px_0px_#D2A679] hover:bg-[#A8D5A0] hover:text-white transition-none">
-                          {{ user.profile.username }}
-                      </a>
-                    </li>
-                  {% endif %}
+              <!-- Mobile Menu Button -->
+              <button class="nav-mobile-toggle" 
+                      @click="mobileMenuOpen = !mobileMenuOpen"
+                      :class="{ 'active': mobileMenuOpen }">
+                <span class="nav-hamburger"></span>
+                <span class="nav-hamburger"></span>
+                <span class="nav-hamburger"></span>
+              </button>
 
-                  <li>
-                      <a href="/"
-                        class="bg-[#FFD66F] text-black border-4 border-[#D2A679] px-2 py-1 shadow-[4px_4px_0px_#D2A679] hover:bg-[#A8D5A0] hover:text-white transition-none">
-                          Home
-                      </a>
-                  </li>
+            </div>
 
-                  {% if user.is_authenticated %}
-                      <li>
-                        <a href="{% url 'following' user.profile.username %}"
-                          class="bg-[#FFD66F] text-black border-4 border-[#D2A679] px-2 py-1 shadow-[4px_4px_0px_#D2A679] hover:bg-[#A8D5A0] hover:text-white transition-none">
-                            Following
-                        </a>
-                      </li>
-                      <li>
-                        <a href="{% url 'account_logout' %}"
-                          class="bg-[#FFD66F] text-black border-4 border-[#D2A679] px-2 py-1 shadow-[4px_4px_0px_#D2A679] hover:bg-[#A8D5A0] hover:text-white transition-none">
-                            Log Out
-                        </a>
-                      </li>
-                  {% else %}
-                      <li>
-                        <a href="{% url 'account_login' %}"
-                          class="bg-[#FFD66F] text-black border-4 border-[#D2A679] px-2 py-1 shadow-[4px_4px_0px_#D2A679] hover:bg-[#A8D5A0] hover:text-white transition-none">
-                            Log In
-                        </a>
-                      </li>
-                      <li>
-                        <a href="{% url 'account_signup' %}"
-                          class="bg-[#FFD66F] text-black border-4 border-[#D2A679] px-2 py-1 shadow-[4px_4px_0px_#D2A679] hover:bg-[#A8D5A0] hover:text-white transition-none">
-                            Sign Up
-                        </a>
-                      </li>
-                  {% endif %}
+            <!-- Mobile Menu -->
+            <div class="nav-menu-mobile" 
+                 x-show="mobileMenuOpen" 
+                 x-cloak
+                 x-transition:enter="transition ease-out duration-200"
+                 x-transition:enter-start="opacity-0 transform -translate-y-2"
+                 x-transition:enter-end="opacity-100 transform translate-y-0"
+                 x-transition:leave="transition ease-in duration-150"
+                 x-transition:leave-start="opacity-100 transform translate-y-0"
+                 x-transition:leave-end="opacity-0 transform -translate-y-2">
 
-                </ul>
+              {% if request.user.is_authenticated %}
+                <a href="{% url 'profile_nest' user.profile.username %}" 
+                   class="nav-btn-mobile nav-btn-primary console-glow" 
+                   @click="mobileMenuOpen = false">
+                  🏠 My Nest
+                </a>
+      
+                <a href="{% url 'profile_about' user.profile.username %}?sub_tab=follow" 
+                  class="nav-btn-mobile nav-btn-secondary console-glow" 
+                  @click="mobileMenuOpen = false">
+                  🌊 Pond
+                </a>
 
+                <a href="{% url 'account_logout' %}" 
+                   class="nav-btn-mobile nav-btn-logout console-glow" 
+                   @click="mobileMenuOpen = false">
+                  👋 Swim Away
+                </a>
+              {% else %}
+                <a 
+                  hx-boost
+                  hx-get="{% url 'account_login' %}"
+                  hx-target="#modal-container"
+                  hx-select="#auth-modal-content"
+                  @htmx:after-request="if($event.detail.successful) showModal = true;"
+                  href="{% url 'account_login' %}" 
+                  class="nav-btn-mobile nav-btn-secondary console-glow" 
+                  @click="mobileMenuOpen = false">
+                  🐢 Dive In
+                </a>
+                <a 
+                  hx-boost
+                  hx-get="{% url 'account_signup' %}"
+                  hx-target="#modal-container"
+                  hx-select="#auth-modal-content"
+                  @htmx:after-request="if($event.detail.successful) showModal = true;"
+                  href="{% url 'account_signup' %}" 
+                  class="nav-btn-mobile nav-btn-primary console-glow" 
+                  @click="mobileMenuOpen = false">
+                  🥚 Become a turtler!
+                </a>
+              {% endif %}
             </div>
         </nav>
-        
-        <div 
-          class="body"
-          hx-headers='{"x-csrftoken": "{{ csrf_token }}"}'
-          hx-ext="multi-swap"
-          hx-ext="response-targets"
-          x-data="{ 
-            showModal: false,
-            selectedMedia: null, 
-            clickedMedia: null,
-            resize(textarea) { 
-              textarea.style.height = 'auto'; 
-              textarea.style.height = textarea.scrollHeight + 'px'; 
-            },
-            preventEmptySubmit(e) {
-              if (this.$refs.textarea.value.trim() === '') {
-                e.preventDefault();
-                return;
-              };
-
-            },
-            clearUpForm(e) {
-              e.target.reset();
-              this.resize(this.$refs.textarea);
-            }
-          }"
-          @form-error.window="() => { alert($event.detail.value); }"
          
-          >
-            {% block body %}
-            {% endblock %}
-        
-            <!-- Modal -->
-            <div 
-              id="modal-bg"
-              class="fixed inset-0 bg-black/60 backdrop-blur-sm
-                flex justify-center items-center z-50"
-              x-show="showModal"
-              x-cloak
-              x-transition
-              ><div 
-                id="modal-container" 
-                x-ref="modalContainer"
-                class="w-full h-full flex justify-center items-center"></div>
-            </div>
-
+        <div  
+          class="w-full min-h-screen holographic-ocean-bg"
+          x-cloak
+        > 
+          {% block body %}
+          {% endblock %}
         </div>
+
+    
+        <!-- Modal -->
+        <div 
+          id="modal-bg"
+          class="fixed inset-0 bg-black/60 backdrop-blur-sm
+            flex justify-center items-center z-49"
+          x-show="showModal"
+          x-cloak
+          x-transition
+          ><div 
+            id="modal-container" 
+            x-ref="modalContainer"
+            class="overflow-x-hidden w-full h-full flex justify-center items-center">
+          </div>
+        </div>
+
+       
         <!-- Bootstrap js -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
         <!-- htmx core -->
         <script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"></script>
         <!-- htmx response target -->
-        <script src="https://cdn.jsdelivr.net/npm/htmx-ext-response-targets@2.0.2"></script>
+        <script src="https://cdn.jsdelivr.net/npm/htmx-ext-response-targets@2.0.2" ></script>
         <!-- htmx multi swap -->
          <script src="https://unpkg.com/htmx.org@1.9.12/dist/ext/multi-swap.js"></script>
         <!-- SweetAlert2 JS -->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <!-- Tailwind Flowbite -->
         <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+
+        <!-- Phase 1 FOUC Fix Complete - Old styles removed and moved to head -->
     </body>
 </html>
+
+<script>
+document.addEventListener('alpine:init', () => {
+  Alpine.store('fileUploadManager', {
+    newUploadMedias: [],
+    isSubmitting: false,
+
+    handleFileSelect(event) {
+      const currentFilesNum = this.newUploadMedias.length
+      const files = Array.from(event.target.files).slice(0, 12 - currentFilesNum);
+      this.createPreviews(files);
+    },
+
+    createPreviews(files) {
+      files = files.filter(file =>
+        file.type.startsWith('image/') || file.type.startsWith('video/')
+      );
+      files.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = e => {
+          this.newUploadMedias.push({
+            url: e.target.result,
+            name: file.name,
+            size: file.size,
+            file: file,
+            file_type: file.type.startsWith('image/') ? 'image' : 'video'
+          });
+        };
+        reader.readAsDataURL(file);
+      });
+    },
+
+    removeFile(index) {
+      this.newUploadMedias.splice(index, 1);
+    },
+
+    clearAllFiles() {
+      this.newUploadMedias = [];
+    },
+
+    handleSubmit(form, fileInput) {
+      this.isSubmitting = true;
+      if (this.newUploadMedias.length > 0) {
+        const dt = new DataTransfer();
+        this.newUploadMedias.forEach(file => dt.items.add(file.file));
+        fileInput.files = dt.files;
+      }
+      form.submit();
+    },
+  })
+})
+
+  document.addEventListener("DOMContentLoaded", () => {
+    flatpickr('.flatpickr', {
+      wrap: true,
+      dateFormat: 'Y-m-d',
+      position: 'auto right',
+      maxDate: 'today',
+      minDate: '1900-01-01',
+    });
+  });
+</script>

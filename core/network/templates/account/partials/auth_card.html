@@ -1,13 +1,26 @@
 {% extends "network/layout.html" %}
 {% block body %}
-  <div class="h-[90vh] flex justify-center items-center px-4">
-    <div 
-    id="auth-modal-content" 
-    @click.outside="showModal = false; $refs.modalContainer.innerHTML = '';"
-      class="bg-[url('/media/defaults/login.png')] bg-cover bg-centertext-white px-20 py-15 shadow-xl rounded-lg text-[10px] w-full max-w-md"
-      style="image-rendering: pixelated; font-family: 'Press Start 2P', monospace;">
+  <div class="w-full min-h-screen holographic-ocean-bg flex justify-center items-center px-4 py-8">
+    <div
+      x-data="{
+        inModal: false,
+        verifying: false,
+        validateForm(form) {
+          if (form.checkValidity()) {
+            this.verifying = true
+          } else {
+            form.reportValidity()
+          }
+        }
+      }" 
+      id="auth-modal-content" 
+      @click.outside="if(inModal) {showModal = false; $refs.modalContainer.innerHTML = '';}"
+      class="login-container w-full max-w-md px-6 py-3 rounded-none sm:rounded-xl shadow-2xl text-white"
+      style="font-family: 'Press Start 2P', monospace; font-size: 10px;">
       {% block auth_content %}
       {% endblock %}
     </div>
   </div>
+
+
 {% endblock %}

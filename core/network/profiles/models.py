@@ -3,11 +3,12 @@
 from django.conf import settings
 from django.core.exceptions import BadRequest
 from django.db import models
-from django.utils.functional import cached_property
 from phonenumber_field.modelfields import PhoneNumberField
 
 from network.common.models import TimestampedModel
 from network.tools.media import generate_file_path
+
+from .services import ActivityManagerService
 
 
 class FollowMixin:
@@ -64,7 +65,124 @@ class Profile(TimestampedModel, FollowMixin):
             self.username = self.user.email
         return super().save(*args, **kwargs)
 
-    @cached_property
+    @property
     def albums_count(self):
         """Return profile's albums count."""
         return self.albums.count()
+
+    @property
+    def special_eggs(self):
+        """Return user's speical eggs."""
+        return Egg.objects.filter(egg_type="special", user=self.user)
+
+    @property
+    def regular_eggs(self):
+        """Return user's regular eggs."""
+        return Egg.objects.filter(egg_type="regular", user=self.user)
+
+    @property
+    def easter_eggs(self):
+        """Return user's easter eggs."""
+        return Egg.objects.filter(egg_type="easter", user=self.user)
+
+    def get_eggs_qunt(self):
+        """Get all 3 types of eggs quantity of the profile."""
+        return {
+            "regular_eggs_count": sum(egg.quantity for egg in self.regular_eggs),
+            "special_eggs_count": sum(egg.quantity for egg in self.special_eggs),
+            "easter_eggs_count": sum(egg.quantity for egg in self.easter_eggs),
+        }
+
+    @property
+    def total_eggs_count(self):
+        """Return total eggs type count."""
+        return (
+            self.easter_eggs.count()
+            + self.special_eggs.count()
+            + self.regular_eggs.count()
+        )
+
+    @property
+    def posts(self):
+        """Return user's posts count."""
+        return self.user.posts.all()
+
+    @property
+    def activity(self):
+        """Return user's actiity status."""
+        return ActivityManagerService.get_activity_obj(user=self.user)
+
+
+class SpecialEggChoices(models.TextChoices):
+    """Special egg choices."""
+
+    VOLCANO = "volcano", "Volcano"
+    RAINBOW = "rainbow", "Rainbow"
+    DEVIL = "devil", "Devil"
+    ANGEL = "angel", "Angel"
+    SKULL = "skull", "Skull"
+    SWAMP = "swamp", "Swamp"
+    GOLDEN = "golden", "Golden"
+    SILVER = "silver", "Silver"
+    THUNDER = "thunder", "Thunder"
+    BUBBLE = "bubble", "Bubble"
+    LUCKY = "lucky", "Lucky"
+    CANDY = "candy", "Candy"
+    STAR = "star", "Star"
+    SAKURA = "sakura", "Sakura"
+    CYBER = "cyber", "Cyber"
+    UNIVERSE = "universe", "Universe"
+    RUBIKS_CUBE = "rubik's cube", "Rubik's Cube"
+
+
+class RegularEggChoices(models.TextChoices):
+    """Regular egg choices."""
+
+    TEAL = "teal", "Teal"
+    ORANGE = "orange", "Orange"
+    YELLOW = "yellow", "Yellow"
+    RED = "red", "Red"
+    GREEN = "green", "Green"
+    BLUE = "blue", "Blue"
+    PURPLE = "purple", "Purple"
+    Chicken = "chiken", "Chicken"
+
+
+class EasterEggChoices(models.TextChoices):
+    """Regular egg choices."""
+
+    GLICHY = "glichy", "Glichy"
+    BUGGY = "buggy", "Buggy"
+    EASTER = "easter", "Easter"
+
+
+class EggTypeChoices(models.TextChoices):
+    """Egg type."""
+
+    SPECIAL = "special", "Special"
+    REGULAR = "regular", "Regular"
+    EASTER = "easter", "Easter"
+
+
+class Egg(TimestampedModel):
+    """Egg model."""
+
+    url = models.CharField(max_length=255)
+    quantity = models.PositiveSmallIntegerField(default=1)
+    name = models.CharField(max_length=20)
+    egg_type = models.CharField(max_length=20, choices=EggTypeChoices)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="eggs"
+    )
+
+    def save(self, *args, **kwargs):
+        """Override to also save egg url."""
+        from network.posts.services import EggManageService
+
+        self.name = EggManageService.get_egg_name(self.url)
+
+        super().save(*args, **kwargs)
+
+    def __str__(self) -> str:
+        """Return egg info."""
+        return f"{self.egg_type} egg: {self.name}"

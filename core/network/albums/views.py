@@ -2,6 +2,7 @@
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
+from django.db.models import Count
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import (
@@ -12,14 +13,13 @@ from django.views.generic import (
     UpdateView,
 )
 
-from network.common.mixins import SetOwnerProfileMixin
-from network.profiles.models import Profile
+from network.common.mixins import SetOwnerProfileMixin, SetProfileContextMixin
 
 from .forms import AlbumForm
 from .models import Album, AlbumMedia
 
 
-class AlbumsPaginateView(ListView):
+class AlbumsPaginateView(SetProfileContextMixin, ListView):
     """Album paginate view that handle partial albums paginate retreive."""
 
     template_name = "albums/album_paginator.html"
@@ -28,22 +28,21 @@ class AlbumsPaginateView(ListView):
 
     def dispatch(self, request, *args, **kwargs):
         """Save profile for later use."""
-        self.profile = get_object_or_404(Profile, username=self.kwargs.get("username"))
+        self.set_profile()
         return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
         """Get albums owned by the profile."""
-        return Album.objects.prefetch_related("medias").filter(profile=self.profile)
-
-    def get_context_data(self, **kwargs):
-        """Inject profile into context."""
-        context = super().get_context_data(**kwargs)
-        context["profile"] = self.profile
-        return context
+        return (
+            Album.objects.filter(profile=self.profile)
+            .select_related("profile", "profile__user")
+            .prefetch_related("medias")
+            .annotate(medias_count=Count("medias"))
+        )
 
 
 class AlbumMediasPaginatorView(ListView):
-    """Album Photos paginator view."""
+    """View to accesss any user's album list page."""
 
     context_object_name = "medias"
     template_name = "albums/media_paginator.html"
@@ -62,21 +61,22 @@ class AlbumMediasPaginatorView(ListView):
 
 
 # Create your views here.
-class AlbumDetailView(LoginRequiredMixin, DetailView):
-    """Album detail view."""
+class AlbumDetailView(SetProfileContextMixin, LoginRequiredMixin, DetailView):
+    """View to accesss any user's album detail page."""
 
     context_object_name = "album"
     template_name = "albums/detail.html"
 
     def get_object(self, queryset=None):
         """Directly return the album obect."""
-        profile = get_object_or_404(Profile, username=self.kwargs.get("username"))
-
-        return get_object_or_404(Album, pk=self.kwargs.get("album_pk"), profile=profile)
+        self.set_profile()
+        return get_object_or_404(
+            Album, pk=self.kwargs.get("album_pk"), profile=self.profile
+        )
 
 
 class AlbumCreateView(SetOwnerProfileMixin, LoginRequiredMixin, CreateView):
-    """View to create Album."""
+    """View to create user's own Album."""
 
     template_name = "albums/create.html"
     form_class = AlbumForm
@@ -86,7 +86,7 @@ class AlbumCreateView(SetOwnerProfileMixin, LoginRequiredMixin, CreateView):
         """Associate profile with album."""
         with transaction.atomic():
             form.instance.profile = (
-                self._profile
+                self.owner_profile
             )  # associate the profile with the album
             resp = super().form_valid(form)
             form.save_medias(self.object)
@@ -94,11 +94,17 @@ class AlbumCreateView(SetOwnerProfileMixin, LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         """Get profile album url."""
-        return reverse_lazy("profile_photos_albums", args=[self._profile.username])
+        return reverse_lazy("profile_photos_albums", args=[self.owner_profile.username])
+
+    def get_context_data(self, **kwargs):
+        """Insert owner profile to context."""
+        context = super().get_context_data(**kwargs)
+        context["profile"] = self.owner_profile
+        return context
 
 
 class AlbumUpdate(SetOwnerProfileMixin, LoginRequiredMixin, UpdateView):
-    """View to update album."""
+    """View to update user's own album."""
 
     template_name = "albums/edit.html"
     form_class = AlbumForm
@@ -107,19 +113,22 @@ class AlbumUpdate(SetOwnerProfileMixin, LoginRequiredMixin, UpdateView):
         """Get back to the request album detail page."""
         album_pk = self.kwargs.get("album_pk")
 
-        return reverse_lazy("album_detail", args=[album_pk, self._profile.username])
+        return reverse_lazy(
+            "album_detail", args=[album_pk, self.owner_profile.username]
+        )
 
     def get_object(self):
         """Return the specified album owned by the profile."""
         album_pk = self.kwargs.get("album_pk")
 
-        return get_object_or_404(Album, profile=self._profile, pk=album_pk)
+        return get_object_or_404(Album, profile=self.owner_profile, pk=album_pk)
 
     def get_context_data(self, **kwargs):
         """Provide existing medias in album in context."""
         context = super().get_context_data(**kwargs)
         album = self.object
         context["medias"] = album.medias.all()
+        context["profile"] = self.owner_profile
         return context
 
     def form_valid(self, form):
@@ -132,15 +141,15 @@ class AlbumUpdate(SetOwnerProfileMixin, LoginRequiredMixin, UpdateView):
         return resp
 
 
-class AlbumDeleteView(SetOwnerProfileMixin, DeleteView):
-    """View to delete a album owned by the requesting user."""
+class AlbumDeleteView(SetOwnerProfileMixin, LoginRequiredMixin, DeleteView):
+    """View to delete user's own album."""
 
     def get_success_url(self):
         """Go back to albums pages of the requesting profile."""
-        return reverse_lazy("profile_photos_albums", args=[self._profile.username])
+        return reverse_lazy("profile_photos_albums", args=[self.owner_profile.username])
 
     def get_object(self, queryset=None):
         """Get the album owned by requesting user."""
         return get_object_or_404(
-            Album, id=self.kwargs.get("album_id"), profile=self._profile
+            Album, id=self.kwargs.get("album_id"), profile=self.owner_profile
         )

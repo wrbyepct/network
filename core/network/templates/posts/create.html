@@ -1,161 +1,203 @@
-{% extends 'network/layout.html' %} 
 
-{% block body %}
-{# Main container with a cozy, pixel-art feel #}
+{# Holographic Post Creation Container #}
 <div
-    id="post-create-container"
-    class="w-full max-w-2xl mx-auto bg-amber-50 border-4 border-emerald-800 rounded-lg p-4 sm:p-8 shadow-[8px_8px_0px_#25422a]"
-    @click.outside="showModal = false; $el.remove();" {# This click.outside might interfere with the new modal #}
-    x-data="{
-        selectedMedia: { 
-            images: [],
-            videos: [],
-        },
-        get allMedia() {
-          return [
-            ...this.selectedMedia.images,
-            ...this.selectedMedia.videos
-          ]
-        },
-        addMedia(file, type) {
-            this.selectedMedia[type].push({ 
-                file: file, 
-                url: URL.createObjectURL(file),
-                type: type
-            });
-        },
-        handleMediaUpload(event) {
-            const files = Array.from(event.target.files);
-            files.forEach(file => {
-                if (file.type.startsWith('image/')) this.addMedia(file, 'images');
-                if (file.type.startsWith('video/')) this.addMedia(file, 'videos');
-            });
-        },
-        removeMedia(index, type) {
-            // This is to clean up memory
-            URL.revokeObjectURL(this.selectedMedia[type][index].url); 
+  id="post-create-container"
+  class="w-full max-w-2xl mx-auto post-card rounded-xl p-4 sm:p-8 relative"
+  @click.outside="showModal = false; $el.remove();" {# This click.outside might interfere with the new modal #}
+  x-data="{
+      creating: false,
+      selectedMedia: { 
+          images: [],
+          videos: [],
+      },
+      get allMedia() {
+        return [
+          ...this.selectedMedia.images,
+          ...this.selectedMedia.videos
+        ]
+      },
+      addMedia(file, type) {
+          // derive extension from filename
+          const ext = file.name.split('.').pop()?.toLowerCase() || '';
 
-            this.selectedMedia[type].splice(index, 1);
-        },
- 
-        prepareMediaThenSubmit(form) {
-            // Put the newest list in media input before submit
-            const imageTransfer = new DataTransfer();
-            this.selectedMedia.images.forEach( image => imageTransfer.items.add(image.file));
-            this.$refs.imageInput.files = imageTransfer.files;
+          this.selectedMedia[type].push({ 
+              file: file, 
+              url: URL.createObjectURL(file),
+              type: type,
+              ext: ext,
+          });
+      },
+      handleMediaUpload(event) {
+          const files = Array.from(event.target.files);
+          files.forEach(file => {
+              if (file.type.startsWith('image/')) this.addMedia(file, 'images');
+              if (file.type.startsWith('video/')) this.addMedia(file, 'videos');
+          });
+      },
+      removeMedia(index, type) {
+          // This is to clean up memory
+          URL.revokeObjectURL(this.selectedMedia[type][index].url); 
 
-            const videoTransfer = new DataTransfer();
-            this.selectedMedia.videos.forEach( video => videoTransfer.items.add(video.file));
-            this.$refs.videoInput.files = videoTransfer.files;
+          this.selectedMedia[type].splice(index, 1);
+          
+          this.updateExtensionFields();
+          this.updateMediaCountFields();
+
+          this.updateFileInputs();
+
+      },
+      updateExtensionFields() {
+          // gather extensions separately
+          const imageExts = this.selectedMedia.images.map(m => m.ext);
+          const videoExts = this.selectedMedia.videos.map(m => m.ext);
+
+          this.$refs.imageExtsInput.value = JSON.stringify(imageExts);
+          this.$refs.videoExtsInput.value = JSON.stringify(videoExts);
+        },
+
+      updateMediaCountFields() {
+          // gather extensions separately
+          this.$refs.imageCountInput.value = this.selectedMedia.images.length || 0;
+          this.$refs.videoCountInput.value = this.selectedMedia.videos.length || 0;
 
         },
-    }"
+      updateFileInputs() {
+          // Put the newest list in media input before submit
+
+          const imageTransfer = new DataTransfer();
+          this.selectedMedia.images.forEach( image => imageTransfer.items.add(image.file));
+          this.$refs.imageInput.files = imageTransfer.files;
+
+          const videoTransfer = new DataTransfer();
+          this.selectedMedia.videos.forEach( video => videoTransfer.items.add(video.file));
+          this.$refs.videoInput.files = videoTransfer.files;
+
+      },
+      updateMediaInputs(event){
+          this.handleMediaUpload(event);
+
+          this.updateExtensionFields();
+          this.updateMediaCountFields();
+      }
+  }"
 >
 
-    <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-emerald-900 mb-4 sm:mb-6 text-center font-mono">Create a New Post</h2>
+  <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-center mb-4 sm:mb-6 holo-title" 
+      style="font-family: 'Press Start 2P', monospace; font-size: 14px; color: #06b6d4; text-shadow: 0 0 10px rgba(6, 182, 212, 0.5);">
+       INCUBATE NEW TURTIE 
+  </h2>
+  
+  <img class="w-40 mx-auto" src="/media/defaults/regular_eggs/unknown.png" alt="Turtle Composer image" >
 
-    {# Display non-field errors, if any #}
-    {% for error in form.non_field_errors %}
-        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded-md" role="alert">
-            <p>{{ error }}</p>
-        </div>
-    {% endfor %}
+  {# Display non-field errors, if any #}
+  {% for error in form.non_field_errors %}
+      <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded-md" role="alert">
+          <p>{{ error }}</p>
+      </div>
+  {% endfor %}
+    
+  {# Custom File Inputs Buttons #}
+  <form 
 
-    <form 
-        id="post-form"  
-        class="space-y-6"
-        hx-post="{% url 'post_create' %}"
-        hx-target="#modal-container"
-        hx-select="#egg-modal-content"
-        hx-swap="innerHTML"
-        hx-trigger="submit" 
-        hx-encoding="multipart/form-data"
-        @submit.prevent="prepareMediaThenSubmit($el)" {# htmx will wait for this to complete before issue a post#}
-    >
+    class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-3"
+    hx-post="{% url 'post_media_save' %}"
+    hx-trigger="save-media"
+    hx-encoding="multipart/form-data"
+    enctype="multipart/form-data"
+    @htmx:response-error.window="creating = false"
+    @post-created.window="$refs.postId.value = $event.detail.postId; $dispatch('save-media');" 
+  >
+      {% include 'posts/partial/media_upload_btn.html' %}
+      <input name="post_id" x-ref="postId">
+  </form>
 
-        {# Content Textarea #}
-        <div>
-            <label for="{{ form.content.id_for_label }}" class="block text-lg font-medium text-emerald-800 mb-2">Your thoughts?</label>
-            {# Manually rendering the field to add classes and placeholder #}
-            <textarea
-                name="{{ form.content.name }}"
-                id="{{ form.content.id_for_label }}"
-                class="w-full p-4 bg-white border-2 border-emerald-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition duration-150 ease-in-out font-mono"
-                rows="6"
-                placeholder="Take a deep breath... what's on your mind?"
-            >{{ form.content.value|default_if_none:'' }}</textarea>
-            {% for error in form.content.errors %}
-                <p class="text-red-500 text-sm mt-1">{{ error }}</p>
-            {% endfor %}
-        </div>
+  {# Holographic Media Pond Preview Area #}
+  <div x-show=" allMedia.length > 0" class="mt-6 p-4 mini-screen rounded-lg backdrop-blur-xl bg-white/[0.05] border border-cyan-400/20 shadow-2xl">
+    
+      <div class="mb-3 text-center">
+        <span class="text-sm font-bold tracking-wider" 
+              style="font-family: 'Press Start 2P', monospace; font-size: 10px; color: rgba(255, 255, 255, 0.9); text-shadow: 0 0 5px rgba(52, 211, 153, 0.5);">
+              🖼️ SHELLS TO UPLOAD 🖼️
+        </span>
+      </div>
 
-        {# Custom File Inputs Buttons #}
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {# Image Upload Button #}
-            <div>
-                <label for="image-upload" class="w-full flex items-center justify-center px-4 py-3 border-2 border-dashed border-emerald-600 rounded-lg cursor-pointer hover:bg-emerald-50 transition duration-150 ease-in-out">
-                    <svg class="w-8 h-8 text-emerald-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                    <span class="text-emerald-800 font-medium">Add Images</span>
-                </label>
-                <input type="file" name="images" id="image-upload" accept="image/*" class="hidden" multiple x-ref="imageInput" @change="handleMediaUpload($event)" />
-                {% for error in form.images.errors %}
-                    <p class="text-red-500 text-sm mt-1">{{ error }}</p>
-                {% endfor %}
-            </div>
+      {# Media Grid #}
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+        <template x-for="(media, index) in allMedia">
+          <div class="relative w-full aspect-square bg-black/40 border border-cyan-400/30 rounded-lg overflow-hidden backdrop-blur-sm hover:border-cyan-400/60 transition-all duration-300">
+            <template x-if="media.type === 'images'">
+              <img :src="media.url" class="w-full h-full object-cover filter saturate-110 contrast-110" />
+            </template>
 
-            {# Video Upload Button #}
-            <div>
-                <label for="video-upload" class="w-full flex items-center justify-center px-4 py-3 border-2 border-dashed border-emerald-600 rounded-lg cursor-pointer hover:bg-emerald-50 transition duration-150 ease-in-out">
-                    <svg class="w-8 h-8 text-emerald-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.55a1 1 0 011.45.89V15.1a1 1 0 01-1.45.89L15 12M4 6h11a1 1 0 011 1v10a1 1 0 01-1 1H4a1 1 0 01-1-1V7a1 1 0 011-1z"></path></svg>
-                    <span class="text-emerald-800 font-medium">Add Video</span>
-                </label>
-                <input type="file" name="video" id="video-upload" accept="video/*" class="hidden" x-ref="videoInput" @change="handleMediaUpload($event)" />
-                 {% for error in form.video.errors %}
-                    <p class="text-red-500 text-sm mt-1">{{ error }}</p>
-                {% endfor %}
-            </div>
-        </div>
+            <template x-if="media.type === 'videos'">
+              <video 
+                class="w-full h-full object-cover filter saturate-110 contrast-110"
+                preload="metadata" 
+                :src="media.url" 
+              ></video>
+            </template>
 
-        {# Media Pond Preview Area #}
-        <div x-show=" allMedia.length > 0" class="mt-6 p-4 bg-amber-100 border-4 border-emerald-700 rounded-lg shadow-[4px_4px_0px_#25422a]">
-          
-            {# Image Previews #}
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-              <template x-for="(media, index) in allMedia" :key="index">
-                <div class="relative w-full aspect-square border-2 border-emerald-600 rounded-md overflow-hidden">
-                  <template x-if="media.type === 'images'">
-                    <img :src="media.url" class="w-full h-full object-cover" />
-                  </template>
-
-                  <template x-if="media.type === 'videos'">
-                    <video 
-                      class="w-full h-full object-cover"
-                      controls 
-                      preload="metadata" 
-                      :src="media.url" 
-                    ></video>
-                  </template>
-
-                  <button @click="removeMedia(index, media.type)" type="button" class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold opacity-80 hover:opacity-100 transition-opacity duration-150">
-                      X
-                  </button>
-                </div>
-              </template>
-            </div>
-
-        </div>
-
-        {# Submit Button #}
-        <div>
-            <button
-                type="submit"
-                class="w-full bg-emerald-600 text-white font-bold py-4 px-6 rounded-lg hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-300 transition duration-150 ease-in-out shadow-[4px_4px_0px_#25422a]"
-            >
-                Incubate Egg
+            <button @click="removeMedia(index, media.type)" type="button" class="absolute top-2 right-2 bg-red-500/80 hover:bg-red-500 text-white rounded-full w-7 h-7 flex items-center justify-center font-bold backdrop-blur-sm transition-all duration-200 border border-red-400/50"
+                    style="font-family: 'Press Start 2P', monospace; font-size: 8px;">
+                ✕
             </button>
-        </div>
-    </form>
+          </div>
+        </template>
+      </div>
+
+  </div>
+
+  <form 
+      id="post-form"  
+      class="space-y-6"
+      hx-post="{% url 'post_create' %}"
+      hx-target="#modal-container"
+      hx-select="#egg-modal-content"
+      hx-swap="innerHTML"
+      hx-trigger="submit" 
+      @post-submit-error="displayAlertMessage($event)"
+  >
+      {# Media number inputs #}
+      <input type="number" hidden name="images_count" x-ref="imageCountInput" value="0">
+      <input type="number" hidden name="videos_count" x-ref="videoCountInput" value="0">
+
+      <!-- hidden fields Django will receive -->
+      <input type="hidden" name="image_exts" x-ref="imageExtsInput">
+      <input type="hidden" name="video_exts" x-ref="videoExtsInput">
+
+      {# Content Textarea #}
+      <div>
+          <label for="{{ form.content.id_for_label }}" class="block text-sm font-bold mb-3" 
+                 style="font-family: 'Press Start 2P', monospace; font-size: 10px; color: rgba(255, 255, 255, 0.9); text-shadow: 0 0 5px rgba(52, 211, 153, 0.5);">
+                 💭 WHAT'S ON YOUR MIND?
+          </label>
+          {# Manually rendering the field to add classes and placeholder #}
+          <textarea
+              name="{{ form.content.name }}"
+              id="{{ form.content.id_for_label }}"
+              class="w-full p-4 bg-black/30 border border-cyan-400/30 rounded-lg backdrop-blur-sm text-white/90 placeholder:text-white/50 focus:border-emerald-400/50 focus:outline-none focus:bg-black/40 transition-all duration-300"
+              style="resize: none; font-family: 'Press Start 2P', monospace; font-size: 10px; line-height: 1.6;"
+              rows="8"
+              placeholder="🐢 All turtlers carefully put their thoughts in an egg and wait with patience, calm and excitement...! "
+          >{{ form.content.value|default_if_none:'' }}</textarea>
+          {% for error in form.content.errors %}
+              <p class="text-red-500 text-sm mt-1">{{ error }}</p>
+          {% endfor %}
+      </div>
+
+  
+
+      {# Holographic Submit Button #}
+      <div>
+          <button
+              @click="$nextTick(() => creating = true)"
+              type="submit"
+              :disabled="creating"
+              x-text="creating ? 'Creating Egg...' :  '🥚 INCUBATE EGG' "
+              :class="creating ? 'cursor-not-allowed' : 'cursor-pointer'"
+              class="w-full bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 border border border-emerald-400/40 hover:border-emerald-400/70 text-white/90 font-bold py-4 px-6 rounded-lg backdrop-blur-md hover:bg-gradient-to-r hover:from-emerald-400/30 hover:to-cyan-400/30 hover:transform hover:-translate-y-1 hover:shadow-[0_0_30px_rgba(16,185,129,0.4)] focus:outline-none transition-all duration-300 relative overflow-hidden nav-btn-secondary"
+              style="font-family: 'Press Start 2P', monospace; font-size: 12px; text-shadow: 0 0 10px rgba(16, 185, 129, 0.5);"
+          ></button>
+      </div>
+  </form>
 </div>
-
-
-{% endblock %} 

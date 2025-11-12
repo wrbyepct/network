@@ -1,7 +1,6 @@
 """Album models."""
 
 from django.db import models
-from django.utils.functional import cached_property
 
 from network.common.models import MediaBaseModel, TimestampedModel
 from network.profiles.models import Profile
@@ -15,11 +14,6 @@ class Album(TimestampedModel):
     profile = models.ForeignKey(
         Profile, on_delete=models.CASCADE, related_name="albums"
     )
-
-    @cached_property
-    def medias_count(self):
-        """Return photo count."""
-        return self.medias.count()
 
 
 class AlbumMedia(MediaBaseModel):

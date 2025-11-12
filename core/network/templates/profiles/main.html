@@ -1,56 +1,129 @@
 {% extends "network/layout.html" %}
 {% load profile_extra %}
 {% block body %}
-<!-- Follow toast -->
 
-<div id="follow_message">
 
-</div>
+<div 
 
-<div class="container mt-5">
-    <!-- Follow or edit buttons -->
-    <div class="d-flex justify-content-between">
-        <h2>{{ profile.username }}'s Profile</h2>
+  class="w-full min-h-screen pt-4 px-2 sm:px-4 lg:px-8 relative z-10"
+  x-data="{ 
+    activeTab: '{{ current_tab }}',
+    isIncubating: {{ is_incubating|yesno:'true,false' }},
+  }"
+>
+  <div class="max-w-6xl mx-auto">
+    <!-- Holographic Profile Header -->
+    <div class="post-card breathing rounded-xl p-4 sm:p-6 lg:p-8 mb-6 sm:mb-8 relative overflow-hidden" 
+         style="font-family: 'Press Start 2P', monospace; font-size: 10px;">
+      
+      <!-- Action Button (Edit/Follow) -->
+      <div class="absolute top-4 left-4 z-20">
         {% if profile.user == request.user %}
-          <a href="{% url 'profile_edit' %}">Edit</a>
+          <div class="relative group">
+            {% include 'profiles/partials/edit_button.html' %}
+          </div>
         {% else %}
-          <a 
-            class="btn"
-            x-data="{ hasFollowed: {{ profile|has_followed:request.user|yesno:'true,false' }}}"
-            :class="hasFollowed ? 'btn-primary' : 'btn-outline-primary'"
-            x-text="hasFollowed ? 'Followed' : 'Follow'"
-          {% if request.user.is_authenticated %}
-            @click="hasFollowed = !hasFollowed"
-            hx-post="{% url 'follow' profile.username %}"
-            hx-target="#follow_message"
-          {% else %}
-            href="{% url 'account_login' %}"
-          {% endif %}
-            ></a>
+          {% include 'profiles/partials/follow_btn.html' %}
         {% endif %}
+      </div>
+
+      <!-- Profile Content -->
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 lg:gap-8 pt-12 sm:pt-4">
+        
+        <!-- Avatar Section -->
+        <div class="relative flex-shrink-0">
+          <img src="{{ profile.profile_picture.url }}" 
+               class="holo-avatar--float w-20 h-20 sm:w-24 sm:h-24 lg:w-32 lg:h-32 rounded-full object-cover holo-avatar border-4 border-cyan-400/50 shadow-lg">
+          <div class="absolute inset-0 rounded-full border-2 border-cyan-300/30 animate-pulse"></div>
+        </div>
+
+        <!-- Username Display -->
+        <div class="holo-composer-container rounded-lg px-4 py-3 sm:px-6 sm:py-4 backdrop-blur-15 border border-cyan-400/30">
+          <div class="text-lg sm:text-xl lg:text-2xl xl:text-3xl text-white font-bold text-center tracking-wide">
+            <span class="bg-gradient-to-r from-cyan-400 to-emerald-400 bg-clip-text text-transparent">
+              {{ profile.username }}
+            </span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Holographic Particles Effect -->
+      <div class="absolute inset-0 pointer-events-none overflow-hidden">
+        <div class="absolute top-1/4 left-1/4 w-2 h-2 bg-cyan-400/20 rounded-full animate-bounce" style="animation-delay: 0s;"></div>
+        <div class="absolute top-1/3 right-1/3 w-1 h-1 bg-emerald-400/30 rounded-full animate-bounce" style="animation-delay: 1s;"></div>
+        <div class="absolute bottom-1/4 left-1/3 w-1.5 h-1.5 bg-yellow-400/20 rounded-full animate-bounce" style="animation-delay: 2s;"></div>
+      </div>
     </div>
 
-  <ul class="nav nav-tabs mb-3"
-    x-data="{'activeTab': '{{ current_tab }}'}"
-  >
-    {% for tab in tabs %}
-        <li class="nav-item">
-          <a class="nav-link"
-            :class="{ 'active': activeTab === '{{ tab }}' }"
-            @click="activeTab = '{{ tab }}'"
-            hx-get="{% url 'profile_'|add:tab profile.username %}"
-            hx-target="#tab-content"
-            hx-push-url="{% url 'profile_'|add:tab profile.username %}"
-            hx-swap="innerHTML">
-            {{ tab|title }}
-          </a>
-        </li>
-    {% endfor %}
-  </ul>
+    <!-- Holographic Navigation Tabs -->
+    <div class="flex flex-wrap justify-center gap-2 sm:gap-3 lg:gap-4 mb-6 sm:mb-8 px-2">
+      {% for tab in tabs %}
+        <button 
+          class="nav-btn relative overflow-hidden
+                 px-3 py-2 sm:px-4 sm:py-3 lg:px-6 lg:py-4
+                 text-xs sm:text-sm lg:text-base
+                 font-bold tracking-wide uppercase
+                 rounded-lg border transition-all duration-300 ease-out
+                 backdrop-blur-15 flex-shrink-0 min-w-[80px] sm:min-w-[100px] lg:min-w-[120px]"
+          :class="{
+            'nav-btn-primary border-yellow-400/50 bg-gradient-to-r from-yellow-400/20 to-amber-500/20 text-yellow-300 shadow-lg shadow-yellow-400/20': activeTab === '{{ tab }}',
+            'nav-btn-secondary border-cyan-400/30 bg-gradient-to-r from-cyan-400/10 to-emerald-400/10 text-cyan-300 hover:border-cyan-400/50 hover:bg-gradient-to-r hover:from-cyan-400/20 hover:to-emerald-400/20': activeTab !== '{{ tab }}'
+          }"
+          @click="activeTab = '{{ tab }}'"
+          hx-get="{% url 'profile_'|add:tab profile.username %}"
+          hx-target="#tab-content"
+          hx-push-url="{% url 'profile_'|add:tab profile.username %}"
+          hx-swap="innerHTML transition:true"
+          style="font-family: 'Press Start 2P', monospace; font-size: 8px; touch-action: manipulation;">
+          
+          <!-- Active Tab Indicator -->
+          <div x-show="activeTab === '{{ tab }}'" 
+               class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1 
+                      w-3 h-3 bg-yellow-400 rounded-full border-2 border-yellow-300 
+                      shadow-lg shadow-yellow-400/50 animate-pulse"
+               x-transition:enter="transition ease-out duration-300"
+               x-transition:enter-start="opacity-0 scale-75"
+               x-transition:enter-end="opacity-100 scale-100"></div>
+          
+          <!-- Tab Text -->
+          <span class="relative z-10">{{ tab|title }}</span>
+          
+          <!-- Shimmer Effect -->
+          <div class="absolute inset-0 -top-2 -left-2 w-[calc(100%+16px)] h-[calc(100%+16px)] 
+                      bg-gradient-to-r from-transparent via-white/10 to-transparent 
+                      transform -skew-x-12 opacity-0 hover:opacity-100 hover:animate-ping"
+               style="transition: opacity 0.3s;"></div>
+        </button>
+      {% endfor %}
+    </div>
 
-  <div id="tab-content" class="row" >
-    {% block tab_content %}
-    {% endblock %}
+    <!-- Holographic Content Container -->
+    <div id="tab-content" 
+         class="post-card relative rounded-xl 
+                sm:p-6 lg:p-8 
+                min-h-[300px] sm:min-h-[400px] lg:min-h-[500px]
+                backdrop-blur-20 border border-cyan-400/20
+                shadow-2xl shadow-cyan-900/20">
+      
+      <!-- Content Background Pattern -->
+      <div class="absolute relative inset-0 opacity-5 pointer-events-none">
+        <div class="absolute inset-0 bg-gradient-to-br from-cyan-400/10 via-transparent to-emerald-400/10"></div>
+        <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-cyan-400/5 to-transparent transform -skew-y-12"></div>
+      </div>
+      
+      <!-- Main Content -->
+      <div class="relative z-10">
+        {% block tab_content %}
+        {% endblock %}
+      </div>
+      
+      <!-- Floating Elements -->
+      <div class="absolute top-4 right-4 w-3 h-3 bg-cyan-400/20 rounded-full animate-pulse"></div>
+      <div class="absolute bottom-8 left-8 w-2 h-2 bg-emerald-400/30 rounded-full animate-bounce" style="animation-delay: 0.5s;"></div>
+      <div class="absolute top-1/2 right-8 w-1.5 h-1.5 bg-yellow-400/25 rounded-full animate-ping" style="animation-delay: 1s;"></div>
+    </div>
+    
   </div>
 </div>
 

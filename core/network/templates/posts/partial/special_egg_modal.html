@@ -1,0 +1,204 @@
+<!-- Premium TUR-BOY Special Egg Console Modal -->
+<div 
+    id="egg-modal-content"
+    class="relative bg-black/95 border-[6px] rounded-xl max-w-lg w-full premium-turboy-console"
+    :class="{%if egg_type == 'special' %}'border-yellow-500/50'{% else %}'border-pink-400/50'{% endif %}"
+    style="font-family: 'Press Start 2P', monospace; font-size: 8px;"
+    x-data="{
+        celebrationPhase: 1,
+        maxPhases: 5,
+        dialogues: [
+            'Wait... is that...?',
+            'Could it be...?', 
+            '{%if egg_type == 'special' %}A LEGENDARY{% else %}AN EASTER{% endif %} EGG ！！'
+        ],
+        showConfetti: false,
+        currentDialogue: 0,
+        autoAdvanceTimer: null,
+        
+        nextPhase() {
+            if (this.celebrationPhase < this.maxPhases) {
+                this.celebrationPhase++;
+                if (this.celebrationPhase === 2) {
+                    this.startDialogueSequence();
+                }
+            }
+        },
+        
+        startDialogueSequence() {
+            this.autoAdvanceTimer = setInterval(() => {
+                if (this.currentDialogue < this.dialogues.length - 1) {
+                    this.currentDialogue++;
+                    this.celebrationPhase++;
+                } else {
+                    clearInterval(this.autoAdvanceTimer);
+                    setTimeout(() => this.nextPhase(), 1000);
+                }
+            }, 2000);
+        },
+        
+        triggerConfetti() {
+            this.showConfetti = true;
+            setTimeout(() => this.showConfetti = false, 3000);
+        },
+        
+    }">
+    
+    <!-- Premium Console Header -->
+    <div class="console-header flex justify-between items-center relative px-3 py-2 border-b-4"
+         :class="{%if egg_type == 'special' %}'border-purple-900 legendary-header'{% else %}'border-blue-900 garden-header'{% endif %}">
+        <div class="text-xl italic font-bold tracking-wide premium-title"
+             :class="{%if egg_type == 'special' %}'text-yellow-400'{% else %}'text-pink-400'{% endif %}"
+             style="text-shadow: 0 0 8px currentColor, 1px 1px 0px rgba(0, 0, 0, 0.8);">
+            TUR-BOY
+        </div>
+        <div class="text-neutral-400 opacity-80" style="font-size: 6px; text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.5);">
+            {%if egg_type == 'special' %}v2.0{% else %}v1.8{% endif %}
+        </div>
+    </div>
+
+    <!-- Console Screen Container -->
+    <div class="console-screen mx-3 my-4 border-4 border-blue-800 rounded-lg relative overflow-hidden" 
+         :class="{%if egg_type == 'special' %}'legendary-screen'{% else %}'garden-screen'{% endif %}"
+         style="min-height: 300px;">
+         
+        <!-- Phase 1: Console Boot Screen -->
+        <div x-show="celebrationPhase === 1" 
+             x-transition:enter="transition ease-out duration-1000 transform"
+             x-transition:enter-start="opacity-0 translate-y-20 scale-50"
+             x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+             class="p-6 text-center">
+            
+            <!-- Boot Sequence -->
+            <div class="mb-4">
+                <div class="text-cyan-400 mb-2" style="font-size: 9px;">SYSTEM BOOT...</div>
+                <div class="text-green-400 mb-2" style="font-size: 8px;">SCANNING EGG SIGNATURE...</div>
+                <div class="text-yellow-400 mb-4" style="font-size: 8px;">⚠ ANOMALY DETECTED ⚠</div>
+            </div>
+            
+            <div class="relative inline-block">
+                <img src="/media/defaults/surprised_turtle.png" 
+                     alt="Surprised Turtle" 
+                     class="w-20 h-20 mx-auto turtle-surprise-entrance pixel-perfect"
+                     style="image-rendering: pixelated;"
+                     @animationend="setTimeout(() => nextPhase(), 500)">
+                <!-- Console Alert Indicators -->
+                <div class="absolute -top-2 -left-2 text-red-400 text-sm animate-pulse">!</div>
+                <div class="absolute -top-2 -right-2 text-red-400 text-sm animate-pulse" style="animation-delay: 0.3s;">!</div>
+                <div class="absolute -bottom-2 -left-2 text-red-400 text-sm animate-pulse" style="animation-delay: 0.6s;">!</div>
+                <div class="absolute -bottom-2 -right-2 text-red-400 text-sm animate-pulse" style="animation-delay: 0.9s;">!</div>
+            </div>
+        </div>
+
+        <!-- Phase 2-4: Console Analysis Sequence -->
+        <div x-show="celebrationPhase >= 2 && celebrationPhase <= 4" 
+             x-transition:enter="transition ease-out duration-500"
+             x-transition:enter-start="opacity-0 scale-90"
+             x-transition:enter-end="opacity-100 scale-100"
+             class="p-6">
+            
+            <!-- Console Status Display -->
+            <div class="mb-4 text-center">
+                <div class="text-cyan-400 mb-3" style="font-size: 10px;">ANALYSIS IN PROGRESS...</div>
+                <div class="bg-black/40 border-2 border-cyan-400/30 rounded-md p-3 mb-4">
+                    <div class="text-left">
+                        <div class="text-green-400 mb-1" style="font-size: 8px;">> RUNNING DIAGNOSTICS</div>
+                        <div class="text-yellow-400 mb-1" style="font-size: 8px;">> CHECKING EGG DATABASE</div>
+                        <div class="text-orange-400 mb-2" style="font-size: 8px;">> CROSS-REFERENCING RARITY</div>
+                    </div>
+                    
+                    <!-- Console Dialogue Output -->
+                    <div class="border-t border-cyan-400/30 pt-2 mt-2 text-center">
+                        <p class="font-bold console-dialogue" 
+                           :class="currentDialogue === 2 ? '{%if egg_type == 'special' %}text-yellow-400 text-lg{% else%}text-pink-400 text-lg{%endif%}' : 'text-white text-sm'"
+                           x-text="dialogues[currentDialogue] || 'ANALYZING...'"></p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Console Turtle Avatar -->
+            <div class="text-center">
+                <img src="/media/defaults/surprised_turtle.png" 
+                     alt="Console Turtle" 
+                     class="w-16 h-16 mx-auto turtle-excited pixel-perfect"
+                     style="image-rendering: pixelated;">
+            </div>
+        </div>
+
+
+        <!-- Phase 5: Premium Console Display Mode -->
+        <div x-show="celebrationPhase === 5" 
+             @transitionstart="triggerConfetti()"
+             x-transition:enter="transition ease-out duration-800 transform"
+             x-transition:enter-start="opacity-0 translate-y-10 scale-95"
+             x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+             class="p-6">
+        
+            <!-- Console Success Banner -->
+            <div class="text-center mb-4">
+                <div class="text-cyan-400 mb-2" style="font-size: 10px;">ANALYSIS COMPLETE</div>
+                <div class="bg-gradient-to-r font-bold p-2 rounded"
+                     :class="{%if egg_type == 'special' %}'from-yellow-400 to-yellow-300'{% else %}'from-pink-400 to-pink-300'{% endif %}"
+                     style="font-size: 10px;">
+                    {%if egg_type == 'special' %}LEGENDARY SPECIMEN{% else %}GARDEN MIRACLE{% endif %} CONFIRMED
+                </div>
+            </div>
+            
+            <!-- Hologram Egg Display Chamber -->
+            <div class="hologram-chamber relative mb-4 p-4 border-2 rounded-lg"
+                 :class="{%if egg_type == 'special' %}'border-yellow-400/50 bg-purple-950/30'{% else %}'border-pink-400/50 bg-pink-950/20'{% endif %}">
+                
+                <!-- Hologram Scan Lines -->
+                <div class="absolute inset-0 pointer-events-none z-10 scan-lines"></div>
+                
+                <!-- Floating Egg Display -->
+                <div class="relative">
+                    <img src="{{ egg_url }}" 
+                         alt="{%if egg_type == 'special' %}Legendary Egg{% else %}Garden Egg{% endif %}" 
+                         class="w-60 h-auto mx-auto pixel-perfect hologram-egg"
+                         :class="{%if egg_type == 'special' %}'legendary-hologram'{% else %}'garden-hologram'{% endif %}"
+                         style="image-rendering: pixelated;">
+                    
+                    <!-- Hologram Projector Rings -->
+                    <div class="absolute inset-0 rounded-full border animate-ping"
+                         :class="{%if egg_type == 'special' %}'border-yellow-400/40'{% else %}'border-pink-400/40'{% endif %}"></div>
+                    <div class="absolute inset-0 rounded-full border animate-ping"
+                         :class="{%if egg_type == 'special' %}'border-purple-400/30'{% else %}'border-green-400/30'{% endif %}"
+                         style="animation-delay: 0.5s;"></div>
+                </div>
+                
+                <!-- Rarity Status Display -->
+                <div class="mt-3 text-center">
+                    <div class="inline-block p-3 rounded border text-white "
+                         :class="{%if egg_type == 'special' %}'bg-yellow-400/20 border-yellow-400/50'{% else %}'bg-pink-400/20 border-pink-400/50'{% endif %}"
+                         style="font-size: 10px;">
+                         <div class="mb-3">🔍 Egg idetified:</div> 
+                         <div>It's {%if egg_type == 'special' %}<span class="text-yellow-400 font-bold text-sm">{{ egg_name|upper }}</span>{% else %}<span class="text-pink-400 font-bold text-sm">{{ egg_name|upper }}</span>{% endif %} egg!</div>
+                 
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Turtle Council Approval -->
+            <div class="text-center mb-4">
+                <div class="text-white text-xs font-bold">This egg is...{%if egg_type == 'special' %} <span class="text-sky-400">RARE</span>{% else %}<span class="text-fuchsia-400">ULTRA RARE</span>{% endif %}...!!</div>
+            </div>
+        </div>
+    </div>
+
+    
+    <!-- Console Action Button -->
+    <div class="p-3">
+        <button
+            class="w-full bg-gradient-to-b from-yellow-200 via-yellow-300 to-yellow-500 border-2 border-slate-700 text-slate-700 font-bold py-3 px-4 rounded-md console-btn-action hover:from-yellow-300 hover:to-yellow-600 hover:shadow-[3px_3px_0px_rgba(0,0,0,0.4)] transition-all duration-150"
+            style="font-size: 10px; text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.3);"
+            @click="closeModal()"
+            x-show="celebrationPhase === 5"
+            x-cloak
+        >
+            {%if egg_type == 'special' %}⭐ MAGNIFICENT{% else %}🌸 WONDERFUL{% endif %}
+        </button>
+    </div>
+    
+
+</div>

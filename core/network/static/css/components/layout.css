@@ -1,0 +1,394 @@
+/* ===================================
+   LAYOUT COMPONENT SYSTEM
+   Cards, containers, and structural elements
+   ================================= */
+
+/* Layout variables imported from _variables.css */
+
+/* Content Cards System */
+.post-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  backdrop-filter: blur(20px);
+  box-shadow: var(--card-shadow);
+  position: relative;
+  color: rgba(255, 255, 255, 0.9);
+  border-radius: var(--border-radius);
+  padding: var(--container-padding);
+  margin-bottom: 16px;
+}
+
+.post-card h6 {
+  color: rgba(255, 255, 255, 0.95) !important;
+  text-shadow: 0 0 10px rgba(52, 211, 153, 0.3);
+}
+
+.post-card .text-muted {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.post-card .text-stone-800 {
+  color: rgba(255, 255, 255, 0.95) !important;
+}
+
+/* Authentication Container */
+.login-container {
+  background: rgba(15, 23, 42, 0.95);
+  border: 2px solid rgba(6, 182, 212, 0.4);
+  box-shadow:
+    0 0 40px rgba(6, 182, 212, 0.2),
+    0 20px 40px rgba(0, 0, 0, 0.3),
+    inset 0 2px 4px rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--border-radius);
+  padding: 24px;
+}
+
+.login-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(45deg,
+      rgba(6, 182, 212, 0.5) 0%,
+      transparent 25%,
+      transparent 75%,
+      rgba(16, 185, 129, 0.5) 100%);
+  border-radius: inherit;
+  opacity: 0.6;
+  animation: border-glow 3s ease-in-out infinite;
+  z-index: -1;
+}
+
+/* Form Input Elements */
+.holo-input {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  color: rgba(255, 255, 255, 0.9);
+  border-radius: var(--border-radius);
+  padding: 12px 16px;
+  transition: all var(--transition-normal) ease;
+  backdrop-filter: blur(5px);
+}
+
+.holo-input:focus {
+  border-color: var(--holo-glow);
+  box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.holo-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Content Containers */
+.content-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--container-padding);
+}
+
+/* Mini Screen Glass Morphism */
+.mini-screen {
+  background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.06) 0%,
+      rgba(255, 255, 255, 0.02) 100%);
+  border: 1px solid rgba(30, 58, 138, 0.3);
+  border-radius: 6px;
+  backdrop-filter: blur(15px);
+  box-shadow:
+    0 4px 8px rgba(0, 0, 0, 0.1),
+    inset 0 1px 2px rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.mini-screen::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(6, 182, 212, 0.6) 50%,
+      transparent 100%);
+  animation: scanning-line 3s ease-in-out infinite;
+}
+
+@keyframes scanning-line {
+  0% {
+    left: -100%;
+  }
+
+  100% {
+    left: 100%;
+  }
+}
+
+.section-container {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-radius: var(--border-radius);
+  padding: 24px;
+  margin: 16px 0;
+}
+
+/* Media Gallery Layout */
+.media-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin: 16px 0;
+}
+
+.media-item {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  transition: all var(--transition-normal) ease;
+  cursor: pointer;
+}
+
+.media-item:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--card-shadow), 0 0 20px rgba(52, 211, 153, 0.2);
+}
+
+.media-item img,
+.media-item video {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  display: block;
+}
+
+/* Profile Layout Components */
+.profile-header {
+  background: linear-gradient(135deg,
+      rgba(6, 182, 212, 0.1) 0%,
+      rgba(16, 185, 129, 0.1) 100%);
+  border: 1px solid rgba(52, 211, 153, 0.3);
+  backdrop-filter: blur(20px);
+  border-radius: var(--border-radius);
+  padding: 32px;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.profile-avatar {
+  width: 120px;
+  height: 120px;
+  border: 3px solid var(--turtle-glow);
+  border-radius: 50%;
+  box-shadow:
+    0 0 30px rgba(52, 211, 153, 0.4),
+    inset 0 2px 4px rgba(255, 255, 255, 0.1);
+  margin: 0 auto 16px;
+  display: block;
+}
+
+/* List Layout */
+.item-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.list-item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--border-radius);
+  padding: 16px;
+  transition: all var(--transition-fast) ease;
+}
+
+.list-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(52, 211, 153, 0.3);
+  transform: translateX(4px);
+}
+
+/* Stats and Counter Layout */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+  margin: 24px 0;
+}
+
+.stat-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--border-radius);
+  padding: 20px;
+  text-align: center;
+  transition: all var(--transition-normal) ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--card-shadow);
+}
+
+.stat-number {
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--turtle-glow);
+  text-shadow: 0 0 10px currentColor;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.stat-label {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ===================================
+   HOLOGRAPHIC CONSOLE COMPONENTS
+   Reusable console and glass elements
+   ================================= */
+
+
+/* Mini console circle for floating elements */
+.holo-mini-console {
+  background: var(--console-bg);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--holo-cyan-primary);
+  box-shadow:
+    0 8px 25px rgba(0, 0, 0, 0.3),
+    inset 0 2px 4px rgba(255, 255, 255, 0.05),
+    0 0 30px var(--holo-cyan-primary);
+  transition: all var(--transition-normal) var(--ease-out-quart);
+  position: relative;
+  overflow: hidden;
+  animation: mini-turtle-float 6s ease-in-out infinite;
+}
+
+/* Holographic bezel glow effect */
+.holo-mini-console::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg,
+      var(--holo-cyan-secondary) 0%,
+      transparent 25%,
+      transparent 75%,
+      var(--holo-emerald-secondary) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: exclude;
+  animation: mini-bezel-glow 4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* Underwater screen environment for mini consoles */
+.holo-underwater-screen {
+  background:
+    radial-gradient(ellipse at center top, var(--holo-cyan-primary) 0%, transparent 50%),
+    radial-gradient(ellipse at center bottom, rgba(16, 185, 129, 0.05) 0%, transparent 50%),
+    rgba(0, 0, 0, 0.6);
+  border: 1px solid var(--holo-cyan-secondary);
+  border-radius: var(--border-radius-small);
+}
+
+/* Toolkit container for common toolkit overlays */
+.holo-toolkit-base {
+  background: var(--console-deep-bg);
+  border: 1px solid var(--holo-cyan-secondary);
+  box-shadow:
+    0 8px 16px rgba(0, 0, 0, 0.4),
+    inset 0 1px 2px var(--holo-cyan-secondary);
+  border-radius: var(--border-radius);
+  font-family: 'Press Start 2P', monospace;
+}
+
+/* Hover states for interactive console elements */
+.holo-console-interactive:hover {
+  border-color: var(--holo-cyan-secondary);
+  box-shadow:
+    0 12px 35px rgba(0, 0, 0, 0.4),
+    0 0 40px var(--holo-cyan-secondary),
+    inset 0 2px 4px rgba(255, 255, 255, 0.1);
+  transform: scale(1.05);
+}
+
+/* Dragging state for moveable consoles */
+.holo-console-dragging {
+  transform: scale(1.1) !important;
+  box-shadow:
+    0 15px 40px rgba(0, 0, 0, 0.5),
+    0 0 50px var(--holo-cyan-accent) !important;
+}
+
+/* Glow ring for floating animations */
+.holo-glow-ring {
+  background: radial-gradient(circle, var(--holo-cyan-primary) 0%, transparent 70%);
+  animation: mini-glow-pulse 3s ease-in-out infinite;
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+/* ===================================
+   KEYFRAME ANIMATIONS
+   ================================= */
+
+@keyframes mini-turtle-float {
+
+  0%,
+  100% {
+    transform: translate(0px, 0px) rotate(0deg);
+  }
+
+  25% {
+    transform: translate(2px, -3px) rotate(-1deg);
+  }
+
+  50% {
+    transform: translate(0px, -5px) rotate(0deg);
+  }
+
+  75% {
+    transform: translate(-2px, -2px) rotate(1deg);
+  }
+}
+
+@keyframes mini-bezel-glow {
+
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes mini-glow-pulse {
+
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.6;
+    transform: scale(1.1);
+  }
+}
+
+/* Responsive layout adjustments moved to _responsive.css */

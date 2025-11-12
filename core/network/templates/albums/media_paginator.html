@@ -1,4 +1,6 @@
+{% load cache %}
 
+{% cache 900 album_media_paginator album.pkid page_obj.number %}
 {% for media in medias %}
 <div class="col-span-1">
     <div 
@@ -34,10 +36,10 @@
 {% empty %}
 <!-- Empty State -->
 <div class="col-span-4 text-center mt-5">
-    <i class="bi bi-image fs-1 text-muted d-block mb-2"></i>
-    <p class="text-muted">This album is empty.</p>
+    <i class="bi bi-image fs-1 text-white d-block mb-2"></i>
+    <p class="text-emerald-400">No shell in this album yet</p>
     {% if request.user == album.profile.user %}
-    <a href="#" class="btn btn-primary btn-sm">Add Media</a>
+    <a href="{% url 'album_edit' album.pk %}" class="btn btn-primary btn-sm">Add More!</a>
     {% endif %}
 </div>
 {% endfor %}
@@ -45,3 +47,4 @@
 <!-- Next media batch trigger -->
 {% url 'album_media_paginate' album.id as fetch_url %}
 {% include 'common/next_media_batch.html' with fetch_url=fetch_url %}
+{% endcache %}

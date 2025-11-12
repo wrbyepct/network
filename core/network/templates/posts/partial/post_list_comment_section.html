@@ -1,15 +1,17 @@
 
   {% if post.comment_count %}
   
-    {% if post.comment_count > 2 %}
-      <a 
-        class="text-decoration-none text-muted fs-6 d-block mb-3 cursor-pointer" 
-        hx-get="{% url 'post_modal' post.id %}"
-        hx-target="#modal-container"
-        @htmx:after-request="if($event.detail.successful) showModal = true;"
-        >See More</a>
 
-    {% endif %}
+    <a
+      class="text-decoration-none block text-muted text-md mb-3 cursor-pointer" 
+      hx-get="{% url 'post_modal' post.id %}"
+      hx-target="#modal-container"
+      x-show="commentCount >= $refs.commentSection.childElementCount"
+      x-cloak
+      @htmx:after-request="if($event.detail.successful) showModal = true;"
+      >See More</a>
+
+
     {% for comment in post.latest_two_comments %}
         {% include 'comments/comment.html' %}
     {% endfor %}

@@ -1,10 +1,13 @@
 """Custom common mixins for views."""
 
+import json
+
 from django.db.models import Max, Model, PositiveSmallIntegerField
 from django.forms import ValidationError
-from django.utils.functional import cached_property
+from django.shortcuts import get_object_or_404
 
 from network.common.models import MediaBaseModel
+from network.profiles.models import Profile
 
 
 class RefererRedirectMixin:
@@ -47,8 +50,25 @@ class SetOwnerProfileMixin:
 
     def dispatch(self, request, *args, **kwargs):
         """Set profile instance for later access."""
-        self._profile = self.request.user.profile
+        self.owner_profile = self.request.user.profile
         return super().dispatch(request, *args, **kwargs)
+
+
+class SetProfileContextMixin:
+    """Mixin to set profile at concern in context."""
+
+    def set_profile(self):
+        """Set prefetched user data profile."""
+        self.profile = get_object_or_404(
+            Profile.objects.select_related("user"),
+            username=self.kwargs.get("username"),
+        )
+
+    def get_context_data(self, **kwargs):
+        """Inject profile into context."""
+        context = super().get_context_data(**kwargs)
+        context["profile"] = self.profile
+        return context
 
 
 class ProfileInfoMixin:
@@ -61,12 +81,12 @@ class ProfileInfoMixin:
 
     """
 
-    @cached_property
+    @property
     def profile_picture_url(self):
         """Return profile picture url."""
         return self.user.profile.profile_picture.url
 
-    @cached_property
+    @property
     def username(self):
         """Return profile username."""
         return self.user.profile.username
@@ -79,7 +99,7 @@ class LikeCountMixin(Model):
     Fields:
         - like_count: PostiveSmallIntergerField
     Methods:
-        - update_like_count: update like_count with db count.
+        - sync_like_count: update like_count with db count.
 
     """
 
@@ -93,12 +113,33 @@ class LikeCountMixin(Model):
         self.like_count = self.likes.count()
         self.save(update_fields=["like_count"])
 
-    def add_one_like_count(self):
-        """Add 1 like count."""
-        self.like_count = self.like_count + 1
-        self.save(update_fields=["like_count"])
 
-    def subtract_one_like_count(self):
-        """Subtract 1 like count."""
-        self.like_count = self.like_count - 1
-        self.save(update_fields=["like_count"])
+class CommentCountMixin(Model):
+    """
+    Mixin to track and update comment count.
+
+    Fields:
+        - comment_count: PostiveSmallIntergerField
+    Methods:
+        - sync_like_count: update like_count with db count.
+
+    """
+
+    comment_count = PositiveSmallIntegerField(default=0)
+
+    class Meta:
+        abstract = True
+
+    def sync_comment_count(self):
+        """Update like_count in object and save it."""
+        self.comment_count = self.comments.count()
+        self.save(update_fields=["comment_count"])
+
+
+class SetHtmxAlertTriggerMixin:
+    """Set HTMX event trigger for custom frontend alert."""
+
+    def set_htmx_trigger(self, resp, event_name, message):
+        """Create json event object with message and set it HX-Trigger header in http response."""
+        resp["HX-Trigger"] = json.dumps({event_name: {"message": message}})
+        return resp

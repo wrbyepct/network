@@ -1,22 +1,28 @@
 <!-- Media container -->
 <div 
 	id="media-container"
-	class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+	class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 lg:p-4">
 	
 	{% if in_album_detail %}
 		<!-- Album add more photos button -->
-		{% if request.user == album.profile.user %}
-		
-		<div class="col-span-1" id="album-edit">
-			<a href="{% url 'album_edit' album.pk %}" class="text-decoration-none">
-				<div class="card h-100 border-dashed text-center d-flex justify-content-center align-items-center p-3 bg-light">
-					<div class="fs-1 text-primary">＋</div>
-					<div class="fw-bold">Add more photos</div>
-				</div>
-			</a>
-		</div>
+		{% if request.user == profile.user %}
+			{% url 'album_edit' album.pk as create_media_url %}
+			{% include 'albums/add_more_btn.html' %}
+
 		{% endif %}
 	{% endif %}
 	
 	
+  <!-- Load More Media Trigger -->
+   {% if in_album_detail %}
+	<div
+		hx-get="{% url 'album_media_paginate' album.id %}"
+		hx-target="#media-container"
+		hx-trigger="load"
+		hx-swap="beforeend"
+		@htmx:after-request="if($event.detail.successful) $el.remove();">
+
+		{% include 'profiles/partials/loading.html' %}
+	</div>
+  {% endif %}
 </div>

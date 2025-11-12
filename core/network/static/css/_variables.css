@@ -1,0 +1,186 @@
+/* ===================================
+   CENTRALIZED CSS VARIABLES
+   All CSS custom properties consolidated from multiple files
+   Import this file first in your CSS architecture
+   ================================= */
+
+:root {
+  /* ===================================
+     CORE COLOR PALETTE
+     ================================= */
+
+  /* Base Colors */
+  --holo-deep: #0f172a;
+  --holo-mid: #1e293b;
+  --holo-light: #334155;
+  --holo-glow: #06b6d4;
+  --turtle-green: #10b981;
+  --turtle-glow: #34d399;
+
+  /* Holographic Color Variations */
+  --holo-cyan-primary: rgba(6, 182, 212, 0.3);
+  --holo-cyan-secondary: rgba(6, 182, 212, 0.5);
+  --holo-cyan-accent: rgba(6, 182, 212, 0.8);
+  --holo-emerald-primary: rgba(16, 185, 129, 0.3);
+  --holo-emerald-secondary: rgba(16, 185, 129, 0.5);
+  --holo-emerald-accent: rgba(16, 185, 129, 0.8);
+  --holo-yellow-primary: rgba(251, 191, 36, 0.2);
+  --holo-yellow-secondary: rgba(251, 191, 36, 0.4);
+  --holo-yellow-accent: rgba(251, 191, 36, 0.7);
+
+  /* Gaming & Console Colors */
+  --console-bg: rgba(0, 0, 0, 0.4);
+  --console-border: rgba(6, 182, 212, 0.3);
+  --console-glow: rgba(6, 182, 212, 0.1);
+  --screen-bg: rgba(6, 182, 212, 0.2);
+  --console-deep-bg: rgba(15, 23, 42, 0.95);
+  --pixel-yellow: #fbbf24;
+  --gaming-green: #10b981;
+  --gaming-red: #ef4444;
+
+  /* ===================================
+     GLASS MORPHISM & UI ELEMENTS
+     ================================= */
+
+  /* Glass Effects */
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-glow: rgba(6, 182, 212, 0.2);
+
+  /* Card Components */
+  --card-bg: rgba(255, 255, 255, 0.06);
+  --card-border: rgba(255, 255, 255, 0.1);
+  --card-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), inset 0 2px 4px rgba(255, 255, 255, 0.05);
+
+  /* ===================================
+     ANIMATION & TRANSITION SYSTEM
+     ================================= */
+
+  /* Transition Durations */
+  --transition-fast: 0.2s;
+  --transition-normal: 0.3s;
+  --transition-slow: 0.6s;
+
+  /* Animation Speeds */
+  --animation-speed-slow: 3s;
+  --animation-speed-normal: 2s;
+  --animation-speed-fast: 0.6s;
+  --animation-float: 4s;
+  --animation-glow: 6s;
+
+  /* Animation Properties */
+  --pulse-opacity-min: 0.5;
+  --pulse-opacity-max: 0.8;
+  --glow-intensity: 0.4;
+
+  /* Easing Functions */
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+  /* ===================================
+     LAYOUT & SPACING
+     ================================= */
+
+  /* Border Radius */
+  --border-radius: 8px;
+  --border-radius-large: 12px;
+  --border-radius-small: 6px;
+
+  /* Container Spacing */
+  --container-padding: 16px;
+  --container-padding-small: 12px;
+  --container-padding-large: 24px;
+
+  /* ===================================
+     BUTTON SYSTEM
+     ================================= */
+
+  /* Button Transitions */
+  --btn-transition: all var(--transition-fast) var(--ease-out-quart);
+  --btn-hover-glow: 0 8px 25px rgba(6, 182, 212, 0.2);
+  --btn-shimmer-duration: 0.6s;
+
+  /* ===================================
+     SHADOWS & EFFECTS
+     ================================= */
+
+  /* Shadow System */
+  --shadow-glow: 0 0 20px rgba(52, 211, 153, 0.4);
+  --shadow-small: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.1);
+  --shadow-large: 0 8px 16px rgba(0, 0, 0, 0.15);
+  --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+
+  /* Glow Effects */
+  --glow-cyan: 0 0 15px rgba(6, 182, 212, 0.6);
+  --glow-emerald: 0 0 15px rgba(16, 185, 129, 0.6);
+  --glow-yellow: 0 0 15px rgba(251, 191, 36, 0.6);
+
+  /* ===================================
+     RESPONSIVE BREAKPOINTS
+     ================================= */
+
+  /* Standard breakpoints for consistency */
+  --breakpoint-xs: 480px;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+
+  /* ===================================
+     TYPOGRAPHY & TEXT EFFECTS
+     ================================= */
+
+  /* Text Shadows */
+  --text-glow-subtle: 0 0 5px rgba(6, 182, 212, 0.3);
+  --text-glow-medium: 0 0 10px rgba(6, 182, 212, 0.5);
+  --text-glow-strong: 0 0 15px rgba(6, 182, 212, 0.8);
+
+  /* ===================================
+     ACCESSIBILITY OVERRIDES
+     ================================= */
+
+  /* High contrast mode colors */
+  --high-contrast-border: #00ffff;
+  --high-contrast-glow: #00ffff;
+  --high-contrast-text: #ffffff;
+
+  /* Focus states */
+  --focus-outline: 2px solid var(--turtle-glow);
+  --focus-offset: 2px;
+  --focus-shadow: 0 0 0 4px rgba(52, 211, 153, 0.3);
+}
+
+/* ===================================
+   DARK MODE VARIATIONS (FUTURE-PROOFING)
+   ================================= */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Enhanced contrast for dark mode */
+    --glass-bg: rgba(255, 255, 255, 0.08);
+    --glass-border: rgba(255, 255, 255, 0.15);
+    --card-bg: rgba(255, 255, 255, 0.08);
+    --card-border: rgba(255, 255, 255, 0.12);
+  }
+}
+
+/* ===================================
+   REDUCED MOTION PREFERENCES
+   ================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    /* Disable animations for accessibility */
+    --animation-speed-slow: 0s;
+    --animation-speed-normal: 0s;
+    --animation-speed-fast: 0s;
+    --animation-float: 0s;
+    --animation-glow: 0s;
+
+    /* Instant transitions */
+    --transition-fast: 0s;
+    --transition-normal: 0s;
+    --transition-slow: 0s;
+  }
+}

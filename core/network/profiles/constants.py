@@ -1,4 +1,9 @@
 """Profile constants."""
 
-PROFILE_TABS = ["posts", "photos", "followers", "about"]
+PROFILE_TABS = [
+    "about",
+    "nest",
+    "turties",
+    "shells",
+]
 PHOTO_TABS = ["uploads", "albums"]

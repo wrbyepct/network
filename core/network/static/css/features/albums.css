@@ -1,0 +1,113 @@
+/* ===================================
+   ALBUMS FEATURE STYLES
+   Album-specific components and interactions
+   ================================= */
+
+/* Import variables for consistency */
+
+/* ===================================
+   1. ALBUM-SPECIFIC ANIMATIONS
+   ================================= */
+
+
+/* Holographic glow animation for interactive elements */
+@keyframes holo-glow-pulse {
+
+  0%,
+  100% {
+    box-shadow: 0 0 10px rgba(6, 182, 212, 0.3);
+  }
+
+  50% {
+    box-shadow: 0 0 20px rgba(6, 182, 212, 0.6);
+  }
+}
+
+
+
+/* ===================================
+   2. HOLOGRAPHIC EFFECTS
+   ================================= */
+
+/* Holographic text glow using CSS variables */
+.holo-text-glow {
+  text-shadow: var(--text-glow-medium);
+}
+
+
+/* Icon hover glow effect */
+.holo-icon:hover {
+  animation: holo-glow-pulse var(--animation-speed-normal) ease-in-out infinite;
+}
+
+/* Enhanced focus ring for accessibility */
+.holo-focus:focus {
+  outline: none;
+  box-shadow: var(--focus-shadow);
+}
+
+/* ===================================
+   3. ALBUM LAYOUT COMPONENTS
+   ================================= */
+
+/* Upload zone enhanced hover states */
+.album-upload-zone:hover {
+  background: rgba(6, 182, 212, 0.05);
+  border-color: rgba(6, 182, 212, 0.4);
+}
+
+/* Album creation form specific hover behavior */
+.album-create-form .post-card:hover {
+  background: rgba(6, 182, 212, 0.05);
+  border-color: rgba(6, 182, 212, 0.4);
+}
+
+
+
+/* ===================================
+   4. PERFORMANCE OPTIMIZATIONS
+   ================================= */
+
+/* GPU acceleration for smooth animations */
+.holo-icon {
+  transform: translateZ(0);
+  will-change: transform, opacity;
+}
+
+/* ===================================
+   5. RESPONSIVE OPTIMIZATIONS
+   (Only album-specific, general mobile opts are in _responsive.css)
+   ================================= */
+
+/* Touch-friendly button sizing for mobile */
+@media (max-width: 768px) {
+  .album-touch-btn {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Reduce hover effects on mobile for better performance */
+
+}
+
+/* ===================================
+   6. ACCESSIBILITY ENHANCEMENTS
+   ================================= */
+
+/* Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+
+  .holo-icon {
+    animation: none !important;
+  }
+
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .holo-text-glow {
+    text-shadow: 0 0 2px var(--high-contrast-text);
+  }
+
+
+}

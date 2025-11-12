@@ -1,0 +1,284 @@
+/* ===================================
+   PROFILES FEATURE MODULE
+   Profile headers, follow buttons, media galleries, gaming elements
+   Refactored for optimal maintainability and performance
+   ================================= */
+
+/* ===================================
+   1. BASE VARIABLES & UTILITIES
+   CSS Custom Properties for consistent theming
+   ================================= */
+
+/* All variables imported from _variables.css */
+
+/* ===================================
+   2. AVATAR COMPONENTS
+   Holographic avatar effects used across profile pages
+   ================================= */
+
+/* Base Avatar Component */
+.holo-avatar {
+  border: 2px solid var(--holo-cyan-secondary);
+  filter: drop-shadow(0 0 10px var(--holo-cyan-primary));
+  box-shadow: 0 0 20px var(--holo-cyan-primary);
+  transition: all 0.3s ease-out;
+}
+
+.holo-avatar:hover {
+  filter: drop-shadow(0 0 15px var(--holo-cyan-secondary));
+  transform: scale(1.05);
+}
+
+/* Avatar Variants */
+.holo-avatar--gaming {
+  image-rendering: pixelated;
+}
+
+.holo-avatar--float {
+  animation: avatar-float var(--animation-float) ease-in-out infinite;
+}
+
+
+
+/* Holographic Pulse Effect for Follow Button */
+.holo-pulse {
+  animation: holoPulse 0.6s ease-out;
+}
+
+/* ===================================
+   4. CARD COMPONENTS
+   Profile cards, post cards, and containers
+   ================================= */
+
+/* Base Card Component */
+
+
+/* Breathing Animation for Profile Header */
+.breathing {
+  animation: container-breathe 6s ease-in-out infinite;
+}
+
+/* Profile Card Variant */
+.holo-profile-card {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), inset 0 2px 4px rgba(255, 255, 255, 0.05);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.holo-profile-card:hover {
+  background: var(--holo-cyan-primary);
+  border-color: var(--holo-cyan-primary);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2), 0 0 40px var(--holo-cyan-primary), inset 0 2px 4px rgba(255, 255, 255, 0.1);
+  transform: translateY(-4px);
+}
+
+/* Shell Container for Media Gallery */
+.holo-shell-container {
+  animation: gentle-float var(--animation-glow) ease-in-out infinite;
+  position: relative;
+}
+
+.holo-shell-container::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(45deg,
+      var(--holo-cyan-primary) 0%,
+      var(--holo-emerald-primary) 25%,
+      var(--holo-yellow-primary) 50%,
+      var(--holo-emerald-primary) 75%,
+      var(--holo-cyan-primary) 100%);
+  border-radius: 14px;
+  animation: shell-glow var(--animation-float) ease-in-out infinite;
+  z-index: -1;
+}
+
+/* ===================================
+   5. ANIMATION LIBRARY
+   Reusable animation keyframes and effects
+   ================================= */
+
+/* Holographic Pulse Animation */
+@keyframes holoPulse {
+  0% {
+    box-shadow: 0 0 0 0 var(--holo-emerald-accent);
+    transform: scale(1);
+  }
+
+  50% {
+    box-shadow: 0 0 0 10px var(--holo-emerald-secondary);
+    transform: scale(1.05);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+    transform: scale(1);
+  }
+}
+
+/* Avatar Float Animation */
+@keyframes avatar-float {
+
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+
+  50% {
+    transform: translateY(-3px) scale(1.02);
+  }
+}
+
+/* Shell Glow Animation */
+@keyframes shell-glow {
+
+  0%,
+  100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+/* Gentle Float Animation */
+@keyframes gentle-float {
+
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  25% {
+    transform: translateY(-3px) rotate(1deg);
+  }
+
+  50% {
+    transform: translateY(-2px) rotate(0deg);
+  }
+
+  75% {
+    transform: translateY(-1px) rotate(-1deg);
+  }
+}
+
+/* Container Breathing Animation */
+@keyframes container-breathe {
+
+  0%,
+  100% {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  }
+
+  50% {
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2), 0 0 30px var(--holo-cyan-primary);
+  }
+}
+
+/* Scan Line Effect */
+@keyframes scan-line {
+
+  0%,
+  100% {
+    left: -100%;
+    opacity: 0;
+  }
+
+  50% {
+    left: 100%;
+    opacity: 1;
+  }
+}
+
+/* ===================================
+   6. SPECIALIZED COMPONENTS
+   Component-specific effects and styling
+   ================================= */
+
+/* Text Glow Effects */
+.holo-glow-text {
+  text-shadow: 0 0 10px var(--holo-cyan-secondary);
+}
+
+/* Tab Button Effects */
+.holo-tab-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.holo-tab-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.6s;
+}
+
+.holo-tab-btn:hover::before {
+  transform: translateX(100%);
+}
+
+/* Stats Display with Scan Line */
+.holo-stat-display {
+  position: relative;
+}
+
+.holo-stat-display::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--holo-cyan-accent), transparent);
+  animation: scan-line 3s ease-in-out infinite;
+}
+
+/* Profile Console Containers */
+.holo-about-container {
+  animation: container-breathe 6s ease-in-out infinite;
+}
+
+.holo-profile-console {
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), inset 0 2px 4px rgba(255, 255, 255, 0.05);
+}
+
+/* Missing Legendary Hologram Effect */
+.legendary-hologram {
+  filter: drop-shadow(0 0 16px var(--holo-yellow-secondary));
+  animation: legendary-float 4s ease-in-out infinite;
+  transition: all 0.2s ease-out;
+}
+
+.legendary-hologram:hover {
+  transform: scale(1.1);
+  filter: drop-shadow(0 0 24px var(--holo-yellow-accent));
+}
+
+.garden-hologram {
+  animation: garden-float 4s ease-in-out infinite;
+  filter: drop-shadow(0 0 20px rgba(236, 72, 153, 0.6));
+}
+
+/* Responsive utilities and accessibility features moved to _responsive.css */
+
+/* Focus States for Accessibility */
+button:focus {
+  outline: 2px solid var(--holo-emerald-secondary);
+  outline-offset: 2px;
+}
+
+/* Improved Focus Visibility */
+button:focus-visible {
+  outline: 2px solid var(--holo-cyan-accent);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(52, 211, 153, 0.2);
+}

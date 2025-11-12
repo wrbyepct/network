@@ -7,13 +7,26 @@
         replying: false,
         commentBody: '{{ comment.content|escapejs }}',
         newComment: {{ is_new_comment|yesno:'true,false' }}, 
-        isOwner: {% if request.user == comment.user%}true{% else %}false{%endif%},
+        isOwner: {% if user == comment.user%}true{% else %}false{%endif%},
         setReplyTo() { return this.isOwner ? '' : '@{{ comment.username }} ' },
-        liked: {{ comment|liked_by_user:request.user|yesno:'true,false' }},
+        liked: {{ comment.liked_by_user|yesno:'true,false' }},
         likeCount: {{ comment.like_count }},
+
+        collapse: true,
+        showMore: false,
+        checkClamp() {
+            const content = this.$refs.content;
+            this.showMore = content.scrollHeight > content.clientHeight;
+        },
+        deleteComment() {
+          $el.remove();
+        },
+        init() {
+            $nextTick(() => this.checkClamp());
+        },
     }">
     <div 
-        class="d-flex"
+        class="flex w-full mb-2"
         @mouseover="isHovering = true"
         @mouseleave="isHovering = false"
         >
@@ -21,31 +34,23 @@
         <a class="min-w-11" href="{% url 'profile_about' comment.username  %}">
             <img 
             src="{{ comment.profile_picture_url }}" 
-            class="rounded-full w-11 h-11 object-cover me-2" 
-            alt="profile picture">
+            class="holo-comment-avatar rounded-full w-11 h-11 object-cover me-2 transition-all duration-300" 
+            alt="profile picture"
+            style="image-rendering: pixelated;">
         </a>
         
         <!-- Comment  -->
-        <div x-show="!editing">   
+        <div x-show="!editing" class="min-w-0 wrap-break-word">   
             <!-- Username and collapsable content -->
             <div
-                x-data="{
-                    collapse: true,
-                    showMore: false,
-                    init() {
-                        $nextTick(() => this.checkClamp());
-                    },
-                    checkClamp() {
-                        const content = this.$refs.content;
-                        this.showMore = content.scrollHeight > content.clientHeight;
-                    },
-                }"
                 x-effect="if(newComment) $nextTick(() => newComment = false)"
-                :class="newComment ? 'bg-sky-100' : 'bg-gray-50'"
-                class="rounded px-3 py-2  transition-colors duration-1000 delay-1000">
-                <strong>{{ comment.username }}</strong>
+                :class="newComment ? 'holo-comment-new' : 'holo-comment-shell'"
+                class="rounded-lg px-4 py-3 relative holo-comment-shell xl:max-w-[250px] 2xl:max-w-[340px]"
+                @mouseover="$el.classList.add('holo-comment-hover')"
+                @mouseleave="$el.classList.remove('holo-comment-hover')">
+                <strong class="holo-username">{{ comment.username }}</strong>
                 <p 
-                    class="mb-1"
+                    class="mb-1 holo-comment-text"
                     x-ref="content"
                     style="max-width: 20rem;"
                     :class="collapse && 'line-clamp-2'"
@@ -56,12 +61,12 @@
             <!-- Time, like & Reply button -->
             <div class="flex justify-between mb-1">
               <div class="flex self-center">
-                  <small class="p-0 me-2 bg-white">{{ comment.created_at|timesince_simple }}</small>
+                  <small class="p-0 me-2" style="color: rgba(255, 255, 255, 0.8);">{{ comment.created_at|timesince_simple }}</small>
 
                   <small 
                     class="p-0 me-2 cursor-pointer hover:underline"
                     x-text="liked ? 'Liked' : 'Like'"
-                    :class="liked && 'text-primary fw-bold'"
+                    :class="liked && 'text-green-400 fw-bold'"
                     {% if request.user.is_authenticated %}
                       hx-post="{% url 'comment_like' comment.id %}"
                       hx-target="#comment-like-count-{{ comment.id }}"
@@ -75,6 +80,7 @@
   
                   <small 
                     class="p-0 me-2 cursor-pointer hover:underline"
+                    style="color: rgba(255, 255, 255, 0.8);"
                   {% if request.user.is_authenticated %}
                     @click="replying = true"
                   {% else %}
@@ -95,7 +101,7 @@
 
                   <img 
                     class="w-5 h-auto mx-2" 
-                    src="media/defaults/thumbsup.png" 
+                    src="/media/defaults/thumbsup.png" 
                     alt="Turtle Thumbsup Image"
                   >
               </div>
@@ -105,12 +111,14 @@
 
         <!-- Comment 3-dot menu -->
         {% if request.user == comment.user %}
-            {% include 'comments/dropdown.html' %}
+            <div class="text-white" x-show="isHovering && !editing" x-transition>
+                {% include 'comments/dropdown.html' %}
+            </div>
         {% endif %}
 
         <!-- Edit form (initially hidden) -->
         <form 
-            class="flex-grow-1 comment-form" 
+            class="flex-grow-1" 
             hx-post="{% url 'comment_edit' comment.id %}"
             hx-target="#comment-{{ comment.id }}"
             hx-swap="outerHTML"
@@ -118,13 +126,10 @@
             x-show="editing"
             x-effect="if(editing) $focus.first()"
             x-cloak
-            x-transition
             @htmx:before-request="preventEmptySubmit($event)"
             >
-                {% include 'comments/submit.html' %}
-            <a 
-                class="btn link-primary link-opacity-50-hover text-decoration-none" 
-                @click="editing = false">Cancel</a>
+              {% include 'comments/submit.html' with for_comment_submit=True %}
+              {% include 'comments/cancel_btn.html' %}
 
         </form>
     </div>
@@ -136,7 +141,6 @@
         :id=" isPostDetail ? 'post-detail-replies-{{ comment.id }}' : 'post-list-replies-{{ comment.id }}'"
         ></div>
     </div>
-    
     <!-- Show more reply button  -->
     {% if comment.children_count %}
     <div 
@@ -151,14 +155,15 @@
 
     <!-- Reply form (initially hidden) -->
     <form 
-        class="comment-form ps-5" 
+        class="ps-5 mb-3" 
         x-data="{ commentBody: setReplyTo() }"
         x-show="replying"
         x-cloak
-        x-transition
         x-effect="if(replying) {commentBody = setReplyTo(); $focus.first() }"
         @htmx:before-request="preventEmptySubmit($event)"
-        hx-post="{% url 'comment_create' comment.post.id %}"
+        @htmx:after-request="if($event.detail.successful) clearUpForm($el)"
+        hx-post="{% url 'comment_create' post.id %}"
+        hx-vals='{ "is_reply": true }'
         hx-swap="beforeend"
         :hx-target="isPostDetail ? '#post-detail-replies-{{ comment.id }}' : '#post-list-replies-{{ comment.id }}'"
     >
@@ -166,12 +171,12 @@
         {% include 'comments/submit.html' %}
         <!-- Parent comment input -->
         <input type="hidden" name="parent_id" value="{{ comment.id }}">
-        <a 
-            class="btn link-primary link-opacity-50-hover text-decoration-none" 
-            @click="replying = false">Cancel</a>
+        {% include 'comments/cancel_btn.html' with in_reply_form=True %}
     </form>
 </div>
+
+
 <!-- For piggy-pack data -->
-{% if is_new_comment %}
+{% if is_new_comment and is_reply %}
     {% include 'posts/partial/comment_count.html' %}
 {% endif %}

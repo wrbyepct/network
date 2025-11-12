@@ -1,0 +1,23 @@
+{# Holographic Image Upload Button #}
+  <div>
+    <label for="image-upload" class="w-full flex items-center justify-center px-4 py-3 bg-white/[0.08] border border-cyan-400/30 rounded-lg cursor-pointer backdrop-blur-md hover:bg-cyan-400/15 hover:border-cyan-400/50 transition-all duration-300">
+        <span class="text-lg mr-3">📸</span>
+        <span class="text-white/90 font-bold tracking-wider" style="font-family: 'Press Start 2P', monospace; font-size: 10px; text-shadow: 0 0 5px rgba(6, 182, 212, 0.3);">ADD IMAGES</span>
+    </label>
+    <input type="file" name="images" id="image-upload" accept="image/*" class="hidden" multiple x-ref="imageInput" @change="updateMediaInputs($event);" />
+    {% for error in form.images.errors %}
+        <p class="text-red-500 text-sm mt-1">{{ error }}</p>
+    {% endfor %}
+  </div>
+
+  {# Holographic Video Upload Button #}
+  <div>
+    <label for="video-upload" class="w-full flex items-center justify-center px-4 py-3 bg-white/[0.08] border border-cyan-400/30 rounded-lg cursor-pointer backdrop-blur-md hover:bg-cyan-400/15 hover:border-cyan-400/50 transition-all duration-300">
+      <span class="text-lg mr-3">🎥</span>
+      <span class="text-white/90 font-bold tracking-wider" style="font-family: 'Press Start 2P', monospace; font-size: 10px; text-shadow: 0 0 5px rgba(6, 182, 212, 0.3);">ADD VIDEO</span>
+    </label>
+    <input type="file" name="video" id="video-upload" accept="video/*" class="hidden" x-ref="videoInput" @change="updateMediaInputs($event)" />
+      {% for error in form.video.errors %}
+        <p class="text-red-500 text-sm mt-1">{{ error }}</p>
+    {% endfor %}
+</div>

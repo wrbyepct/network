@@ -1,13 +1,55 @@
 {% if page_obj.has_next %}
-<div
-  class="col-span-1"
-  hx-get="{{ fetch_url }}"
-  hx-vals='{"page": {{ page_obj.next_page_number }}}'
-  hx-target="#media-container"
-  hx-swap="beforeend"
-  hx-trigger="revealed once"
-  @htmx:after-request="if($event.detail.successful) $el.remove();"
-  >
-  {% include 'profiles/partials/loading.html' %}
+<!-- Load More Albums Card -->
+<div class="col-span-1"
+     hx-get="{{ fetch_url }}"
+     hx-vals='{"page": {{ page_obj.next_page_number }}}'
+     hx-target="#media-container"
+     hx-swap="beforeend"
+     hx-trigger="revealed once"
+     @htmx:after-request="if($event.detail.successful) $el.remove();">
+  
+  <!-- Holographic Loading Card -->
+  <div class="bg-white/5 border border-cyan-400/20 backdrop-blur-20 rounded-2xl p-4 
+              shadow-xl shadow-cyan-500/10">
+    <div class="bg-gradient-to-br from-slate-800/20 to-slate-900/40 border border-cyan-400/30 
+                backdrop-blur-15 rounded-xl p-6">
+      
+      <!-- Original Turtle with Holographic Text -->
+      {% include 'profiles/partials/loading.html' %}
+    </div>
+  </div>
+</div>
+{% else %}
+<!-- Holographic End of Albums Message -->
+<div class="col-span-2 md:col-span-3 lg:col-span-4">
+  <div class="bg-white/5 backdrop-blur-20 rounded-2xl p-4 
+              shadow-xl shadow-cyan-500/10">
+    <div class="bg-white/8 border border-cyan-400/30 backdrop-blur-20 rounded-2xl p-8 text-center
+                shadow-xl shadow-cyan-400/10 relative overflow-hidden">
+      
+      <div class="relative z-10">
+        <div class="text-center mb-3"><img class="w-17 mx-auto" src="/media/defaults/turtle_proud.png" alt="Turle Proud image"></div>
+
+        <div class="text-white/90 text-lg font-bold mb-2"
+             style="font-family: 'Press Start 2P', monospace; font-size: 14px;
+                    text-shadow: 0 0 20px rgba(52, 211, 153, 0.8);">
+          ALL SHELLS EXPLORED!
+        </div>
+        <div class="text-white/70  text-sm"
+             style="font-family: 'Press Start 2P', monospace; font-size: 8px;
+                    text-shadow: 0 0 10px rgba(6, 182, 212, 0.4);">
+          The ocean depths have revealed all treasures
+        </div>
+      </div>
+      
+      <!-- Floating celebration particles -->
+      <div class="absolute inset-0 pointer-events-none">
+        <div class="absolute top-4 left-4 w-1 h-1 bg-cyan-400/60 rounded-full animate-ping"></div>
+        <div class="absolute top-6 right-6 w-1 h-1 bg-emerald-400/60 rounded-full animate-pulse" style="animation-delay: 0.5s;"></div>
+        <div class="absolute bottom-4 left-1/3 w-1 h-1 bg-yellow-400/60 rounded-full animate-ping" style="animation-delay: 1s;"></div>
+        <div class="absolute bottom-6 right-1/4 w-1 h-1 bg-cyan-400/60 rounded-full animate-pulse" style="animation-delay: 1.5s;"></div>
+      </div>
+    </div>
+  </div>
 </div>
 {% endif %}

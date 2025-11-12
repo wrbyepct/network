@@ -4,9 +4,9 @@ from django.conf import settings
 from django.db import models
 from django.utils.functional import cached_property
 
-from network.common.mixins import LikeCountMixin, ProfileInfoMixin
+from network.common.mixins import CommentCountMixin, LikeCountMixin, ProfileInfoMixin
 from network.common.models import MediaBaseModel, TimestampedModel
-from network.profiles.models import Profile
+from network.profiles.models import Egg, Profile
 
 from .managers import PostManager
 from .tasks import delete_task
@@ -14,7 +14,12 @@ from .validators import validate_publish_time
 
 
 # Create your models here.
-class Post(LikeCountMixin, ProfileInfoMixin, TimestampedModel):
+class Post(
+    LikeCountMixin,
+    CommentCountMixin,
+    ProfileInfoMixin,
+    TimestampedModel,
+):
     """Post model."""
 
     content = models.TextField(max_length=1280)
@@ -25,6 +30,8 @@ class Post(LikeCountMixin, ProfileInfoMixin, TimestampedModel):
     is_published = models.BooleanField(default=False)
     # TODO this is ephemeral data, consider implement it other ways like cache or something.
     celery_task_id = models.CharField(max_length=255, blank=True)
+
+    egg = models.ForeignKey(Egg, on_delete=models.DO_NOTHING, related_name="posts")
 
     objects = PostManager()
 
@@ -38,27 +45,41 @@ class Post(LikeCountMixin, ProfileInfoMixin, TimestampedModel):
         """Return string <user-profile-username>'s post: <post-title>."""
         return f"Post by: {self.user.profile.username}"
 
-    @cached_property
+    @property
     def latest_two_comments(self):
         """Fetch first 2 top level comments."""
-        return self.comments.top_level_for(self)[:2]
+        if not hasattr(self, "top_level_comments"):
+            return self.comments.prefetched_info_qs(self.user).filter(
+                parent__isnull=True
+            )[:2]
+        return self.top_level_comments[:2]
 
-    @cached_property
-    def comment_count(self):
-        """Return comment count."""
-        from network.comments.models import Comment
-
-        return Comment.objects.filter(post=self).count()
+    @property
+    def updated_comment_count(self):
+        """Return the update-to-date comment count."""
+        return self.comments.count()
 
     @cached_property
     def medias_count(self):
         """Return medias count."""
         return self.medias.count()
 
-    @cached_property
-    def ordered_medias(self):
-        """Get acending medias of this post."""
-        return self.medias.all().order_by("order")
+    @property
+    def media_objects(self):
+        """Return media objects."""
+        return [
+            {
+                "id": m.id,
+                "url": m.file.url,  # access property or field
+                "type": m.type,
+            }
+            for m in self.ordered_medias
+        ]
+
+    @property
+    def liked_by_user(self):
+        """Return True if the requesting user likes this post. Otherwise False."""
+        return bool(self.user_likes) if hasattr(self, "user_likes") else False
 
     def delete(self, *args, **kwargs):
         """Override delete method to revoke publish task."""
@@ -101,6 +122,7 @@ class PostMedia(MediaBaseModel):
     )
 
     class Meta(MediaBaseModel.Meta):
+        ordering = ["order"]
         constraints = [
             models.UniqueConstraint(
                 fields=["post", "order"], name="Unique order per post."
