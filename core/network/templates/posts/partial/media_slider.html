@@ -1,0 +1,49 @@
+
+
+<div x-data="{
+        active: 0,
+        items: {{ post.medias.all|length }},
+        prev() { this.active = (this.active - 1 + this.items) % this.items; },
+        next() { this.active = (this.active + 1) % this.items; },
+    }"
+    class="relative w-full h-full flex justify-center items-center">
+
+  <!-- Slides -->
+    {% for media in post.medias.all %}
+    <div 
+        class="transition duration-500 ease-in-out max-w-4/5 max-h-full flex justify-center"
+        x-init="if ('{{ media.id }}' === clickedMedia) { 
+           active = {{ forloop.counter0 }};
+        }"
+        x-show="active === {{ forloop.counter0 }}"
+        x-transition
+    >
+        {% if media.is_image %}
+          <img src="{{ media.file.url }}" class="object-contain" alt="picture">
+        {% else %} 
+          <video 
+            src="{{ media.file.url }}" 
+            class="object-contain" 
+            controls
+            x-effect="
+              if (active === {{ forloop.counter0 }}) {
+                $el.play();
+              } else { 
+                if(!$el.paused) $el.pause();
+              }"></video>
+        {% endif %}
+    </div>
+    {% endfor %}
+  
+
+  <!-- Controls -->
+   {% if post.medias_count > 1 %}
+    <button @click="prev" class="absolute start-0 -translate-y-1/2 top-1/2 z-30 p-4 text-white bg-transparent hover:scale-120 hover:-translate-x-2 transform transition">
+      <i class="bi bi-arrow-left-circle text-4xl "></i>
+    </button>
+    <button @click="next" class="absolute end-0 -translate-y-1/2 top-1/2 z-30 p-4 text-white bg-transparent hover:scale-120 hover:translate-x-2 transform transition">
+      <i class="bi bi-arrow-right-circle text-4xl"></i>
+    </button>
+  {% endif %}
+
+</div>

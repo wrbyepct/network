@@ -1,0 +1,36 @@
+{% extends 'network/layout.html' %}
+
+
+{% block body %}
+<div class="max-w-5xl mx-auto py-6 px-4">
+
+  <!-- Album Header -->
+  <div class="flex justify-between items-center mb-6">
+    <div>
+      <h2 class="text-xl font-semibold">{{ album.name }}</h2>
+      <p class="text-sm text-gray-500">{{ album.medias_count }} media item{{ album.medias_count|pluralize }}</p>
+    </div>
+    <a href="{% url 'profile_photos_albums' album.profile.username %}" 
+       class="inline-flex items-center text-sm text-gray-700 border border-gray-300 rounded px-3 py-1.5 hover:bg-gray-100 transition">
+      ← Back to albums
+    </a>
+  </div>
+
+  <!-- Media Grid Load Trigger (htmx) -->
+  <div
+    hx-get="{% url 'album_media_paginate' album.id %}"
+    hx-target="#media-container"
+    hx-trigger="load"
+    hx-swap="beforeend"
+    @htmx:after-request="if($event.detail.successful) $el.remove();">
+  </div>
+
+  <!-- Media Container -->
+  {% include 'profiles/partials/media_container.html' with in_album_detail=True %}
+
+  <!-- Media Modal -->
+  {% include 'albums/media_modal.html' with medias=album.medias.all %}
+
+</div>
+
+{% endblock %}

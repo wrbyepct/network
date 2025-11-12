@@ -1,0 +1,68 @@
+<div 
+  x-ref="incubatingEgg"
+  x-data="{
+    startFadeEgg: false,
+    isHatching: false, {# Control egg hatching effect showing #}
+    glowStyleIndex: Math.floor(Math.random() * 9),
+    addGlowEffectToPost(postId) {
+        const hatchedPost = document.getElementById(postId);
+        hatchedPost.classList.add(`glow-scheme-${this.glowStyleIndex}`, 'post-pulsing-glow');
+    },
+    removeEgg() {
+      isIncubating = false;
+      $refs.incubatingEgg.remove();
+    },
+    hatching() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        this.isHatching = true;
+        this.startFadeEgg = true; {# Makes egg slowly fade away #}
+    },
+    waitForHatchingEvent() {
+        console.log('Listening to server...');
+        let eventSource = new EventSource('{% url "post_hatch_check" %}');
+        eventSource.addEventListener('hatch', event => {
+            const data = JSON.parse(event.data);
+            if (data.post_id === '{{ post_id }}') {
+                console.log('boom!')
+                this.hatching();
+                eventSource.close();
+            } else {
+                console.log('Post id not matched!');
+                console.log(`Even post id: ${data.post_id}`);
+                console.log('Template post id: {{ post_id }}');
+            }
+        });
+    }
+  }" 
+  x-init="waitForHatchingEvent()"
+  
+  hx-get="{% url 'hatched_post' post_id %}"
+  hx-trigger="post-hatched"
+  hx-target="#published-posts"
+  hx-swap="afterbegin"
+  @htmx:after-request="addGlowEffectToPost('{{post_id}}');  removeEgg();"
+>
+   
+    <div 
+        class="relative"
+        x-show="!startFadeEgg"
+        x-transition:leave="transition delay-[5s] ease-in duration-5000 opacity-0"
+        @transitionend=" if(event.target === $el)  $dispatch('post-hatched');"
+       >
+       <!-- Glow effect placeholder -->
+        <div 
+            :class="`glow-scheme-${glowStyleIndex}`"
+            class="absolute -z-1 top-1/2 -translate-y-1/2 left-1/2 transform -translate-x-1/2 pulsing-glow"
+            x-show="isHatching"
+            x-transition:enter="transition-opacity ease-in duration-2000"
+            x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100"
+        ></div>
+        <img
+          class="w-60 h-auto mx-auto"
+          src="{{ egg_url }}"
+          alt="Incubating Egg"
+        >
+    </div>
+
+</div>

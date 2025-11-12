@@ -1,0 +1,15 @@
+{% extends 'posts/post/base.html' %}
+
+{% block post_stats %}
+    {% include 'posts/partial/post_stats.html'%}
+{% endblock %}
+
+
+{% block actions_bar %}
+    {% include 'posts/partial/actions_bar.html' %}
+{% endblock %}
+
+
+{% block comment_section %}
+    {% include 'posts/partial/post_detail_comment_section.html' %}
+{% endblock %}

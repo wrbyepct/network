@@ -1,0 +1,63 @@
+
+<!-- This get swapped in modal container  -->
+
+<!-- Media Slider modal content -->
+<template x-teleport="#modal-container">
+  <div 
+  
+    x-data="{
+      active: null,
+      items: {{ medias|length }},
+      prev() { this.active = (this.active - 1 + this.items) % this.items; },
+      next() { this.active = (this.active + 1) % this.items; },
+      close() { showModal = false; if (!$refs.video.paused) $refs.video.pause(); }
+    }"
+    
+    class="relative w-full h-full flex justify-center items-center"
+    @keydown.escape.window="close()"
+    @click.outside="close()"
+  >
+  <!-- TODO make a cancel btn for album media modal later -->
+    <!-- Slides -->
+      {% for media in medias %}
+      <div 
+        class="transition duration-500 ease-in-out max-w-4/5 max-h-full flex justify-center"
+        x-effect="if ('{{ media.id }}' === clickedMedia) { 
+            active = {{ forloop.counter0 }};
+        }"
+        x-show="active === {{ forloop.counter0 }}"
+        x-cloak
+      >
+          {% if media.is_image %}
+            <img src="{{ media.file.url }}" class="object-contain" alt="picture">
+          {% else %} 
+            <video 
+              src="{{ media.file.url }}" 
+              class="object-contain" 
+              controls
+              x-ref="video"
+              x-effect="
+                if (active === {{ forloop.counter0 }}) {
+                  $el.play();
+                } else { 
+                  if(!$el.paused) $el.pause();
+                } "></video>
+          {% endif %}
+      </div>
+      {% endfor %}
+    
+
+    <!-- Controls -->
+     <!-- TODO refactor this to resuable piece later -->
+    {% if medias|length > 1 %}
+      <button x-ref="slideControl" @click="prev" class="absolute start-0 -translate-y-1/2 top-1/2 z-30 p-4 text-white bg-transparent hover:scale-120 hover:-translate-x-2 transform transition">
+        <i class="bi bi-arrow-left-circle text-4xl "></i>
+      </button>
+      <button x-ref="slideControl" @click="next" class="absolute end-0 -translate-y-1/2 top-1/2 z-30 p-4 text-white bg-transparent hover:scale-120 hover:translate-x-2 transform transition">
+        <i class="bi bi-arrow-right-circle text-4xl"></i>
+      </button>
+    {% endif %}
+
+  </div>
+ 
+</template>

@@ -1,0 +1,50 @@
+
+
+<div 
+  class="container"
+>
+    <div class="d-flex justify-content-between mb-3">
+        <h2 class="text-dark">Photos</h2>
+        <a href="{% url 'post_create' %}">Upload New Photo/Video</a>
+    </div>
+
+    <!-- Photo Tabs  -->
+    <div 
+      class="my-3" 
+      id="photos-tabs"
+      x-data="{ activeTab: '{{ current_photo_tab }}' }"
+    >
+      <ul class="nav nav-tabs">
+        {% for tab in photo_tabs %}
+        <li class="nav-item">
+          <a 
+            class="nav-link"
+            :class="{ 'active': activeTab === '{{ tab }}' }"
+            @click="activeTab = '{{ tab }}'"
+            hx-get="{% url 'profile_photos_'|add:tab profile.username %}"
+            hx-swap="innerHTML"
+            hx-target="#media-container"
+            hx-push-url="{% url 'profile_photos_'|add:tab profile.username %}"
+          >
+            {{ tab|title }}
+          </a>
+          
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div 
+      hx-get="{% url 'profile_photos_'|add:current_photo_tab profile.username%}"
+      hx-target="#media-container"
+      hx-trigger="load"
+      @htmx:after-request="if($event.detail.successful) $el.remove()"
+    >
+
+    </div>
+    
+    {% include 'profiles/partials/media_container.html'  %}
+
+ 
+
+</div>

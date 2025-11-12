@@ -1,0 +1,16 @@
+<div 
+  class="w-full h-full cursor-pointer"
+  hx-get="{% url 'post_modal' post.id %}"
+  hx-target="#modal-container"
+  @htmx:after-request="if($event.detail.successful) { showModal = true; clickedMedia = '{{ media.id }}'; }"
+>
+
+  {% if media.is_image %}
+  <img class="w-full h-full object-cover" src="{{ media.file.url }}" alt="">
+  {% else %}
+  <video class="w-full h-full" controls>
+    <source src="{{ media.file.url }}" preload="metadata" type="video/mp4">
+    Your browser does not support video playback.
+  </video>
+  {% endif %}
+</div>

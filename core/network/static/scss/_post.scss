@@ -1,0 +1,18 @@
+.post-creator {
+    max-width: 600px;
+    margin: 2rem auto;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border: 1px solid #ddd;
+}
+
+
+
+  .hover-bg-danger:hover {
+    background-color: #f8d7da !important;  /* Light red background */
+  }
+
+  .heart-transition {
+    transition: all 0.3s ease-in-out;
+  }

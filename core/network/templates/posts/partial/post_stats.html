@@ -1,0 +1,51 @@
+<div class="flex justify-start items-center py-2">
+
+  <!-- Like Button -->
+  <a
+    class="flex items-center text-stone-600 cursor-pointer hover:text-emerald-600 transition-colors duration-200"
+    {% if request.user.is_authenticated %}
+      hx-post="{% url 'post_like' post.id %}"
+      hx-target="#post-like-stat-{{ post.id }}"
+      hx-swap="outerHTML"
+    {% else %}
+     hx-get="{% url 'account_login' %}"
+     hx-target="#modal-container"
+     hx-select="#auth-modal-content"
+     @htmx:after-request="if($event.detail.successful) showModal = true;"
+    {% endif %}
+  >
+    <img 
+      class="w-7 h-auto hover:scale-110 transition-transform" 
+      :src="postLiked ? '/media/defaults/thumbsup.png': '/media/defaults/nothumbsup.png'" 
+      alt="Turtle Thumbsup Image"
+    >
+  </a>
+
+  <!-- Like Count -->
+  <span 
+    id="post-like-stat-{{ post.id }}"
+    class="font-mono font-bold text-stone-700 ml-2"
+    x-text="postLikeStat"
+  ></span>
+
+  <!-- Comment Button -->
+  <div 
+    {% if request.user.is_authenticated %}
+      hx-get="{% url 'post_modal' post.id %}" 
+      hx-target="#modal-container"
+      @click="showModal = true"
+    {% else %}
+      hx-get="{% url 'account_login' %}"
+      hx-target="#modal-container"
+      hx-select="#auth-modal-content"
+      @htmx:after-request="if($event.detail.successful) showModal = true;"
+    {% endif %}
+    class="flex items-center text-stone-600 hover:text-emerald-600 transition-colors duration-200 ml-auto cursor-pointer"
+  >
+    <!-- Carved speech bubble rune -->
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+    </svg>
+    <span id="post-comment-count-{{ post.id }}" class="font-mono font-bold text-stone-700 ml-2" x-text="commentCount"></span>
+  </div>
+</div>

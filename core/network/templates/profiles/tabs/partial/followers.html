@@ -1,0 +1,35 @@
+
+
+<div 
+  class="community-pond-container p-4 bg-gradient-to-b from-emerald-100 to-emerald-200 min-h-screen"
+  style="font-family: 'Press Start 2P', monospace; font-size: 10px; image-rendering: pixelated;"
+>
+    {% if profile.followers.exists %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {% for follower in profile.followers.all %}
+                <div class="follower-lily-pad {% cycle 'bg-emerald-50' 'bg-rose-50' 'bg-purple-50' %}
+ rounded-md shadow-none p-4 flex items-center space-x-4 border-4 border-emerald-700 transition-all duration-100 ease-linear hover:scale-105 hover:-translate-y-2 hover:translate-x-2">
+                    {# User Avatar #}
+                    <a href="{% url 'profile_about' follower.username %}">
+                        <img src="{{ follower.profile_picture.url }}" alt="{{ follower.username }} Avatar" class="w-12 h-12 rounded-full object-cover border-4 border-sky-500">
+                    </a>
+
+                    {# Username #}
+                    <a href="{% url 'profile_about' follower.username %}" class="text-lg font-semibold text-emerald-900 hover:underline">
+                        {{ follower.username }}
+                    </a>
+
+                    {# Follow/Unfollow Button (Conditional, HTMX-powered) #}
+                    {# This part would need a separate include or logic to determine if the current user can follow/unfollow this follower #}
+                    {# Example: {% include 'profiles/partial/follow_button.html' with target_user=follower %} #}
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-pond-message text-center text-emerald-600 py-8 italic">
+            <p>This pond is a bit quiet right now...</p>
+            <p>No followers yet.</p>
+            {# Optional: Add a small pixel-art lonely turtle image here #}
+        </div>
+    {% endif %}
+</div>

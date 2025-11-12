@@ -10,4 +10,5 @@ python -m  manage migrate --no-input
 python -m  manage create_superuser
 
 
-python -m manage runserver 0.0.0.0:8000
+
+python -m manage runserver_plus --nopin 0.0.0.0:8000

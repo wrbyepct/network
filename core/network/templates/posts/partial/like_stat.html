@@ -1,0 +1,6 @@
+<span 
+  id="post-like-stat-{{ post_id }}"
+  class="fw-bold ps-1" 
+  hx-swap-oob="outerHTML:#post-like-stat-{{ post_id }}"
+  x-init="postLiked = !postLiked"
+>{{ like_stat }}</span>

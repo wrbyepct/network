@@ -1,0 +1,57 @@
+{% extends "network/layout.html" %}
+{% load profile_extra %}
+{% block body %}
+<!-- Follow toast -->
+
+<div id="follow_message">
+
+</div>
+
+<div class="container mt-5">
+    <!-- Follow or edit buttons -->
+    <div class="d-flex justify-content-between">
+        <h2>{{ profile.username }}'s Profile</h2>
+        {% if profile.user == request.user %}
+          <a href="{% url 'profile_edit' %}">Edit</a>
+        {% else %}
+          <a 
+            class="btn"
+            x-data="{ hasFollowed: {{ profile|has_followed:request.user|yesno:'true,false' }}}"
+            :class="hasFollowed ? 'btn-primary' : 'btn-outline-primary'"
+            x-text="hasFollowed ? 'Followed' : 'Follow'"
+          {% if request.user.is_authenticated %}
+            @click="hasFollowed = !hasFollowed"
+            hx-post="{% url 'follow' profile.username %}"
+            hx-target="#follow_message"
+          {% else %}
+            href="{% url 'account_login' %}"
+          {% endif %}
+            ></a>
+        {% endif %}
+    </div>
+
+  <ul class="nav nav-tabs mb-3"
+    x-data="{'activeTab': '{{ current_tab }}'}"
+  >
+    {% for tab in tabs %}
+        <li class="nav-item">
+          <a class="nav-link"
+            :class="{ 'active': activeTab === '{{ tab }}' }"
+            @click="activeTab = '{{ tab }}'"
+            hx-get="{% url 'profile_'|add:tab profile.username %}"
+            hx-target="#tab-content"
+            hx-push-url="{% url 'profile_'|add:tab profile.username %}"
+            hx-swap="innerHTML">
+            {{ tab|title }}
+          </a>
+        </li>
+    {% endfor %}
+  </ul>
+
+  <div id="tab-content" class="row" >
+    {% block tab_content %}
+    {% endblock %}
+  </div>
+</div>
+
+{% endblock %}

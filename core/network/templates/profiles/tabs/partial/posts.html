@@ -1,0 +1,22 @@
+
+
+<div 
+  x-data="{ isPostDetail: false }" 
+  class="col-lg-8 mx-auto">
+  {% for post in posts %}
+  <div class="mb-4">
+	  {% include 'posts/post/list_card.html' %}
+  </div>
+  {% empty %}
+		<div>No Turtles Yet!</div>
+	{% endfor %}
+
+	{% if page_obj.has_next %}
+	<div 
+		hx-get="{% url 'profile_posts' profile.username %}"
+		hx-trigger="intersect once"
+		hx-vals='{"page": {{ page_obj.next_page_number}}}'
+		hx-target="#tab-content"
+		hx-swap="beforeend"></div>
+	{% endif %}
+</div>

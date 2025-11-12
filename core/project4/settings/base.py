@@ -2,24 +2,67 @@
 # ruff: noqa: F821
 # Application definition
 
-INSTALLED_APPS = [
+MY_APPS = [
     "network",
+    "network.profiles",
+    "network.posts",
+    "network.albums",
+    "network.comments",
+    "network.common",
+]
+
+BASE_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.sites",  # Required by allauth
 ]
+
+THIRD_PARTY_APPS = [
+    # Allauth core
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    # Social providers
+    "allauth.socialaccount.providers.google",
+    "allauth.socialaccount.providers.facebook",
+    "allauth.socialaccount.providers.twitter",
+    "phonenumber_field",  # Profile
+    "widget_tweaks",  # Widget tweaks
+    "sass_processor",  # SCSS
+    # Debug
+    "django_extensions",
+    # HTMX
+    "django_htmx",
+    # Crispy forms
+    "crispy_forms",
+    "crispy_tailwind",
+    # Real-time
+    "django_eventstream",
+    # Dev
+    "django_browser_reload",
+    # Cleaup media
+    "django_cleanup.apps.CleanupConfig",
+]
+
+INSTALLED_APPS = BASE_APPS + MY_APPS + THIRD_PARTY_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    # "network.middlewares.sessionswatch.SessionWatchMiddleware", # my middileware
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    # Required by latest django-allauth
+    "allauth.account.middleware.AccountMiddleware",
+    "django_htmx.middleware.HtmxMiddleware",
+    "network.profiles.middlewares.activity.ActivityStatusMiddleware",
 ]
 
 ROOT_URLCONF = "project4.urls"
@@ -27,7 +70,7 @@ ROOT_URLCONF = "project4.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "network" / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -39,6 +82,7 @@ TEMPLATES = [
         },
     },
 ]
+
 
 WSGI_APPLICATION = "project4.wsgi.application"
 
@@ -53,7 +97,6 @@ DATABASES = {
     }
 }
 
-AUTH_USER_MODEL = "network.User"
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -79,7 +122,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Asia/Taipei"
 
 USE_I18N = True
 

@@ -1,0 +1,8 @@
+
+<span 
+  id="comment-like-count-{{ comment.id }}"
+  hx-swap-oob="outerHTML:#comment-like-count-{{ comment.id }}"
+  class="fw-bold mx-2"
+  x-init="likeCount = {{ comment.like_count }}; liked = !liked;"
+  x-text="{{ comment.like_count }}"
+>{{ comment.like_count }}</span> 

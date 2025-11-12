@@ -1,0 +1,24 @@
+{# Incubation Confirmation Modal #}
+
+
+    {# Modal Content #}
+    <div 
+        id="egg-modal-content"
+        class="relative bg-amber-50 border-4 border-emerald-800 rounded-lg p-8 pb-0 shadow-[8px_8px_0px_#25422a] max-w-sm w-full text-center">
+        <div class="mb-10">
+            <h3 class="text-2xl font-bold text-emerald-900 mb-4 font-mono">Egg Placed in Hatchery!</h3>
+            <p class="text-emerald-800 mb-6">Your egg has been placed in the Hatchery. It will hatch sometime within the next 24 hours.</p>
+        </div>
+    
+        {# Placeholder for pixel animation #}
+       
+        <img src="{{ egg_url }}" alt="Pixel Egg Animation" class="w-60 h-auto mx-auto animate-bounce"> {# Simple bounce animation for now #}
+    
+        {# Cancel button #}
+        <button
+            class="w-full bg-amber-600 text-white font-bold py-4 px-6 mb-5 rounded-lg hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-300 transition duration-150 ease-in-out shadow-[4px_4px_0px_#25422a]"
+            @click="showModal = false"
+        >
+            Got it!
+        </button>
+    </div>

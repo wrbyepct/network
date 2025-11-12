@@ -1,0 +1,57 @@
+{% extends 'network/layout.html' %} 
+{% load post_extra %}
+{% block body %}
+  <div x-data="{ 
+    isPostDetail: false, 
+    showCreatePostModal: false,
+    isIncubating: {{ is_incubating|yesno:'true,false' }},
+  }" > 
+ 
+    <div class="container mt-4 ">
+      <div class="row ">
+        <div class="col-lg-8 mx-auto ">
+
+          <div 
+            id="incubating-egg-container"
+            x-ref="eggDiv"
+            @post-created.window="isIncubating = true"
+            x-effect="if(isIncubating) $nextTick(() => $dispatch('egg-fetch-ready'))"
+
+            hx-get="{% url 'egg' %}"
+            hx-trigger="egg-fetch-ready"
+            hx-swap="innerHTML"
+            {# Error means the post has hatched, just refresh the page #}
+            @htmx:response-error="window.location.href = '/'"
+          ></div>
+
+          <div x-show="!isIncubating" class="mb-4">
+             {% include 'posts/partial/post_composer.html' %}
+          </div>
+          
+          <div id="published-posts" class="grid grid-cols-1 gap-4">
+
+            {% for post in posts %}
+                {% include 'posts/post/list_card.html' %}
+            {% empty %}
+              <p class="text-center text-muted">No posts yet. Let's hatch One!</p>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      <!-- Pagination -->
+        <div class="d-flex justify-content-around">
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">Next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+        {% elif page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+            <a href="?page={{ page_obj.paginator.start_index }}"> &laquo; First</a>
+        {% endif %}
+        </div>
+    
+    </div>
+
+  </div>
+
+
+{% endblock %} 

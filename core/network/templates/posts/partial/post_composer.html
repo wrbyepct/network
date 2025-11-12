@@ -1,0 +1,28 @@
+    <div id="post-composer"
+        {% if request.user.is_authenticated %}
+        hx-get="{% url 'post_create' %}"
+        hx-target="#modal-container"
+        hx-select="#post-create-container"
+        {% else %}
+        hx-get="{% url 'account_login' %}"
+        hx-target="#modal-container"
+        hx-select="#auth-modal-content"
+        {% endif %}
+        @htmx:after-request="if($event.detail.successful) showModal = true;"
+        class="turtle-shell-container flex items-center p-3 rounded-lg shadow-md bg-emerald-50 hover:shadow-lg transition transform hover:-translate-y-0.5 cursor-pointer"
+        style="font-family: 'Press Start 2P', monospace; font-size: 10px; image-rendering: pixelated;"
+    >
+
+        {# User Avatar #}
+        <img src="{{ request.user.profile.profile_picture.url }}" alt="User Avatar" class="w-10 h-10 rounded-full mr-3 object-cover">
+
+        {# Mock Input Field #}
+        <div class="flex-grow bg-white rounded-full py-2 px-4 text-gray-500 border border-gray-300 cursor-text">
+            <span>What's on your mind?</span>
+        </div>
+
+        {# Turtle Trigger Icon #}
+        <div class="ml-3 text-emerald-700">
+            <img src="/media/defaults/turtle_composer.png" alt="Turtle Composer image" class="w-10 h-auto">
+        </div>
+    </div>

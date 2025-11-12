@@ -1,0 +1,19 @@
+<div class="btn-group ms-auto p-2">
+    <button class="btn btn-lg dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        ⋮
+    </button>
+    <ul class="dropdown-menu p-0">
+        <li><a class="dropdown-item py-1" href="{% url 'post_edit' post.id %}">Edit</a></li>
+        <li><hr class="dropdown-divider m-0"></li>
+        <li>  
+            <form 
+                hx-post="{% url 'post_delete' post.id %}"
+                hx-swap="none"
+                @htmx:after-request="window.location.href = '/'"
+            >
+                <button type="submit" class="dropdown-item py-1 text-danger hover-bg-danger border-0 bg-transparent w-100 text-start">
+                    Delete
+                </button>
+          </form></li>
+    </ul>
+</div>

@@ -1,0 +1,28 @@
+
+
+{% if request.user == profile.user %}
+<div class="col-span-1">
+  <a href="{% url 'album_create' %}" class="text-decoration-none">
+    <div class="card h-100 border-dashed text-center d-flex justify-content-center align-items-center p-3 bg-light">
+        <div class="fs-1 text-primary">＋</div>
+        <div class="fw-bold">Create New Album</div>
+    </div>
+  </a>
+</div>
+{% endif %}
+
+<!-- Fetch first album batch on load -->
+{% if profile.albums_count %}
+<div
+  class="col-span-1"
+  hx-get="{% url 'albums_paginate' profile.username %}"
+  hx-target="this"
+  hx-swap="outerHTML"
+  hx-trigger="load"
+  
+>
+  {% include 'profiles/partials/loading.html' %}
+</div>
+{% endif %}
+        
+ 

@@ -1,0 +1,84 @@
+{% load post_extra %}
+<!-- Post -->
+<div
+  id="{{ post.id }}"
+  class="bg-stone-100 rounded-md border-4 border-stone-600 shadow-[4px_4px_0px_#a8a29e] p-4 transition-transform duration-200 ease-in-out hover:-translate-y-1"
+  {% with post_liked=post|liked_by_user:request.user %}
+    x-data="{
+      commentBody: '', 
+      replying: false,
+      commentCount: {{ post.comment_count }},
+      postLiked: {{ post_liked|yesno:'true,false' }},
+      postLikeCount: {{ post.like_count }},
+      postLikeStat: '{{ post.like_count|like_stat_str:post_liked }}',
+    }"
+  {% endwith %}
+  >
+  <!-- Header -->
+  <div class="card-body d-flex align-items-center">
+      <a href="{% url 'profile_about' post.username  %}">
+        <img src="{{ post.profile_picture_url }}" class="rounded-full w-15 h-15 object-cover me-3 border-4 border-emerald-500">
+      </a>
+      <div>
+          <h6 class="mb-0 font-mono text-lg text-stone-800">{{ post.username }}</h6>
+          <small class="text-muted">{{ post.created_at|timesince_simple }}</small>
+      </div>
+      {% if request.user.id == post.user.id %}
+          {% include 'posts/partial/dropdown.html' %}
+      {% endif %}
+  </div>
+  <!-- Content collapsable --> 
+  <div 
+    x-data="{
+      collapse: true,
+      showMore: false,
+      init() {
+          $nextTick(() => this.checkClamp());
+      },
+      checkClamp() {
+          const content = this.$refs.content;
+          this.showMore = content.scrollHeight > content.clientHeight;
+      },
+    }"
+    class="card-body">
+      <p 
+        class="mb-3"
+        x-ref="content"
+        :class="collapse && 'line-clamp-3'"
+        > {{ post.content|linebreaksbr }}</p>
+      
+        {% include 'common/collapse.html' %}
+
+  </div>
+  <!-- Post medias -->
+  {% block media_gallery %}
+  {% endblock %}
+  <!-- Like and comment stats -->
+  {% block post_stats %}
+  {% endblock %}
+  <!-- Like/Comment/Share -->
+  {% block actions_bar %}
+  {% endblock %}
+
+  <!-- Comments - load first batch after load-->
+  {% block comment_section %}
+  {% endblock %}
+
+  <!-- Comment submit form -->
+  <div class="mt-4 pt-4">
+    <form 
+      {% if request.user.is_authenticated %}
+        hx-post="{% url 'comment_create' post.id %}"
+        :hx-target="isPostDetail ? '#post-detail-comment-section-{{ post.id }}' : '#post-list-comment-section-{{ post.id }}'"
+        :hx-swap="isPostDetail ? 'afterbegin scroll:#comments:top' : 'beforeend'"
+        @htmx:before-request="preventEmptySubmit($event)"
+        @htmx:after-request="if($event.detail.successful) clearUpForm($event)"
+      {% else %}
+        @submit.prevent
+      {% endif %}
+    >
+      {% include 'comments/submit.html' %}
+    </form>
+  </div>
+
+</div>

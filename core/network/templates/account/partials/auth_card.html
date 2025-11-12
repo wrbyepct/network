@@ -1,0 +1,13 @@
+{% extends "network/layout.html" %}
+{% block body %}
+  <div class="h-[90vh] flex justify-center items-center px-4">
+    <div 
+    id="auth-modal-content" 
+    @click.outside="showModal = false; $refs.modalContainer.innerHTML = '';"
+      class="bg-[url('/media/defaults/login.png')] bg-cover bg-centertext-white px-20 py-15 shadow-xl rounded-lg text-[10px] w-full max-w-md"
+      style="image-rendering: pixelated; font-family: 'Press Start 2P', monospace;">
+      {% block auth_content %}
+      {% endblock %}
+    </div>
+  </div>
+{% endblock %}

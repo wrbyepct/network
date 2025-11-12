@@ -1,0 +1,105 @@
+{% extends 'network/layout.html' %}
+{% load widget_tweaks %}
+{% block body %}
+<div class="container mt-5">
+    <div class="card shadow-sm border-0">
+      <!-- Album Delete Button -->
+      <div class="my-2 text-end">
+        <form method="post" action="{% url 'album_delete' album.id %}" id="album-delete-form">
+          {% csrf_token %}
+          <button type="button" class="btn btn-outline-danger" id="album-delete-btn">
+            <i class="bi bi-dash-circle me-1"></i> Delete Album
+          </button>
+        </form>
+      </div>
+
+      <!-- Album Edit Form -->
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Edit Album</h5>
+      </div>
+      <div class="card-body">
+ 
+        <form method="post" action="{% url 'album_edit' album.pk %}" enctype="multipart/form-data">
+          {% csrf_token %}
+          
+          <!-- Album Name Field -->
+          <div class="mb-3">
+            <label for="{{ form.name.id_for_label }}" class="form-label">Album Name</label>
+            <input class="form-control" type="text" name="name" value="{{ form.name.value }}" > 
+            {% if form.name.errors %}
+              <div class="text-danger small ">{{ form.name.errors }}</div>
+            {% endif %}
+          </div>
+
+          <!-- Album Medias field  -->
+          <div class="mb-3">
+            <label for="{{ form.medias.id_for_label }}" class="form-label">Upload Media</label>
+            <input 
+                type="file" 
+                name="medias" 
+                id="{{ form.medias.id_for_label }}" 
+                multiple 
+                class="form-control{% if form.medias.errors %} is-invalid{% endif %}"
+            >
+            {% if form.medias.errors %}
+                <div class="invalid-feedback">
+                    {{ form.medias.errors }}
+                </div>
+            {% endif %}
+          </div>
+          
+          <!-- List of existing Medias -->
+          <div class="row g-3 my-2">
+              {% for media in medias %}
+                <div class="col-6 col-md-4">
+                  <div class="border p-2 rounded position-relative">
+                      {% if media.is_image %}
+                        <img src="{{ media.file.url }}" class="img-fluid rounded" alt="Image">
+                      {% elif media.is_video %}
+                      <video class="w-100 rounded" controls>
+                          <source src="{{ media.file.url }}">
+                          Your browser does not support the video tag.
+                      </video>
+                      {% endif %}
+
+                      <div class="form-check mt-2">
+                      <input class="form-check-input" type="checkbox" 
+                              name="delete_media" value="{{ media.id }}" 
+                              id="media-{{ media.id }}">
+                      <label class="form-check-label text-danger small" for="media-{{ media.id }}">
+                          Delete
+                      </label>
+                      </div>
+                  </div>
+                </div>
+            {% endfor %}  
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" class="btn btn-success">
+            <i class="bi bi-plus-circle me-1"></i> Update Album
+          </button>
+        </form>
+ 
+
+      </div>
+  </div>
+</div>
+<script>
+  document.getElementById("album-delete-btn").addEventListener("click", function () {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        document.getElementById("album-delete-form").submit();
+      }
+    });
+  });
+</script>
+{% endblock %}

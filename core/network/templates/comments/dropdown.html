@@ -1,0 +1,29 @@
+<div class="btn-group my-auto mx-2">
+  <button 
+      class="btn dropdown-toggle rounded-circle border-0" 
+      type="button" 
+      data-bs-toggle="dropdown" 
+      aria-expanded="false"
+      :class="{ 'opacity-0': isHovering === false }"
+      x-show="!editing">
+        <i class="bi bi-three-dots"></i>
+  </button>
+  <ul class="dropdown-menu p-0">
+    <li><a 
+          class="dropdown-item py-1"
+          @click="editing = true">Edit</a></li>
+    <li><hr class="dropdown-divider m-0"></li>
+    <li>  
+      <form 
+        hx-delete="{% url 'comment_delete' comment.id %}"
+        hx-target="#comment-{{ comment.id }}"
+        hx-swap="outerHTML"
+        >
+        <button 
+          type="submit" 
+          class="dropdown-item py-1 text-danger hover-bg-danger border-0 bg-transparent w-100 text-start">
+            Delete
+        </button>
+      </form></li>
+  </ul>
+</div>

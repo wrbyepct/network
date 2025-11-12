@@ -1,0 +1,20 @@
+{% extends 'posts/post/base.html' %}
+
+{% block media_gallery %}
+  {% include 'posts/partial/media_gallery.html' with medias=post.ordered_medias %}
+{% endblock %}
+
+{% block post_stats %}
+  {% include 'posts/partial/post_stats.html' %}
+{% endblock %}
+
+{% block comment_section %}
+
+<div 
+  id="post-list-comment-section-{{ post.id }}"
+  {% if post.comment_count  %} class="p-3 border-t-2 border-b-2 border-stone-300" {% endif %}
+>
+{% include 'posts/partial/post_list_comment_section.html' %}  
+</div>
+
+{% endblock %}

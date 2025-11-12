@@ -1,0 +1,17 @@
+
+
+  <!-- Post Modal content -->
+  <div 
+    class="w-4/5 h-9/10" 
+    x-data="{ close() { showModal = false; $el.remove(); } }"
+    x-init="isPostDetail = true"
+    @keydown.escape.window="close()"
+    @click.outside="close()"
+  >
+    {% if post.medias_count %}
+      {% include 'posts/post/with_media_slider.html' %}
+    {% else %}
+      {% include 'posts/post/detail_card.html'  %}
+    {% endif %}
+  </div>
+  
