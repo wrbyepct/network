@@ -66,14 +66,5 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-            options={
-                "ordering": ["-created_at", "-updated_at"],
-                "abstract": False,
-                "constraints": [
-                    models.UniqueConstraint(
-                        fields=("album", "order"), name="Unique order per album."
-                    )
-                ],
-            },
         ),
     ]
