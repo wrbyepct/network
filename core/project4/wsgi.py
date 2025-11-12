@@ -14,7 +14,8 @@ from dj_static import Cling, MediaCling
 from django.core.wsgi import get_wsgi_application
 from static_ranges import Ranges
 
-# TODO check for more modern pacakge to do the same.
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "project4.settings")
 
+# TODO check for more modern/prduction pacakge or method to do the same.
+# use cling for simple video stream serving
 application = Ranges(Cling(MediaCling(get_wsgi_application())))

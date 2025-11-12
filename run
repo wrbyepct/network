@@ -89,47 +89,6 @@ test:ci() {
 }
 
 
-##
-# Terraform
-##
-
-tf-lint:cd() {
-    cd terraform
-    docker compose -f tf.yml run --rm terraform -chdir=setup init -backend=false
-    docker compose -f tf.yml run --rm terraform -chdir=deploy init -backend=false
-
-    docker compose -f tf.yml run --rm terraform -chdir=setup validate
-    docker compose -f tf.yml run --rm terraform -chdir=setup fmt -check
-
-    docker compose -f tf.yml run --rm terraform -chdir=deploy validate
-    docker compose -f tf.yml run --rm terraform -chdir=deploy fmt -check
-
-}
-
-tf-init() {
-    docker-compose -f terraform/tf.yml run --rm terraform -chdir=$1 init
-}
-
-tf-plan() {
-    docker-compose -f terraform/tf.yml run --rm terraform -chdir=$1 plan
-}
-
-tf-deploy() {
-    docker-compose -f terraform/tf.yml run --rm terraform -chdir=$1 deploy
-}
-
-tf-destroy() {
-    docker-compose -f terraform/tf.yml run --rm terraform -chdir=$1 destroy
-}
-
-tf-fmt() {
-    docker-compose -f terraform/tf.yml run --rm terraform -chdir=$1 fmt
-}
-
-tf-validate() {
-    docker-compose -f terraform/tf.yml run --rm terraform -chdir=$1 fmt
-}
-
 
 help() {
     echo "${1} <task> <arg>s"

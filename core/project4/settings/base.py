@@ -1,6 +1,8 @@
 """Settings: Base."""
+
 # ruff: noqa: F821
 # Application definition
+import dj_database_url
 
 MY_APPS = [
     "network",
@@ -93,11 +95,13 @@ WSGI_APPLICATION = "project4.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
+
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": Path(BASE_DIR) / "db.sqlite3",
-    }
+    "default": dj_database_url.config(
+        default="sqlite:///db.sqlite3",  # fallback if DATABASE_URL is missing
+        conn_max_age=600,  # keeps connections alive for perf
+        ssl_require=False,  # set True if using SSL
+    )
 }
 
 

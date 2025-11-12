@@ -32,7 +32,6 @@ from .utils import get_like_stat
 redis_client = redis.StrictRedis(host="redis", port=6379, db=0)
 
 
-# TODO (extra) cache the posts result
 class PostListView(ListView):
     """Post List View."""
 
