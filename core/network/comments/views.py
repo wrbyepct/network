@@ -104,12 +104,10 @@ class CommentCreateView(
 
         parent_id = self.request.POST.get("parent_id")
 
-        if parent_id:
+        if parent_id:  # meaning it's replying to a parent comment
             form.instance.parent = get_object_or_404(Comment, id=parent_id)
 
-        with transaction.atomic():
-            self.object = form.save()
-            self.object.post.sync_comment_count()
+        self.object = form.save()
 
         return self.get_response()
 
@@ -150,9 +148,7 @@ class CommentDeleteView(
         comment = self.get_object()
         post = comment.post
 
-        with transaction.atomic():
-            comment.delete()
-            post.sync_comment_count()
+        comment.delete()
 
         context = {"post": post}
 
