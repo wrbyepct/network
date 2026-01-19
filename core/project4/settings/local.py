@@ -34,14 +34,17 @@ CACHEOPS = {
     "profiles.profile": {"ops": "all", "timeout": 60 * 60},  # 1h TTL
     "posts.post": {"ops": "all", "timeout": 60 * 60},
     # "profiles.profile_followers": {"ops": "all", "timeout": 60 * 60},  # 1h TTL
-    # "albums.album": {"ops": "all", "timeout": 60 * 60},  # 1h TTL
     "network.user": {"ops": "all", "timeout": 60 * 60},  # 1h TTL
+    "comments.comment": {
+        "ops": ("fetch",),
+        "timeout": 60 * 60 * 24 * 365,
+    },  # Caches 1 year
 }
 
 
 # DEV TOOLBAR
 DEBUG_TOOLBAR_CONFIG = {
-    "SHOW_TOOLBAR_CALLBACK": lambda _: False,  # always show
+    "SHOW_TOOLBAR_CALLBACK": lambda _: True,  # always show
 }
 
 INTERNAL_IPS = ["127.0.0.1"]

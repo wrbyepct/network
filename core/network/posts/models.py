@@ -1,10 +1,11 @@
 """Post models."""
 
+from cacheops import cached_as
 from django.conf import settings
 from django.db import models
 from django.utils.functional import cached_property
 
-from network.common.mixins import CommentCountMixin, LikeCountMixin, ProfileInfoMixin
+from network.common.mixins import LikeCountMixin, ProfileInfoMixin
 from network.common.models import MediaBaseModel, TimestampedModel
 from network.profiles.models import Egg, Profile
 
@@ -16,7 +17,6 @@ from .validators import validate_publish_time
 # Create your models here.
 class Post(
     LikeCountMixin,
-    CommentCountMixin,
     ProfileInfoMixin,
     TimestampedModel,
 ):
@@ -55,9 +55,17 @@ class Post(
         return self.top_level_comments[:2]
 
     @property
-    def updated_comment_count(self):
+    def comment_count(self):
         """Return the update-to-date comment count."""
-        return self.comments.count()
+        from network.comments.models import Comment
+
+        comment_qs = Comment.objects.filter(post=self)
+
+        @cached_as(comment_qs, extra=self.pkid, timeout=None)
+        def _comment_count():
+            return self.comments.count()
+
+        return _comment_count()
 
     @cached_property
     def medias_count(self):
