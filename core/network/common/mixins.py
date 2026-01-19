@@ -130,8 +130,13 @@ class CommentCountMixin(Model):
     class Meta:
         abstract = True
 
+    # TODO Implement periodically aync comment count sync task later.
     def sync_comment_count(self):
-        """Update like_count in object and save it."""
+        """
+        Update like_count in object and save it.
+
+        It's meant for aync periodically update to ensure data consistency.
+        """
         self.comment_count = self.comments.count()
         self.save(update_fields=["comment_count"])
 
