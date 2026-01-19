@@ -108,6 +108,7 @@ class CommentCreateView(
             form.instance.parent = get_object_or_404(Comment, id=parent_id)
 
         self.object = form.save()
+        self.post.refresh_from_db()
 
         return self.get_response()
 
@@ -149,6 +150,8 @@ class CommentDeleteView(
         post = comment.post
 
         comment.delete()
+
+        post.refresh_from_db()
 
         context = {"post": post}
 
